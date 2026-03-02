@@ -1,4 +1,4 @@
-# Simple VTT to host on simple Apache server
+# FreeRoll VTT to host on simple Apache server
 
 Simple Virtual Table Top, that you can build and host on apache server. Simpliest option ever. 
 

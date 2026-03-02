@@ -487,6 +487,8 @@ try {
             break;
 
         case 'POST':
+            // Dla większości akcji dane przychodzą jako JSON.
+            // Wyjątkiem będzie upload plików (multipart/form-data), który ignoruje $input.
             $input = json_decode(file_get_contents('php://input'), true);
             
             switch ($action) {
@@ -937,6 +939,263 @@ try {
                     echo json_encode(['success' => true, 'version' => $state['version']]);
                     break;
 
+                case 'upload-asset':
+                    // Upload materiałów – tylko dla Mistrza Gry
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+
+                    // Oczekujemy multipart/form-data, więc ignorujemy $input z JSON
+                    $type = $_POST['type'] ?? '';
+                    $type = is_string($type) ? trim($type) : '';
+
+                    $baseDirMap = [
+                        'token' => __DIR__ . '/assets/tokens',
+                        'map' => __DIR__ . '/assets/map',
+                        'background' => __DIR__ . '/assets/backgrounds',
+                        'template' => __DIR__ . '/assets/templates',
+                        'paper' => __DIR__ . '/assets/papers',
+                    ];
+
+                    if (!isset($baseDirMap[$type])) {
+                        http_response_code(400);
+                        echo json_encode(['success' => false, 'error' => 'Invalid type']);
+                        break;
+                    }
+
+                    $baseDir = $baseDirMap[$type];
+                    if (!is_dir($baseDir)) {
+                        mkdir($baseDir, 0755, true);
+                    }
+
+                    // Pomocnicza funkcja do sanityzacji nazw plików
+                    $sanitizeFilename = function ($name) {
+                        $name = basename($name);
+                        $name = preg_replace('/[^A-Za-z0-9._-]/', '_', $name);
+                        if ($name === '' || $name === '.' || $name === '..') {
+                            $name = 'file';
+                        }
+                        return $name;
+                    };
+
+                    // Pomocnicza funkcja do generowania unikalnej ścieżki
+                    $makeUniquePath = function ($dir, $filename) {
+                        $path = $dir . '/' . $filename;
+                        if (!file_exists($path)) {
+                            return $path;
+                        }
+                        $info = pathinfo($filename);
+                        $base = $info['filename'] ?? 'file';
+                        $ext = isset($info['extension']) && $info['extension'] !== '' ? ('.' . $info['extension']) : '';
+                        $i = 1;
+                        do {
+                            $candidate = $dir . '/' . $base . '-' . $i . $ext;
+                            $i++;
+                        } while (file_exists($candidate));
+                        return $candidate;
+                    };
+
+                    $result = [
+                        'success' => false,
+                        'uploaded' => [],
+                        'errors' => [],
+                    ];
+
+                    // Upload wielu obrazków (token/map/background)
+                    if (in_array($type, ['token', 'map', 'background'], true)) {
+                        if (empty($_FILES['files']) || !is_array($_FILES['files']['name'])) {
+                            http_response_code(400);
+                            echo json_encode(['success' => false, 'error' => 'No files uploaded']);
+                            break;
+                        }
+
+                        $allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'];
+                        $names = $_FILES['files']['name'];
+                        $tmpNames = $_FILES['files']['tmp_name'];
+                        $errors = $_FILES['files']['error'];
+
+                        $count = count($names);
+                        for ($i = 0; $i < $count; $i++) {
+                            $origName = $names[$i];
+                            $tmpName = $tmpNames[$i];
+                            $err = $errors[$i];
+
+                            if ($err !== UPLOAD_ERR_OK) {
+                                $msg = 'Upload error';
+                                if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+                                    $msg = 'File too large for server limits';
+                                }
+                                $result['errors'][] = [
+                                    'name' => $origName,
+                                    'message' => $msg,
+                                ];
+                                continue;
+                            }
+
+                            $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+                            if (!in_array($ext, $allowedExtensions, true)) {
+                                $result['errors'][] = [
+                                    'name' => $origName,
+                                    'message' => 'Invalid file type',
+                                ];
+                                continue;
+                            }
+
+                            $safeName = $sanitizeFilename($origName);
+                            $targetPath = $makeUniquePath($baseDir, $safeName);
+
+                            if (!move_uploaded_file($tmpName, $targetPath)) {
+                                $result['errors'][] = [
+                                    'name' => $origName,
+                                    'message' => 'Failed to save file',
+                                ];
+                                continue;
+                            }
+
+                            $result['uploaded'][] = [
+                                'originalName' => $origName,
+                                'storedName' => basename($targetPath),
+                                'type' => $type,
+                            ];
+                        }
+
+                        $result['success'] = count($result['uploaded']) > 0;
+                        echo json_encode($result);
+                        break;
+                    }
+
+                    // Upload szablonu HTML (pojedynczy plik)
+                    if ($type === 'template') {
+                        if (empty($_FILES['file'])) {
+                            http_response_code(400);
+                            echo json_encode(['success' => false, 'error' => 'No file uploaded']);
+                            break;
+                        }
+
+                        $file = $_FILES['file'];
+                        $origName = $file['name'] ?? '';
+                        $tmpName = $file['tmp_name'] ?? '';
+                        $err = $file['error'] ?? UPLOAD_ERR_NO_FILE;
+
+                        if ($err !== UPLOAD_ERR_OK) {
+                            $msg = 'Upload error';
+                            if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+                                $msg = 'File too large for server limits';
+                            }
+                            echo json_encode(['success' => false, 'error' => $msg]);
+                            break;
+                        }
+
+                        if (!preg_match('/\\.html?$/i', $origName)) {
+                            echo json_encode(['success' => false, 'error' => 'Invalid template extension']);
+                            break;
+                        }
+
+                        $safeName = $sanitizeFilename($origName);
+                        $targetPath = $makeUniquePath($baseDir, $safeName);
+
+                        if (!move_uploaded_file($tmpName, $targetPath)) {
+                            echo json_encode(['success' => false, 'error' => 'Failed to save template']);
+                            break;
+                        }
+
+                        // Skan na obecność <script>
+                        $content = @file_get_contents($targetPath);
+                        if ($content === false) {
+                            @unlink($targetPath);
+                            echo json_encode(['success' => false, 'error' => 'Failed to read template']);
+                            break;
+                        }
+
+                        if (preg_match('/<\\s*script\\b/i', $content)) {
+                            @unlink($targetPath);
+                            echo json_encode([
+                                'success' => false,
+                                'error' => 'Template rejected – contains <script> tag',
+                            ]);
+                            break;
+                        }
+
+                        echo json_encode([
+                            'success' => true,
+                            'uploaded' => [[
+                                'originalName' => $origName,
+                                'storedName' => basename($targetPath),
+                                'type' => $type,
+                            ]],
+                        ]);
+                        break;
+                    }
+
+                    // Upload PDF (pojedynczy plik)
+                    if ($type === 'paper') {
+                        // Obsługa przypadku zbyt dużego pliku – serwer może w ogóle nie utworzyć wpisu w $_FILES
+                        $contentLength = (int)($_SERVER['CONTENT_LENGTH'] ?? 0);
+                        if (empty($_FILES['file']) && $contentLength > 0) {
+                            echo json_encode([
+                                'success' => false,
+                                'error' => 'File too large for server limits – upload manually via FTP',
+                                'code' => 'file_too_large',
+                            ]);
+                            break;
+                        }
+
+                        if (empty($_FILES['file'])) {
+                            http_response_code(400);
+                            echo json_encode(['success' => false, 'error' => 'No file uploaded']);
+                            break;
+                        }
+
+                        $file = $_FILES['file'];
+                        $origName = $file['name'] ?? '';
+                        $tmpName = $file['tmp_name'] ?? '';
+                        $err = $file['error'] ?? UPLOAD_ERR_NO_FILE;
+
+                        if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+                            echo json_encode([
+                                'success' => false,
+                                'error' => 'File too large for server limits – such big files must be uploaded manually.',
+                                'code' => 'file_too_large',
+                            ]);
+                            break;
+                        }
+
+                        if ($err !== UPLOAD_ERR_OK) {
+                            echo json_encode(['success' => false, 'error' => 'Upload error']);
+                            break;
+                        }
+
+                        if (!preg_match('/\\.pdf$/i', $origName)) {
+                            echo json_encode(['success' => false, 'error' => 'Invalid PDF extension']);
+                            break;
+                        }
+
+                        $safeName = $sanitizeFilename($origName);
+                        $targetPath = $makeUniquePath($baseDir, $safeName);
+
+                        if (!move_uploaded_file($tmpName, $targetPath)) {
+                            echo json_encode(['success' => false, 'error' => 'Failed to save PDF']);
+                            break;
+                        }
+
+                        echo json_encode([
+                            'success' => true,
+                            'uploaded' => [[
+                                'originalName' => $origName,
+                                'storedName' => basename($targetPath),
+                                'type' => $type,
+                            ]],
+                        ]);
+                        break;
+                    }
+
+                    // Fallback – nieobsługiwany typ (nie powinno się zdarzyć)
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'error' => 'Invalid type']);
+                    break;
+                    
                 default:
                     http_response_code(400);
                     echo json_encode(['success' => false, 'error' => 'Unknown action']);

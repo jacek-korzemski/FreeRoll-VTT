@@ -187,6 +187,17 @@ function App() {
       .catch(console.error)
   }, [])
 
+  const refreshBackgroundAssets = useCallback(() => {
+    fetch(API_BASE + '?action=assets', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setBackgroundAssets(data.backgroundAssets || [])
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   useEffect(() => {
     const isForward = mapNavigationForwardRef.current
     if (!isInitialMapFetch.current && isForward) setMapListLoading(true)
@@ -206,6 +217,21 @@ function App() {
       .catch(() => setMapListLoading(false))
   }, [mapPath])
 
+  const refreshMapAssets = useCallback(() => {
+    const q = mapPath ? `&path=${encodeURIComponent(mapPath)}` : ''
+    fetch(`${API_BASE}?action=list-map${q}`, { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          startTransition(() => {
+            setMapFolders(data.folders || [])
+            setMapFiles(data.files || [])
+          })
+        }
+      })
+      .catch(console.error)
+  }, [mapPath])
+
   useEffect(() => {
     const isForward = tokenNavigationForwardRef.current
     if (!isInitialTokenFetch.current && isForward) setTokenListLoading(true)
@@ -223,6 +249,21 @@ function App() {
         setTokenListLoading(false)
       })
       .catch(() => setTokenListLoading(false))
+  }, [tokenPath])
+
+  const refreshTokenAssets = useCallback(() => {
+    const q = tokenPath ? `&path=${encodeURIComponent(tokenPath)}` : ''
+    fetch(`${API_BASE}?action=list-tokens${q}`, { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          startTransition(() => {
+            setTokenFolders(data.folders || [])
+            setTokenFiles(data.files || [])
+          })
+        }
+      })
+      .catch(console.error)
   }, [tokenPath])
 
   
@@ -366,6 +407,18 @@ useEffect(() => {
           setScenes(prev => [...prev, data.scene])
           setVersion(data.version)
         }
+      })
+      .catch(console.error)
+  }, [])
+
+  const refreshPapers = useCallback(() => {
+    fetch(`${API_BASE}?action=list-papers`, { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        // Odświeżenie listy po stronie PdfPanel jest trudniejsze bez kontekstu,
+        // więc na razie ta funkcja może zostać wykorzystana w przyszłości.
+        // Obecnie nie modyfikujemy lokalnego stanu tutaj.
+        return data
       })
       .catch(console.error)
   }, [])
@@ -998,6 +1051,10 @@ useEffect(() => {
         activePing={activePing}
         onClearPing={handleClearPing}
         onDeselectAsset={handleDeselectAsset}
+        onRefreshMapAssets={refreshMapAssets}
+        onRefreshTokenAssets={refreshTokenAssets}
+        onRefreshBackgroundAssets={refreshBackgroundAssets}
+        onRefreshPapers={refreshPapers}
       />
       
       <main className="main-content">

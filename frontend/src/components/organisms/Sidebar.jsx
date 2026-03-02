@@ -5,6 +5,7 @@ import BackgroundSection from './BackgroundSection'
 import FogOfWarSection from './FogOfWarSection'
 import AssetBrowser from './AssetBrowser'
 import ZoomControls from '../atoms/ZoomControls'
+import UploadSection from './UploadSection'
 import { useScrollToSection } from '../../hooks/useScrollToSection'
 import { useBackgroundZoom } from '../../hooks/useBackgroundZoom'
 import { t } from '../../lang'
@@ -69,6 +70,10 @@ function Sidebar({
   onTogglePing,
   onClearPing,
   onDeselectAsset,
+  onRefreshMapAssets,
+  onRefreshTokenAssets,
+  onRefreshBackgroundAssets,
+  onRefreshPapers,
 }) {
   const mapSectionRef = useScrollToSection(mapListLoading, mapNavigationForwardRef)
   const tokenSectionRef = useScrollToSection(tokenListLoading, tokenNavigationForwardRef)
@@ -81,6 +86,25 @@ function Sidebar({
       <div className="sidebar-sections">
         <div className="sidebar-sections-inner">
           <div className="sidebar-sections-content">
+          {isGameMaster && (
+              <CollapsibleSection 
+                title={t('upload.title')} 
+                icon="📁" 
+                defaultOpen={false}
+                onToggle={onDeselectAsset}
+              >
+                <UploadSection
+                  onUploadedImages={() => {
+                    onRefreshMapAssets && onRefreshMapAssets()
+                    onRefreshTokenAssets && onRefreshTokenAssets()
+                  }}
+                  onUploadedBackgrounds={onRefreshBackgroundAssets}
+                  onUploadedTemplates={null}
+                  onUploadedPapers={onRefreshPapers}
+                />
+              </CollapsibleSection>
+            )}
+
             {isGameMaster && (
               <CollapsibleSection 
                 title={t('scenes.title')} 

@@ -1,7 +1,7 @@
 {
   "en": {
     "app": {
-      "title": "Simple VTT",
+      "title": "FreeRoll VTT",
       "loading": "Loading..."
     },
     "status": {
@@ -116,7 +116,7 @@
       "rollResult": "Result"
     },
     "login": {
-      "title": "Simple VTT",
+      "title": "FreeRoll VTT",
       "subtitle": "Enter password to continue",
       "placeholder": "Password...",
       "submit": "Enter game",
@@ -207,11 +207,36 @@
       "active": "Click on map to ping",
       "clear": "Clear ping",
       "clearHint": "Remove active ping so new players won't be redirected"
+    },
+    "upload": {
+      "title": "Add materials",
+      "typeLabel": "Material type",
+      "types": {
+        "tokens": "Tokens",
+        "map": "Map elements",
+        "backgrounds": "Backgrounds",
+        "templates": "Templates (HTML)",
+        "papers": "PDF materials"
+      },
+      "selectFiles": "Select files",
+      "uploadButton": "Upload",
+      "uploading": "Uploading...",
+      "reset": "Reset",
+      "removeFile": "Remove file from list",
+      "success": "Files uploaded successfully.",
+      "partialSuccess": "Some files were uploaded, some failed.",
+      "genericError": "Failed to upload files. Please try again.",
+      "noFiles": "No files selected.",
+      "singleFileOnly": "Only a single file is allowed for this type.",
+      "invalidImageExtensions": "Only image files are allowed for this type.",
+      "invalidTemplateExtension": "Template must be a .html or .htm file.",
+      "invalidPdfExtension": "File must be in .pdf format.",
+      "tooBigPdf": "PDF is too large for server limits – such big files must be uploaded manually on the server."
     }
   },
   "pl": {
     "app": {
-      "title": "Simple VTT",
+      "title": "FreeRoll VTT",
       "loading": "Ładowanie..."
     },
     "status": {
@@ -326,7 +351,7 @@
       "rollResult": "Wynik"
     },
     "login": {
-      "title": "Simple VTT",
+      "title": "FreeRoll VTT",
       "subtitle": "Wprowadź hasło aby kontynuować",
       "placeholder": "Hasło...",
       "submit": "Wejdź do gry",
@@ -417,6 +442,31 @@
       "active": "Kliknij na mapę aby wysłać ping",
       "clear": "Usuń ping",
       "clearHint": "Usuń aktywny ping, żeby nowi gracze nie byli przekierowywani"
+    },
+    "upload": {
+      "title": "Dodaj materiały",
+      "typeLabel": "Typ materiału",
+      "types": {
+        "tokens": "Tokeny",
+        "map": "Elementy mapy",
+        "backgrounds": "Tła",
+        "templates": "Szablony (HTML)",
+        "papers": "Materiały PDF"
+      },
+      "selectFiles": "Wybierz pliki",
+      "uploadButton": "Wyślij",
+      "uploading": "Wysyłanie...",
+      "reset": "Resetuj",
+      "removeFile": "Usuń plik z listy",
+      "success": "Pliki zostały przesłane.",
+      "partialSuccess": "Część plików została przesłana, część się nie udała.",
+      "genericError": "Nie udało się przesłać plików. Spróbuj ponownie.",
+      "noFiles": "Nie wybrano żadnych plików.",
+      "singleFileOnly": "Dla tego typu materiału możesz wysłać tylko jeden plik.",
+      "invalidImageExtensions": "Dla tego typu dozwolone są tylko pliki graficzne.",
+      "invalidTemplateExtension": "Szablon musi być plikiem .html lub .htm.",
+      "invalidPdfExtension": "Plik musi być w formacie .pdf.",
+      "tooBigPdf": "Plik PDF jest zbyt duży dla ograniczeń serwera – tak duże materiały trzeba wgrać ręcznie na serwer."
     }
   }
 }

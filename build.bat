@@ -4,7 +4,7 @@ chcp 65001 >nul 2>nul
 
 echo.
 echo  ========================================
-echo   Simple VTT - Build Script
+echo   FreeRoll VTT - Build Script
 echo  ========================================
 echo.
 
@@ -90,23 +90,23 @@ echo.
 
 :: Ustaw teksty na podstawie języka
 if /i "%LANGUAGE%"=="pl" (
-    set "LOGIN_TITLE=Simple VTT"
+    set "LOGIN_TITLE=FreeRoll VTT"
     set "LOGIN_SUBTITLE=Wprowadz haslo aby kontynuowac"
     set "LOGIN_PLACEHOLDER=Haslo..."
     set "LOGIN_SUBMIT=Wejdz do gry"
     set "LOGIN_ERROR=Nieprawidlowe haslo!"
     set "LOGIN_GM_CHECKBOX=Jestem Mistrzem Gry"
     set "LOGOUT=Wyloguj"
-    set "APP_TITLE=Simple VTT"
+    set "APP_TITLE=FreeRoll VTT"
 ) else (
-    set "LOGIN_TITLE=Simple VTT"
+    set "LOGIN_TITLE=FreeRoll VTT"
     set "LOGIN_SUBTITLE=Enter password to continue"
     set "LOGIN_PLACEHOLDER=Password..."
     set "LOGIN_SUBMIT=Enter game"
     set "LOGIN_ERROR=Invalid password!"
     set "LOGIN_GM_CHECKBOX=I'm Game Master"
     set "LOGOUT=Logout"
-    set "APP_TITLE=Simple VTT"
+    set "APP_TITLE=FreeRoll VTT"
 )
 
 echo [1/5] Creating build folder...

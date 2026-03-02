@@ -1,6 +1,6 @@
 # Template Crafting Guide
 
-How to create interactive character sheets and custom templates for Simple VTT.
+How to create interactive character sheets and custom templates for FreeRoll VTT.
 
 Templates are plain HTML files with special `data-*` attributes. You don't need to know JavaScript — just HTML basics. Place your `.html` files in `backend/assets/templates/` and they'll appear in the template picker inside the notepad panel.
 

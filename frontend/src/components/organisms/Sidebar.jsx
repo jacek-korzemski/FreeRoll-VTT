@@ -33,6 +33,8 @@ function Sidebar({
   selectedType,
   isEraserActive,
   hasMapElements,
+  isTokenEraserActive,
+  hasTokens,
   fogOfWar,
   fogEditMode,
   fogRevealMode,
@@ -47,6 +49,7 @@ function Sidebar({
   onFogHideAll,
   onSelectAsset,
   onToggleEraser,
+  onToggleTokenEraser,
   onSetBackground,
   onRemoveBackground,
   onNudgeBackground,
@@ -213,6 +216,9 @@ function Sidebar({
                 assetType="token"
                 rootIcon="🎭"
                 rootTitle={t('sidebar.tokensRoot')}
+                isTokenEraserActive={isTokenEraserActive}
+                hasTokens={hasTokens}
+                onToggleTokenEraser={onToggleTokenEraser}
               />
             </CollapsibleSection>
           </div>

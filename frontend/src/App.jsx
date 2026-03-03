@@ -57,6 +57,7 @@ function App() {
   const [isGameMaster, setIsGameMaster] = useState(false)
   const [apiStatus, setApiStatus] = useState('ok')
   const [apiFlashTrigger, setApiFlashTrigger] = useState(0)
+  const [isTokenEraserActive, setIsTokenEraserActive] = useState(false)
 
   const fogUpdateTimeoutRef = useRef(null)
   const backgroundUpdateTimeoutRef = useRef(null)
@@ -527,6 +528,21 @@ useEffect(() => {
     }
   }, [isEraserActive])
 
+  const handleToggleTokenEraser = useCallback(() => {
+    setFogEditMode(false)
+    setPingMode(false)
+    
+    setIsTokenEraserActive(prev => {
+      const next = !prev
+      if (next) {
+        setIsEraserActive(false)
+        setSelectedAsset(null)
+        setSelectedType(null)
+      }
+      return next
+    })
+  }, [])
+
   
   const scheduleBackgroundSave = useCallback((bgConfig) => {
     if (backgroundUpdateTimeoutRef.current) {
@@ -822,12 +838,18 @@ useEffect(() => {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          setTokens(prev => prev.filter(t => t.id !== tokenId))
+          setTokens(prev => {
+            const next = prev.filter(t => t.id !== tokenId)
+            if (next.length === 0 && isTokenEraserActive) {
+              setIsTokenEraserActive(false)
+            }
+            return next
+          })
           setVersion(data.version)
         }
       })
       .catch(console.error)
-  }, [])
+  }, [isTokenEraserActive])
 
   
   const handleClear = useCallback(() => {
@@ -1014,6 +1036,8 @@ useEffect(() => {
         selectedType={selectedType}
         isEraserActive={isEraserActive}
         hasMapElements={mapElements.length > 0}
+        isTokenEraserActive={isTokenEraserActive}
+        hasTokens={tokens.length > 0}
         fogOfWar={fogOfWar}
         fogEditMode={fogEditMode}
         fogRevealMode={fogRevealMode}
@@ -1028,6 +1052,7 @@ useEffect(() => {
         onFogHideAll={handleFogHideAll}
         onSelectAsset={handleSelectAsset}
         onToggleEraser={handleToggleEraser}
+        onToggleTokenEraser={handleToggleTokenEraser}
         onSetBackground={handleSetBackground}
         onRemoveBackground={handleRemoveBackground}
         onNudgeBackground={handleNudgeBackground}
@@ -1067,6 +1092,7 @@ useEffect(() => {
           selectedAsset={selectedAsset}
           selectedType={selectedType}
           isEraserActive={isEraserActive}
+          isTokenEraserActive={isTokenEraserActive}
           fogBitmap={fogBitmap}
           fogEnabled={fogOfWar.enabled}
           fogEditMode={fogEditMode}

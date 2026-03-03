@@ -40,7 +40,8 @@
       "noAssets": "No assets",
       "selectTool": "Click element to select",
       "clickToDeselect": "Click again to deselect",
-      "hintLeftRight": "LMB = action | RMB = remove"
+      "hintLeftRight": "LMB = action | RMB = remove",
+      "tokenEraser": "Token eraser"
     },
     "notes": {
       "title": "Notepads",
@@ -234,6 +235,20 @@
       "invalidTemplateExtension": "Template must be a .html or .htm file.",
       "invalidPdfExtension": "File must be in .pdf format.",
       "tooBigPdf": "PDF is too large for server limits – such big files must be uploaded manually on the server."
+    },
+    "token": {
+      "upperLabelPlaceholder": "Top label",
+      "lowerLabelPlaceholder": "Bottom label",
+      "editTitle": "Edit token",
+      "sizeDecreaseTitle": "Decrease size by 20%",
+      "sizeIncreaseTitle": "Increase size by 20%",
+      "saveTitle": "Save changes",
+      "cancelTitle": "Cancel",
+      "deleteTitle": "Delete token",
+      "deleteConfirmTitle": "Confirm token removal",
+      "deleteConfirmQuestion": "Do you want to delete this token?",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel"
     }
   },
   "pl": {
@@ -277,7 +292,8 @@
       "noAssets": "Brak elementów",
       "selectTool": "Kliknij element aby wybrać",
       "clickToDeselect": "Kliknij ponownie aby odznaczyć",
-      "hintLeftRight": "LPM = akcja | PPM = usuń"
+      "hintLeftRight": "LPM = akcja | PPM = usuń",
+      "tokenEraser": "Gumka tokenów"
     },
     "notes": {
       "title": "Notatniki",
@@ -471,6 +487,20 @@
       "invalidTemplateExtension": "Szablon musi być plikiem .html lub .htm.",
       "invalidPdfExtension": "Plik musi być w formacie .pdf.",
       "tooBigPdf": "Plik PDF jest zbyt duży dla ograniczeń serwera – tak duże materiały trzeba wgrać ręcznie na serwer."
+    },
+    "token": {
+      "upperLabelPlaceholder": "Etykieta górna",
+      "lowerLabelPlaceholder": "Etykieta dolna",
+      "editTitle": "Edytuj token",
+      "sizeDecreaseTitle": "Zmniejsz rozmiar o 20%",
+      "sizeIncreaseTitle": "Zwiększ rozmiar o 20%",
+      "saveTitle": "Zapisz zmiany",
+      "cancelTitle": "Anuluj",
+      "deleteTitle": "Usuń token",
+      "deleteConfirmTitle": "Potwierdź usunięcie tokena",
+      "deleteConfirmQuestion": "Czy chcesz usunąć ten token?",
+      "deleteConfirm": "Usuń",
+      "deleteCancel": "Anuluj"
     }
   }
 }

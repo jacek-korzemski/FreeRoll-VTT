@@ -13,6 +13,7 @@ const Grid = forwardRef(function Grid(props, ref) {
     selectedAsset,
     selectedType,
     isEraserActive,
+    isTokenEraserActive,
     fogBitmap,
     fogEnabled,
     fogEditMode,
@@ -91,10 +92,11 @@ const Grid = forwardRef(function Grid(props, ref) {
     if (e.target.closest('.fog-canvas.editing')) return false
     if (selectedAsset) return false
     if (isEraserActive) return false
+    if (isTokenEraserActive) return false
     if (fogEditMode) return false
     if (pingMode) return false
     return true
-  }, [selectedAsset, isEraserActive, fogEditMode, pingMode])
+  }, [selectedAsset, isEraserActive, isTokenEraserActive, fogEditMode, pingMode])
 
   const handleMouseDown = useCallback((e) => {
     if (e.button !== 0) return
@@ -195,6 +197,7 @@ const Grid = forwardRef(function Grid(props, ref) {
 
   const handleTokenDragStart = useCallback((token, e) => {
     if (isEraserActive) return
+    if (isTokenEraserActive) return
     if (fogEditMode) return
     if (pingMode) return
     
@@ -207,28 +210,12 @@ const Grid = forwardRef(function Grid(props, ref) {
       setDraggedToken(token)
       setDragPosition(pos)
     }
-  }, [getPixelPosition, getClientCoords, isEraserActive, fogEditMode, pingMode])
+  }, [getPixelPosition, getClientCoords, isEraserActive, isTokenEraserActive, fogEditMode, pingMode])
 
   const handleContextMenu = useCallback((e) => {
     e.preventDefault()
     onDeselectPlacement?.()
-    if (isEraserActive) return
-    if (fogEditMode) return
-    if (pingMode) return
-    const cell = getCellFromMousePosition(e.clientX, e.clientY)
-    if (!cell) return
-
-    const token = tokens.find(t => t.x === cell.x && t.y === cell.y)
-    if (token) {
-      onRemoveToken(token.id)
-      return
-    }
-
-    const element = mapElements.find(el => el.x === cell.x && el.y === cell.y)
-    if (element) {
-      onRemoveMapElement(element.id)
-    }
-  }, [getCellFromMousePosition, tokens, mapElements, onRemoveToken, onRemoveMapElement, isEraserActive, fogEditMode, pingMode, onDeselectPlacement])
+  }, [onDeselectPlacement])
 
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
@@ -289,10 +276,11 @@ const Grid = forwardRef(function Grid(props, ref) {
   const containerClasses = [
     'grid-container',
     isEraserActive && 'eraser-mode',
+    isTokenEraserActive && 'token-eraser-mode',
     fogEditMode && 'fog-edit-mode',
     pingMode && 'ping-mode',
     isPanning && 'panning',
-    (!selectedAsset && !isEraserActive && !fogEditMode && !pingMode) && 'can-pan'
+    (!selectedAsset && !isEraserActive && !isTokenEraserActive && !fogEditMode && !pingMode) && 'can-pan'
   ].filter(Boolean).join(' ')
 
   return (
@@ -349,6 +337,9 @@ const Grid = forwardRef(function Grid(props, ref) {
               dragPosition={draggedToken?.id === token.id ? dragPosition : null}
               onDragStart={handleTokenDragStart}
               onTokenUpdate={onTokenUpdate}
+              onRemoveToken={onRemoveToken}
+              isTokenEraserActive={isTokenEraserActive}
+              onTokenErase={onRemoveToken}
               basePath={basePath}
             />
           ))}

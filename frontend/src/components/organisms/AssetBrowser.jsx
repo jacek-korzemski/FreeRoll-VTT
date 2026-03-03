@@ -26,9 +26,13 @@ function AssetBrowser({
   isEraserActive,
   hasMapElements,
   onToggleEraser,
+  isTokenEraserActive,
+  hasTokens,
+  onToggleTokenEraser,
 }) {
   const showPingTool = assetType === 'map'
   const showEraser = assetType === 'map'
+  const showTokenEraser = assetType === 'token'
 
   return (
     <div ref={sectionRef} className="sidebar-section-assets">
@@ -52,6 +56,15 @@ function AssetBrowser({
           isEraserActive={isEraserActive}
           hasMapElements={hasMapElements}
           onToggleEraser={onToggleEraser}
+        />
+      )}
+
+      {showTokenEraser && (
+        <EraserTool
+          isActive={!!isTokenEraserActive}
+          hasItems={!!hasTokens}
+          onToggle={onToggleTokenEraser}
+          labelKey="sidebar.tokenEraser"
         />
       )}
 

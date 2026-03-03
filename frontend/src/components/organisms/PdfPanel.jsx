@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, Component } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import { API_BASE, BASE_PATH } from '../../../config'
+import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import {
   getLocalPdfMeta,
@@ -67,6 +67,7 @@ function PdfPanel() {
   const [missingIds, setMissingIds] = useState(new Set())
   const [numPages, setNumPages] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sliderValue, setSliderValue] = useState(100)
   const blobUrlRef = useRef(null)
   const serverCacheRef = useRef(new Map())
   const viewerRef = useRef(null)
@@ -231,8 +232,15 @@ function PdfPanel() {
 
   const hasPdfs = serverPdfs.length > 0 || localPdfs.length > 0
   const MAX_CANVAS_WIDTH = 1024
-  const pageWidth = viewerWidth
+  const ZOOM_MIN = 50
+  const ZOOM_MAX = 200
+  const ZOOM_STEP = 10
+  const zoomPercent = Math.round(sliderValue / ZOOM_STEP) * ZOOM_STEP
+  const basePageWidth = viewerWidth
     ? Math.min(viewerWidth - 20, MAX_CANVAS_WIDTH)
+    : undefined
+  const pageWidth = basePageWidth != null
+    ? basePageWidth * (zoomPercent / 100)
     : undefined
 
   return (
@@ -295,30 +303,70 @@ function PdfPanel() {
         {sidebarOpen ? '◀' : '▶'}
       </button>
 
-      <div className="pdf-viewer" ref={viewerRef}>
-        {loading && <div className="pdf-placeholder">{t('pdf.loading')}</div>}
-        {!loading && !pdfUrl && (
-          <div className="pdf-placeholder">
-            {hasPdfs ? t('pdf.selectPdf') : t('pdf.noPdfs')}
-          </div>
-        )}
-        {!loading && pdfUrl && (
-          <PdfErrorBoundary ref={errorBoundaryRef}>
-            <Document
-              file={pdfUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
-              loading={<div className="pdf-placeholder">{t('pdf.loading')}</div>}
+      <div className="pdf-viewer-area">
+        <div className="pdf-viewer" ref={viewerRef}>
+          {loading && <div className="pdf-placeholder">{t('pdf.loading')}</div>}
+          {!loading && !pdfUrl && (
+            <div className="pdf-placeholder">
+              {hasPdfs ? t('pdf.selectPdf') : t('pdf.noPdfs')}
+            </div>
+          )}
+          {!loading && pdfUrl && (
+            <PdfErrorBoundary ref={errorBoundaryRef}>
+              <Document
+                file={pdfUrl}
+                onLoadSuccess={onDocumentLoadSuccess}
+                loading={<div className="pdf-placeholder">{t('pdf.loading')}</div>}
+              >
+                {numPages && Array.from({ length: numPages }, (_, i) => (
+                  <LazyPage
+                    key={i + 1}
+                    pageNumber={i + 1}
+                    width={pageWidth}
+                    scrollRoot={viewerRef}
+                  />
+                ))}
+              </Document>
+            </PdfErrorBoundary>
+          )}
+        </div>
+        {pdfUrl && (
+          <div className="pdf-zoom-bar">
+            <button
+              className="pdf-zoom-btn"
+              type="button"
+              onClick={() => setSliderValue(prev => Math.max(ZOOM_MIN, Math.round(prev / ZOOM_STEP) * ZOOM_STEP - ZOOM_STEP))}
+              disabled={zoomPercent <= ZOOM_MIN}
             >
-              {numPages && Array.from({ length: numPages }, (_, i) => (
-                <LazyPage
-                  key={i + 1}
-                  pageNumber={i + 1}
-                  width={pageWidth}
-                  scrollRoot={viewerRef}
-                />
-              ))}
-            </Document>
-          </PdfErrorBoundary>
+              −
+            </button>
+            <input
+              className="pdf-zoom-slider"
+              type="range"
+              min={ZOOM_MIN}
+              max={ZOOM_MAX}
+              step={1}
+              value={sliderValue}
+              onChange={e => setSliderValue(Number(e.target.value))}
+            />
+            <span className="pdf-zoom-value">{zoomPercent}%</span>
+            <button
+              className="pdf-zoom-btn pdf-zoom-btn-reset"
+              type="button"
+              onClick={() => setSliderValue(100)}
+              disabled={zoomPercent === 100}
+            >
+              100%
+            </button>
+            <button
+              className="pdf-zoom-btn"
+              type="button"
+              onClick={() => setSliderValue(prev => Math.min(ZOOM_MAX, Math.round(prev / ZOOM_STEP) * ZOOM_STEP + ZOOM_STEP))}
+              disabled={zoomPercent >= ZOOM_MAX}
+            >
+              +
+            </button>
+          </div>
         )}
       </div>
     </div>

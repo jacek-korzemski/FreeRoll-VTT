@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react'
+import { t } from '../../lang'
 
-function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePath, onTokenUpdate }) {
+function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePath, onTokenUpdate, onRemoveToken, isTokenEraserActive = false, onTokenErase }) {
   const [isHovered, setIsHovered] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isDeleteConfirmMode, setIsDeleteConfirmMode] = useState(false)
   const [editSize, setEditSize] = useState(token.size ?? 1)
   const [editUpperLabel, setEditUpperLabel] = useState(token.upperLabel ?? '')
   const [editLowerLabel, setEditLowerLabel] = useState(token.lowerLabel ?? '')
@@ -17,13 +19,15 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
     setEditSize(token.size ?? 1)
     setEditUpperLabel(token.upperLabel ?? '')
     setEditLowerLabel(token.lowerLabel ?? '')
+    setIsEditMode(false)
+    setIsDeleteConfirmMode(false)
   }, [token.id, token.size, token.upperLabel, token.lowerLabel])
 
   const handleMouseEnter = useCallback(() => {
-    if (!isDragging && !isEditMode) {
+    if (!isDragging && !isEditMode && !isDeleteConfirmMode) {
       setIsHovered(true)
     }
-  }, [isDragging, isEditMode])
+  }, [isDragging, isEditMode, isDeleteConfirmMode])
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false)
@@ -33,6 +37,15 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
     e.preventDefault()
     e.stopPropagation()
     setIsEditMode(true)
+    setIsDeleteConfirmMode(false)
+    setIsHovered(false)
+  }, [])
+
+  const handleTrashClick = useCallback((e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDeleteConfirmMode(true)
+    setIsEditMode(false)
     setIsHovered(false)
   }, [])
 
@@ -45,6 +58,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
       })
     }
     setIsEditMode(false)
+    setIsDeleteConfirmMode(false)
   }, [token.id, editSize, editUpperLabel, editLowerLabel, onTokenUpdate])
 
   const handleCancel = useCallback(() => {
@@ -52,7 +66,20 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
     setEditUpperLabel(token.upperLabel ?? '')
     setEditLowerLabel(token.lowerLabel ?? '')
     setIsEditMode(false)
+    setIsDeleteConfirmMode(false)
   }, [token.size, token.upperLabel, token.lowerLabel])
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (onRemoveToken) {
+      onRemoveToken(token.id)
+    }
+    setIsDeleteConfirmMode(false)
+    setIsEditMode(false)
+  }, [onRemoveToken, token.id])
+
+  const handleDeleteCancel = useCallback(() => {
+    setIsDeleteConfirmMode(false)
+  }, [])
 
   const handleIncreaseSize = useCallback((e) => {
     e.preventDefault()
@@ -68,9 +95,9 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
 
   const handleMouseDown = useCallback((e) => {
     if (e.button !== 0) return
-    if (isEditMode) return
+    if (isEditMode || isDeleteConfirmMode || isTokenEraserActive) return
     
-    if (e.target.closest('.token-gear, .token-edit-controls, .token-size-controls, .token-labels, .token-save-controls')) {
+    if (e.target.closest('.token-gear, .token-trash, .token-edit-controls, .token-size-controls, .token-labels, .token-save-controls, .token-delete-controls, .token-delete-buttons')) {
       return
     }
 
@@ -101,12 +128,12 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
     
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
-  }, [token, onDragStart, isEditMode])
+  }, [token, onDragStart, isEditMode, isDeleteConfirmMode, isTokenEraserActive])
 
   const handleTouchStart = useCallback((e) => {
-    if (isEditMode) return
+    if (isEditMode || isDeleteConfirmMode || isTokenEraserActive) return
     
-    if (e.target.closest('.token-gear, .token-edit-controls, .token-size-controls, .token-labels, .token-save-controls')) {
+    if (e.target.closest('.token-gear, .token-trash, .token-edit-controls, .token-size-controls, .token-labels, .token-save-controls, .token-delete-controls, .token-delete-buttons')) {
       return
     }
 
@@ -122,6 +149,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
       if (!hasMovedRef.current) {
         isLongPressRef.current = true
         setIsEditMode(true)
+        setIsDeleteConfirmMode(false)
         setIsHovered(false)
       }
     }, 500)
@@ -154,7 +182,14 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
     
     document.addEventListener('touchmove', handleTouchMove)
     document.addEventListener('touchend', handleTouchEnd)
-  }, [token, onDragStart, isEditMode])
+  }, [token, onDragStart, isEditMode, isDeleteConfirmMode])
+
+  const handleTokenClickInEraseMode = useCallback((e) => {
+    if (!isTokenEraserActive || !onTokenErase) return
+    e.preventDefault()
+    e.stopPropagation()
+    onTokenErase(token.id)
+  }, [isTokenEraserActive, onTokenErase, token.id])
 
   useEffect(() => {
     return () => {
@@ -177,7 +212,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
 
   return (
     <div
-      className={`token ${isDragging ? 'dragging' : ''} ${isEditMode ? 'edit-mode' : ''}`}
+      className={`token ${isDragging ? 'dragging' : ''} ${(isEditMode || isDeleteConfirmMode) ? 'edit-mode' : ''}`}
       style={{
         left: posX,
         top: posY
@@ -186,6 +221,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
       onMouseLeave={handleMouseLeave}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
+      onClick={handleTokenClickInEraseMode}
     >
       {(isEditMode || token.upperLabel) && (
         <div className="token-label token-label-upper">
@@ -195,7 +231,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
               className="token-label-input"
               value={editUpperLabel}
               onChange={(e) => setEditUpperLabel(e.target.value)}
-              placeholder="Label górny"
+              placeholder={t('token.upperLabelPlaceholder')}
               onClick={(e) => e.stopPropagation()}
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
@@ -207,7 +243,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
         </div>
       )}
 
-      {isHovered && !isEditMode && !isDragging && (
+      {isHovered && !isEditMode && !isDeleteConfirmMode && !isDragging && (
         <button
           className="token-gear"
           onClick={handleGearClick}
@@ -216,14 +252,29 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
             e.preventDefault()
           }}
           onTouchStart={(e) => e.stopPropagation()}
-          title="Edytuj token"
+          title={t('token.editTitle')}
         >
           ⚙️
         </button>
       )}
 
+      {isHovered && !isEditMode && !isDeleteConfirmMode && !isDragging && (
+        <button
+          className="token-trash"
+          onClick={handleTrashClick}
+          onMouseDown={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+          }}
+          onTouchStart={(e) => e.stopPropagation()}
+          title={t('token.deleteTitle')}
+        >
+          🗑️
+        </button>
+      )}
+
       <div className="token-content">
-        {isEditMode && (
+        {isEditMode && !isDeleteConfirmMode && (
           <div className="token-edit-controls">
             <div className="token-size-controls">
               <button
@@ -231,7 +282,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
                 onClick={handleDecreaseSize}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
-                title="Zmniejsz o 20%"
+                title={t('token.sizeDecreaseTitle')}
               >
                 −
               </button>
@@ -240,7 +291,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
                 onClick={handleIncreaseSize}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
-                title="Zwiększ o 20%"
+                title={t('token.sizeIncreaseTitle')}
               >
                 +
               </button>
@@ -252,7 +303,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
                 onClick={handleSave}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
-                title="Zapisz zmiany"
+                title={t('token.saveTitle')}
               >
                 ✓
               </button>
@@ -261,9 +312,35 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
                 onClick={handleCancel}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
-                title="Anuluj"
+                title={t('token.cancelTitle')}
               >
                 ✕
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isDeleteConfirmMode && (
+          <div className="token-delete-controls" title={t('token.deleteConfirmTitle')}>
+            <div className="token-delete-message">
+              {t('token.deleteConfirmQuestion')}
+            </div>
+            <div className="token-delete-buttons">
+              <button
+                className="token-delete-btn token-delete-confirm"
+                onClick={handleDeleteConfirm}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+              >
+                {t('token.deleteConfirm')}
+              </button>
+              <button
+                className="token-delete-btn token-delete-cancel"
+                onClick={handleDeleteCancel}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+              >
+                {t('token.deleteCancel')}
               </button>
             </div>
           </div>
@@ -288,7 +365,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
               className="token-label-input"
               value={editLowerLabel}
               onChange={(e) => setEditLowerLabel(e.target.value)}
-              placeholder="Label dolny"
+              placeholder={t('token.lowerLabelPlaceholder')}
               onClick={(e) => e.stopPropagation()}
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}

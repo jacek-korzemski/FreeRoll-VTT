@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
-import { templateModelToHtml } from '../../utils/templateEditorUtils'
+import { templateModelToHtml, htmlToModel } from '../../utils/templateEditorUtils'
 
 const ROW_TYPES = [
   { value: 'text', labelKey: 'rowTypeText' },
@@ -165,11 +165,25 @@ function TemplateEmojiPicker({ value, onChange }) {
   )
 }
 
-function TemplateEditor({ onSave, onCancel }) {
+function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
+  const isEditMode = Boolean(initialTemplateId && initialHtml)
   const [templateName, setTemplateName] = useState('')
   const [sections, setSections] = useState([defaultSection()])
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
+  const [loadError, setLoadError] = useState('')
+
+  useEffect(() => {
+    if (!isEditMode || !initialHtml) return
+    const model = htmlToModel(initialHtml)
+    if (model) {
+      setTemplateName(model.templateName || '')
+      setSections(Array.isArray(model.sections) && model.sections.length > 0 ? model.sections : [defaultSection()])
+      setLoadError('')
+    } else {
+      setLoadError(t('templates.cannotLoadForEdit') || 'Cannot load this template for editing.')
+    }
+  }, [isEditMode, initialHtml])
 
   const updateSection = useCallback((sectionIndex, patch) => {
     setSections((prev) => prev.map((s, i) => (i === sectionIndex ? { ...s, ...patch } : s)))
@@ -288,11 +302,14 @@ function TemplateEditor({ onSave, onCancel }) {
     setSaveError('')
     try {
       const html = templateModelToHtml({ templateName: name, sections })
+      const body = isEditMode && initialTemplateId
+        ? { id: initialTemplateId, name, html }
+        : { name, html }
       const res = await fetch(`${API_BASE}?action=save-template`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, html }),
+        body: JSON.stringify(body),
       })
       const data = await res.json()
       if (data.success) {
@@ -305,7 +322,7 @@ function TemplateEditor({ onSave, onCancel }) {
     } finally {
       setSaving(false)
     }
-  }, [templateName, sections, onSave])
+  }, [templateName, sections, onSave, isEditMode, initialTemplateId])
 
   const model = { templateName: templateName.trim() || 'Untitled', sections }
   const previewHtml = templateModelToHtml(model)
@@ -314,17 +331,17 @@ function TemplateEditor({ onSave, onCancel }) {
   return (
     <div
       className="note-template-modal template-editor-modal"
-      onClick={onCancel}
       role="dialog"
       aria-modal="true"
     >
-      <div
-        className="note-template-modal-content template-editor-content"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="note-template-modal-content template-editor-content">
         <div className="template-editor-header">
-          <h3>{t('templates.createInEditor')}</h3>
+          <h3>{isEditMode ? t('templates.editTemplate') : t('templates.createInEditor')}</h3>
         </div>
+
+        {loadError && (
+          <div className="template-editor-error template-editor-load-error">{loadError}</div>
+        )}
 
         <div className="template-editor-scroll">
           <div className="template-editor-layout">

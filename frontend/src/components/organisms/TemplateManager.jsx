@@ -4,6 +4,7 @@ import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import TemplateEditor from './TemplateEditor'
 import { executeDiceRoll } from '../../utils/diceRollUtils'
+import { detectTemplateKind, htmlToModel } from '../../utils/templateEditorUtils'
 
 function extractBodyContent(html) {
   const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
@@ -18,6 +19,10 @@ function TemplateManager() {
   const [previewHtml, setPreviewHtml] = useState('')
   const [previewName, setPreviewName] = useState('')
   const [showEditor, setShowEditor] = useState(false)
+  const [editTemplateId, setEditTemplateId] = useState(null)
+  const [editHtml, setEditHtml] = useState(null)
+  const [showCustomWarning, setShowCustomWarning] = useState(false)
+  const [cloning, setCloning] = useState(false)
   const [uploading, setUploading] = useState(false)
   const previewContainerRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -87,7 +92,60 @@ function TemplateManager() {
     setPreviewId(null)
     setPreviewHtml('')
     setPreviewName('')
+    setShowCustomWarning(false)
   }, [])
+
+  const handleEditTemplate = useCallback(() => {
+    const kind = detectTemplateKind(previewHtml)
+    if (kind === 'editor' || kind === 'custom-clone') {
+      const model = htmlToModel(previewHtml)
+      if (!model) {
+        alert(t('templates.cannotLoadForEdit'))
+        return
+      }
+      setEditTemplateId(previewId)
+      setEditHtml(previewHtml)
+      closePreview()
+      setShowEditor(true)
+    } else {
+      setShowCustomWarning(true)
+    }
+  }, [previewHtml, previewId, closePreview])
+
+  const handleCustomOpenReadOnly = useCallback(() => {
+    setShowCustomWarning(false)
+  }, [])
+
+  const handleDuplicateAndEdit = useCallback(async () => {
+    if (!previewId) return
+    setCloning(true)
+    try {
+      const res = await fetch(`${API_BASE}?action=clone-template`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: previewId }),
+      })
+      const data = await res.json()
+      if (!data.success || !data.template?.id) {
+        alert(data.error || t('templates.saveFailed'))
+        return
+      }
+      const newId = data.template.id
+      const getRes = await fetch(`${API_BASE}?action=get-template&id=${encodeURIComponent(newId)}`, {
+        credentials: 'include',
+      })
+      const newHtml = await getRes.text()
+      closePreview()
+      setEditTemplateId(newId)
+      setEditHtml(newHtml)
+      setShowEditor(true)
+    } catch {
+      alert(t('templates.saveFailed'))
+    } finally {
+      setCloning(false)
+    }
+  }, [previewId, closePreview])
 
   // Bind preview container for dice rolls (same logic as NoteEditor)
   useEffect(() => {
@@ -143,8 +201,16 @@ function TemplateManager() {
 
   const handleEditorSaved = useCallback(() => {
     setShowEditor(false)
+    setEditTemplateId(null)
+    setEditHtml(null)
     fetchTemplates()
   }, [fetchTemplates])
+
+  const handleEditorCancel = useCallback(() => {
+    setShowEditor(false)
+    setEditTemplateId(null)
+    setEditHtml(null)
+  }, [])
 
   return (
     <div className="template-manager">
@@ -210,14 +276,10 @@ function TemplateManager() {
         createPortal(
           <div
             className="note-template-modal template-manager-preview-modal"
-            onClick={closePreview}
             role="dialog"
             aria-modal="true"
           >
-            <div
-              className="note-template-modal-content template-manager-preview-content"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <div className="note-template-modal-content template-manager-preview-content">
               <h3>{previewName}</h3>
               <div className="template-manager-preview-body" ref={previewContainerRef}>
                 {previewHtml && (() => {
@@ -229,6 +291,41 @@ function TemplateManager() {
                 <button type="button" onClick={closePreview} className="note-template-cancel">
                   {t('notes.templateCancel')}
                 </button>
+                <button
+                  type="button"
+                  className="notes-add-btn template-manager-btn-edit"
+                  onClick={handleEditTemplate}
+                >
+                  {t('templates.editTemplate')}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {showCustomWarning &&
+        createPortal(
+          <div
+            className="note-template-modal template-manager-custom-warning-modal"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="note-template-modal-content template-manager-custom-warning-content">
+              <h3>{t('templates.templateCustomWarningTitle')}</h3>
+              <p>{t('templates.templateCustomWarningMessage')}</p>
+              <div className="note-template-modal-footer">
+                <button type="button" onClick={handleCustomOpenReadOnly} className="note-template-cancel">
+                  {t('templates.templateOpenReadOnly')}
+                </button>
+                <button
+                  type="button"
+                  className="notes-add-btn"
+                  onClick={handleDuplicateAndEdit}
+                  disabled={cloning}
+                >
+                  {cloning ? '...' : t('templates.templateDuplicateAndEdit')}
+                </button>
               </div>
             </div>
           </div>,
@@ -239,7 +336,9 @@ function TemplateManager() {
         createPortal(
           <TemplateEditor
             onSave={handleEditorSaved}
-            onCancel={() => setShowEditor(false)}
+            onCancel={handleEditorCancel}
+            initialTemplateId={editTemplateId || undefined}
+            initialHtml={editHtml || undefined}
           />,
           document.body
         )}

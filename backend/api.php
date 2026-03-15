@@ -204,6 +204,30 @@ function getSceneById(&$state, $sceneId) {
     return null;
 }
 
+/**
+ * Ensure vtt-template meta is present in HTML (for editor/clone distinction).
+ * @param string $html
+ * @param string|null $source e.g. 'custom-clone' for cloned custom templates
+ * @return string
+ */
+function injectTemplateMeta($html, $source = null) {
+    $content = 'editor;v=1';
+    if ($source !== null && $source !== '') {
+        $content .= ';source=' . preg_replace('/[^a-z0-9_-]/i', '', $source);
+    }
+    $metaTag = '<meta name="vtt-template" content="' . htmlspecialchars($content) . '">';
+    if (preg_match('/<meta\s+name=["\']vtt-template["\'][^>]*>/i', $html)) {
+        return preg_replace('/<meta\s+name=["\']vtt-template["\'][^>]*>/i', $metaTag, $html, 1);
+    }
+    if (preg_match('/<head([^>]*)>/i', $html)) {
+        return preg_replace('/<head([^>]*)>/i', '<head$1>' . "\n  " . $metaTag, $html, 1);
+    }
+    if (preg_match('/<body([^>]*)>/i', $html)) {
+        return preg_replace('/<body([^>]*)>/i', $metaTag . "\n<body$1>", $html, 1);
+    }
+    return $metaTag . "\n" . $html;
+}
+
 // ============================================
 // API
 // ============================================
@@ -984,6 +1008,10 @@ try {
                     $name = is_string($name) ? trim($name) : '';
                     $html = $input['html'] ?? '';
                     $html = is_string($html) ? $html : '';
+                    $templateId = isset($input['id']) ? basename(trim($input['id'])) : '';
+                    if (preg_match('/[^A-Za-z0-9_.-]/', $templateId) || !preg_match('/\.html?$/i', $templateId)) {
+                        $templateId = '';
+                    }
                     if ($name === '') {
                         http_response_code(400);
                         echo json_encode(['success' => false, 'error' => 'Template name is required']);
@@ -994,21 +1022,27 @@ try {
                         echo json_encode(['success' => false, 'error' => 'Template rejected – contains <script> tag']);
                         break;
                     }
-                    $slug = preg_replace('/[^A-Za-z0-9_-]/', '_', $name);
-                    if ($slug === '') {
-                        $slug = 'template';
-                    }
-                    $filename = $slug . '.html';
+                    $html = injectTemplateMeta($html, null);
                     $templatesDir = __DIR__ . '/assets/templates';
                     if (!is_dir($templatesDir)) {
                         mkdir($templatesDir, 0755, true);
                     }
-                    $filePath = $templatesDir . '/' . $filename;
-                    $i = 1;
-                    while (file_exists($filePath)) {
-                        $filename = $slug . '-' . $i . '.html';
+                    if ($templateId !== '' && is_file($templatesDir . '/' . $templateId)) {
+                        $filePath = $templatesDir . '/' . $templateId;
+                        $filename = $templateId;
+                    } else {
+                        $slug = preg_replace('/[^A-Za-z0-9_-]/', '_', $name);
+                        if ($slug === '') {
+                            $slug = 'template';
+                        }
+                        $filename = $slug . '.html';
                         $filePath = $templatesDir . '/' . $filename;
-                        $i++;
+                        $i = 1;
+                        while (file_exists($filePath)) {
+                            $filename = $slug . '-' . $i . '.html';
+                            $filePath = $templatesDir . '/' . $filename;
+                            $i++;
+                        }
                     }
                     if (file_put_contents($filePath, $html) === false) {
                         http_response_code(500);
@@ -1016,6 +1050,50 @@ try {
                         break;
                     }
                     echo json_encode(['success' => true, 'id' => $filename]);
+                    break;
+
+                case 'clone-template':
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $cloneSourceId = isset($input['id']) ? basename(trim($input['id'])) : '';
+                    if ($cloneSourceId === '' || !preg_match('/\.html?$/i', $cloneSourceId)) {
+                        http_response_code(400);
+                        echo json_encode(['success' => false, 'error' => 'Invalid template id']);
+                        break;
+                    }
+                    $templatesDirClone = __DIR__ . '/assets/templates';
+                    $srcPath = $templatesDirClone . '/' . $cloneSourceId;
+                    if (!is_file($srcPath)) {
+                        http_response_code(404);
+                        echo json_encode(['success' => false, 'error' => 'Template not found']);
+                        break;
+                    }
+                    $cloneName = isset($input['name']) ? trim($input['name']) : '';
+                    $baseName = pathinfo($cloneSourceId, PATHINFO_FILENAME);
+                    $baseSlug = $cloneName !== '' ? preg_replace('/[^A-Za-z0-9_-]/', '_', $cloneName) : $baseName . '_clone';
+                    if ($baseSlug === '') {
+                        $baseSlug = 'template_clone';
+                    }
+                    $newFilename = $baseSlug . '.html';
+                    $newPath = $templatesDirClone . '/' . $newFilename;
+                    $idx = 1;
+                    while (file_exists($newPath)) {
+                        $newFilename = $baseSlug . '-' . $idx . '.html';
+                        $newPath = $templatesDirClone . '/' . $newFilename;
+                        $idx++;
+                    }
+                    $cloneHtml = file_get_contents($srcPath);
+                    $cloneHtml = injectTemplateMeta($cloneHtml, 'custom-clone');
+                    if (file_put_contents($newPath, $cloneHtml) === false) {
+                        http_response_code(500);
+                        echo json_encode(['success' => false, 'error' => 'Failed to clone template']);
+                        break;
+                    }
+                    $displayName = ucfirst(str_replace(['_', '-'], ' ', pathinfo($newFilename, PATHINFO_FILENAME)));
+                    echo json_encode(['success' => true, 'template' => ['id' => $newFilename, 'name' => $displayName]]);
                     break;
 
                 case 'upload-asset':

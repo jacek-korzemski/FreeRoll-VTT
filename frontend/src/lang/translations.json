@@ -297,7 +297,13 @@
       "duplicateRow": "Duplicate row",
       "duplicateCell": "Duplicate cell",
       "saveSuccess": "Template saved",
-      "saveFailed": "Failed to save template"
+      "saveFailed": "Failed to save template",
+      "editTemplate": "Edit template",
+      "templateCustomWarningTitle": "This template was not created in the editor",
+      "templateCustomWarningMessage": "Editing it directly may cause inconsistencies. You can keep preview only or duplicate and try to edit the duplicate.",
+      "templateOpenReadOnly": "Open read-only",
+      "templateDuplicateAndEdit": "Duplicate and try to edit",
+      "cannotLoadForEdit": "This template cannot be loaded for editing in the editor."
     }
   },
   "pl": {
@@ -598,7 +604,13 @@
       "duplicateRow": "Duplikuj wiersz",
       "duplicateCell": "Duplikuj komórkę",
       "saveSuccess": "Szablon zapisany",
-      "saveFailed": "Nie udało się zapisać szablonu"
+      "saveFailed": "Nie udało się zapisać szablonu",
+      "editTemplate": "Edytuj szablon",
+      "templateCustomWarningTitle": "Ten szablon nie został utworzony w edytorze",
+      "templateCustomWarningMessage": "Bezpośrednia edycja może być niespójna. Możesz otworzyć go tylko do odczytu (podgląd) albo zduplikować i spróbować edytować duplikat.",
+      "templateOpenReadOnly": "Otwórz tylko do odczytu",
+      "templateDuplicateAndEdit": "Duplikuj i spróbuj edytować",
+      "cannotLoadForEdit": "Nie można załadować tego szablonu do edycji w edytorze."
     }
   }
 }

@@ -91,6 +91,7 @@ export function templateModelToHtml(model, lang = 'en') {
 
 <head>
   <meta charset="UTF-8">
+  <meta name="vtt-template" content="editor;v=1">
   <title>${title}</title>
 </head>
 
@@ -98,4 +99,114 @@ export function templateModelToHtml(model, lang = 'en') {
 
 </html>
 `
+}
+
+/**
+ * Detect template kind from HTML (editor vs custom) using vtt-template meta.
+ * @param {string} html - Full HTML document or fragment
+ * @returns {'editor' | 'custom' | 'custom-clone'}
+ */
+export function detectTemplateKind(html) {
+  if (typeof html !== 'string') return 'custom'
+  const metaMatch = html.match(/<meta[^>]+name=["']vtt-template["'][^>]*content=["']([^"']*)["']/i)
+  if (!metaMatch) return 'custom'
+  const content = (metaMatch[1] || '').trim().toLowerCase()
+  const parts = content.split(';').map((p) => p.trim())
+  const hasEditor = parts.includes('editor')
+  const fromCustomClone = parts.some((p) => p.startsWith('source=') && p.includes('custom-clone'))
+  if (hasEditor && fromCustomClone) return 'custom-clone'
+  if (hasEditor) return 'editor'
+  return 'custom'
+}
+
+/**
+ * Parse HTML (from templateModelToHtml or similar) into editor model.
+ * Expects tables with class tpl-table, section-header row, and cells with data-field / data-roll.
+ * @param {string} html - Full HTML document or fragment
+ * @returns {{ templateName: string, sections: Array<{ title: string, emoji?: string, rows: Array<{ cells: Array<Object> }> }> } | null}
+ */
+export function htmlToModel(html) {
+  if (typeof html !== 'string' || html.trim() === '') return null
+  const parser = typeof DOMParser !== 'undefined' ? new DOMParser() : null
+  if (!parser) return null
+  const doc = parser.parseFromString(html, 'text/html')
+  const tables = doc.querySelectorAll('table.tpl-table')
+  if (!tables || tables.length === 0) return null
+
+  const templateName =
+    (doc.querySelector('title') && doc.querySelector('title').textContent.trim()) || 'Untitled template'
+  const sections = []
+
+  for (const table of tables) {
+    const section = { title: 'Section', emoji: '', rows: [] }
+    const trs = table.querySelectorAll('tr')
+    if (trs.length === 0) continue
+
+    const headerTr = trs[0]
+    const headerTd = headerTr.querySelector('td.section-header')
+    if (headerTd) {
+      const raw = (headerTd.textContent || '').trim()
+      const emojiMatch = raw.match(/^(\s*[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]+\s*)/u)
+      if (emojiMatch) {
+        section.emoji = emojiMatch[1].trim()
+        section.title = raw.slice(emojiMatch[0].length).trim() || 'Section'
+      } else {
+        section.title = raw || 'Section'
+      }
+    }
+
+    for (let i = 1; i < trs.length; i++) {
+      const row = { cells: [] }
+      const tds = trs[i].querySelectorAll('td')
+      for (const td of tds) {
+        const cell = parseCell(td)
+        if (cell) row.cells.push(cell)
+      }
+      if (row.cells.length > 0) section.rows.push(row)
+    }
+
+    sections.push(section)
+  }
+
+  if (sections.length === 0) return null
+  return { templateName, sections }
+}
+
+function parseCell(td) {
+  const checkbox = td.querySelector('input[type="checkbox"][data-field]')
+  if (checkbox) {
+    const fieldId = (checkbox.getAttribute('data-field') || 'field').trim()
+    const label = (td.textContent || '').trim()
+    return { type: 'checkbox', label, fieldId }
+  }
+
+  const textarea = td.querySelector('textarea[data-field]')
+  if (textarea) {
+    const fieldId = (textarea.getAttribute('data-field') || 'field').trim()
+    const strong = td.querySelector('strong')
+    const label = strong ? (strong.textContent || '').trim() : ''
+    const size = (textarea.getAttribute('class') || '').includes('wide') ? 'wide' : 'normal'
+    return { type: 'textarea', label, fieldId, size, style: 'plain' }
+  }
+
+  const input = td.querySelector('input[type="text"][data-field]')
+  const rollBtn = td.querySelector('button[data-roll]')
+  if (input) {
+    const fieldId = (input.getAttribute('data-field') || 'field').trim()
+    const strong = td.querySelector('strong')
+    const label = strong ? (strong.textContent || '').trim() : ''
+    const cls = input.getAttribute('class') || ''
+    const size = cls.includes('wide') ? 'wide' : 'normal'
+    let style = 'plain'
+    if (cls.includes('box')) style = 'box'
+    else if (cls.includes('circle')) style = 'circle'
+    if (rollBtn) {
+      const rollFormula = (rollBtn.getAttribute('data-roll') || 'd20').trim()
+      const rollLabel = (rollBtn.getAttribute('data-roll-label') || '').trim()
+      return { type: 'textWithRoll', label, fieldId, rollFormula, rollLabel, size, style }
+    }
+    return { type: 'text', label, fieldId, size, style }
+  }
+
+  return null
 }

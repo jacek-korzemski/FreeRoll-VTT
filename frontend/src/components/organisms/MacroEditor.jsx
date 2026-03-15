@@ -363,8 +363,8 @@ function MacroEditor() {
       </div>
 
       {showInfoModal && (
-        <div className="macro-info-modal-overlay" onClick={() => setShowInfoModal(false)}>
-          <div className="macro-info-modal" onClick={e => e.stopPropagation()}>
+        <div className="macro-info-modal-overlay">
+          <div className="macro-info-modal">
             <h3>{t('macros.infoTitle')}</h3>
             <div className="macro-info-modal-body">
               <h4>{t('macros.infoWhereFieldsHeading')}</h4>

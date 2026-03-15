@@ -239,7 +239,7 @@ const SimpleWYSIWYG = forwardRef(function SimpleWYSIWYG(props, ref) {
         <div ref={editorRef} className="swysiwyg-editor" contentEditable suppressContentEditableWarning={true} data-placeholder={placeholder} onInput={handleChange} onBlur={handleChange} onKeyDown={handleKeyDown} onMouseUp={updateToolbarState} onKeyUp={updateToolbarState} />
       </div>
       {showTableModal && (
-        <div className="swysiwyg-modal active" onClick={(e) => e.target === e.currentTarget && setShowTableModal(false)}>
+        <div className="swysiwyg-modal active">
           <div className="swysiwyg-modal-content">
             <h3>Insert Table</h3>
             <div className="swysiwyg-modal-form">

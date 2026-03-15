@@ -559,8 +559,8 @@ ${content}
       </div>
 
       {showTemplateModal && (
-        <div className="note-template-modal" onClick={() => setShowTemplateModal(false)}>
-          <div className="note-template-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="note-template-modal">
+          <div className="note-template-modal-content">
             <h3>{t('notes.templateModalTitle')}</h3>
             <div className="note-template-list">
               {templatesLoading && <div className="note-template-loading">{t('notes.templateLoading')}</div>}
@@ -588,8 +588,8 @@ ${content}
       )}
 
       {showMismatchModal && (
-        <div className="note-template-modal" onClick={handleMismatchCancel}>
-          <div className="note-template-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="note-template-modal">
+          <div className="note-template-modal-content">
             <h3>{t('notes.jsonMismatchTitle')}</h3>
             <p className="note-mismatch-message">
               {t('notes.jsonMismatchMessage', {

@@ -135,6 +135,7 @@ function getState() {
         $initialState = [
             'activeSceneId' => $defaultScene['id'],
             'scenes' => [$defaultScene],
+            'counters' => [],
             'lastUpdate' => time(),
             'version' => 0
         ];
@@ -161,8 +162,55 @@ function getState() {
         ];
     }
     
+    if (!isset($state['counters']) || !is_array($state['counters'])) {
+        $state['counters'] = [];
+    }
+    
     return $state;
 }
+
+function sanitizeClientId($id) {
+    if (!is_string($id)) {
+        return '';
+    }
+    if (!preg_match('/^[a-zA-Z0-9-]{8,64}$/', $id)) {
+        return '';
+    }
+    return $id;
+}
+
+function sanitizeCounterId($id) {
+    if (!is_string($id)) {
+        return '';
+    }
+    if (!preg_match('/^[a-zA-Z0-9-]{1,48}$/', $id)) {
+        return '';
+    }
+    return $id;
+}
+
+function canEditCounter($counter, $clientId) {
+    if (isGameMaster()) {
+        return true;
+    }
+    return isset($counter['ownerId']) && $counter['ownerId'] === $clientId && $clientId !== '';
+}
+
+function findCounterIndex(&$state, $counterId) {
+    if (!isset($state['counters']) || !is_array($state['counters'])) {
+        return null;
+    }
+    foreach ($state['counters'] as $idx => $c) {
+        if (($c['id'] ?? '') === $counterId) {
+            return $idx;
+        }
+    }
+    return null;
+}
+
+const COUNTER_TITLE_MAX = 120;
+const COUNTER_NOTES_MAX = 2000;
+const COUNTER_DURATION_MAX_SEC = 604800;
 
 function saveState($state) {
     global $dataFile;
@@ -274,7 +322,9 @@ try {
                                 return ['id' => $s['id'], 'name' => $s['name']];
                             }, $state['scenes']),
                             'scene' => $activeScene,
-                            'version' => $state['version']
+                            'counters' => $state['counters'] ?? [],
+                            'version' => $state['version'],
+                            'serverNow' => time()
                         ]
                     ]);
                     break;
@@ -300,14 +350,17 @@ try {
                                     return ['id' => $s['id'], 'name' => $s['name']];
                                 }, $state['scenes']),
                                 'scene' => $activeScene,
-                                'version' => $state['version']
+                                'counters' => $state['counters'] ?? [],
+                                'version' => $state['version'],
+                                'serverNow' => time()
                             ]
                         ]);
                     } else {
                         echo json_encode([
                             'success' => true,
                             'hasChanges' => false,
-                            'version' => $state['version']
+                            'version' => $state['version'],
+                            'serverNow' => time()
                         ]);
                     }
                     break;
@@ -966,6 +1019,172 @@ try {
                 case 'clear-ping':
                     $state = getState();
                     $state['ping'] = null;
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    break;
+
+                case 'counter-add':
+                    $input = is_array($input) ? $input : [];
+                    $state = getState();
+                    $clientId = sanitizeClientId($input['clientId'] ?? '');
+                    if ($clientId === '') {
+                        echo json_encode(['success' => false, 'error' => 'clientId required']);
+                        break;
+                    }
+                    $type = $input['type'] ?? '';
+                    if ($type !== 'manual' && $type !== 'timer') {
+                        echo json_encode(['success' => false, 'error' => 'Invalid counter type']);
+                        break;
+                    }
+                    $rawId = $input['id'] ?? '';
+                    $id = sanitizeCounterId(is_string($rawId) ? $rawId : '');
+                    if ($id === '') {
+                        $id = generateId();
+                    } else {
+                        foreach ($state['counters'] as $ex) {
+                            if (($ex['id'] ?? '') === $id) {
+                                echo json_encode(['success' => false, 'error' => 'Counter id already exists']);
+                                break 2;
+                            }
+                        }
+                    }
+                    $title = htmlspecialchars(substr(is_string($input['title'] ?? null) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
+                    $notesRaw = $input['notes'] ?? '';
+                    $notes = htmlspecialchars(substr(is_string($notesRaw) ? $notesRaw : '', 0, COUNTER_NOTES_MAX));
+                    $now = time();
+                    if ($type === 'manual') {
+                        $counter = [
+                            'id' => $id,
+                            'type' => 'manual',
+                            'ownerId' => $clientId,
+                            'title' => $title,
+                            'notes' => $notes,
+                            'value' => intval($input['value'] ?? 0),
+                        ];
+                    } else {
+                        $direction = (($input['direction'] ?? 'down') === 'up') ? 'up' : 'down';
+                        $durationSec = intval($input['durationSec'] ?? 60);
+                        $durationSec = min(COUNTER_DURATION_MAX_SEC, max(1, $durationSec));
+                        if ($direction === 'down') {
+                            $initSec = intval($input['initialDurationSec'] ?? $durationSec);
+                            $initSec = min(COUNTER_DURATION_MAX_SEC, max(1, $initSec));
+                            $counter = [
+                                'id' => $id,
+                                'type' => 'timer',
+                                'ownerId' => $clientId,
+                                'title' => $title,
+                                'notes' => $notes,
+                                'direction' => 'down',
+                                'endsAt' => $now + $durationSec,
+                                'initialDurationSec' => $initSec,
+                            ];
+                        } else {
+                            $counter = [
+                                'id' => $id,
+                                'type' => 'timer',
+                                'ownerId' => $clientId,
+                                'title' => $title,
+                                'notes' => $notes,
+                                'direction' => 'up',
+                                'startedAt' => $now,
+                                'durationSec' => $durationSec,
+                            ];
+                        }
+                    }
+                    $state['counters'][] = $counter;
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'counter' => $counter, 'version' => $state['version']]);
+                    break;
+
+                case 'counter-update':
+                    $input = is_array($input) ? $input : [];
+                    $state = getState();
+                    $clientId = sanitizeClientId($input['clientId'] ?? '');
+                    $cid = $input['id'] ?? '';
+                    if (!is_string($cid) || $cid === '') {
+                        echo json_encode(['success' => false, 'error' => 'id required']);
+                        break;
+                    }
+                    $idx = findCounterIndex($state, $cid);
+                    if ($idx === null) {
+                        echo json_encode(['success' => false, 'error' => 'Not found']);
+                        break;
+                    }
+                    $counter = &$state['counters'][$idx];
+                    if (!canEditCounter($counter, $clientId)) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    if (array_key_exists('title', $input)) {
+                        $counter['title'] = htmlspecialchars(substr(is_string($input['title']) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
+                    }
+                    if (array_key_exists('notes', $input)) {
+                        $counter['notes'] = htmlspecialchars(substr(is_string($input['notes']) ? $input['notes'] : '', 0, COUNTER_NOTES_MAX));
+                    }
+                    if (($counter['type'] ?? '') === 'manual' && array_key_exists('value', $input)) {
+                        $counter['value'] = intval($input['value']);
+                    }
+                    if (($counter['type'] ?? '') === 'timer') {
+                        $now = time();
+                        if (array_key_exists('direction', $input)) {
+                            $counter['direction'] = ($input['direction'] === 'up') ? 'up' : 'down';
+                        }
+                        if (array_key_exists('endsAt', $input)) {
+                            $counter['endsAt'] = intval($input['endsAt']);
+                        }
+                        if (array_key_exists('startedAt', $input)) {
+                            $counter['startedAt'] = intval($input['startedAt']);
+                        }
+                        if (array_key_exists('durationSec', $input)) {
+                            $counter['durationSec'] = min(COUNTER_DURATION_MAX_SEC, max(1, intval($input['durationSec'])));
+                        }
+                        if (array_key_exists('initialDurationSec', $input)) {
+                            $counter['initialDurationSec'] = min(COUNTER_DURATION_MAX_SEC, max(1, intval($input['initialDurationSec'])));
+                        }
+                        if (($counter['direction'] ?? 'down') === 'down') {
+                            unset($counter['startedAt'], $counter['durationSec']);
+                            if (!isset($counter['endsAt'])) {
+                                $counter['endsAt'] = $now + 60;
+                            }
+                            $counter['endsAt'] = min($now + COUNTER_DURATION_MAX_SEC, max($now, intval($counter['endsAt'])));
+                        } else {
+                            unset($counter['endsAt'], $counter['initialDurationSec']);
+                            if (!isset($counter['startedAt'])) {
+                                $counter['startedAt'] = $now;
+                            }
+                            if (!isset($counter['durationSec'])) {
+                                $counter['durationSec'] = 60;
+                            }
+                            $counter['durationSec'] = min(COUNTER_DURATION_MAX_SEC, max(1, intval($counter['durationSec'])));
+                        }
+                    }
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'counter' => $state['counters'][$idx], 'version' => $state['version']]);
+                    unset($counter);
+                    break;
+
+                case 'counter-delete':
+                    $input = is_array($input) ? $input : [];
+                    $state = getState();
+                    $clientId = sanitizeClientId($input['clientId'] ?? '');
+                    $cid = $input['id'] ?? '';
+                    if (!is_string($cid) || $cid === '') {
+                        echo json_encode(['success' => false, 'error' => 'id required']);
+                        break;
+                    }
+                    $idx = findCounterIndex($state, $cid);
+                    if ($idx === null) {
+                        echo json_encode(['success' => false, 'error' => 'Not found']);
+                        break;
+                    }
+                    $delCounter = $state['counters'][$idx];
+                    if (!canEditCounter($delCounter, $clientId)) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    array_splice($state['counters'], $idx, 1);
                     $state = saveState($state);
                     echo json_encode(['success' => true, 'version' => $state['version']]);
                     break;

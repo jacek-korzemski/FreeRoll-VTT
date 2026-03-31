@@ -5,6 +5,7 @@ import { t } from '../../lang'
 
 const PdfPanel = lazy(() => import('./PdfPanel'))
 const MacroEditor = lazy(() => import('./MacroEditor'))
+const CountersPanel = lazy(() => import('./CountersPanel'))
 
 const STORAGE_KEY = 'vtt_bottom_panel_height'
 const MIN_HEIGHT_PERCENT = 30
@@ -15,9 +16,18 @@ const PANELS = [
   { id: 'notes', icon: '📝', titleKey: 'notes.title' },
   { id: 'pdf', icon: '📄', titleKey: 'pdf.title' },
   { id: 'macros', icon: '⚡', titleKey: 'macros.title' },
+  { id: 'counters', icon: '🔢', titleKey: 'counters.title' },
 ]
 
-function BottomPanel({ activeTab, onTabChange }) {
+function BottomPanel({
+  activeTab,
+  onTabChange,
+  sharedCounters = [],
+  serverNow = null,
+  isGameMaster = false,
+  apiBase = '',
+  onCountersMutation,
+}) {
   const [heightPercent, setHeightPercent] = useState(DEFAULT_HEIGHT_PERCENT)
   const [isResizing, setIsResizing] = useState(false)
   const [mountedTabs, setMountedTabs] = useState(new Set())
@@ -173,6 +183,19 @@ function BottomPanel({ activeTab, onTabChange }) {
               </div>
             )}
           </NotesTemplateProvider>
+          {mountedTabs.has('counters') && (
+            <div className={`bottom-panel-tab-pane ${activeTab !== 'counters' ? 'hidden' : ''}`}>
+              <Suspense fallback={<div className="counters-placeholder">{t('app.loading')}</div>}>
+                <CountersPanel
+                  sharedCounters={sharedCounters}
+                  serverNow={serverNow}
+                  isGameMaster={isGameMaster}
+                  apiBase={apiBase}
+                  onCountersMutation={onCountersMutation}
+                />
+              </Suspense>
+            </div>
+          )}
         </div>
       </div>
 

@@ -58,6 +58,8 @@ function App() {
   const [apiStatus, setApiStatus] = useState('ok')
   const [apiFlashTrigger, setApiFlashTrigger] = useState(0)
   const [isTokenEraserActive, setIsTokenEraserActive] = useState(false)
+  const [sharedCounters, setSharedCounters] = useState([])
+  const [serverNow, setServerNow] = useState(null)
 
   const fogUpdateTimeoutRef = useRef(null)
   const backgroundUpdateTimeoutRef = useRef(null)
@@ -103,6 +105,25 @@ function App() {
     setTokens(sceneData.tokens || [])
     setFogOfWar(sceneData.fogOfWar || { enabled: false, data: null })
     setFogBitmap(decodeFromBase64(sceneData.fogOfWar?.data))
+  }, [])
+
+  const handleCountersMutation = useCallback((action, body, data) => {
+    if (typeof data.version === 'number') {
+      setVersion(data.version)
+    }
+    if (action === 'counter-add' && data.counter) {
+      setSharedCounters((prev) => {
+        const rest = prev.filter((c) => c.id !== data.counter.id)
+        return [...rest, data.counter]
+      })
+    } else if (action === 'counter-update' && data.counter) {
+      setSharedCounters((prev) => prev.map((c) => (c.id === data.counter.id ? data.counter : c)))
+    } else if (action === 'counter-delete' && data.success) {
+      const id = body?.id
+      if (id) {
+        setSharedCounters((prev) => prev.filter((c) => c.id !== id))
+      }
+    }
   }, [])
 
   const handleSendPing = useCallback((x, y) => {
@@ -277,6 +298,10 @@ useEffect(() => {
         setActiveSceneId(data.data.activeSceneId)
         updateSceneState(data.data.scene)
         setVersion(data.data.version || 0)
+        setSharedCounters(data.data.counters || [])
+        if (typeof data.data.serverNow === 'number') {
+          setServerNow(data.data.serverNow)
+        }
       }
       setIsLoading(false)
     })
@@ -306,8 +331,15 @@ useEffect(() => {
         .then(data => {
           if (data.success) {
             onSuccess()
+            const sn = data.hasChanges ? data.data?.serverNow : data.serverNow
+            if (typeof sn === 'number') {
+              setServerNow(sn)
+            }
             if (data.hasChanges) {
               setScenes(data.data.scenes || [])
+              if (Array.isArray(data.data.counters)) {
+                setSharedCounters(data.data.counters)
+              }
               // Sprawdź czy zmieniono aktywną scenę
               if (data.data.activeSceneId !== activeSceneId) {
                 setActiveSceneId(data.data.activeSceneId)
@@ -1192,6 +1224,11 @@ useEffect(() => {
       <BottomPanel
         activeTab={bottomPanelTab}
         onTabChange={setBottomPanelTab}
+        sharedCounters={sharedCounters}
+        serverNow={serverNow}
+        isGameMaster={isGameMaster}
+        apiBase={API_BASE}
+        onCountersMutation={handleCountersMutation}
       />
 
       {DEBUG_MODE && <DebugOverlay />}

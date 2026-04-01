@@ -3826,14 +3826,37 @@ body {
 
 .pdf-viewer {
   flex: 1;
+  background: #0a0a14;
+  overflow: auto;
+  min-height: 0;
+  cursor: default;
+}
+
+.pdf-viewer.pdf-viewer--pannable {
+  cursor: grab;
+  touch-action: none;
+}
+
+.pdf-viewer.pdf-pan-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Wrapper fixes horizontal scroll range with zoomed PDFs (flex+align on scroll parent clips pan). */
+.pdf-viewer-scroll-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #0a0a14;
-  overflow-y: auto;
-  overflow-x: auto;
-  padding: 10px 0;
-  min-height: 0;
+  gap: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100%;
+}
+
+.pdf-viewer-scroll-content--idle {
+  min-height: 100%;
+  justify-content: center;
 }
 
 .pdf-zoom-bar {
@@ -3918,7 +3941,7 @@ body {
   flex-shrink: 0;
 }
 
-.pdf-viewer .react-pdf__Document {
+.pdf-viewer-scroll-content .react-pdf__Document {
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -2709,6 +2709,335 @@ body {
   background: rgba(74, 222, 128, 0.25);
 }
 
+/* Notes panel layout (sidebar + main, PDF-like) */
+.notes-panel {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  background: #1a1a2e;
+}
+
+.notes-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1a1a2e;
+  border-right: 1px solid #0f3460;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.notes-sidebar.closed {
+  width: 0;
+  border-right: none;
+  overflow: hidden;
+}
+
+.notes-sidebar-header {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #0f3460;
+  flex-shrink: 0;
+}
+
+.notes-sidebar-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e94560;
+}
+
+.notes-sidebar-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #adf #1a1a2e;
+}
+
+.notes-sidebar-list::-webkit-scrollbar {
+  width: 12px;
+}
+
+.notes-sidebar-list::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+.notes-sidebar-list::-webkit-scrollbar-thumb {
+  background: #adf;
+  border-radius: 3px;
+}
+
+.notes-sidebar-list::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+.notes-item-wrap {
+  border-bottom: 1px solid rgba(15, 52, 96, 0.5);
+}
+
+.notes-item-wrap:last-of-type {
+  border-bottom: none;
+}
+
+.notes-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.notes-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.notes-item.active {
+  background: #0f3460;
+  color: white;
+}
+
+.notes-item.is-left-slot {
+  box-shadow: inset 3px 0 0 0 #4ade80;
+}
+
+.notes-item.is-right-slot {
+  box-shadow: inset 3px 0 0 0 #64c8ff;
+}
+
+.notes-item.is-left-slot.is-right-slot {
+  box-shadow: inset 3px 0 0 0 #4ade80, inset 6px 0 0 0 #64c8ff;
+}
+
+.notes-item.is-slot-picker-parent {
+  background: rgba(100, 200, 255, 0.08);
+}
+
+.notes-item-slot-badges {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.notes-slot-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  line-height: 1.2;
+}
+
+.notes-slot-badge--left {
+  background: rgba(74, 222, 128, 0.25);
+  color: #4ade80;
+}
+
+.notes-slot-badge--right {
+  background: rgba(100, 200, 255, 0.25);
+  color: #64c8ff;
+}
+
+.notes-item-slot-picker {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem 0.5rem 1.75rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.notes-slot-btn {
+  flex: 1;
+  padding: 0.3rem 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #bbb;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.notes-slot-btn:hover {
+  color: #fff;
+}
+
+.notes-slot-btn--left:hover,
+.notes-slot-btn--left:focus-visible {
+  border-color: rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+.notes-slot-btn--right:hover,
+.notes-slot-btn--right:focus-visible {
+  border-color: rgba(100, 200, 255, 0.5);
+  background: rgba(100, 200, 255, 0.12);
+  color: #64c8ff;
+}
+
+.notes-item-icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+.notes-item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notes-item-remove {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  color: #666;
+  opacity: 0;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.notes-item:hover .notes-item-remove {
+  opacity: 1;
+}
+
+.notes-item-remove:hover {
+  background: rgba(233, 69, 96, 0.25);
+  color: #e94560;
+}
+
+.notes-sidebar-add {
+  margin: 0.5rem 0.75rem;
+  flex-shrink: 0;
+  width: auto;
+  align-self: stretch;
+  text-align: center;
+}
+
+.notes-sidebar-split {
+  padding: 0.5rem 0.75rem 0.75rem;
+  border-top: 1px solid #0f3460;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notes-sidebar-split-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  font-weight: 600;
+}
+
+.notes-sidebar-split-toggle {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.notes-sidebar-split-toggle button {
+  flex: 1;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.notes-sidebar-split-toggle button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+}
+
+.notes-sidebar-split-toggle button.active {
+  background: rgba(100, 200, 255, 0.15);
+  border-color: #64c8ff;
+  color: #64c8ff;
+}
+
+.notes-split-pick-hint {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: #666;
+}
+
+.notes-split-narrow-hint {
+  padding: 0 0.75rem 0.75rem;
+  font-size: 0.68rem;
+  color: #666;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.notes-sidebar-toggle {
+  position: absolute;
+  left: 320px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 64px;
+  background: #16213e;
+  border: 2px solid #0f3460;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: left 0.3s ease, background 0.2s, color 0.2s, width 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notes-sidebar-toggle:hover {
+  background: #1a2a4a;
+  color: white;
+  width: 32px;
+}
+
+.notes-sidebar-toggle:not(.open) {
+  left: 0;
+  border-left: none;
+}
+
+.notes-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  transition: padding-left 0.3s ease;
+}
+
+/* Reserve space for the sidebar toggle — visible at sidebar edge when open, at left when collapsed */
+.notes-sidebar-toggle + .notes-main-area {
+  padding-left: 1.7rem;
+}
+
 /* ============================================
    Macro Editor (content inside bottom panel)
    ============================================ */
@@ -3901,16 +4230,40 @@ body {
 }
 
 /* ============================================
-   Editors Container
+   Notes editors area (single or split inside notes-main-area)
    ============================================ */
-.notes-editors-container {
+.notes-editors-single,
+.notes-editors-split {
   flex: 1;
   display: flex;
-  justify-content: center;
-  gap: 0;
-  padding: 0;
+  min-height: 0;
   overflow: hidden;
   background: #0a0a14;
+}
+
+.notes-editors-single {
+  flex-direction: column;
+}
+
+.notes-editors-split {
+  flex-direction: row;
+  gap: 0;
+}
+
+.notes-editors-split .note-editor {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+  border-right: 1px solid #0f3460;
+}
+
+.notes-editors-split .note-editor:last-child {
+  border-right: none;
+}
+
+.notes-main-area .note-editor {
+  min-height: 0;
+  max-width: none;
 }
 
 /* ============================================
@@ -4041,6 +4394,30 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 0.85rem;
   line-height: 1.5;
+  scrollbar-width: thin;
+  scrollbar-color: #adf #1a1a2e;
+}
+
+.note-template-renderer::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.note-template-renderer::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+.note-template-renderer::-webkit-scrollbar-thumb {
+  background: #adf;
+  border-radius: 3px;
+}
+
+.note-template-renderer::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+.note-template-renderer::-webkit-scrollbar-corner {
+  background: #1a1a2e;
 }
 
 .note-template-renderer .tpl-table {
@@ -4546,6 +4923,8 @@ body {
   flex: 1;
   overflow: auto;
   background: #1a1a2e;
+  scrollbar-width: thin;
+  scrollbar-color: #adf #1a1a2e;
 }
 
 .swysiwyg-editor {
@@ -4671,6 +5050,10 @@ body {
 .swysiwyg-editor-container::-webkit-scrollbar-thumb {
   background: #adf;
   border-radius: 3px;
+}
+
+.swysiwyg-editor-container::-webkit-scrollbar-thumb:hover {
+  background: #fff;
 }
 
 /* ============================================

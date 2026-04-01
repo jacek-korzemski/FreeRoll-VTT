@@ -70,7 +70,17 @@
       "jsonMismatchTitle": "Incompatible data",
       "jsonMismatchMessage": "This data was saved from a different template (\"{source}\"). Current template is \"{current}\". Some fields may not match.",
       "jsonMismatchConfirm": "Load anyway",
-      "jsonMismatchCancel": "Cancel"
+      "jsonMismatchCancel": "Cancel",
+      "listUntitled": "Untitled notepad",
+      "viewMode": "Layout",
+      "viewSingle": "One",
+      "viewSplit": "Two side by side",
+      "secondaryNotepad": "Second notepad",
+      "secondaryPlaceholder": "— off —",
+      "splitNarrowHint": "Two notepads at once is only available on wider screens.",
+      "slotLeft": "Left",
+      "slotRight": "Right",
+      "splitPickHint": "Click a notepad, then choose which column it opens in."
     },
     "zoom": {
       "zoomOut": "Zoom out",
@@ -409,7 +419,17 @@
       "jsonMismatchTitle": "Niekompatybilne dane",
       "jsonMismatchMessage": "Te dane zostały zapisane z innego szablonu (\"{source}\"). Aktualny szablon to \"{current}\". Niektóre pola mogą nie pasować.",
       "jsonMismatchConfirm": "Wczytaj mimo to",
-      "jsonMismatchCancel": "Anuluj"
+      "jsonMismatchCancel": "Anuluj",
+      "listUntitled": "Notatnik bez tytułu",
+      "viewMode": "Układ",
+      "viewSingle": "Jeden",
+      "viewSplit": "Dwa obok siebie",
+      "secondaryNotepad": "Drugi notatnik",
+      "secondaryPlaceholder": "— wył. —",
+      "splitNarrowHint": "Tryb dwóch notatników jest dostępny na szerszym ekranie.",
+      "slotLeft": "Lewa",
+      "slotRight": "Prawa",
+      "splitPickHint": "Kliknij notatnik, potem wybierz kolumnę: lewa lub prawa."
     },
     "zoom": {
       "zoomOut": "Oddal",

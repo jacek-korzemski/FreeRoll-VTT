@@ -3,18 +3,19 @@ import SimpleWYSIWYG from '../atoms/SimpleWYSIWYG'
 import { t } from '../../lang'
 import { API_BASE } from '../../../config'
 import { executeDiceRoll, getEffectiveRollExpression } from '../../utils/diceRollUtils'
-
-function extractBodyContent(html) {
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-  return bodyMatch ? bodyMatch[1] : html
-}
+import { extractBodyContent } from '../../utils/noteTemplateMeta'
+import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 
 function extractTitle(html) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
   return titleMatch ? titleMatch[1] : ''
 }
 
-function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTemplate, unregisterNoteTemplate }) {
+function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTemplate: registerProp, unregisterNoteTemplate: unregisterProp }) {
+  const ctx = useNotesTemplate() || {}
+  const registerNoteTemplate = registerProp ?? ctx.registerNoteTemplate
+  const unregisterNoteTemplate = unregisterProp ?? ctx.unregisterNoteTemplate
+  const refreshNoteSources = ctx.refreshNoteSources
   const storageKey = `vtt_notes_${id}`
   const editorRef = useRef(null)
   const templateRef = useRef(null)
@@ -73,7 +74,8 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       lastModified: Date.now()
     }
     localStorage.setItem(storageKey, JSON.stringify(data))
-  }, [storageKey, title])
+    refreshNoteSources?.()
+  }, [storageKey, title, refreshNoteSources])
 
   const handleChange = useCallback((content) => {
     saveNotepad(content, title)
@@ -90,7 +92,8 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       lastModified: Date.now()
     }
     localStorage.setItem(storageKey, JSON.stringify(data))
-  }, [storageKey, templateHtml, templateId, templateFields, title])
+    refreshNoteSources?.()
+  }, [storageKey, templateHtml, templateId, templateFields, title, refreshNoteSources])
 
   const handleFieldChange = useCallback((fieldName, value) => {
     fieldsRef.current = { ...fieldsRef.current, [fieldName]: value }
@@ -104,7 +107,8 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       lastModified: Date.now()
     }
     localStorage.setItem(storageKey, JSON.stringify(data))
-  }, [storageKey, templateHtml, templateId, title])
+    refreshNoteSources?.()
+  }, [storageKey, templateHtml, templateId, title, refreshNoteSources])
 
   handleFieldChangeRef.current = handleFieldChange
 
@@ -312,6 +316,7 @@ ${content}
               setTemplateFields(fieldsRef.current)
               setTitle(data.title || '')
               localStorage.setItem(storageKey, JSON.stringify(data))
+              refreshNoteSources?.()
               return
             }
           } catch { /* not valid json, treat as HTML */ }
@@ -337,6 +342,7 @@ ${content}
             lastModified: Date.now()
           }
           localStorage.setItem(storageKey, JSON.stringify(data))
+          refreshNoteSources?.()
         } else {
           setMode('notepad')
           const detectedTitle = extractTitle(raw) || ''
@@ -349,7 +355,7 @@ ${content}
       reader.readAsText(file)
     }
     input.click()
-  }, [storageKey, title, saveNotepad])
+  }, [storageKey, title, saveNotepad, refreshNoteSources])
 
   const applyJsonFields = useCallback((fields) => {
     fieldsRef.current = { ...fieldsRef.current, ...fields }
@@ -363,8 +369,9 @@ ${content}
       lastModified: Date.now()
     }
     localStorage.setItem(storageKey, JSON.stringify(data))
+    refreshNoteSources?.()
     setTemplateRenderKey(k => k + 1)
-  }, [storageKey, templateHtml, templateId, title])
+  }, [storageKey, templateHtml, templateId, title, refreshNoteSources])
 
   const handleImportJson = useCallback(() => {
     setShowLoadMenu(false)
@@ -456,11 +463,12 @@ ${content}
         lastModified: Date.now()
       }
       localStorage.setItem(storageKey, JSON.stringify(data))
+      refreshNoteSources?.()
     } catch {
       // silently fail
     }
     setShowTemplateModal(false)
-  }, [storageKey])
+  }, [storageKey, refreshNoteSources])
 
   const handleClear = useCallback(() => {
     if (confirm(t('notes.clearConfirm'))) {
@@ -475,8 +483,9 @@ ${content}
       setTitle('')
       setInitialContent('Notatnik')
       localStorage.removeItem(storageKey)
+      refreshNoteSources?.()
     }
-  }, [storageKey, mode])
+  }, [storageKey, mode, refreshNoteSources])
 
   const handleRemove = useCallback(() => {
     if (confirm(t('notes.removeConfirm'))) {

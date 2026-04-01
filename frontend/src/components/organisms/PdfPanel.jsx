@@ -72,6 +72,7 @@ function PdfPanel() {
   const serverCacheRef = useRef(new Map())
   const viewerRef = useRef(null)
   const [viewerWidth, setViewerWidth] = useState(null)
+  const panPointerRef = useRef(null)
 
   useEffect(() => {
     fetch(`${API_BASE}?action=list-papers`, { credentials: 'include' })
@@ -230,7 +231,82 @@ function PdfPanel() {
     errorBoundaryRef.current?.reset()
   }, [pdfUrl])
 
+  useEffect(() => {
+    const root = viewerRef.current
+    if (root) root.scrollTo(0, 0)
+  }, [pdfUrl])
+
+  const endPdfPan = useCallback(() => {
+    const state = panPointerRef.current
+    if (!state) return
+    const root = viewerRef.current
+    panPointerRef.current = null
+    if (root) {
+      root.classList.remove('pdf-pan-dragging')
+      try {
+        if (root.hasPointerCapture?.(state.pointerId)) {
+          root.releasePointerCapture(state.pointerId)
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [])
+
+  const onPdfPointerDown = useCallback(
+    (e) => {
+      if (!pdfUrl || loading) return
+      if (!e.isPrimary) return
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      const t = e.target
+      if (t && typeof t.closest === 'function' && t.closest('button, a, input, textarea, select, label')) return
+
+      const root = viewerRef.current
+      if (!root) return
+      panPointerRef.current = { pointerId: e.pointerId, x: e.clientX, y: e.clientY }
+      root.classList.add('pdf-pan-dragging')
+      try {
+        root.setPointerCapture(e.pointerId)
+      } catch {
+        /* ignore */
+      }
+    },
+    [pdfUrl, loading],
+  )
+
+  const onPdfPointerMove = useCallback((e) => {
+    const state = panPointerRef.current
+    if (!state || state.pointerId !== e.pointerId) return
+    const root = viewerRef.current
+    if (!root) return
+    const dx = e.clientX - state.x
+    const dy = e.clientY - state.y
+    state.x = e.clientX
+    state.y = e.clientY
+    root.scrollLeft -= dx
+    root.scrollTop -= dy
+  }, [])
+
+  const onPdfPointerUp = useCallback(
+    (e) => {
+      const state = panPointerRef.current
+      if (!state || state.pointerId !== e.pointerId) return
+      endPdfPan()
+    },
+    [endPdfPan],
+  )
+
+  const onPdfLostPointerCapture = useCallback(() => {
+    panPointerRef.current = null
+    viewerRef.current?.classList.remove('pdf-pan-dragging')
+  }, [])
+
+  useEffect(() => {
+    return () => endPdfPan()
+  }, [endPdfPan])
+
   const hasPdfs = serverPdfs.length > 0 || localPdfs.length > 0
+  const scrollContentIdle = loading || !pdfUrl
   const MAX_CANVAS_WIDTH = 1024
   const ZOOM_MIN = 50
   const ZOOM_MAX = 200
@@ -304,31 +380,43 @@ function PdfPanel() {
       </button>
 
       <div className="pdf-viewer-area">
-        <div className="pdf-viewer" ref={viewerRef}>
-          {loading && <div className="pdf-placeholder">{t('pdf.loading')}</div>}
-          {!loading && !pdfUrl && (
-            <div className="pdf-placeholder">
-              {hasPdfs ? t('pdf.selectPdf') : t('pdf.noPdfs')}
-            </div>
-          )}
-          {!loading && pdfUrl && (
-            <PdfErrorBoundary ref={errorBoundaryRef}>
-              <Document
-                file={pdfUrl}
-                onLoadSuccess={onDocumentLoadSuccess}
-                loading={<div className="pdf-placeholder">{t('pdf.loading')}</div>}
-              >
-                {numPages && Array.from({ length: numPages }, (_, i) => (
-                  <LazyPage
-                    key={i + 1}
-                    pageNumber={i + 1}
-                    width={pageWidth}
-                    scrollRoot={viewerRef}
-                  />
-                ))}
-              </Document>
-            </PdfErrorBoundary>
-          )}
+        <div
+          className={`pdf-viewer${pdfUrl && !loading ? ' pdf-viewer--pannable' : ''}`}
+          ref={viewerRef}
+          onPointerDown={onPdfPointerDown}
+          onPointerMove={onPdfPointerMove}
+          onPointerUp={onPdfPointerUp}
+          onPointerCancel={onPdfPointerUp}
+          onLostPointerCapture={onPdfLostPointerCapture}
+        >
+          <div
+            className={`pdf-viewer-scroll-content${scrollContentIdle ? ' pdf-viewer-scroll-content--idle' : ''}`}
+          >
+            {loading && <div className="pdf-placeholder">{t('pdf.loading')}</div>}
+            {!loading && !pdfUrl && (
+              <div className="pdf-placeholder">
+                {hasPdfs ? t('pdf.selectPdf') : t('pdf.noPdfs')}
+              </div>
+            )}
+            {!loading && pdfUrl && (
+              <PdfErrorBoundary ref={errorBoundaryRef}>
+                <Document
+                  file={pdfUrl}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  loading={<div className="pdf-placeholder">{t('pdf.loading')}</div>}
+                >
+                  {numPages && Array.from({ length: numPages }, (_, i) => (
+                    <LazyPage
+                      key={i + 1}
+                      pageNumber={i + 1}
+                      width={pageWidth}
+                      scrollRoot={viewerRef}
+                    />
+                  ))}
+                </Document>
+              </PdfErrorBoundary>
+            )}
+          </div>
         </div>
         {pdfUrl && (
           <div className="pdf-zoom-bar">

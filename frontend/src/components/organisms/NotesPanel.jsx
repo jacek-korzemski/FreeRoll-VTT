@@ -303,113 +303,133 @@ function NotesPanel() {
   return (
     <div className="notes-panel">
       <div className={`notes-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
-        <div className="notes-sidebar-header">
-          <span className="notes-sidebar-title">📝 {t('notes.title')}</span>
-        </div>
-        <div className="notes-sidebar-list">
-          {editorIds.map((id) => {
-            const showPicker = splitView && splitAllowed && expandedNoteId === id
-            const isSingleActive = !splitView && primaryId === id
-            const isLeft = splitView && splitAllowed && primaryId === id
-            const isRight = splitView && splitAllowed && secondaryId === id
-            return (
-              <div key={id} className="notes-item-wrap">
-                <button
-                  type="button"
-                  className={`notes-item${isSingleActive ? ' active' : ''}${
-                    isLeft ? ' is-left-slot' : ''
-                  }${isRight ? ' is-right-slot' : ''}${showPicker ? ' is-slot-picker-parent' : ''}`}
-                  onClick={() => handleNoteRowClick(id)}
-                  title={listLabel(id, sources)}
-                >
-                  <span className="notes-item-icon">📋</span>
-                  <span className="notes-item-name">{listLabel(id, sources)}</span>
-                  {splitView && splitAllowed && (
-                    <span className="notes-item-slot-badges" aria-hidden="true">
-                      {isLeft && <span className="notes-slot-badge notes-slot-badge--left">L</span>}
-                      {isRight && <span className="notes-slot-badge notes-slot-badge--right">R</span>}
-                    </span>
-                  )}
-                  {editorIds.length > 1 && (
-                    <span
-                      className="notes-item-remove"
-                      onClick={(e) => handleRemoveFromSidebar(e, id)}
-                      title={t('notes.remove')}
-                      role="presentation"
-                    >
-                      ✕
-                    </span>
-                  )}
-                </button>
-                {showPicker && (
-                  <div className="notes-item-slot-picker">
-                    <button
-                      type="button"
-                      className="notes-slot-btn notes-slot-btn--left"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        assignToLeftSlot(id)
-                      }}
-                    >
-                      {t('notes.slotLeft')}
-                    </button>
-                    <button
-                      type="button"
-                      className="notes-slot-btn notes-slot-btn--right"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        assignToRightSlot(id)
-                      }}
-                    >
-                      {t('notes.slotRight')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-        <button type="button" className="notes-add-btn notes-sidebar-add" onClick={handleAddNotepad}>
-          + {t('notes.addEditor')}
-        </button>
-
-        {splitAllowed && editorIds.length >= 2 && (
-          <div className="notes-sidebar-split">
-            <div className="notes-sidebar-split-label">{t('notes.viewMode')}</div>
-            <div className="notes-sidebar-split-toggle">
+        {!sidebarOpen ? (
+          <button
+            type="button"
+            className="notes-sidebar-toggle"
+            onClick={toggleSidebar}
+            title={t('pdf.expandSidebar')}
+          >
+            ▶
+          </button>
+        ) : (
+          <>
+            <div className="notes-sidebar-header">
+              <span className="notes-sidebar-title">📝 {t('notes.title')}</span>
               <button
                 type="button"
-                className={!splitView ? 'active' : ''}
-                onClick={() => handleSplitToggle(false)}
+                className="notes-sidebar-toggle open"
+                onClick={toggleSidebar}
+                title={t('pdf.collapseSidebar')}
               >
-                {t('notes.viewSingle')}
-              </button>
-              <button
-                type="button"
-                className={splitView ? 'active' : ''}
-                onClick={() => handleSplitToggle(true)}
-              >
-                {t('notes.viewSplit')}
+                ◀
               </button>
             </div>
-            {splitView && (
-              <p className="notes-split-pick-hint">{t('notes.splitPickHint')}</p>
+            <div className="notes-sidebar-list">
+              {editorIds.map((id) => {
+                const showPicker = splitView && splitAllowed && expandedNoteId === id
+                const isSingleActive = !splitView && primaryId === id
+                const isLeft = splitView && splitAllowed && primaryId === id
+                const isRight = splitView && splitAllowed && secondaryId === id
+                return (
+                  <div key={id} className="notes-item-wrap">
+                    <button
+                      type="button"
+                      className={`notes-item${isSingleActive ? ' active' : ''}${
+                        isLeft ? ' is-left-slot' : ''
+                      }${isRight ? ' is-right-slot' : ''}${showPicker ? ' is-slot-picker-parent' : ''}`}
+                      onClick={() => handleNoteRowClick(id)}
+                      title={listLabel(id, sources)}
+                    >
+                      <span className="notes-item-icon">📋</span>
+                      <span className="notes-item-name">{listLabel(id, sources)}</span>
+                      {splitView && splitAllowed && (
+                        <span className="notes-item-slot-badges" aria-hidden="true">
+                          {isLeft && (
+                            <span className="notes-slot-badge notes-slot-badge--left">L</span>
+                          )}
+                          {isRight && (
+                            <span className="notes-slot-badge notes-slot-badge--right">R</span>
+                          )}
+                        </span>
+                      )}
+                      {editorIds.length > 1 && (
+                        <span
+                          className="notes-item-remove"
+                          onClick={(e) => handleRemoveFromSidebar(e, id)}
+                          title={t('notes.remove')}
+                          role="presentation"
+                        >
+                          ✕
+                        </span>
+                      )}
+                    </button>
+                    {showPicker && (
+                      <div className="notes-item-slot-picker">
+                        <button
+                          type="button"
+                          className="notes-slot-btn notes-slot-btn--left"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            assignToLeftSlot(id)
+                          }}
+                        >
+                          {t('notes.slotLeft')}
+                        </button>
+                        <button
+                          type="button"
+                          className="notes-slot-btn notes-slot-btn--right"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            assignToRightSlot(id)
+                          }}
+                        >
+                          {t('notes.slotRight')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            <button
+              type="button"
+              className="notes-add-btn notes-sidebar-add"
+              onClick={handleAddNotepad}
+            >
+              + {t('notes.addEditor')}
+            </button>
+
+            {splitAllowed && editorIds.length >= 2 && (
+              <div className="notes-sidebar-split">
+                <div className="notes-sidebar-split-label">{t('notes.viewMode')}</div>
+                <div className="notes-sidebar-split-toggle">
+                  <button
+                    type="button"
+                    className={!splitView ? 'active' : ''}
+                    onClick={() => handleSplitToggle(false)}
+                  >
+                    {t('notes.viewSingle')}
+                  </button>
+                  <button
+                    type="button"
+                    className={splitView ? 'active' : ''}
+                    onClick={() => handleSplitToggle(true)}
+                  >
+                    {t('notes.viewSplit')}
+                  </button>
+                </div>
+                {splitView && (
+                  <p className="notes-split-pick-hint">{t('notes.splitPickHint')}</p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-        {!splitAllowed && editorIds.length >= 2 && (
-          <p className="notes-split-narrow-hint">{t('notes.splitNarrowHint')}</p>
+            {!splitAllowed && editorIds.length >= 2 && (
+              <p className="notes-split-narrow-hint">{t('notes.splitNarrowHint')}</p>
+            )}
+          </>
         )}
       </div>
-
-      <button
-        type="button"
-        className={`notes-sidebar-toggle ${sidebarOpen ? 'open' : ''}`}
-        onClick={toggleSidebar}
-        title={sidebarOpen ? t('pdf.collapseSidebar') : t('pdf.expandSidebar')}
-      >
-        {sidebarOpen ? '◀' : '▶'}
-      </button>
 
       <div className="notes-main-area">
         <div

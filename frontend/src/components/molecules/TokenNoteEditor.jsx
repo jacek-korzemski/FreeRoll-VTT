@@ -2,12 +2,8 @@ import React, { useRef, useEffect, useState, useCallback } from 'react'
 import SimpleWYSIWYG from '../atoms/SimpleWYSIWYG'
 import { t } from '../../lang'
 import { API_BASE } from '../../../config'
-import { executeDiceRoll, getEffectiveRollExpression } from '../../utils/diceRollUtils'
-
-function extractBodyContent(html) {
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-  return bodyMatch ? bodyMatch[1] : html
-}
+import { extractBodyContent } from '../../utils/noteTemplateMeta'
+import { mountTemplate } from '../../utils/templateRuntime'
 
 function extractTitle(html) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
@@ -21,6 +17,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
   const menuRef = useRef(null)
   const fieldsRef = useRef({})
   const handleFieldChangeRef = useRef(null)
+  const mountHandleRef = useRef(null)
   const [initialContent, setInitialContent] = useState('')
   const [title, setTitle] = useState('')
   const [mode, setMode] = useState('notepad')
@@ -118,47 +115,20 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
     if (mode !== 'template' || !templateRef.current || !templateHtml) return
 
     const container = templateRef.current
-    container.innerHTML = extractBodyContent(templateHtml)
-    const fields = fieldsRef.current
-
-    container.querySelectorAll('[data-field]').forEach(el => {
-      const name = el.getAttribute('data-field')
-      const val = fields[name]
-
-      if (el.type === 'checkbox') {
-        el.checked = val === true || val === 'true' || val === 'on'
-        el.addEventListener('change', () => {
-          handleFieldChangeRef.current?.(name, el.checked)
-        })
-      } else if (el.tagName === 'TEXTAREA') {
-        el.value = val || ''
-        el.addEventListener('input', () => {
-          handleFieldChangeRef.current?.(name, el.value)
-        })
-      } else {
-        el.value = val ?? el.getAttribute('value') ?? ''
-        el.addEventListener('input', () => {
-          handleFieldChangeRef.current?.(name, el.value)
-        })
-      }
+    const handle = mountTemplate({
+      container,
+      html: templateHtml,
+      scopeId: `token-${tokenId}`,
+      fields: fieldsRef.current,
+      onFieldChange: (name, value) => handleFieldChangeRef.current?.(name, value),
     })
+    mountHandleRef.current = handle
 
-    const getFieldValue = (fieldName) => {
-      const el = container.querySelector(`[data-field="${fieldName}"]`)
-      if (!el) return ''
-      if (el.type === 'checkbox') return el.checked
-      return el.value || ''
+    return () => {
+      handle.unmount()
+      mountHandleRef.current = null
     }
-
-    container.querySelectorAll('[data-roll]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault()
-        const expr = getEffectiveRollExpression(btn)
-        const label = btn.getAttribute('data-roll-label') || ''
-        executeDiceRoll(expr, label, getFieldValue)
-      })
-    })
-  }, [mode, templateHtml, templateRenderKey])
+  }, [mode, templateHtml, templateRenderKey, tokenId])
 
   const applyJsonFields = useCallback((fields) => {
     fieldsRef.current = { ...fieldsRef.current, ...fields }

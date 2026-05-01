@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import { templateModelToHtml, htmlToModel } from '../../utils/templateEditorUtils'
+import { mountTemplate } from '../../utils/templateRuntime'
 
 const ROW_TYPES = [
   { value: 'text', labelKey: 'rowTypeText' },
@@ -37,11 +38,6 @@ const defaultSection = () => ({
   emoji: '',
   rows: [defaultRow()],
 })
-
-function extractBodyContent(html) {
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-  return bodyMatch ? bodyMatch[1] : html
-}
 
 function TemplateEmojiPicker({ value, onChange }) {
   const buttonRef = useRef(null)
@@ -172,6 +168,7 @@ function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [loadError, setLoadError] = useState('')
+  const previewRef = useRef(null)
 
   useEffect(() => {
     if (!isEditMode || !initialHtml) return
@@ -326,7 +323,19 @@ function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
 
   const model = { templateName: templateName.trim() || 'Untitled', sections }
   const previewHtml = templateModelToHtml(model)
-  const previewBody = extractBodyContent(previewHtml)
+  const previewScopeId = `editor-${initialTemplateId || 'new'}`
+
+  useEffect(() => {
+    if (!previewRef.current) return
+    const handle = mountTemplate({
+      container: previewRef.current,
+      html: previewHtml,
+      scopeId: previewScopeId,
+      fields: {},
+      readOnly: true,
+    })
+    return () => handle.unmount()
+  }, [previewHtml, previewScopeId])
 
   return (
     <div
@@ -515,8 +524,8 @@ function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
 
             <div className="template-editor-preview">
               <div
+                ref={previewRef}
                 className="note-template-renderer template-editor-preview-renderer"
-                dangerouslySetInnerHTML={{ __html: previewBody }}
               />
             </div>
           </div>

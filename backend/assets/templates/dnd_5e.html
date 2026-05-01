@@ -4,6 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <title>Locheły i Smokeły</title>
+  <style>
+    /* Per-template scoped style: rewritten with [data-vtt-scope="..."] prefix at runtime,
+       so customizations here never leak to other notes / templates / app chrome. */
+    .tpl-table {
+      background: black;
+      border-color: #c9b88e;
+    }
+
+    .section-header {
+      background: linear-gradient(180deg, #6a2c2c, #4a1a1a);
+      color: #f4e7c0;
+      letter-spacing: 0.04em;
+    }
+
+    .section-header-sm {
+      background: #4a1a1a;
+      color: #f4e7c0;
+    }
+
+    /* Modifier inputs are auto-computed; visually distinguish them. */
+    input[data-field$="_mod"] {
+      background: #efe3c4;
+      font-weight: 700;
+      color: #6a2c2c;
+    }
+
+    input[data-field="prof"] {
+      background: #efe3c4;
+      font-weight: 700;
+    }
+  </style>
 </head>
 
 <body>
@@ -31,7 +62,8 @@
     <tr>
       <td class="center"><strong>KP</strong><br><input data-field="ac" type="text" class="circle"></td>
       <td class="center"><strong>Inicjatywa</strong><br><input data-field="initiative" type="text" class="circle">
-        <button data-roll="d20+@initiative" data-roll-label="Inicjatywa" class="roll-btn">🎲</button></td>
+        <button data-roll="d20+@initiative" data-roll-label="Inicjatywa" class="roll-btn">🎲</button>
+      </td>
       <td class="center"><strong>Szybkość</strong><br><input data-field="speed" type="text" class="circle"></td>
     </tr>
     <tr>
@@ -451,6 +483,33 @@
       <td><textarea data-field="notes" class="plain wide" rows="8"></textarea></td>
     </tr>
   </table>
+
+  <script>
+    // Per-template script: runs in a sandboxed scope, talks to this instance only.
+    // Auto-computes D&D 5e ability modifiers from the score (10 -> +0, 12 -> +1, 8 -> -1).
+    // Save / skill bonuses stay manually editable.
+    var ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+    function abilityModifier(score) {
+      var n = parseInt(score, 10);
+      if (isNaN(n)) return '';
+      var m = Math.floor((n - 10) / 2);
+      return (m >= 0 ? '+' : '') + m;
+    }
+
+    function refresh(ability) {
+      vtt.setField(ability + '_mod', abilityModifier(vtt.getField(ability + '_score')));
+    }
+
+    vtt.onMount(function () {
+      ABILITIES.forEach(refresh);
+    });
+
+    vtt.onFieldChange(function (name) {
+      var match = name.match(/^(str|dex|con|int|wis|cha)_score$/);
+      if (match) refresh(match[1]);
+    });
+  </script>
 
 </body>
 

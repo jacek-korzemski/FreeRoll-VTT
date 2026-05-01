@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Treat all string operations as UTF-8 by default. Prevents `substr`-style
+// byte truncation from cutting Polish/UTF-8 characters in half.
+if (function_exists('mb_internal_encoding')) {
+    mb_internal_encoding('UTF-8');
+}
+
 // ============================================
 // Sprawdzanie autoryzacji
 // ============================================
@@ -582,7 +588,7 @@ try {
                 
                 case 'create-scene':
                     $state = getState();
-                    $name = htmlspecialchars(substr($input['name'] ?? 'New Scene', 0, 50));
+                    $name = htmlspecialchars(mb_substr($input['name'] ?? 'New Scene', 0, 50));
                     $newScene = createEmptyScene($name);
                     $state['scenes'][] = $newScene;
                     $state = saveState($state);
@@ -620,7 +626,7 @@ try {
                 case 'rename-scene':
                     $state = getState();
                     $sceneId = $input['id'] ?? '';
-                    $name = htmlspecialchars(substr($input['name'] ?? 'Scene', 0, 50));
+                    $name = htmlspecialchars(mb_substr($input['name'] ?? 'Scene', 0, 50));
                     
                     foreach ($state['scenes'] as &$scene) {
                         if ($scene['id'] === $sceneId) {
@@ -945,7 +951,7 @@ try {
                         // Rzut L5R
                         $newRoll = [
                             'id' => generateId(),
-                            'player' => htmlspecialchars(substr($input['player'] ?? 'Anonymous', 0, 20)),
+                            'player' => htmlspecialchars(mb_substr($input['player'] ?? 'Anonymous', 0, 100)),
                             'type' => 'l5r',
                             'dice' => array_map(function($die) {
                                 return [
@@ -968,7 +974,7 @@ try {
                         // Rzut standardowy
                         $newRoll = [
                             'id' => generateId(),
-                            'player' => htmlspecialchars(substr($input['player'] ?? 'Anonymous', 0, 20)),
+                            'player' => htmlspecialchars(mb_substr($input['player'] ?? 'Anonymous', 0, 100)),
                             'type' => 'standard',
                             'dice' => array_map(function($die) {
                                 return [
@@ -1048,9 +1054,9 @@ try {
                             }
                         }
                     }
-                    $title = htmlspecialchars(substr(is_string($input['title'] ?? null) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
+                    $title = htmlspecialchars(mb_substr(is_string($input['title'] ?? null) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
                     $notesRaw = $input['notes'] ?? '';
-                    $notes = htmlspecialchars(substr(is_string($notesRaw) ? $notesRaw : '', 0, COUNTER_NOTES_MAX));
+                    $notes = htmlspecialchars(mb_substr(is_string($notesRaw) ? $notesRaw : '', 0, COUNTER_NOTES_MAX));
                     $now = time();
                     if ($type === 'manual') {
                         $counter = [
@@ -1117,10 +1123,10 @@ try {
                         break;
                     }
                     if (array_key_exists('title', $input)) {
-                        $counter['title'] = htmlspecialchars(substr(is_string($input['title']) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
+                        $counter['title'] = htmlspecialchars(mb_substr(is_string($input['title']) ? $input['title'] : '', 0, COUNTER_TITLE_MAX));
                     }
                     if (array_key_exists('notes', $input)) {
-                        $counter['notes'] = htmlspecialchars(substr(is_string($input['notes']) ? $input['notes'] : '', 0, COUNTER_NOTES_MAX));
+                        $counter['notes'] = htmlspecialchars(mb_substr(is_string($input['notes']) ? $input['notes'] : '', 0, COUNTER_NOTES_MAX));
                     }
                     if (($counter['type'] ?? '') === 'manual' && array_key_exists('value', $input)) {
                         $counter['value'] = intval($input['value']);

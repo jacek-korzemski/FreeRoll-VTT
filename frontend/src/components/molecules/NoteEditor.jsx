@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useState, useCallback } from 'react'
 import SimpleWYSIWYG from '../atoms/SimpleWYSIWYG'
 import { t } from '../../lang'
 import { API_BASE } from '../../../config'
-import { executeDiceRoll, getEffectiveRollExpression } from '../../utils/diceRollUtils'
 import { extractBodyContent } from '../../utils/noteTemplateMeta'
+import { mountTemplate } from '../../utils/templateRuntime'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 
 function extractTitle(html) {
@@ -23,6 +23,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
   const saveMenuRef = useRef(null)
   const fieldsRef = useRef({})
   const handleFieldChangeRef = useRef(null)
+  const mountHandleRef = useRef(null)
   const [initialContent, setInitialContent] = useState('')
   const [title, setTitle] = useState('')
   const [mode, setMode] = useState('notepad')
@@ -127,39 +128,16 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
     if (mode !== 'template' || !templateRef.current || !templateHtml) return
 
     const container = templateRef.current
-    container.innerHTML = extractBodyContent(templateHtml)
-    const fields = fieldsRef.current
-
-    container.querySelectorAll('[data-field]').forEach(el => {
-      const name = el.getAttribute('data-field')
-      const val = fields[name]
-
-      if (el.type === 'checkbox') {
-        el.checked = val === true || val === 'true' || val === 'on'
-        el.addEventListener('change', () => {
-          handleFieldChangeRef.current?.(name, el.checked)
-        })
-      } else if (el.tagName === 'TEXTAREA') {
-        el.value = val || ''
-        el.addEventListener('input', () => {
-          handleFieldChangeRef.current?.(name, el.value)
-        })
-      } else {
-        el.value = val ?? el.getAttribute('value') ?? ''
-        el.addEventListener('input', () => {
-          handleFieldChangeRef.current?.(name, el.value)
-        })
-      }
+    const handle = mountTemplate({
+      container,
+      html: templateHtml,
+      scopeId: `note-${id}`,
+      fields: fieldsRef.current,
+      onFieldChange: (name, value) => handleFieldChangeRef.current?.(name, value),
     })
+    mountHandleRef.current = handle
 
-    const getFieldValue = (fieldName) => {
-      const el = container.querySelector(`[data-field="${fieldName}"]`)
-      if (!el) return ''
-      if (el.type === 'checkbox') return el.checked
-      return el.value || ''
-    }
-
-    const fieldEntries = [...container.querySelectorAll('[data-field]')]
+    const fieldEntries = handle.getFieldElements()
       .map(el => {
         const name = el.getAttribute('data-field')
         if (!name) return null
@@ -180,20 +158,13 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
     const fieldNames = [...new Set(fieldEntries.map(e => e.name))]
     const fieldLabels = Object.fromEntries(fieldEntries.map(e => [e.name, e.label]))
     if (registerNoteTemplate) {
-      registerNoteTemplate(id, { noteIndex, title, fieldNames, fieldLabels, getFieldValue })
+      registerNoteTemplate(id, { noteIndex, title, fieldNames, fieldLabels, getFieldValue: handle.getFieldValue })
     }
-
-    container.querySelectorAll('[data-roll]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault()
-        const expr = getEffectiveRollExpression(btn)
-        const label = btn.getAttribute('data-roll-label') || ''
-        executeDiceRoll(expr, label, getFieldValue)
-      })
-    })
 
     return () => {
       if (unregisterNoteTemplate) unregisterNoteTemplate(id)
+      handle.unmount()
+      mountHandleRef.current = null
     }
   }, [mode, templateHtml, templateRenderKey, id, noteIndex, title, registerNoteTemplate, unregisterNoteTemplate])
 
@@ -202,21 +173,18 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
     setShowSaveMenu(false)
     const filename = title || `notepad-${id}`
 
-    let content
+    let bodyHtml = ''
+    let extraStyles = ''
+    let extraScripts = ''
     if (mode === 'notepad') {
-      content = editorRef.current?.getContent() || ''
+      bodyHtml = editorRef.current?.getContent() || ''
     } else {
-      const container = templateRef.current
-      if (!container) return
-      container.querySelectorAll('[data-field]').forEach(el => {
-        if (el.type === 'checkbox') {
-          if (el.checked) el.setAttribute('checked', '')
-          else el.removeAttribute('checked')
-        } else {
-          el.setAttribute('value', el.value || '')
-        }
-      })
-      content = container.innerHTML
+      const handle = mountHandleRef.current
+      if (!handle) return
+      const serialized = handle.serialize()
+      bodyHtml = serialized.bodyHtml
+      extraStyles = serialized.stylesHtml
+      extraScripts = serialized.scriptsHtml
     }
 
     const blob = new Blob([`<!DOCTYPE html>
@@ -239,9 +207,11 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
     input.xs { width: 36px; } input.sm { width: 60px; } .wide { width: 100%; box-sizing: border-box; }
     .roll-btn { display: none; }
   </style>
+${extraStyles}
 </head>
 <body>
-${content}
+${bodyHtml}
+${extraScripts}
 </body>
 </html>`], { type: 'text/html' })
 

@@ -2,7 +2,7 @@
 
 How to create interactive character sheets and custom templates for FreeRoll VTT.
 
-Templates are plain HTML files with special `data-*` attributes. You don't need to know JavaScript — just HTML basics. Place your `.html` files in `backend/assets/templates/` and they'll appear in the template picker inside the notepad panel.
+Templates are plain HTML files with special `data-*` attributes. The basics need only HTML — text fields, checkboxes, and dice buttons work out of the box. For advanced sheets you can also add a `<style>` block (auto-scoped to the template instance) and a `<script>` block (sandboxed `vtt` API for reactive computation, e.g. ability modifiers). Place your `.html` files in `backend/assets/templates/` and they'll appear in the template picker inside the notepad panel.
 
 ---
 
@@ -273,6 +273,140 @@ How it works:
 
 ---
 
+## Custom Styling (Per-Template CSS)
+
+You can ship CSS together with the template. Put a `<style>` block in `<head>` (or anywhere in `<body>`) and use plain CSS selectors — the runtime rewrites them so they only match elements **inside this template instance**.
+
+### Why scoping matters
+
+Two notes loaded with the same template (or two different templates) live side-by-side in the same page. Without scoping, `.tpl-table { background: red }` from one template would paint every table in the app. The runtime prefixes each selector with `[data-vtt-scope="<unique-id>"]`, so styles never leak out of their own instance.
+
+### Example
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <title>My Template</title>
+  <style>
+    .tpl-table { background: #fbf6ec; border-color: #c9b88e; }
+    .section-header {
+      background: linear-gradient(180deg, #6a2c2c, #4a1a1a);
+      color: #f4e7c0;
+    }
+    /* Highlight auto-computed fields */
+    input[data-field$="_mod"] {
+      background: #efe3c4;
+      font-weight: 700;
+    }
+  </style>
+</head>
+```
+
+Internally `.tpl-table { background: #fbf6ec }` becomes `[data-vtt-scope="note-1"] .tpl-table { background: #fbf6ec }` for one note, `[data-vtt-scope="note-2"] .tpl-table { ... }` for another, etc.
+
+### Scoping rules
+
+| Rule type | Scoped? | Notes |
+|---|---|---|
+| Element/class/id selectors | yes | `.tpl-table`, `#hp`, `input[data-field="x"]` |
+| Comma-separated selector lists | yes (each part) | `.a, .b` → both prefixed |
+| `:root`, `html`, `body` | yes — map to scope root | use to set instance-wide background, font, etc. |
+| `@media`, `@supports`, `@container`, `@layer` | yes (recursively) | inner rules are scoped |
+| `@keyframes`, `@font-face`, `@import`, `@charset` | not scoped | names stay global; reference them by name |
+
+### Tips
+
+- The app's global CSS (e.g. `.note-template-renderer .tpl-table` from `App.css`) loads first; your scoped rules override the matching defaults because the scoped selector is more specific.
+- Avoid `!important` — clean specificity is enough thanks to the `[data-vtt-scope="…"]` prefix.
+- Don't try to escape your scope (no `:root :host`, no `html { ... }` expecting global reach). All rules are confined to the template root.
+
+---
+
+## Custom Scripts (Reactive Behavior)
+
+Templates can include a `<script>` block that runs in a small sandbox. The script receives a `vtt` object exposing the only safe way to read/write fields and react to user input. This is how the `dnd_5e.html` template auto-computes ability modifiers from scores.
+
+### Where to put it
+
+Anywhere in `<body>` (typically at the end, after the markup):
+
+```html
+<body>
+  <!-- ...tables, fields, buttons... -->
+
+  <script>
+    function abilityModifier(score) {
+      var n = parseInt(score, 10);
+      if (isNaN(n)) return '';
+      var m = Math.floor((n - 10) / 2);
+      return (m >= 0 ? '+' : '') + m;
+    }
+
+    function refresh(ability) {
+      vtt.setField(ability + '_mod', abilityModifier(vtt.getField(ability + '_score')));
+    }
+
+    var ABILITIES = ['str','dex','con','int','wis','cha'];
+
+    vtt.onMount(function () {
+      ABILITIES.forEach(refresh);
+    });
+
+    vtt.onFieldChange(function (name) {
+      var match = name.match(/^(str|dex|con|int|wis|cha)_score$/);
+      if (match) refresh(match[1]);
+    });
+  </script>
+</body>
+```
+
+### `vtt` API reference
+
+| Member | Type | Description |
+|---|---|---|
+| `vtt.scopeId` | `string` | Unique id for this instance (e.g. `note-1`, `token-abc`). Useful for `console.log` debugging. |
+| `vtt.root` | `HTMLElement` | The DOM container that holds the rendered template. Use `vtt.root.querySelector(...)` if you need direct DOM access; never use `document.querySelector` (would leak across instances). |
+| `vtt.getField(name)` | `string \| boolean` | Current value of a `data-field`. Strings for text/textarea, booleans for checkboxes. |
+| `vtt.setField(name, value)` | `void` | Update a field. Writes the DOM input AND saves to storage. Strings, numbers, or booleans (for checkboxes). |
+| `vtt.onMount(cb)` | `void` | `cb()` runs once after the template is mounted and fields are populated from saved data. Good for initial computations. |
+| `vtt.onFieldChange(cb)` | `void` | `cb(name, value)` runs whenever the user edits a field. Does NOT fire for changes you triggered with `vtt.setField` (no infinite loops). |
+| `vtt.onDestroy(cb)` | `void` | `cb()` runs when the template unmounts (e.g. user clears the note, switches templates, closes the token panel). Use it to cancel timers, observers, etc. |
+| `vtt.fields` | `object` | Read-only snapshot of values at mount time. For live values use `getField(name)`. |
+
+### What scripts can do
+
+- Auto-compute derived fields (modifiers, totals, save bonuses).
+- React to checkbox toggles (e.g. recompute totals when proficiency changes).
+- Add custom DOM behavior on `vtt.root` (e.g. tooltips, badges) — but remember the DOM is yours only inside `vtt.root`.
+
+### What scripts cannot/should not do
+
+- **No external requests, no globals.** Your script runs as `new Function('vtt', code)(vtt)` in the page origin. Keep it limited to the `vtt` API and standard JS built-ins.
+- **No `<script src="…">`.** External scripts are ignored — only inline `<script>…</script>` blocks execute.
+- **No reaching into other templates.** Stick to `vtt.root` / `vtt.getField` / `vtt.setField`. Other instances have their own scope.
+- **No assuming React state.** The runtime keeps DOM, localStorage, and React state in sync via the `vtt` API. Don't poke at React internals.
+
+### Lifecycle
+
+```
+load template → mount DOM → restore saved fields → run <script> → vtt.onMount() →
+   ↓ user types in a field
+   ↓ DOM updates → vtt.onFieldChange(name, value) callbacks fire
+   ↓ your callback may call vtt.setField(...) → DOM + storage updated, NO recursive onFieldChange
+   ...
+unmount → vtt.onDestroy() callbacks fire → DOM is torn down
+```
+
+### Errors
+
+If your script throws, the error is logged to the browser console with the prefix `[template:<scopeId>]` and the rest of the template keeps working. The same holds for individual `onFieldChange`/`onMount`/`onDestroy` callbacks — one bad handler does not break others.
+
+### Trust note
+
+Templates from `backend/assets/templates/` are treated as **trusted content**: their `<script>` blocks execute arbitrary JavaScript in the app's origin. Only upload templates from sources you trust (your own files, GM-curated bundles).
+
+---
+
 ## Saving & Loading
 
 ### How Data is Stored
@@ -313,7 +447,8 @@ Example: `dnd_5e.html` appears as **"Dnd 5e"** in the picker.
 ## Tips
 
 - **Field names must be unique** across the entire template. Use prefixes like `skill_`, `save_`, `atk1_` to avoid collisions.
-- **Keep it simple.** The template is just HTML — no scripts, no frameworks. The VTT handles all the interactivity.
-- **Test locally.** Open your `.html` file in a browser to check the structure before deploying. Inputs and checkboxes will work, only the dice buttons and styling need the VTT.
+- **HTML first, scripts last.** You can build a fully working sheet with just `data-field` and `data-roll`. Add `<style>` and `<script>` only when you need theming or computed fields — they're optional.
+- **Test locally.** Open your `.html` file in a browser to check the structure before deploying. Inputs, checkboxes, and your custom CSS will work; only the dice buttons and the `vtt` script API need the VTT runtime.
 - **Use `<small>` for hints** like ability abbreviations: `Stealth <small>(Dex)</small>`.
 - **Textarea for long text.** Use `<textarea>` with `rows="N"` instead of text inputs for equipment lists, backstory, notes, etc.
+- **Two instances, two scopes.** The same template can be loaded into multiple notes or token panels at the same time — each has its own `data-vtt-scope`, its own styles, its own `vtt` instance. Don't share state via globals; use `data-field` values.

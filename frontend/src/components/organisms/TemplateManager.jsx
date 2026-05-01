@@ -3,13 +3,8 @@ import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import TemplateEditor from './TemplateEditor'
-import { executeDiceRoll, getEffectiveRollExpression } from '../../utils/diceRollUtils'
+import { mountTemplate } from '../../utils/templateRuntime'
 import { detectTemplateKind, htmlToModel } from '../../utils/templateEditorUtils'
-
-function extractBodyContent(html) {
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-  return bodyMatch ? bodyMatch[1] : html
-}
 
 function TemplateManager() {
   const [templates, setTemplates] = useState([])
@@ -147,26 +142,16 @@ function TemplateManager() {
     }
   }, [previewId, closePreview])
 
-  // Bind preview container for dice rolls (same logic as NoteEditor)
+  // Mount preview with scoped CSS / JS sandbox
   useEffect(() => {
     if (!previewContainerRef.current || !previewHtml) return
-    const container = previewContainerRef.current
-    const getFieldValue = (fieldName) => {
-      const el = container.querySelector(`[data-field="${fieldName}"]`)
-      if (!el) return ''
-      if (el.type === 'checkbox') return el.checked
-      return el.value || ''
-    }
-    container.querySelectorAll('[data-roll]').forEach((btn) => {
-      const clone = btn.cloneNode(true)
-      btn.parentNode.replaceChild(clone, btn)
-      clone.addEventListener('click', (e) => {
-        e.preventDefault()
-        const expr = getEffectiveRollExpression(clone)
-        const label = clone.getAttribute('data-roll-label') || ''
-        executeDiceRoll(expr, label, getFieldValue)
-      })
+    const handle = mountTemplate({
+      container: previewContainerRef.current,
+      html: previewHtml,
+      scopeId: `preview-${previewId || 'unknown'}`,
+      fields: {},
     })
+    return () => handle.unmount()
   }, [previewId, previewHtml])
 
   const handleUploadFile = useCallback(
@@ -281,11 +266,10 @@ function TemplateManager() {
           >
             <div className="note-template-modal-content template-manager-preview-content">
               <h3>{previewName}</h3>
-              <div className="template-manager-preview-body" ref={previewContainerRef}>
-                {previewHtml && (() => {
-                  const body = extractBodyContent(previewHtml)
-                  return <div dangerouslySetInnerHTML={{ __html: body }} className="note-template-renderer" />
-                })()}
+              <div className="template-manager-preview-body">
+                {previewHtml && (
+                  <div ref={previewContainerRef} className="note-template-renderer" />
+                )}
               </div>
               <div className="note-template-modal-footer">
                 <button type="button" onClick={closePreview} className="note-template-cancel">

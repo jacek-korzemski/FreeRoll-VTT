@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback, forwardRef, useImperativeHandle }
 import Token from '../molecules/Token'
 import MapElement from '../molecules/MapElement'
 import FogOfWar from '../molecules/FogOfWar'
+import GridRulers from '../molecules/GridRulers'
 import { GRID_SIZE, CELL_SIZE } from '../../../config'
 
 const Grid = forwardRef(function Grid(props, ref) {
@@ -293,31 +294,39 @@ const Grid = forwardRef(function Grid(props, ref) {
   ].filter(Boolean).join(' ')
 
   return (
-    <div 
-      className={containerClasses}
-      ref={gridRef}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onTouchCancel={() => setDraggedToken(null)}
-      onClick={handleGridClick}
-      onContextMenu={handleContextMenu}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      <div 
-        className="grid-zoom-wrapper"
-        style={{
-          transform: `scale(${zoomLevel})`,
-          transformOrigin: 'top left',
-          width: GRID_SIZE * CELL_SIZE,
-          height: GRID_SIZE * CELL_SIZE,
-        }}
+    <div className="map-viewport">
+      <GridRulers
+        scrollContainerRef={gridRef}
+        zoomLevel={zoomLevel}
+        background={background}
+        cellSize={CELL_SIZE}
+        gridSize={GRID_SIZE}
+      />
+      <div
+        className={containerClasses}
+        ref={gridRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={() => setDraggedToken(null)}
+        onClick={handleGridClick}
+        onContextMenu={handleContextMenu}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
+        <div
+          className="grid-zoom-wrapper"
+          style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'top left',
+            width: GRID_SIZE * CELL_SIZE,
+            height: GRID_SIZE * CELL_SIZE,
+          }}
+        >
         <div 
           className={`grid ${background ? 'has-background' : ''}`}
           style={{
@@ -381,6 +390,7 @@ const Grid = forwardRef(function Grid(props, ref) {
             zoomLevel={zoomLevel}
           />
         </div>
+      </div>
       </div>
     </div>
   )

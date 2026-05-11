@@ -10,5 +10,10 @@
     Deny from all
 </FilesMatch>
 
+# Zezwolenie na publiczne szablony HTML
+<If "%{REQUEST_URI} =~ m#^/backend/assets/templates/.*\.html$#">
+    Require all granted
+</If>
+
 # Blokada listowania katalogów
 Options -Indexes

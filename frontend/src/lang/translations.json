@@ -87,6 +87,11 @@
       "zoomIn": "Zoom in",
       "reset": "Reset (100%)"
     },
+    "grid": {
+      "rulerScene": "Cell",
+      "rulerMap": "Map",
+      "rulerOffArt": "Off art"
+    },
     "dice": {
       "title": "Dice Roll",
       "playerPlaceholder": "Your name...",
@@ -435,6 +440,11 @@
       "zoomOut": "Oddal",
       "zoomIn": "Przybliż",
       "reset": "Reset (100%)"
+    },
+    "grid": {
+      "rulerScene": "Komórka",
+      "rulerMap": "Mapa",
+      "rulerOffArt": "Poza mapą"
     },
      "dice": {
       "title": "Rzut Kośćmi",

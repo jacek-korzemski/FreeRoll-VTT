@@ -250,38 +250,49 @@
     <!-- ATTACKS -->
     <table class="tpl-table">
       <tr>
-        <td colspan="5" class="section-header">Attacks</td>
+        <td colspan="4" class="section-header">Attacks</td>
       </tr>
       <tr>
         <td><strong>Weapon</strong></td>
         <td class="center"><strong>Atk</strong></td>
         <td class="center"><strong>Dmg</strong></td>
         <td class="center"><strong>Range</strong></td>
-        <td></td>
       </tr>
       <tr>
         <td><input data-field="atk1_name" type="text" class="plain wide"></td>
-        <td class="center"><input data-field="atk1_hit" type="text" class="box xs"></td>
-        <td class="center"><input data-field="atk1_dmg" type="text" class="plain sm"></td>
+        <td class="center">
+          <input data-field="atk1_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk1_hit" data-roll-label="Attack: @atk1_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk1_dmg" type="text" class="box sm">
+          <button data-roll="@atk1_dmg" data-roll-label="Damage: @atk1_name" class="roll-btn">dmg</button>
+        </td>
         <td class="center"><input data-field="atk1_range" type="text" class="plain xs"></td>
-        <td class="center"><button data-roll="d20+@atk1_hit" data-roll-label="Attack: @atk1_name"
-            class="roll-btn">d20</button></td>
       </tr>
       <tr>
         <td><input data-field="atk2_name" type="text" class="plain wide"></td>
-        <td class="center"><input data-field="atk2_hit" type="text" class="box xs"></td>
-        <td class="center"><input data-field="atk2_dmg" type="text" class="plain sm"></td>
+        <td class="center">
+          <input data-field="atk2_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk2_hit" data-roll-label="Attack: @atk2_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk2_dmg" type="text" class="box sm">
+          <button data-roll="@atk2_dmg" data-roll-label="Damage: @atk2_name" class="roll-btn">dmg</button>
+        </td>
         <td class="center"><input data-field="atk2_range" type="text" class="plain xs"></td>
-        <td class="center"><button data-roll="d20+@atk2_hit" data-roll-label="Attack: @atk2_name"
-            class="roll-btn">d20</button></td>
       </tr>
       <tr>
         <td><input data-field="atk3_name" type="text" class="plain wide"></td>
-        <td class="center"><input data-field="atk3_hit" type="text" class="box xs"></td>
-        <td class="center"><input data-field="atk3_dmg" type="text" class="plain sm"></td>
+        <td class="center">
+          <input data-field="atk3_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk3_hit" data-roll-label="Attack: @atk3_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk3_dmg" type="text" class="box sm">
+          <button data-roll="@atk3_dmg" data-roll-label="Damage: @atk3_name" class="roll-btn">dmg</button>
+        </td>
         <td class="center"><input data-field="atk3_range" type="text" class="plain xs"></td>
-        <td class="center"><button data-roll="d20+@atk3_hit" data-roll-label="Attack: @atk3_name"
-            class="roll-btn">d20</button></td>
       </tr>
     </table>
 

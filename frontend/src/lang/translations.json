@@ -104,7 +104,10 @@
       "now": "now",
       "minutesAgo": "m ago",
       "hoursAgo": "h ago",
-      "standardMode": "Standard"
+      "standardMode": "Standard",
+      "snackbarPause": "Pause auto-close",
+      "snackbarResume": "Resume auto-close",
+      "snackbarClose": "Close"
     },
     "l5r": {
       "ringDice": "Ring Dice",
@@ -458,7 +461,10 @@
       "now": "teraz",
       "minutesAgo": "m temu",
       "hoursAgo": "h temu",
-      "standardMode": "Standardowe"
+      "standardMode": "Standardowe",
+      "snackbarPause": "Wstrzymaj zamknięcie",
+      "snackbarResume": "Wznów zamykanie",
+      "snackbarClose": "Zamknij"
     },
     "l5r": {
       "ringDice": "Kości Pierścienia",

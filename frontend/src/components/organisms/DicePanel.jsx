@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { t } from '../../lang'
 import L5RDicePanel from '../molecules/L5RDicePanel'
 import { parseRollExpression } from '../../utils/diceRollUtils'
+import { formatRoll, formatTotal } from '../../utils/diceFormat'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 
 const DICE_TYPES = [
@@ -135,40 +136,6 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
       setIsRolling(false)
     }, 500)
   }, [selectedDice, modifier, playerName, onRoll])
-
-  const formatRoll = (roll) => {
-    if (roll.type === 'l5r') {
-      return t('l5r.rollResult', {
-        success: roll.totals.success,
-        opportunity: roll.totals.opportunity,
-        strife: roll.totals.strife
-      })
-    }
-
-    const diceCounts = {}
-    roll.dice.forEach(d => {
-      diceCounts[d.type] = diceCounts[d.type] || []
-      diceCounts[d.type].push(d.result)
-    })
-
-    const parts = Object.entries(diceCounts).map(([type, results]) => 
-      `${results.length}${type} [${results.join(', ')}]`
-    )
-
-    let formula = parts.join(' + ')
-    if (roll.modifier !== 0) {
-      formula += roll.modifier > 0 ? ` + ${roll.modifier}` : ` - ${Math.abs(roll.modifier)}`
-    }
-
-    return formula
-  }
-
-  const formatTotal = (roll) => {
-    if (roll.type === 'l5r') {
-      return `✓${roll.totals.success} 🌀${roll.totals.opportunity} 💢${roll.totals.strife}`
-    }
-    return `= ${roll.total}`
-  }
 
   const timeAgo = (timestamp) => {
     const seconds = Math.floor((Date.now() - timestamp) / 1000)

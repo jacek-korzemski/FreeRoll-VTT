@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, startTransition } from 'react'
-import { Sidebar, Grid, DicePanel, BottomPanel } from './components'
+import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer } from './components'
 import DebugOverlay from './components/atoms/DebugOverlay'
 import { 
   createEmptyFog, 
@@ -1219,6 +1219,11 @@ useEffect(() => {
         onToggle={() => setDicePanelOpen(prev => !prev)}
         rollHistory={rollHistory}
         onRoll={handleDiceRoll}
+      />
+
+      <RollSnackbarContainer
+        rollHistory={rollHistory}
+        dicePanelOpen={dicePanelOpen}
       />
 
       <BottomPanel

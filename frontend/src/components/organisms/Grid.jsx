@@ -128,6 +128,7 @@ const Grid = forwardRef(function Grid(props, ref) {
       const dy = e.clientY - panStart.y
       gridRef.current.scrollLeft = scrollStart.x - dx
       gridRef.current.scrollTop = scrollStart.y - dy
+      gridRef.current.dispatchEvent(new Event('scroll'))
       return
     }
     

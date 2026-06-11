@@ -55,38 +55,71 @@ function GridRulers({ scrollContainerRef, zoomLevel, background, cellSize, gridS
     clientHeight: 0,
   })
 
-  const bump = useCallback(() => {
+  const syncScroll = useCallback(() => {
     const el = scrollContainerRef?.current
     if (!el) return
-    setLayout({
-      scrollLeft: el.scrollLeft,
-      scrollTop: el.scrollTop,
-      scrollWidth: el.scrollWidth,
-      scrollHeight: el.scrollHeight,
-      clientWidth: el.clientWidth,
-      clientHeight: el.clientHeight,
+    setLayout(prev => {
+      const next = {
+        scrollLeft: el.scrollLeft,
+        scrollTop: el.scrollTop,
+        scrollWidth: el.scrollWidth,
+        scrollHeight: el.scrollHeight,
+        clientWidth: el.clientWidth,
+        clientHeight: el.clientHeight,
+      }
+      if (
+        prev.scrollLeft === next.scrollLeft
+        && prev.scrollTop === next.scrollTop
+        && prev.scrollWidth === next.scrollWidth
+        && prev.scrollHeight === next.scrollHeight
+        && prev.clientWidth === next.clientWidth
+        && prev.clientHeight === next.clientHeight
+      ) {
+        return prev
+      }
+      return next
     })
   }, [scrollContainerRef])
 
   useLayoutEffect(() => {
-    const el = scrollContainerRef?.current
-    if (!el) return undefined
+    let stopped = false
+    let rafId = 0
+    let ro = null
+    let el = null
 
-    bump()
-    const ro = new ResizeObserver(() => bump())
-    ro.observe(el)
-    el.addEventListener('scroll', bump, { passive: true })
-    window.addEventListener('resize', bump)
+    const tick = () => {
+      if (stopped) return
+      syncScroll()
+      rafId = requestAnimationFrame(tick)
+    }
 
-    let raf = requestAnimationFrame(() => bump())
+    const bind = () => {
+      el = scrollContainerRef?.current
+      if (!el) {
+        rafId = requestAnimationFrame(bind)
+        return
+      }
+
+      syncScroll()
+      ro = new ResizeObserver(syncScroll)
+      ro.observe(el)
+      el.addEventListener('scroll', syncScroll, { passive: true })
+      window.addEventListener('resize', syncScroll)
+      rafId = requestAnimationFrame(tick)
+    }
+
+    bind()
 
     return () => {
-      cancelAnimationFrame(raf)
-      ro.disconnect()
-      el.removeEventListener('scroll', bump)
-      window.removeEventListener('resize', bump)
+      stopped = true
+      cancelAnimationFrame(rafId)
+      ro?.disconnect()
+      if (el) {
+        el.removeEventListener('scroll', syncScroll)
+      }
+      window.removeEventListener('resize', syncScroll)
     }
-  }, [scrollContainerRef, bump, zoomLevel, background])
+  }, [scrollContainerRef, syncScroll, zoomLevel, background])
 
   const pxPerCell = cellSize * zoomLevel
   const step = labelStepForZoom(pxPerCell)

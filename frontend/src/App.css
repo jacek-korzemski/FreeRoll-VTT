@@ -845,6 +845,9 @@ body {
    ============================================ */
 .map-viewport {
   display: grid;
+  grid-template-areas:
+    "corner ruler-h"
+    "ruler-v map";
   grid-template-columns: 28px minmax(0, 1fr);
   grid-template-rows: 22px minmax(0, 1fr);
   width: 100%;
@@ -866,17 +869,20 @@ body {
 }
 
 .map-ruler-corner {
+  grid-area: corner;
   border-right-width: 1px;
   border-bottom-width: 1px;
 }
 
 .map-ruler-h {
+  grid-area: ruler-h;
   border-bottom-width: 1px;
   overflow: hidden;
   position: relative;
 }
 
 .map-ruler-v {
+  grid-area: ruler-v;
   border-right-width: 1px;
   overflow: hidden;
   position: relative;
@@ -938,6 +944,7 @@ body {
 }
 
 .map-viewport > .grid-container {
+  grid-area: map;
   min-width: 0;
   min-height: 0;
 }

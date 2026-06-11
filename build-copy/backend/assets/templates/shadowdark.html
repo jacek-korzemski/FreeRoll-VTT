@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadowdark (Light)</title>
+  <style>
+    .sd-sheet {
+      background: #fff;
+      padding: 6px;
+      color: #1a1a1a;
+    }
+
+    .sd-sheet input[type="text"],
+    .sd-sheet textarea {
+      color: #1a1a1a;
+    }
+
+    .sd-title {
+      font-family: 'UnifrakturCook', 'Cinzel', Georgia, 'Times New Roman', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: #1a1a1a;
+      margin: 0 0 4px 0;
+      text-align: center;
+    }
+
+    .sd-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .sd-col {
+      flex: 1 1 280px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sd-col > .tpl-table {
+      flex: 1 1 auto;
+    }
+
+    .tpl-table {
+      background: #fff;
+      border-color: #1a1a1a;
+      margin: 0 0 6px 0;
+    }
+
+    .tpl-table td {
+      border: 1px solid #1a1a1a;
+      padding: 3px 6px;
+    }
+
+    .section-header {
+      background: #1a1a1a;
+      color: #fff;
+      letter-spacing: 0.08em;
+      font-variant: small-caps;
+    }
+
+    .section-header-sm {
+      background: #f3eedf;
+      color: #1a1a1a;
+    }
+
+    .tpl-table small {
+      color: #555;
+    }
+
+    input.box {
+      background: #fff;
+      border-color: #1a1a1a;
+      color: #1a1a1a;
+    }
+
+    input.circle {
+      background: #fff;
+      border-color: #1a1a1a;
+      color: #1a1a1a;
+      border-width: 2px;
+    }
+
+    input.plain,
+    textarea.plain {
+      border-bottom-color: rgba(0, 0, 0, 0.12);
+    }
+
+    input.plain:hover,
+    textarea.plain:hover {
+      border-bottom-color: rgba(0, 0, 0, 0.4);
+    }
+
+    input.plain:focus,
+    textarea.plain:focus {
+      border-bottom-color: #1a1a1a;
+    }
+
+    input[data-field$="_mod"] {
+      background: #f0eada;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .roll-btn {
+      border-color: rgba(26, 26, 26, 0.4) !important;
+      background: #1a1a1a !important;
+      color: #fff !important;
+    }
+
+    .roll-btn:hover {
+      background: #333 !important;
+      border-color: #1a1a1a !important;
+    }
+
+    .gear-slot {
+      white-space: nowrap;
+    }
+
+    .gear-slot .slot-num {
+      display: inline-block;
+      width: 1.6em;
+      text-align: right;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sd-sheet">
+
+    <h1 class="sd-title">ShadowDark</h1>
+
+    <!-- IDENTITY + STATS side-by-side -->
+    <div class="sd-row">
+
+      <div class="sd-col">
+        <table class="tpl-table">
+          <tr>
+            <td><strong>Name</strong></td>
+            <td colspan="3"><input data-field="character_name" type="text" class="plain wide"></td>
+          </tr>
+          <tr>
+            <td><strong>Ancestry</strong></td>
+            <td><input data-field="ancestry" type="text" class="plain wide"></td>
+            <td><strong>Class</strong></td>
+            <td><input data-field="class" type="text" class="plain wide"></td>
+          </tr>
+          <tr>
+            <td><strong>Level</strong></td>
+            <td><input data-field="level" type="text" class="box sm"></td>
+            <td><strong>XP</strong></td>
+            <td>
+              <input data-field="xp_current" type="text" class="box sm"> /
+              <input data-field="xp_next" type="text" class="box sm">
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Title</strong></td>
+            <td><input data-field="title" type="text" class="plain wide"></td>
+            <td><strong>Alignment</strong></td>
+            <td><input data-field="alignment" type="text" class="plain wide"></td>
+          </tr>
+          <tr>
+            <td><strong>Background</strong></td>
+            <td><input data-field="background" type="text" class="plain wide"></td>
+            <td><strong>Deity</strong></td>
+            <td><input data-field="deity" type="text" class="plain wide"></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="sd-col">
+        <table class="tpl-table">
+          <tr>
+            <td colspan="3" class="section-header">Stats</td>
+          </tr>
+          <tr>
+            <td class="center"><strong>STR</strong></td>
+            <td class="center"><strong>DEX</strong></td>
+            <td class="center"><strong>CON</strong></td>
+          </tr>
+          <tr>
+            <td class="center">
+              <input data-field="str_score" type="text" class="circle">
+              <input data-field="str_mod" type="text" class="box xs">
+              <button data-roll="d20+@str_mod" data-roll-label="STR" class="roll-btn">d20</button>
+            </td>
+            <td class="center">
+              <input data-field="dex_score" type="text" class="circle">
+              <input data-field="dex_mod" type="text" class="box xs">
+              <button data-roll="d20+@dex_mod" data-roll-label="DEX" class="roll-btn">d20</button>
+            </td>
+            <td class="center">
+              <input data-field="con_score" type="text" class="circle">
+              <input data-field="con_mod" type="text" class="box xs">
+              <button data-roll="d20+@con_mod" data-roll-label="CON" class="roll-btn">d20</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="center"><strong>INT</strong></td>
+            <td class="center"><strong>WIS</strong></td>
+            <td class="center"><strong>CHA</strong></td>
+          </tr>
+          <tr>
+            <td class="center">
+              <input data-field="int_score" type="text" class="circle">
+              <input data-field="int_mod" type="text" class="box xs">
+              <button data-roll="d20+@int_mod" data-roll-label="INT" class="roll-btn">d20</button>
+            </td>
+            <td class="center">
+              <input data-field="wis_score" type="text" class="circle">
+              <input data-field="wis_mod" type="text" class="box xs">
+              <button data-roll="d20+@wis_mod" data-roll-label="WIS" class="roll-btn">d20</button>
+            </td>
+            <td class="center">
+              <input data-field="cha_score" type="text" class="circle">
+              <input data-field="cha_mod" type="text" class="box xs">
+              <button data-roll="d20+@cha_mod" data-roll-label="CHA" class="roll-btn">d20</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- COMBAT -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="2" class="section-header">Combat</td>
+      </tr>
+      <tr>
+        <td class="center">
+          <strong>HP</strong>
+          <input data-field="hp_current" type="text" class="box sm"> /
+          <input data-field="hp_max" type="text" class="box sm">
+        </td>
+        <td class="center">
+          <strong>AC</strong>
+          <input data-field="ac" type="text" class="circle">
+        </td>
+      </tr>
+    </table>
+
+    <!-- ATTACKS -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header">Attacks</td>
+      </tr>
+      <tr>
+        <td><strong>Weapon</strong></td>
+        <td class="center"><strong>Atk</strong></td>
+        <td class="center"><strong>Dmg</strong></td>
+        <td class="center"><strong>Range</strong></td>
+      </tr>
+      <tr>
+        <td><input data-field="atk1_name" type="text" class="plain wide"></td>
+        <td class="center">
+          <input data-field="atk1_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk1_hit" data-roll-label="Attack: @atk1_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk1_dmg" type="text" class="box sm">
+          <button data-roll="@atk1_dmg" data-roll-label="Damage: @atk1_name" class="roll-btn">dmg</button>
+        </td>
+        <td class="center"><input data-field="atk1_range" type="text" class="plain xs"></td>
+      </tr>
+      <tr>
+        <td><input data-field="atk2_name" type="text" class="plain wide"></td>
+        <td class="center">
+          <input data-field="atk2_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk2_hit" data-roll-label="Attack: @atk2_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk2_dmg" type="text" class="box sm">
+          <button data-roll="@atk2_dmg" data-roll-label="Damage: @atk2_name" class="roll-btn">dmg</button>
+        </td>
+        <td class="center"><input data-field="atk2_range" type="text" class="plain xs"></td>
+      </tr>
+      <tr>
+        <td><input data-field="atk3_name" type="text" class="plain wide"></td>
+        <td class="center">
+          <input data-field="atk3_hit" type="text" class="box xs">
+          <button data-roll="d20+@atk3_hit" data-roll-label="Attack: @atk3_name" class="roll-btn">d20</button>
+        </td>
+        <td class="center">
+          <input data-field="atk3_dmg" type="text" class="box sm">
+          <button data-roll="@atk3_dmg" data-roll-label="Damage: @atk3_name" class="roll-btn">dmg</button>
+        </td>
+        <td class="center"><input data-field="atk3_range" type="text" class="plain xs"></td>
+      </tr>
+    </table>
+
+    <!-- TALENTS / SPELLS -->
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header">Talents / Spells</td>
+      </tr>
+      <tr>
+        <td><textarea data-field="talents_spells" class="plain wide" rows="6"></textarea></td>
+      </tr>
+    </table>
+
+    <!-- GEAR -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="2" class="section-header">Gear</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <strong>GP</strong> <input data-field="coin_gp" type="text" class="box xs">
+          <strong>SP</strong> <input data-field="coin_sp" type="text" class="box xs">
+          <strong>CP</strong> <input data-field="coin_cp" type="text" class="box xs">
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; vertical-align: top;">
+          <div class="gear-slot"><span class="slot-num">1.</span> <input data-field="gear_1" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">2.</span> <input data-field="gear_2" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">3.</span> <input data-field="gear_3" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">4.</span> <input data-field="gear_4" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">5.</span> <input data-field="gear_5" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">6.</span> <input data-field="gear_6" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">7.</span> <input data-field="gear_7" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">8.</span> <input data-field="gear_8" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">9.</span> <input data-field="gear_9" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">10.</span> <input data-field="gear_10" type="text" class="plain wide"></div>
+        </td>
+        <td style="width: 50%; vertical-align: top;">
+          <div class="gear-slot"><span class="slot-num">11.</span> <input data-field="gear_11" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">12.</span> <input data-field="gear_12" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">13.</span> <input data-field="gear_13" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">14.</span> <input data-field="gear_14" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">15.</span> <input data-field="gear_15" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">16.</span> <input data-field="gear_16" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">17.</span> <input data-field="gear_17" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">18.</span> <input data-field="gear_18" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">19.</span> <input data-field="gear_19" type="text" class="plain wide"></div>
+          <div class="gear-slot"><span class="slot-num">20.</span> <input data-field="gear_20" type="text" class="plain wide"></div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="section-header-sm">Free to Carry</td>
+      </tr>
+      <tr>
+        <td colspan="2"><textarea data-field="free_to_carry" class="plain wide" rows="3"></textarea></td>
+      </tr>
+    </table>
+
+  </div>
+
+  <script>
+    var ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+    function abilityModifier(score) {
+      var n = parseInt(score, 10);
+      if (isNaN(n)) return '';
+      var m = Math.floor((n - 10) / 2);
+      return (m >= 0 ? '+' : '') + m;
+    }
+
+    function refresh(a) {
+      vtt.setField(a + '_mod', abilityModifier(vtt.getField(a + '_score')));
+    }
+
+    vtt.onMount(function () {
+      ABILITIES.forEach(refresh);
+    });
+
+    vtt.onFieldChange(function (name) {
+      var m = name.match(/^(str|dex|con|int|wis|cha)_score$/);
+      if (m) refresh(m[1]);
+    });
+  </script>
+</body>
+
+</html>

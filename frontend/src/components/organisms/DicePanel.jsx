@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { t } from '../../lang'
+import { ENABLE_L5R } from '../../../config'
 import L5RDicePanel from '../molecules/L5RDicePanel'
 import { parseRollExpression } from '../../utils/diceRollUtils'
 import { formatRoll, formatTotal } from '../../utils/diceFormat'
@@ -64,6 +65,12 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
       setMacros(loadMacros())
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (!ENABLE_L5R && mode === 'l5r') {
+      setMode('standard')
+    }
+  }, [mode])
 
   const handleNameChange = useCallback((e) => {
     const name = e.target.value
@@ -187,12 +194,14 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
               Makra
             </button>
           )}
-          <button 
-            className={mode === 'l5r' ? 'active' : ''}
-            onClick={() => setMode('l5r')}
-          >
-            L5R
-          </button>
+          {ENABLE_L5R && (
+            <button
+              className={mode === 'l5r' ? 'active' : ''}
+              onClick={() => setMode('l5r')}
+            >
+              L5R
+            </button>
+          )}
         </div>
 
         {(mode === 'standard' || mode === 'macros') && (
@@ -294,7 +303,7 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
           </>
         )}
 
-        {mode === 'l5r' && (
+        {ENABLE_L5R && mode === 'l5r' && (
           <L5RDicePanel playerName={playerName} onRoll={onRoll} />
         )}
 

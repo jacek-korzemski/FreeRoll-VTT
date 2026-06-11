@@ -1,0 +1,11 @@
+Options -Indexes
+
+<FilesMatch "^\.env$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+</IfModule>

@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
-    base: env.VITE_BASE_PATH || '/vtt/room1/',
+    base: mode === 'production' ? './' : (env.VITE_BASE_PATH || '/vtt/room1/'),
     build: {
       outDir: 'dist',
       assetsDir: 'assets',

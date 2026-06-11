@@ -1,6 +1,7 @@
 import translations from './translations.json'
 
-const LANGUAGE = import.meta.env.VITE_LANGUAGE || 'en'
+const runtime = typeof window !== 'undefined' ? window.__VTT_CONFIG__ : undefined
+const LANGUAGE = runtime?.language ?? import.meta.env.VITE_LANGUAGE ?? 'en'
 
 const strings = translations[LANGUAGE] || translations['en']
 

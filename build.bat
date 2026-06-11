@@ -8,7 +8,6 @@ echo   FreeRoll VTT - Build Script
 echo  ========================================
 echo.
 
-:: Sprawdź czy Node.js jest zainstalowany
 where node >nul 2>nul
 if %errorlevel% neq 0 (
     echo [ERROR] Node.js is not installed!
@@ -20,66 +19,11 @@ if %errorlevel% neq 0 (
 echo  This script will guide you through the build process.
 echo  Press ENTER to use default values shown in [brackets].
 echo.
-echo  ----------------------------------------
-echo.
 
-:: Hasło dla graczy
-set "PASSWORD="
-set /p "PASSWORD=Player password [2137]: "
-if "%PASSWORD%"=="" set "PASSWORD=2137"
-
-:: Hasło dla MG
-set "GM_PASSWORD="
-set /p "GM_PASSWORD=Game Master password [admin]: "
-if "%GM_PASSWORD%"=="" set "GM_PASSWORD=admin"
-
-:: Ścieżka bazowa
-set "BASE_PATH="
-set /p "BASE_PATH=Base path [/vtt/room1/]: "
-if "%BASE_PATH%"=="" set "BASE_PATH=/vtt/room1/"
-
-:: Język
-:ask_language
-set "LANGUAGE="
-set /p "LANGUAGE=Language (en/pl) [en]: "
-if "%LANGUAGE%"=="" set "LANGUAGE=en"
-if /i not "%LANGUAGE%"=="en" if /i not "%LANGUAGE%"=="pl" (
-    echo   Invalid option. Please enter 'en' or 'pl'.
-    goto ask_language
-)
-
-:: L5R
-:ask_l5r
-set "ENABLE_L5R="
-set /p "ENABLE_L5R=Enable L5R dice? (true/false) [false]: "
-if "%ENABLE_L5R%"=="" set "ENABLE_L5R=false"
-if /i not "%ENABLE_L5R%"=="true" if /i not "%ENABLE_L5R%"=="false" (
-    echo   Invalid option. Please enter 'true' or 'false'.
-    goto ask_l5r
-)
-
-:: Allowed origins
-set "ALLOWED_ORIGINS="
-set /p "ALLOWED_ORIGINS=Allowed origins [*]: "
-if "%ALLOWED_ORIGINS%"=="" set "ALLOWED_ORIGINS=*"
-
-echo.
-echo  ----------------------------------------
-echo.
-echo  Configuration summary:
-echo    Player password:  %PASSWORD%
-echo    GM password:      %GM_PASSWORD%
-echo    Base path:        %BASE_PATH%
-echo    Language:         %LANGUAGE%
-echo    Enable L5R:       %ENABLE_L5R%
-echo    Allowed origins:  %ALLOWED_ORIGINS%
-echo.
-echo  ----------------------------------------
-echo.
-
-set "CONFIRM="
-set /p "CONFIRM=Proceed with build? (Y/n): "
-if /i "%CONFIRM%"=="n" (
+set "PROMPT_LOCALE=en"
+set "CONFIRM_LABEL=build"
+call "%~dp0config-prompts.inc.bat"
+if !errorlevel! equ 2 (
     echo.
     echo  Build cancelled.
     pause
@@ -88,26 +32,8 @@ if /i "%CONFIRM%"=="n" (
 
 echo.
 
-:: Ustaw teksty na podstawie języka
-if /i "%LANGUAGE%"=="pl" (
-    set "LOGIN_TITLE=FreeRoll VTT"
-    set "LOGIN_SUBTITLE=Wprowadz haslo aby kontynuowac"
-    set "LOGIN_PLACEHOLDER=Haslo..."
-    set "LOGIN_SUBMIT=Wejdz do gry"
-    set "LOGIN_ERROR=Nieprawidlowe haslo!"
-    set "LOGIN_GM_CHECKBOX=Jestem Mistrzem Gry"
-    set "LOGOUT=Wyloguj"
-    set "APP_TITLE=FreeRoll VTT"
-) else (
-    set "LOGIN_TITLE=FreeRoll VTT"
-    set "LOGIN_SUBTITLE=Enter password to continue"
-    set "LOGIN_PLACEHOLDER=Password..."
-    set "LOGIN_SUBMIT=Enter game"
-    set "LOGIN_ERROR=Invalid password!"
-    set "LOGIN_GM_CHECKBOX=I'm Game Master"
-    set "LOGOUT=Logout"
-    set "APP_TITLE=FreeRoll VTT"
-)
+set "ROOT=%~dp0"
+if "!ROOT:~-1!"=="\" set "ROOT=!ROOT:~0,-1!"
 
 echo [1/5] Creating build folder...
 if exist "build" rmdir /s /q "build"
@@ -122,20 +48,17 @@ mkdir "build\backend\assets\papers"
 mkdir "build\backend\assets\templates"
 mkdir "build\assets"
 
-echo [2/5] Configuring frontend...
-set "ROOT=%~dp0"
-if "!ROOT:~-1!"=="\" set "ROOT=!ROOT:~0,-1!"
+echo [2/5] Building frontend (this may take a while)...
 if exist "!ROOT!\frontend\.env" (
     ren "!ROOT!\frontend\.env" ".env.devbackup"
 )
 (
-    echo VITE_BASE_PATH=%BASE_PATH%
+    echo VITE_BASE_PATH=/vtt/room1/
     echo VITE_API_PATH=backend/api.php
-    echo VITE_LANGUAGE=%LANGUAGE%
-    echo VITE_ENABLE_L5R=%ENABLE_L5R%
+    echo VITE_LANGUAGE=en
+    echo VITE_ENABLE_L5R=false
 ) > "!ROOT!\frontend\.env"
 
-echo [3/5] Building frontend (this may take a while)...
 cd /d "!ROOT!\frontend"
 
 if not exist "node_modules" (
@@ -162,14 +85,12 @@ if !errorlevel! neq 0 (
 cd /d "!ROOT!"
 call :restore_frontend_env
 
-echo [4/5] Copying files...
-
-:: Kopiuj zbudowane assety (zawierają już L5R jeśli włączone)
+echo [3/5] Copying files...
 xcopy /s /y "frontend\dist\assets\*" "build\assets\" >nul 2>nul
-
 copy /y "backend\api.php" "build\backend\" >nul
+copy /y "index.php" "build\" >nul
+copy /y "deploy-env.php" "build\" >nul
 
-:: Copy templates
 if exist "backend\assets\templates\*.html" (
     xcopy /y "backend\assets\templates\*.html" "build\backend\assets\templates\" >nul 2>nul
 )
@@ -193,28 +114,28 @@ if exist "backend\assets\templates\*.html" (
     echo Deny from all
 ) > "build\backend\data\.htaccess"
 
-(
-    echo ALLOWED_ORIGINS=%ALLOWED_ORIGINS%
-) > "build\backend\.env"
-
 powershell -Command "'' | Out-File -FilePath 'build\backend\assets\map\.gitkeep' -Encoding ASCII"
 powershell -Command "'' | Out-File -FilePath 'build\backend\assets\tokens\.gitkeep' -Encoding ASCII"
 powershell -Command "'' | Out-File -FilePath 'build\backend\assets\backgrounds\.gitkeep' -Encoding ASCII"
 powershell -Command "'' | Out-File -FilePath 'build\backend\assets\papers\.gitkeep' -Encoding ASCII"
 powershell -Command "'' | Out-File -FilePath 'build\backend\data\.gitkeep' -Encoding ASCII"
 
-echo [5/5] Generating index.php...
-
-powershell -ExecutionPolicy Bypass -File "build-helper.ps1" -TemplatePath "index.php.template" -OutputPath "build\index.php" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Lang "%LANGUAGE%" -LoginTitle "%LOGIN_TITLE%" -LoginSubtitle "%LOGIN_SUBTITLE%" -LoginPlaceholder "%LOGIN_PLACEHOLDER%" -LoginSubmit "%LOGIN_SUBMIT%" -LoginError "%LOGIN_ERROR%" -LoginGmCheckbox "%LOGIN_GM_CHECKBOX%" -Logout "%LOGOUT%" -AppTitle "%APP_TITLE%"
-
-if %errorlevel% neq 0 (
-    echo [ERROR] Generating index.php failed!
+echo [4/5] Writing deployment configuration...
+powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "build\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%"
+if !errorlevel! neq 0 (
+    echo [ERROR] Writing build\.env failed!
     pause
     exit /b 1
 )
 
+echo [5/5] Creating .htaccess files...
 (
     echo Options -Indexes
+    echo.
+    echo ^<FilesMatch "^\.env$"^>
+    echo     Order Allow,Deny
+    echo     Deny from all
+    echo ^</FilesMatch^>
     echo.
     echo ^<IfModule mod_mime.c^>
     echo     AddType application/javascript .js
@@ -228,24 +149,21 @@ echo   BUILD COMPLETE!
 echo  ========================================
 echo.
 echo   The 'build' folder contains the package.
+echo   Deployment settings are in build\.env
 echo.
 echo   Configuration used:
 echo     Player password: %PASSWORD%
 echo     GM password:     %GM_PASSWORD%
-echo     Base path:      %BASE_PATH%
-echo     Language:       %LANGUAGE%
-echo     L5R enabled:    %ENABLE_L5R%
+echo     Base path:       %BASE_PATH%
+echo     Language:        %LANGUAGE%
+echo     L5R enabled:     %ENABLE_L5R%
 echo.
 echo   Next steps:
 echo   1. Upload contents of 'build' folder to server
 echo      at location: %BASE_PATH%
-echo   2. Add images to:
-echo      - backend/assets/map/
-echo      - backend/assets/tokens/
-echo      - backend/assets/backgrounds/
-echo      - backend/assets/papers/
-echo   3. Ensure backend/data/ folder is writable
-echo   4. Open the page and login with your password
+echo   2. Or run clone.bat to create another room from this build
+echo   3. Add images to backend/assets/ on the server
+echo   4. Ensure backend/data/ folder is writable
 echo.
 echo  ========================================
 echo.

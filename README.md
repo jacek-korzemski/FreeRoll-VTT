@@ -57,22 +57,27 @@ FreeRoll VTT is a **lightweight Virtual TableTop** that you can build once and h
   - basic validation of file types and size, with detailed error messages
 
 - **Simple auth & GM mode**
-  - **player password** and **GM password**, configured at build time
-  - login page generated from `index.php.template` with localized text
+  - **player password** and **GM password**, configured in `build/.env`
+  - login page served by `index.php` with localized text (from `VTT_LANGUAGE`)
   - backend keeps track of **GM vs player** and restricts sensitive actions (uploads, fog editing, scene edits, etc.)
 
 - **Multi‑language support (en / pl)**
   - UI strings stored in `frontend/src/lang/translations.json`
-  - language chosen at build time (`en` or `pl`) and injected via `VITE_LANGUAGE`
+  - language chosen in `build/.env` (`VTT_LANGUAGE=en` or `pl`)
 
 ---
 
 ## Requirements
 
-### To build the app
+### To build the app (maintainers)
 
 - **Node.js 18+** (`https://nodejs.org/`)
 - **Windows** (if you want to use the provided `build.bat` / `build_pl.bat` helpers)
+
+### To create another room from an existing package (no Node)
+
+- **Windows** with PowerShell (for `clone.bat`)
+- an existing `build/` folder (from `build.bat` or from a downloaded ZIP)
 
 ### Server to run the built package
 
@@ -87,36 +92,30 @@ The final `build` folder is static assets + a small PHP backend, so it can be ho
 
 ## Fast start on Windows
 
-### 1. Build the package
+### 1. Build the package (requires Node.js)
 
 In the project root run **one** of:
 
-- `build.bat` – interactive build script (prompts in English, default language: **en**)
-- `build_pl.bat` – interactive build script (prompts in Polish, default language: **pl**)
+- `build.bat` – interactive build script (prompts in English, default UI language: **en**)
+- `build_pl.bat` – interactive build script (prompts in Polish, default UI language: **pl**)
 
-The script will ask you for:
+The script will ask you for deployment settings (passwords, base path, UI language, L5R, CORS). It then runs `npm run build` once and assembles the `build/` folder.
 
-- **player password** and **GM password**
-- **base path** (e.g. `/vtt/room1/` – where the app will live on your server)
-- **UI language** (`en` / `pl`)
-- whether to **enable L5R dice module**
-- allowed HTTP origins for the API (`ALLOWED_ORIGINS` in backend `.env`)
+All deployment settings are stored in **`build/.env`** (see [`deploy.env.example`](deploy.env.example)). The frontend bundle is path‑ and language‑agnostic; `index.php` reads `.env` at runtime.
 
-It will then:
+### 2. Clone another room (no Node.js)
 
-- prepare a fresh `frontend/.env` for the chosen configuration
-- run `npm install` (only once, if needed) and `npm run build`
-- assemble the `build` folder with:
-  - `index.php` generated from `index.php.template`
-  - `assets/` with all frontend bundles
-  - `backend/` with `api.php`, `.env`, `.htaccess`, `data/`, `assets/…`
-  - placeholder `.gitkeep` files for empty asset folders
+If you already have a `build/` folder and need another instance (different path, passwords, or language):
 
-### 2. Deploy the package
+```bat
+clone.bat
+```
 
-If the build finished successfully, you should see a new `build` folder in the project root.
+The script copies the existing package to a new folder and writes a fresh `build/.env`. Session data (`backend/data/state.json`) is reset so the new room starts empty.
 
-- **Upload the contents of `build/`** (not the folder itself) to the target directory on your server that matches the base path you chose.
+### 3. Deploy the package
+
+- **Upload the contents of `build/`** (not the folder itself) to the target directory on your server that matches `VTT_BASE_PATH` in `.env`.
 - Put your assets on the server side into:
   - `backend/assets/map/` – map elements
   - `backend/assets/tokens/` – tokens
@@ -127,6 +126,8 @@ If the build finished successfully, you should see a new `build` folder in the p
   - `chmod 755 backend/data/` (or more permissive, depending on your hosting)
 
 Then open your configured URL (e.g. `https://yourdomain.com/vtt/room1/`) and log in with the configured player / GM password.
+
+To change passwords or base path later, edit `build/.env` on the server (or run `clone.bat` locally and re‑upload).
 
 ---
 

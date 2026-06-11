@@ -13,7 +13,7 @@ Kolejność kroków pozwala po każdym etapie uruchomić lub zbudować aplikacj�
 - **Node.js 18+** – do budowania frontendu i uruchamiania `build.bat`
 - **PHP 7.4+** – serwer API i strona logowania
 - **Serwer WWW** – Apache (z mod_rewrite opcjonalnie) lub nginx, z obsługą PHP
-- **Windows** – jeśli używasz dostarczonego `build.bat` i `build-helper.ps1` (na innych systemach można zaimplementować odpowiednik w bashu)
+- **Windows** – jeśli używasz dostarczonego `build.bat`, `clone.bat` i `write-deploy-env.ps1` (na innych systemach można zaimplementować odpowiednik w bashu)
 
 ---
 
@@ -33,7 +33,7 @@ Kolejność kroków pozwala po każdym etapie uruchomić lub zbudować aplikacj�
 | 10 | [step-10-ping.md](step-10-ping.md) | Backend: send-ping, clear-ping, GET ping. Frontend: tryb ping, scroll do punktu, animacja. |
 | 11 | [step-11-uploads-and-gm.md](step-11-uploads-and-gm.md) | Backend: upload-asset (token/map/background/template/paper), isGameMaster. Frontend: UploadSection tylko dla GM. |
 | 12 | [step-12-notes-pdf-macros.md](step-12-notes-pdf-macros.md) | Backend: list-templates, get-template, list-papers, get-paper. Frontend: BottomPanel, NotesPanel, PdfPanel, MacroEditor. |
-| 13 | [step-13-build-and-deploy.md](step-13-build-and-deploy.md) | build.bat: PASSWORD, GM_PASSWORD, .env frontendu, npm run build, kopiowanie, build-helper.ps1, .htaccess. Deploy. |
+| 13 | [step-13-build-and-deploy.md](step-13-build-and-deploy.md) | build.bat, clone.bat, build/.env, npm run build, wdrożenie. |
 
 ---
 

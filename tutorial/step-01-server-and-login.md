@@ -8,18 +8,21 @@ Stworzenie strony wejściowej VTT, która:
 - po zalogowaniu pokazuje szkielet strony z placeholderm na aplikację (później dołączy się frontend),
 - udostępnia wylogowanie.
 
-Hasła **nie** są nigdy wysyłane do przeglądarki w formie jawnej – trafiają do aplikacji tylko w momencie builda (wstrzyknięcie do wygenerowanego pliku `index.php`). Logowanie odbywa się przez formularz POST do tego samego dokumentu.
+Hasła **nie** są wysyłane do przeglądarky w formie jawnej. W paczce produkcyjnej trzymane są w **`build/.env`** i odczytywane przez `index.php` (patrz też krok 13).
+
+> **Aktualna wersja projektu:** źródłem prawdy jest statyczny [`index.php`](../index.php) + [`deploy-env.php`](../deploy-env.php). Plik `index.php.template` poniżej opisuje historyczny model z placeholderami — nadal pomocny przy zrozumieniu logiki logowania.
 
 ---
 
-## Pliki do utworzenia
+## Pliki
 
-- `index.php.template` – szablon strony (z placeholderami `{{PASSWORD}}`, `{{GM_PASSWORD}}`, `{{LANG}}`, `{{LOGIN_TITLE}}` itd.), używany przez skrypt builda do wygenerowania finalnego `index.php`.
-- Opcjonalnie: skopiowany jako `index.php` w katalogu głównym z ręcznie wpisanymi hasłami do testów (bez builda).
+- `index.php` – strona logowania i host aplikacji (czyta `build/.env` w runtime)
+- `deploy-env.php` – loader konfiguracji i tekstów logowania en/pl
+- `index.php.template` – starszy szablon z placeholderami (referencja)
 
 ---
 
-## 1. Szablon index.php.template – logika PHP (z komentarzami)
+## 1. Szablon index.php.template – logika PHP (z komentarzami, model historyczny)
 
 ```php
 <?php

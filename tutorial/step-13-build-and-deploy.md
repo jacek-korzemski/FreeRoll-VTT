@@ -2,111 +2,105 @@
 
 ## Cel
 
-- **build.bat** zbiera konfigurację (hasło gracza, hasło MG, ścieżka bazowa, język, L5R, dozwolone originy), tworzy katalog build, ustawia plik .env frontendu, buduje frontend (npm run build), kopiuje pliki backendu i zbudowane assety, generuje index.php z wstrzykniętymi hasłami i tekstami logowania za pomocą skryptu PowerShell (build-helper.ps1), tworzy pliki .htaccess. Hasła **nigdy** nie trafiają do kodu frontendu ani do repozytorium – tylko do wygenerowanego pliku index.php na serwerze.
-- **Wdrożenie:** Upload zawartości folderu build na serwer WWW pod wybraną ścieżką (BASE_PATH), ustawienie uprawnień zapisu na backend/data/, opcjonalnie dodanie obrazków do assets. Po wdrożeniu użytkownik wchodzi na stronę, loguje się hasłem gracza lub MG i korzysta z aplikacji.
+- **build.bat** zbiera konfigurację wdrożenia, buduje frontend (npm run build), składa katalog `build/` i zapisuje ustawienia w **`build/.env`**. Hasła **nie trafiają** do kodu frontendu ani do repozytorium.
+- **clone.bat** kopiuje gotową paczkę `build/` do nowego folderu i zmienia wyłącznie **`build/.env`** — bez Node.js.
+- **Wdrożenie:** upload zawartości `build/` na serwer pod `VTT_BASE_PATH`, zapis na `backend/data/`, opcjonalnie assety w `backend/assets/`.
 
 ---
 
-## 1. Przepływ build.bat (krok po kroku)
+## 1. Plik build/.env
 
-1. **Sprawdzenie Node.js** – bez niego nie uruchomisz Vite (npm run build).
-2. **Pobranie konfiguracji od użytkownika** (domyślnie Enter = wartości w nawiasach):
-   - **PASSWORD** – hasło dla graczy (domyślnie 2137).
-   - **GM_PASSWORD** – hasło dla Mistrza Gry (domyślnie admin).
-   - **BASE_PATH** – ścieżka, pod którą aplikacja będzie hostowana (np. /vtt/room1/).
-   - **LANGUAGE** – en lub pl (teksty logowania i ewentualnie VITE_LANGUAGE).
-   - **ENABLE_L5R** – true/false (moduł kości L5R w frontendzie).
-   - **ALLOWED_ORIGINS** – lista originów CORS dla API (np. * lub konkretna domena).
-3. **Podsumowanie i potwierdzenie** – użytkownik wpisuje Y lub n (anulowanie).
-4. **Ustawienie tekstów logowania** (LOGIN_TITLE, LOGIN_SUBTITLE, LOGIN_PLACEHOLDER, LOGIN_SUBMIT, LOGIN_ERROR, LOGIN_GM_CHECKBOX, LOGOUT, APP_TITLE) w zależności od LANGUAGE.
-5. **[1/5] Tworzenie struktury build** – usunięcie starego build (jeśli jest), mkdir build, build\backend, build\backend\data, build\backend\assets (map, tokens, backgrounds, papers, templates), build\assets.
-6. **[2/5] Konfiguracja frontendu** – zapis pliku frontend\.env z zawartością:
-   - VITE_BASE_PATH=%BASE_PATH%
-   - VITE_API_PATH=backend/api.php
-   - VITE_LANGUAGE=%LANGUAGE%
-   - VITE_ENABLE_L5R=%ENABLE_L5R%
-   Istniejący frontend\.env jest wcześniej backupowany do .env.devbackup, żeby nie nadpisać ustawień deweloperskich na stałe.
-7. **[3/5] Budowanie frontendu** – cd frontend, npm install (jeśli brak node_modules), npm run build. Przy błędzie przywrócenie .env z .env.devbackup i wyjście.
-8. **[4/5] Kopiowanie plików:**
-   - frontend\dist\assets\* → build\assets\
-   - backend\api.php → build\backend\
-   - backend\assets\templates\*.html → build\backend\assets\templates\
-   - Generowanie build\backend\.htaccess (ochrona .env, state.json, rolls.json, Deny dla data/).
-   - Zapis build\backend\.env z ALLOWED_ORIGINS.
-   - Puste pliki .gitkeep w katalogach assets i data (żeby katalogi istniały w repozytorium).
-9. **[5/5] Generowanie index.php** – wywołanie PowerShell:
-   `powershell -ExecutionPolicy Bypass -File "build-helper.ps1" -TemplatePath "index.php.template" -OutputPath "build\index.php" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Lang "%LANGUAGE%" -LoginTitle "%LOGIN_TITLE%" ... (wszystkie placeholdery)`
-   build-helper.ps1 wczytuje index.php.template i zamienia każdy placeholder ({{PASSWORD}}, {{GM_PASSWORD}}, {{BASE_PATH}}, {{LANG}}, {{LOGIN_TITLE}}, itd.) na wartość z parametru, po czym zapisuje wynik do build\index.php.
-10. **Generowanie build\.htaccess** – Options -Indexes, AddType dla .js/.mjs (poprawne MIME).
-11. **Przywrócenie frontend\.env** – jeśli był backup .env.devbackup, przywróć go jako .env (funkcja :restore_frontend_env).
+Jeden plik konfiguracyjny w korzeniu paczki (wzór: [`deploy.env.example`](../../deploy.env.example)):
 
----
-
-## 2. build-helper.ps1 – wstrzykiwanie haseł i tekstów
-
-Skrypt przyjmuje parametry (TemplatePath, OutputPath, Password, GmPassword, BasePath, Lang, LoginTitle, LoginSubtitle, LoginPlaceholder, LoginSubmit, LoginError, LoginGmCheckbox, Logout, AppTitle). Odczytuje szablon jako surowy tekst (UTF-8), wykonuje replace dla każdego placeholder:
-
-```powershell
-$content = Get-Content $TemplatePath -Raw -Encoding UTF8
-$content = $content -replace '\{\{PASSWORD\}\}', $Password
-$content = $content -replace '\{\{GM_PASSWORD\}\}', $GmPassword
-$content = $content -replace '\{\{BASE_PATH\}\}', $BasePath
-# ... pozostałe placeholdery ...
-[System.IO.File]::WriteAllText($OutputPath, $content, [System.Text.Encoding]::UTF8)
+```ini
+VTT_PASSWORD=2137
+VTT_GM_PASSWORD=admin
+VTT_BASE_PATH=/vtt/room1/
+VTT_LANGUAGE=en
+VTT_ENABLE_L5R=false
+ALLOWED_ORIGINS=*
 ```
 
-W wygenerowanym build\index.php pojawią się literalne wartości haseł (np. define('VTT_PASSWORD', '2137');). Ten plik **nie** powinien trafiać do repozytorium z prawdziwymi hasłami – albo build/ jest w .gitignore, albo na serwer wgrywasz build ręcznie i nie commitujesz go.
+- **`index.php`** i **`deploy-env.php`** czytają ten plik w runtime (logowanie, język UI, ścieżka assetów, flaga L5R).
+- **`backend/api.php`** czyta ten sam plik (`../.env` w strukturze build) — m.in. `ALLOWED_ORIGINS` dla CORS.
+- Frontend dostaje `window.__VTT_CONFIG__` z `index.php` — nie wymaga przebudowy przy zmianie ścieżki ani języka.
 
 ---
 
-## 3. Zawartość build po zakończeniu
+## 2. Przepływ build.bat
 
-- **build/index.php** – strona wejściowa z logowaniem i wstawką aplikacji (script/link do assets/index.js i index.css). Zawiera stałe PHP z hasłami.
-- **build/assets/** – index.js, index.css, chunk-y (frontend zbudowany przez Vite z base = BASE_PATH).
-- **build/backend/api.php** – jeden plik API.
-- **build/backend/.env** – tylko ALLOWED_ORIGINS (hasła są w index.php, nie w backendzie).
-- **build/backend/data/** – katalog na state.json i rolls.json (musi być zapisywalny).
-- **build/backend/assets/map|tokens|backgrounds|papers|templates/** – puste lub z plikami (np. .gitkeep). Po wdrożeniu możesz dodać obrazy/PDF/szablony.
-- **build/.htaccess** – indeksowanie wyłączone, typy MIME dla JS.
+1. **Sprawdzenie Node.js** — wymagane tylko do `npm run build`.
+2. **Prompty** — wspólny [`config-prompts.inc.bat`](../../config-prompts.inc.bat) (hasła, ścieżka, język, L5R, originy).
+3. **[1/5]** Struktura katalogów `build/`.
+4. **[2/5]** `npm install` (jeśli potrzeba) + `npm run build` (Vite z `base: './'` w produkcji).
+5. **[3/5]** Kopiowanie: `assets/`, `backend/api.php`, `index.php`, `deploy-env.php`, szablony HTML, `.htaccess`.
+6. **[4/5]** [`write-deploy-env.ps1`](../../write-deploy-env.ps1) → `build/.env`.
+7. **[5/5]** `build/.htaccess` — ochrona root `.env`, MIME dla JS.
 
----
-
-## 4. .htaccess – ochrona wrażliwych plików
-
-W build\backend\.htaccess:
-
-- Blokada dostępu do plików .env (FilesMatch).
-- Blokada bezpośredniego dostępu do state.json i rolls.json (żeby nikt nie czytał stanu przez URL).
-- Options -Indexes – brak listowania katalogów.
-
-W build\backend\data\.htaccess:
-
-- Deny from all – katalog data/ nie jest serwowany bezpośrednio; API czyta/zapisuje pliki z dysku, ale przeglądarka nie może pobrać state.json po URL.
+Teksty logowania po polsku/angielsku pochodzą z `VTT_LANGUAGE` w PHP (`deploy-env.php`), nie z osobnych placeholderów w szablonie.
 
 ---
 
-## 5. Wdrożenie na serwer
+## 3. Przepływ clone.bat
 
-1. Skopiuj **całą zawartość** folderu build (np. przez FTP/SFTP) do katalogu docelowego na serwerze, odpowiadającego BASE_PATH. Np. jeśli BASE_PATH=/vtt/room1/, to index.php i podkatalogi (assets, backend) muszą być dostępne pod https://twoja-domena.pl/vtt/room1/.
-2. Ustaw uprawnienia: katalog backend/data/ (i ewentualnie backend/assets/ i podkatalogi) muszą być zapisywalne przez użytkownika serwera WWW (chmod 755 lub 775, w zależności od konfiguracji).
-3. Serwer musi obsługiwać PHP (np. Apache z mod_php lub PHP-FPM) oraz rozszerzenie PHP do sesji i JSON. Nie jest wymagana baza danych.
-4. (Opcjonalnie) Dodaj obrazy do backend/assets/map, backend/assets/tokens, backend/assets/backgrounds; PDF do backend/assets/papers; szablony HTML do backend/assets/templates.
-5. W przeglądarce otwórz adres strony (np. https://twoja-domena.pl/vtt/room1/). Powinna pojawić się strona logowania. Zaloguj się hasłem gracza lub hasłem MG (z checkboxem „Jestem Mistrzem Gry”). Po zalogowaniu ładuje się aplikacja (index.js), która odwołuje się do backend/api.php pod tym samym BASE_PATH; ciasteczko sesji jest wysyłane z credentials: 'include'.
+1. Wskazanie folderu źródłowego (domyślnie `build/`) i docelowego (domyślnie `build-copy/`).
+2. Te same prompty co w build.bat (`config-prompts.inc.bat`).
+3. `xcopy` paczki do folderu docelowego.
+4. Usunięcie `backend/data/state.json` i `rolls.json` (nowy pokój startuje pusty).
+5. Zapis nowego `.env` w folderze docelowym.
+
+**Node.js nie jest wymagany.**
 
 ---
 
-## 6. ALLOWED_ORIGINS po wdrożeniu
+## 4. Zawartość build po zakończeniu
 
-Jeśli frontend i backend są serwowane z tej samej domeny i ścieżki (np. wszystko pod /vtt/room1/), requesty do API mają ten sam origin – CORS może nie być konieczny. Jeśli jednak np. front jest na CDN lub innej domenie, ustaw w build\backend\.env ALLOWED_ORIGINS na konkretny origin (np. https://twoja-domena.pl). Wartość * przy credentials: true może być ignorowana przez przeglądarki – bezpieczniej podać jawny origin.
+- **build/.env** — wszystkie ustawienia wdrożenia
+- **build/index.php** + **build/deploy-env.php** — logowanie i wstrzyknięcie configu do JS
+- **build/assets/** — index.js, index.css, chunki (wspólne dla wszystkich instancji)
+- **build/backend/api.php** — API
+- **build/backend/data/** — katalog na state.json (zapisywalny)
+- **build/backend/assets/** — map, tokens, backgrounds, papers, templates
+- **build/.htaccess** — ochrona `.env`, MIME JS
+
+---
+
+## 5. .htaccess – ochrona wrażliwych plików
+
+W **build/.htaccess**: blokada root `.env`, Options -Indexes, typy MIME dla JS.
+
+W **build/backend/.htaccess**: blokada `.env`, `state.json`, `rolls.json`.
+
+W **build/backend/data/.htaccess**: Deny from all.
+
+---
+
+## 6. Wdrożenie na serwer
+
+1. Wgraj zawartość `build/` pod ścieżkę zgodną z `VTT_BASE_PATH` w `.env`.
+2. Ustaw zapisywalność `backend/data/`.
+3. Dodaj opcjonalnie obrazy/PDF/szablony do `backend/assets/`.
+4. Otwórz stronę, zaloguj się hasłem gracza lub MG.
+
+Zmiana haseł/ścieżki/języka: edytuj `.env` na serwerze lub uruchom `clone.bat` lokalnie.
+
+---
+
+## 7. Aktualizacja wersji VTT
+
+Przy nowej wersji z ZIP-a: podmień `assets/` i `backend/api.php` (oraz `index.php` / `deploy-env.php` jeśli się zmieniły), **zachowaj własny `.env` i `backend/data/`**.
 
 ---
 
 ## Jak sprawdzić
 
-1. Uruchom build.bat. Podaj hasła (lub Enter dla domyślnych), BASE_PATH (np. /vtt/room1/), język, potwierdź build. Sprawdź, że folder build zawiera index.php, assets/, backend/ z api.php i .env.
+1. Uruchom `build.bat`. Sprawdź, że `build/.env` zawiera wybrane wartości.
+2. Uruchom `clone.bat` z `build/` jako źródłem. Sprawdź nowy folder i nowy `.env`.
+3. Wgraj na lokalny PHP pod ścieżką z `.env`. Przetestuj logowanie, API, kości, upload MG.
+4. Zmień tylko `VTT_LANGUAGE` w `.env` — interfejs powinien przełączyć się bez `npm run build`.
 
-2. Otwórz wygenerowany build\index.php w edytorze – w definicjach VTT_PASSWORD i VTT_GM_PASSWORD powinny być wpisane wybrane przy buildzie wartości (nie placeholdery {{...}}).
+---
 
-3. Skopiuj build na lokalny serwer PHP (np. XAMPP, WAMP) pod ścieżką zgodną z BASE_PATH. Ustaw zapisywalność backend/data/. Wejdź na stronę w przeglądarce – formularz logowania, logowanie hasłem gracza i hasłem MG, wejście do aplikacji i działanie API (np. stan, tło, kości).
+## Uwaga o starych paczkach
 
-4. Po wdrożeniu na serwer produkcyjny sprawdź logowanie, przełączanie scen, rzuty kości i upload (jako MG) – wszystko z zachowaniem credentials: 'include' i bez ujawniania haseł w kodzie frontendu.
+Paczki z hasłami wklejonymi w `index.php` (przed tą zmianą) wymagają ponownego `build.bat`.

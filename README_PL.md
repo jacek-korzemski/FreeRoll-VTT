@@ -57,22 +57,27 @@ FreeRoll VTT to **lekki Virtual TableTop**, który budujesz raz, a potem hostuje
   - podstawowa walidacja typów plików i rozmiarów, komunikaty o błędach
 
 - **Prosta autoryzacja i tryb MG**
-  - **hasło gracza** i **hasło MG**, definiowane na etapie budowania
-  - strona logowania generowana z `index.php.template`, z tekstami zależnymi od języka
+  - **hasło gracza** i **hasło MG**, definiowane w `build/.env`
+  - strona logowania obsługiwana przez `index.php`, z tekstami zależnymi od `VTT_LANGUAGE`
   - backend rozróżnia **MG vs gracz** i ogranicza wrażliwe akcje (upload, edycja mgły, zmiany scen itp.)
 
 - **Wielojęzyczny interfejs (en / pl)**
   - wszystkie teksty trzymane w `frontend/src/lang/translations.json`
-  - język wybierany na etapie builda (`en` lub `pl`) i wstrzykiwany przez `VITE_LANGUAGE`
+  - język wybierany w `build/.env` (`VTT_LANGUAGE=en` lub `pl`)
 
 ---
 
 ## Wymagania
 
-### Do zbudowania aplikacji
+### Do zbudowania aplikacji (maintainerzy)
 
 - **Node.js 18+** (`https://nodejs.org/`)
 - **Windows** (jeśli chcesz używać dostarczonych skryptów `build.bat` / `build_pl.bat`)
+
+### Do utworzenia kolejnego pokoju z gotowej paczki (bez Node)
+
+- **Windows** z PowerShell (dla `clone.bat`)
+- istniejący katalog `build/` (z `build.bat` lub pobranego ZIP-a)
 
 ### Serwer do uruchomienia paczki
 
@@ -87,36 +92,30 @@ Wygenerowany katalog `build` to statyczne assety + mały backend PHP, więc dzia
 
 ## Szybki start na Windows
 
-### 1. Zbuduj paczkę
+### 1. Zbuduj paczkę (wymaga Node.js)
 
 W katalogu głównym projektu uruchom **jeden** z poniższych skryptów:
 
 - `build.bat` – interaktywne budowanie (komunikaty po angielsku, domyślny język UI: **en**)
 - `build_pl.bat` – interaktywne budowanie (komunikaty po polsku, domyślny język UI: **pl**)
 
-Skrypt zapyta Cię o:
+Skrypt zbiera ustawienia wdrożenia (hasła, ścieżka, język, L5R, CORS), uruchamia `npm run build` i składa katalog `build/`.
 
-- **hasło gracza** i **hasło MG**
-- **bazową ścieżkę** (np. `/vtt/room1/` – adres, pod którym aplikacja będzie widoczna na serwerze)
-- **język interfejsu** (`en` / `pl`)
-- czy **włączyć moduł kości L5R**
-- dozwolone źródła HTTP dla API (`ALLOWED_ORIGINS` w `.env` backendu)
+Wszystkie ustawienia wdrożenia trafiają do **`build/.env`** (patrz [`deploy.env.example`](deploy.env.example)). Paczka frontendu jest niezależna od ścieżki i języka – `index.php` czyta `.env` w runtime.
 
-Następnie skrypt:
+### 2. Sklonuj kolejny pokój (bez Node.js)
 
-- przygotuje nowe `frontend/.env` dla wskazanej konfiguracji
-- uruchomi `npm install` (tylko jeśli potrzeba) oraz `npm run build`
-- złoży katalog `build` zawierający:
-  - `index.php` wygenerowany z `index.php.template`
-  - `assets/` z paczką frontendu
-  - `backend/` z `api.php`, `.env`, `.htaccess`, `data/`, `assets/…`
-  - puste pliki `.gitkeep` w katalogach na assety (żeby istniały od razu na serwerze)
+Jeśli masz już katalog `build/` i potrzebujesz kolejnej instancji (inna ścieżka, hasła lub język):
 
-### 2. Wgraj paczkę na serwer
+```bat
+clone.bat
+```
 
-Po udanym buildzie pojawi się katalog `build` w głównym folderze projektu.
+Skrypt kopiuje paczkę do nowego folderu i zapisuje świeży `build/.env`. Dane sesji (`backend/data/state.json`) są resetowane.
 
-- **Wgraj zawartość katalogu `build/`** (nie sam folder) do docelowego katalogu na serwerze, który odpowiada wybranej bazowej ścieżce.
+### 3. Wgraj paczkę na serwer
+
+- **Wgraj zawartość katalogu `build/`** (nie sam folder) do docelowego katalogu na serwerze zgodnego z `VTT_BASE_PATH` z `.env`.
 - Na serwerze umieść własne materiały w:
   - `backend/assets/map/` – elementy mapy
   - `backend/assets/tokens/` – tokeny
@@ -127,6 +126,8 @@ Po udanym buildzie pojawi się katalog `build` w głównym folderze projektu.
   - `chmod 755 backend/data/` (lub bardziej liberalnie – zależnie od hostingu)
 
 Następnie otwórz w przeglądarce skonfigurowany adres (np. `https://twojadomena.pl/vtt/room1/`) i zaloguj się wybranym hasłem gracza / MG.
+
+Aby później zmienić hasła lub ścieżkę, edytuj `build/.env` na serwerze (albo uruchom lokalnie `clone.bat` i wgraj ponownie).
 
 ---
 

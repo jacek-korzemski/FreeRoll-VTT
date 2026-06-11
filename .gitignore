@@ -27,6 +27,7 @@ frontend/dist/
 
 # Build output
 build/
+build-copy/
 
 # OS files
 .DS_Store

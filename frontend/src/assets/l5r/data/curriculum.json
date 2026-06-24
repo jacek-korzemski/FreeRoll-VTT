@@ -1,0 +1,5882 @@
+[
+  {
+    "name": "Hida Battle Leader School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Beseech Hida's Might ♠ (ritual)",
+          "Battle of No Escape ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Games",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Great Anvil's Measure ♠ (shūji)",
+          "♠ Beseech Shiba's Calm (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Tactics"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "♠ The Patient Viper (ninjutsu)",
+          "♠ Beseech Akodo's Judgement (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Smithing"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "♠ Striking as Void (kata)",
+          "Steady the Hammer (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Tactics",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Hida Defender School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rushing Avalanche Style ♠ (kata)",
+          "Honest Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Labor",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Touchstone of Courage ♠ (shūji)",
+          "Slippery Maneuvers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Meditation",
+          "Fitness"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "♠ Iron in the Mountains Style (kata)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "♠ Striking as Void (kata)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Survival",
+          "Command",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Hiruma Scout School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Survival",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Threshold Barrier (ritual)",
+          "Slippery Maneuvers ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Smithing",
+          "Martial Arts [Unarmed]",
+          "[Martial Art [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Skulk ♠ (ninjutsu)",
+          "Lord Hida's Grip (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Skulduggery",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Deadly Sting ♠ (ninjutsu)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Noxious Cloud ♠ (ninjutsu)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Smithing",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Silencing Stroke ♠ (ninjutsu)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kaiu Architect School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Aesthetics",
+          "Commerce",
+          "Labor"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Rite of the Wheel ♠ (ritual)",
+          "Threshold Barrier (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Open-Hand Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Aesthetics",
+          "Martial Arts [Unarmed]",
+          "Fitness"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Lord Hida's Grip (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Labor",
+          "Meditation"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "♠ Rouse the Soul (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Survival",
+          "Tactics"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Soul Sunder (kata)",
+          "Bend with the Storm (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kaiu Engineer School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Tactics",
+          "Smithing",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Pelting Hail Style ♠ (kata)",
+          "Hawk’s Precision (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Smithing"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Battle in the Mind ♠ (kata)",
+          "Noxious Cloud ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Smithing",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Flowing Water Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Command",
+          "Labor",
+          "Tactics"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "Iron in the Mountains Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Smithing",
+          "Command",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "Pin the Fan (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kuni Purifier School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Skulduggery",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Bind the Shadow ♠ (invocation)",
+          "Bitting Steel (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Crimson Leaves Strikes ♠ (kata)",
+          "Symbol of Earth (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Sentiment",
+          "Martial Arts [Unarmed]",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Rise, Earth ♠ (invocation)",
+          "Open Hand style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Survival",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Tomb of Jade ♠ (invocation)",
+          "Flowing Water Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Theology",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Earthquake (invocation)",
+          "Soul Sunder (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kuni Warden School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata ♠",
+        "techniques": [
+          "Courtier’s Resolve (shūji)",
+          "The Body Is an Anvil (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Kihō",
+        "techniques": [
+          "Crimson Leaves Strikes ♠ (kata)",
+          "Coiling Serpent Style ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Kihō",
+        "techniques": [
+          "Thunderclap Strike ♠ (kata)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bravado (shūji)",
+          "Death Touch (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Yasuki Merchant School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Design",
+          "Government"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Tributaries of Trade ♠ (shūji)",
+          "All in Jest (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Composition",
+          "Commerce"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Slippery Maneuvers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Seafaring",
+          "Commerce",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Lord Hida's Grip (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Commerce",
+          "Culture",
+          "Design"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "The Immovable Hand of Peace (shūji)",
+          "Lady Doji’s Decree ♠ (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Yasuki Yōjimbō School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Commerce",
+          "Seafaring"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iron Forest Style ♠ (kata)",
+          "Trip the Leg (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Touchstone of Courage ♠ (shūji)",
+          "Unyielding Terms (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Sentiment",
+          "Courtesy",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata [Ranged]",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "All Shall Fear Me (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Commerce",
+          "Seafaring",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Asahina Artificier School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Path to Inner Peace (invocation)",
+          "Artisan’s Appraisal ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Design",
+          "Performance"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Grasp of the Air Dragon ♠ (invocation)",
+          "Tea Ceremony (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Design",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Wings of the Phoenix ♠ (invocation)",
+          "Vapor of Nightmare (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Fitness",
+          "Performance",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Bend with the Storm ♠ (shūji)",
+          "Rise, Air (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Design",
+          "Performance"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Ever-Changing Waves (invocation)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Asahina Envoy School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Lady Doji's Decree ♠ (shūji)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Design",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Dazzling Performance ♠ (shūji)",
+          "Blessing of the Dance ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Commerce",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Blessed Union (ritual)",
+          "Prayer of Protection ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Rituals ♠ 1-5 Rank",
+          "♠ Buoyant Arrival (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Culture",
+          "Design"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Doji Bureaucrat School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Commerce",
+          "Composition"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Treaty Signing ♠ (ritual)",
+          "Beware the Smallest Mouse (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Government"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "The Wind Blows Both Ways ♠ (shūji)",
+          "Unyielding Terms (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Commerce",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Hidden in Smoke ♠ (shūji)",
+          "All Shall Fear Me (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Tactics",
+          "Meditation"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "The Immovable Hand of Peace ♠ (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Performance",
+          "Command",
+          "Tactics"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "Formal Tea Ceremony (ritual)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Doji Diplomat School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Culture",
+          "Composition"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Civility Foremost ♠ (shūji)",
+          "Tea Ceremony ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "The Wind Blows Both Ways ♠ (shūji)",
+          "Artisan’s Appraisal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Performance"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "Ebb and Flow"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Composition",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Bend with the Storm ♠ (shūji)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Courtesy",
+          "Command"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Daidoji Iron Warrior School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Sentiment",
+          "Government"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crescent Moon Style ♠ (kata)",
+          "Stonewall Tactics (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Lady Doji’s Decree (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crashing Wave Style ♠ (kata)",
+          "Ebb and Flow (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Aesthetics",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "The Immovable Hand of Peace (shūji)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Daidoji Harrier School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Clouds Parted by Steel ♠ (shūji)",
+          "Swift Scouting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Medicine",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "The Patient Viper ♠ (ninjutsu)",
+          "Employ Terrible Thunder ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Labor",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Imbue Outburst ♠ (ritual)",
+          "Vanish in the Shadows ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Sentiment",
+          "Medicine",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Wreak Havoc ♠ (ninjutsu)",
+          "Beseech Bayushi's Absolution (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Pin the Fan (kata)",
+          "Silencing Stroke ♠ (ninjutsu)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Daidoji Spymaster School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Lady Doji's Decree ♠ (shūji)",
+          "Weigh of Duty (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "What's Yours is Mine ♠ (ninjutsu)",
+          "Treaty Signing (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Martial Arts [Unarmed]",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Hidden in Smoke ♠ (shūji)",
+          "Open Hand style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Cunning Distraction ♠ (ninjutsu)",
+          "Wolf's Proposal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Noxious Cloud ♠ (ninjutsu)",
+          "Bend with the Storm (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kakita Duelist School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Aesthetics",
+          "Sentiment",
+          "Courtesy"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iaijutsu Cut: Crossing Blade ♠ (kata)",
+          "Cadence (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Smithing",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "All Arts Are One ♠ (shūji)",
+          "Thunderclap Strike ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Meditation",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "A Samurai's Fate ♠ (shūji)",
+          "Heartpiercing Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Tactics",
+          "Fitness"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Aesthetics",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Soul Sunder (kata)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kakita Swordsmith School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Culture",
+          "Courtesy"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Blessing of Steel ♠ (rituals)",
+          "Well of Desire (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Smithing",
+          "Meditation"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Tributaries of Trade (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Smithing",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Shūji ♠ 1-4 Rank",
+        "techniques": [
+          "All Arts are One (shūji)",
+          "Dazzling Performance (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Performance"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Design",
+          "Smithing"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Agasha Alchemist School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Smithing",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Fire & Water Invocations",
+        "techniques": [
+          "Hawk's Precision ♠ (kata)",
+          "Fires of Purity ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Survival",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Earth & Air Invocations",
+        "techniques": [
+          "Dazzling Performance ♠ (shūji)",
+          "Pelting Hail Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Commerce",
+          "Medicine"
+        ],
+        "techniqueGroup": "Shūji",
+        "techniques": [
+          "Bravado ♠ (shūji)",
+          "Path of Beasts (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Smithing",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Kata [Ranged] ♠",
+          "Rain of Ten Thousand Lotuses ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Commerce",
+          "Survival",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Heart of the Ladt Sun (invocation)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Agasha Ascetic School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Clouds Parted by Steel ♠ (shūji)",
+          "Grasp of Earth (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Survival",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Beseech Togashi's Vision ♠ (ritual)",
+          "Vanish in the Shadows ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Theology",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Employ Terrible Thunder ♠ (ninjutsu)",
+          "Grasp of the Air Dragon (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Imbue Thunder (ritual)",
+          "Rise, Air (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Ever-Changing Waves (invocation)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Agasha Mistic School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Fitness",
+          "Smithing"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Heart of the Water Dragon ♠ (invocation)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Power of the Earth Dragon ♠ (invocation)",
+          "Touchstone of Courage ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Theology",
+          "Medicine"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Rise, Earth ♠ (invocation)",
+          "Earth Becomes Sky (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Ever-Changing Waves ♠ (invocation)",
+          "Rise, Water (Invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Medicine",
+          "Command",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Earthquake (invocation)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsuki Investigator School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Slippery Maneuvers ♠ (shūji)",
+          "Honest Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "All Arts Are One ♠ (shūji)",
+          "Feigning Opening (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Meditation",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "Battle in Mind (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Medicine",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Skulduggery",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Wolf's Proposal (shūji)",
+          "Crashing Wave Style (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mirumoto Taoist Blade School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Labor",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crescent Moon Style ♠ (kata)",
+          "Ki Protection (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Water Kihō",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Iaijutsu Cut: Crossing Blade (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Theology",
+          "Survival",
+          "Medicine"
+        ],
+        "techniqueGroup": "Earth Kihō",
+        "techniques": [
+          "Crimson Leaves Strike ♠ (kata)",
+          "Still the Elements (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Void Kihō",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Labor",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Touch the Void Dragon (kihō)",
+          "Way of the Edgeless Sword (kihō)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mirumoto Two-Heavens Adept School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Composition",
+          "Medicine",
+          "Labor"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iaijutsu Cut: Rising Blade ♠ (kata)",
+          "Stirring the Embers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Heartpiercing Strike ♠ (kata)",
+          "Slippery Maneuvers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Composition",
+          "Smithing",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Commune with the Spirits (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Meditation"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Composition",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Togashi Chronicler School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Performance"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Lord Togashi's Insight ♠ (shūji)",
+          "Beware the Smallest Mouse (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Performance",
+          "Medicine",
+          "Meditation"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "All Arts Are One ♠ (shūji)",
+          "Open-Hand Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Meditation",
+          "Commerce"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "The Great Silence ♠ (kihō)",
+          "The Ties that Bind ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Medicine",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Breaking Blow ♠ (kihō)",
+          "Foreseen Need (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Performance"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Death Touch ♠ (kihō)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Togashi Tattooed Order",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Survival"
+        ],
+        "techniqueGroup": "Fire Kihō",
+        "techniques": [
+          "Way of the Earthquake ♠ (kihō)",
+          "Honest Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Composition",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Kihō",
+        "techniques": [
+          "Open-Hand Style ♠ (kata)",
+          "Stirring the Embers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Martial Arts [Unarmed]",
+          "Labor"
+        ],
+        "techniqueGroup": "Air Kihō",
+        "techniques": [
+          "Death Touch ♠ (kihō)",
+          "All Arts are One (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Labor",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Kihō",
+        "techniques": [
+          "Touch the Void Dragon ♠ (kihō)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Survival",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Void Kihō",
+        "techniques": [
+          "Rituals",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Akodo Commander School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Government"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iron Forest Style ♠ (kata)",
+          "Honest Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rallying Cry ♠ (shūji)",
+          "Lightning Raid (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Composition",
+          "Government",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "A Samurai's Fate ♠ (shūji)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Government",
+          "Tactics"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "Disappearing World Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Tactics",
+          "Meditation"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Akodo Soldier School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Government"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Tactical Assessment ♠ (kata)",
+          "Righteous Example (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Preserve Strenght ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Smithing",
+          "Medicine"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "To Smash the Heart ♠ (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Pin the Fan ♠ (shūji)",
+          "Disappearing World Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Command",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Moment of Glory (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ikoma Bard School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Culture",
+          "Composition"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Slippery Maneuvers ♠ (shūji)",
+          "Soaring Slice (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Dazzling Performance ♠ (shūji)",
+          "Spinning Blades Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Performance",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Government",
+          "Sentiment",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Command",
+          "Meditation"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ikoma Shadow School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Skulduggery",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "What's Yours is Mine ♠ (ninjutsu)",
+          "Rustling of Leaves (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Martial Arts [Unarmed]",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Crackling Laughter ♠ (shūji)",
+          "The Wind Blow Both Ways (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Labor",
+          "Seafaring",
+          "Commerce"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Artful Alibi ♠ (ninjutsu)",
+          "All Arts are One (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Survival",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "Deceitful Strike ♠ (ninjutsu)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Tactics",
+          "Martial Arts [Unarmed]",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Silent Elimination ♠ (ninjutsu)",
+          "Pin the Fan (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsu Medic School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Commune with the Spirits (ritual)",
+          "Honest Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Survival",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Rushing Avalanche Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Martial Arts [Unarmed]",
+          "Medicine"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iron int he Mountain Style ♠ (kata)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "A Samurai's Fate (shūji)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Medicine",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsu Medium School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Command",
+          "Performance"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Courage of Seven Thunders (invocation)",
+          "Heart of the Water Dragon ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Fitness",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Hands of the Tides ♠ (invocation)",
+          "Fanning the Flames (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Rise, Earth ♠ (invocation)",
+          "Ebb and Flow (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Meditation"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Wrath of Kaze-no-Kami ♠ (invocation)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsu Realm Wanderer School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations ♠",
+        "techniques": [
+          "Rite of the Wheel ♠ (ritual)",
+          "Warrior's Resolve (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Theology",
+          "Meditation"
+        ],
+        "techniqueGroup": "Earth Invocations ♠",
+        "techniques": [
+          "Messenger of Chikushō-dō ♠ (invocation)",
+          "Iron Forest Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Meditation",
+          "Tactics"
+        ],
+        "techniqueGroup": "Fire Invocations ♠",
+        "techniques": [
+          "Bpnd of the Realms ♠ (invocation)",
+          "Thunderclap Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Meditation",
+          "Theology",
+          "Commerce"
+        ],
+        "techniqueGroup": "Air Invocations ♠",
+        "techniques": [
+          "Crashing Wave Style (kata)",
+          "Prayer of Protection (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Theology",
+          "Meditation"
+        ],
+        "techniqueGroup": "Water Invocations ♠",
+        "techniques": [
+          "Soul Sunder (kata)",
+          "Rain of Ten Thousand Lotuses ♠ (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Matsu Beastmaster School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Culture",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Lightning Raid ♠ (shūji)",
+          "Beseech Shinjo's Empathy ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Call the Wild ♠ (shūji)",
+          "Lord Akodo's Roar (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Meditation",
+          "Medicine"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Beseech Akodo's Judgment (ritual)",
+          "Swift Scouting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Martial Arts [Unarmed]",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "To Smash the Heart (shūji)",
+          "Vanish in the Shadows ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "Wreak Havoc ♠ (ninjutsu)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Matsu Berserk School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Labor",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Lord Akodo's Roar ♠ (shūji)",
+          "Stonewall Tactics (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Medicine",
+          "Smithing"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Heartpiercing Strike ♠ (kata)",
+          "Fanning the Flames (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Composition",
+          "Government",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Disapearring World Style ♠ (kata)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Culture"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Labor",
+          "Medicine",
+          "Smithing"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Asako Inquisitor School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Meditation"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Threshold Barrier (ritual)",
+          "Weight of Duty (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Theology",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Essence of Jade ♠ (invocation)",
+          "Open-Hand Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Theology",
+          "Medicine"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "The Soul's Blade ♠ (invocation)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Skulduggery",
+          "Tactics"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Asako Loremaster School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Martial Arts [Unarmed]",
+          "Games"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Open-Hand Style ♠ (kata)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Medicine",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "All Arts Are One ♠ (shūji)",
+          "Tea Ceremony (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Meditation",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Ebb and Flow (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Cleansing Spirit ♠ (kihō)",
+          "Wolf's Proposal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Meditation"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Still the Elements ♠ (kihō)",
+          "Bend with the Storm (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Isawa Elementalist School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Command",
+          "Meditation"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Dance of Seasons ♠ (invocation)",
+          "Cleansing Rite (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Meditation"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Fury of Osano-wo ♠ (invocation)",
+          "Fanning the Flames (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Meditation",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Wings of the Phoenix ♠ (invocation)",
+          "Strike the Tsunami (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Wrath of Kaze-no-Kami ♠ (invocation)",
+          "Rise, Flame (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Earthquake (invocation)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Isawa Tensai School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Survival",
+          "Meditation"
+        ],
+        "techniqueGroup": "Inspired Element Invocations ♠ 1-2 Rank",
+        "techniques": [
+          "Sting of Warrior's Pride ♠ (shūji)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Martial Arts [Unarmed]",
+          "Theology"
+        ],
+        "techniqueGroup": "Inspired Element Invocations ♠ 1-3 Rank",
+        "techniques": [
+          "Beseech Shiba's Calm ♠ (ritual)",
+          "Open-Hand Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Inspired Element Invocations ♠ 1-4 Rank",
+        "techniques": [
+          "Incite True Nature (shūji)",
+          "Battle in Mind ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Survival",
+          "Meditation"
+        ],
+        "techniqueGroup": "Inspired Element Invocations ♠ 1-5 Rank",
+        "techniques": [
+          "A Samurai's Fate (shūji)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Inspired Element Invocations",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Striking as Void ♠ (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shiba Artist School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Offend the Sensibilities ♠ (shūji)",
+          "Fun and Games (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Aesthetics",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "The Wind Blows Both Ways ♠ (shūji)",
+          "Civility Foremost (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Command",
+          "Meditation",
+          "Government"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Formal Tea Ceremony ♠ (ritual)",
+          "All Arts are One (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Composition",
+          "Smithing"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "Hidden in Smoke ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Culture",
+          "Courtesy",
+          "Performance"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shiba Guardian School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Civility Foremost ♠ (shūji)",
+          "Stirring the Embers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rallying Cry ♠ (shūji)",
+          "Slippery Maneuvers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Meditation",
+          "Culture"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "A Samurai's Fate ♠ (shūji)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Tactics"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "The Immovable Hand of Peace ♠ (shūji)",
+          "Touch the Void Dragon ♠ (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Way of Edgeless Sword ♠ (kihō)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kaito Shrine Keeper School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Fitness",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Invocations ♠",
+        "techniques": [
+          "Bind the Shadow ♠ (invocation)",
+          "Striking as Air (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Theology",
+          "Smithing"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Grasp of the Air Dragon ♠ (invocation)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Labor",
+          "Survival",
+          "Medicine"
+        ],
+        "techniqueGroup": "Water Invocations ♠",
+        "techniques": [
+          "Breath of Wind Style ♠ (kata)",
+          "Flowing Water Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Fitness",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rise, Air ♠ (invocation)",
+          "Soul Sunder ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Command",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Tomb of Jade ♠ (invocation)",
+          "Pin the Fan (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kaito Spirit Seeker School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Commune with the Spirits (ritual)",
+          "Civility Foremost ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Survival"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Crimson Leaves Strikes ♠ (kata)",
+          "Artisan’s Appraisal ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Invocations",
+          "Bond of the Realms (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Survival",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Guardian of the Secret Gate ♠ (invocation)",
+          "Buoyant Arrival ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Invocations",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bayushi Deathdealer School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "Deceitful Strike ♠ (ninjutsu)",
+          "Spiteful Loss (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Skulduggery",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Deadly Sting ♠ (ninjutsu)",
+          "Iaijutsu Cut: Rising Blade (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata [Close Combat]",
+        "techniques": [
+          "Cunning Distraction ♠ (ninjutsu)",
+          "All Shall Fear Me (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Games",
+          "Tactics"
+        ],
+        "techniqueGroup": "Kata [Ranged]",
+        "techniques": [
+          "A Samurai's Fate (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Stillness of death ♠ (ninjutsu)",
+          "Hidden in Smoke (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bayushi Manipulator School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Martial Arts [Unarmed]",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Fanning the Flames ♠ (shūji)",
+          "The Weight of Duty (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Dazzling Performance ♠ (shūji)",
+          "Veiled Menace Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Wolf's Proposal ♠ (shūji)",
+          "Skulk ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Medicine",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Deadly Sting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shosuro Infiltrator School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Veiled Menace Style ♠ (kata)",
+          "Skulk ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Performance"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Lord's Bayushi Whisper ♠ (shūji)",
+          "Noxious Cloud ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Performance",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Bravado ♠ (shūji)",
+          "Dazzling Performance (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Sentiment",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Silencing Stroke ♠ (ninjutsu)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shosuro Shadowweaver School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Government",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Skulk ♠ (ninjutsu)",
+          "Deadly Sting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Skulduggery",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Fluid Shadows (invocation)",
+          "Lord Bayushi Whisper ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Skulduggery",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Shūji",
+        "techniques": [
+          "Dream Painter",
+          "Noxious Cloud ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Theology",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Wolf's Proposal ♠ (shūji)",
+          "Pin the Fan ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Medicine",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Shūji",
+        "techniques": [
+          "The Fading Dream (invocation)",
+          "Silencing Stroke ♠ (ninjutsu)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Soshi Illustionist School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Mask of Wind ♠ (invocation)",
+          "Skulk ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Vapor of Nightmares ♠ (invocation)",
+          "Lord's Bayushi Whispers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "False Realm of the Fox Spirits ♠ (invocation)",
+          "Noxious Cloud ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Deadly Sting ♠ (ninjutsu)",
+          "Rise, Air (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Silencing Stroke ♠ (ninjutsu)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Yogo Penitent Order",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Labor",
+          "Skulduggery",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Skulk ♠ (ninjutsu)",
+          "Swift Scouting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kihō",
+        "techniques": [
+          "Beseech Bayushi's Absolution ♠ (ritual)",
+          "The Patient Viper ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Entice with Falsehoods ♠ (shūji)",
+          "Still the Elements (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Martial Arts [Unarmed]",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Vanish in the Shadows ♠ (ninjutsu)",
+          "Moment of Glory (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Theology"
+        ],
+        "techniqueGroup": "Void Kihō",
+        "techniques": [
+          "Silencing Stroke ♠ (ninjutsu)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Yogo Preserver School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Culture",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Cloak of Night (invocation)",
+          "Reflections of P'an Ku (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Aesthetics",
+          "Courtesy",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Hands of the Tides ♠ (invocation)",
+          "Skulk ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Government",
+          "Smithing",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Vapor of Nightmares (invocation)",
+          "Wings of the Phoenix ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Performance",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Silencing Stroke (ninjutsu)",
+          "Suijin's Embrace (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Government",
+          "Culture",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Ever-Changing Waves (invocation)",
+          "Tomb of Jade (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Yogo Wardmaster School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Skulduggery",
+          "Martial Arts [Unarmed]",
+          "Composition"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Civility Foremost ♠ (shūji)",
+          "Path to Inner Peace (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Theology",
+          "Composition",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Embrace of Kenro-ji-jin (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Theology",
+          "Martial Arts [Unarmed]",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Open-Hand style ♠ (kata)",
+          "Earth Becomes Sky (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Skulduggery",
+          "Martial Arts [Unarmed]",
+          "Composition"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Skulk ♠ (ninjutsu)",
+          "Rise, Water (Invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Theology",
+          "Performance",
+          "Composition"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Deadly Sting ♠ (ninjutsu)",
+          "Tomb of Jade (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ide Emissary School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Open-Hand Style ♠ (kata)",
+          "Cultural Exchange (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Government",
+          "Martial Arts [Unarmed]"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Entice with Offerings ♠ (shūji)",
+          "Solidify Gratitude (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Meditation",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Everyone has a Price ♠ (shūji)",
+          "Incite Wrath (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Design",
+          "Composition"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Games",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ide Messenger School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Beseech Shinjo's Empathy ♠ (ritual)",
+          "Swift Scouting ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Performance",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Call the Wild ♠ (shūji)",
+          "Beseech Doji's Wisdom ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Performance",
+          "Survival"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Composition",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "Vanish in the Shadows ♠ (ninjutsu)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ide Trader School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Feigned Opening ♠ (shūji)",
+          "Hawk's Precision (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Survival",
+          "Commerce",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Lady Shinjo's Speed ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Aesthetics",
+          "Commerce",
+          "Games"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Sentiment",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Sear the Wound ♠ (shūji)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Command",
+          "Games"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Iuchi Horse Lord Disciple",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Design",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Divination (ritual)",
+          "Sympathetic Energies ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Medicine",
+          "Commerce",
+          "Theology"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Artisan's Appraisal (shūji)",
+          "Call Upon the Wind (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Design",
+          "Theology",
+          "Medicine"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Horse Whisperer (shūji)",
+          "Shadow of Days (rituals)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Survival",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Regal Bearing (shūji)",
+          "Ride the Water Dragon ♠ (kihō)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Command",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Iuchi Meishōdō Master School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Design",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Sympathetic Energies ♠ (invocation)",
+          "Cleansing Rite (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Design",
+          "Theology",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Hands of the Tides ♠ (invocation)",
+          "Artisan’s Appraisal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Performance",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Rise, Earth ♠ (invocation)",
+          "Dazzling Performance (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Survival",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Culture",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "The Soul's Blade (invocation)",
+          "Ever-Changing Waves (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Moto Avenger School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Bind the Shadow ♠ (invocation)",
+          "Caress of Earth (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Essence of Jade ♠ (invocation)",
+          "Touchstone of Courage ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Earthquake ♠ (invocation)",
+          "Earth Becomes Sky (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Rise, Air (invocation)",
+          "Wolf's Proposal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Performance",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Tomb of Jade (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Moto Conqueror School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Performance",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crescent Moon Style ♠ (kata)",
+          "Stir the Embers (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Martial Arts [Unarmed]",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Heartpiercing Strike ♠ (kata)",
+          "Veiled Menace Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Tactics",
+          "Fitness"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Bravado ♠ (shūji)",
+          "Dazzling Performance (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shinjo Mounted Archer",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Call to Ride (shūji)",
+          "Lady Shinjo's Speed ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Performance",
+          "Theology",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Horse Whisperer ♠ (shūji)",
+          "Sudden Downpour Style ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Dazzling Performance (shūji)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Tactics"
+        ],
+        "techniqueGroup": "Close Combat Kata",
+        "techniques": [
+          "A Samurai's Fate (shūji)",
+          "Rouse the Soul ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Survival",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shinjo Outrider School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Commerce",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Pelting Hail Style ♠ (kata)",
+          "Cadence (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Dazzling Performance ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Survival",
+          "Performance",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Crashing Wave Style ♠ (kata)",
+          "Crimson Leaves Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Skulduggery",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Bend with the Storm ♠ (shūji)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Survival",
+          "Meditation"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Pin the Fan (kata)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Utaku Battle Maiden School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Lady Shinjo's Speed ♠ (shūji)",
+          "Striking as Air (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Thunderclap Strike ♠ (kata)",
+          "Rushing Avalanche Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Survival",
+          "Theology",
+          "Medicine"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Fitness"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "Breath of Wind Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Bend with the Storm (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Utaku Silent Shadow Yojimbō",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Call to Ride (shūji)",
+          "Stonewall Tactics (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Tactics",
+          "Meditation"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Iron Forest Style (kata)",
+          "Tactical Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Government",
+          "Survival",
+          "Sentiment"
+        ],
+        "techniqueGroup": "General Kata",
+        "techniques": [
+          "Center the World (ritual)",
+          "Thunderclap Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Tactics"
+        ],
+        "techniqueGroup": "Close Combat Kata",
+        "techniques": [
+          "A Samurai's Fate (shūji)",
+          "Rouse the Soul ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Utaku Stablemaster School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Sentiment",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Call upon the Wind ♠ (invocation)",
+          "Blessing of Fertile Fields ♠ (rituals)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rituals",
+          "Emboldened Steed ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Smithing",
+          "Survival",
+          "Medicine"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Messenger of Chikushō-dō (invocation)",
+          "Path of Beasts (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Survival",
+          "Commerce"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rituals",
+          "Guardian of the Secret Gate ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Medicine",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rituals",
+          "Rain of Ten Thousand Lotuses ♠ (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Miya Cartographer School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Fitness",
+          "Culture",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Slippery Maneuvers ♠ (shūji)",
+          "Threshold Barrier (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Games",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "The Wind Blows Both Ways ♠ (shūji)",
+          "Feigned Opening (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Crimson Leaves Strike ♠ (kata)",
+          "All Arts are One (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Bend with the Storm ♠ (shūji)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Culture",
+          "Seafaring",
+          "Command"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Awe of Heaven (shūji)",
+          "Bravado (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Miya Herald School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Culture",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Feigned Opening ♠ (shūji)",
+          "Courtier’s Resolve (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Culture"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Tributaries of Trade (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Courtesy",
+          "Survival"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Awe of Heaven ♠ (shūji)",
+          "The Wind Blows Both Ways (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Command",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Pillar of Calm (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Survival",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Otomo Schemer School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Civility Foremost ♠ (shūji)",
+          "Tea Ceremony ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Courtesy"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Awe of Heaven ♠ (shūji)",
+          "Prey on the Weak (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Courtesy",
+          "Commerce",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Regal Bearing ♠ (shūji)",
+          "The Wind Blows Both Ways (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Aesthetics",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Wolf's Proposal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Composition",
+          "Culture",
+          "Design"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Seppun Astrologer School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Skulduggery",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Heart of the Water Dragon ♠ (invocation)",
+          "Ancestry Unearthed (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Composition",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Symbol of Earth (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Smithing",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "False Realm of the Fox Spirits ♠ (invocation)",
+          "Vapor of Nightmare (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Sentiment",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Tomb of Jade ♠ (invocation)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Skulduggery",
+          "Tactics"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Sear the Wound (shūji)",
+          "The Soul's Blade (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Seppun Palace Guard School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Sentiment",
+          "Government"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crescent Moon Style ♠ (kata)",
+          "Weight of Duty (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Games"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Crimson Leaves Strikes ♠ (kata)",
+          "Touchstone of Courage ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Skulduggery",
+          "Command"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Iron int he Mountain Style ♠ (kata)",
+          "Treshold Barrier (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Sentiment",
+          "Skulduggery",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kasuga Smuggler School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Culture",
+          "Courtesy"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Coiling Serpent Style ♠ (kata)",
+          "Courtier's Resolve (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Seafaring",
+          "Skulduggery",
+          "Commerce"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Ebb and Flow ♠ (shūji)",
+          "Tributaries of Trade (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Government",
+          "Fitness",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "All Arts are One (shūji)",
+          "Breath of Wind Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Design",
+          "Martial Arts [Unarmed]",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Aesthetics",
+          "Courtesy",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Bend with the Storm (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Storm Fleet Sailor School",
+    "ranks": [
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Games",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Skulk ♠ (ninjutsu)",
+          "Shallow Waters ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Seafaring",
+          "Survival",
+          "Commerce"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Flowing Water Strike ♠ (kata)",
+          "Osano-wo's Boast ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Seafaring",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Bravado ♠ (shūji)",
+          "Heartpiercing Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Buoyant Arrival ♠ (shūji)",
+          "Crashing Wave Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Commerce",
+          "Seafaring",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "Sear the Wound (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Storm Fleet Tide Seer School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Labor",
+          "Seafaring"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Summon Fog ♠ (invocation)",
+          "Reflections of P'an Ku (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Fitness",
+          "Theology",
+          "Tactics"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Hands of the Tides ♠ (invocation)",
+          "Call upon the Wind (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Performance",
+          "Seafaring",
+          "Survival"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Fury of Osano-wo ♠ (invocation)",
+          "Osano-wo's Boast (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Command",
+          "Games",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Wrath of Kaze-no-Kami ♠ (invocation)",
+          "Rise, Water (Invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Seafaring",
+          "Survival"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Ever-Changing Waves (invocation)",
+          "Rise, Air (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Toritaka Phantom Hunter School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Bō of Water (invocation)",
+          "Treshold Barrier (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Essence of Jade ♠ (invocation)",
+          "Striking Striking"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Government",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Water Invocations",
+          "Rise, Water ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Performance",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "Soul Sunder ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Flowing Water Cut ♠ (kata)",
+          "Wrath of Kaze-no-Kami (invocation)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mazoku's Enforcer Tradition",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Iaijutsu Cut: Crossing Blade ♠ (kata)",
+          "Weight of Duty (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Theology",
+          "Meditation"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Touchstone of Courage ♠ (shūji)",
+          "Rite of the Wheel (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "Rallying Cry (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Prayer of Protection (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Theology",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Rouse of the Soul (shūji)",
+          "The Immovable Hand of Peace (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Dragonfly Grace of the Spirits School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Government",
+          "Theology"
+        ],
+        "techniqueGroup": "Air and Water Shūji",
+        "techniques": [
+          "Heart of the Water Dragon ♠ (invocation)",
+          "By the Light of the Lord Moon (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Air and Water Invocations",
+        "techniques": [
+          "The Wind Blows Both Ways ♠ (shūji)",
+          "Tea Ceremony (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Performance"
+        ],
+        "techniqueGroup": "Air and Water Invocations",
+        "techniques": [
+          "Rise, Water ♠ (invocation)",
+          "Touchstone of Courage (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Culture",
+          "Theology"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Bend with the Storm ♠ (shūji)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Government",
+          "Theology"
+        ],
+        "techniqueGroup": "Invocations",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shika Matchmaker School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Games",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Ancestry Unearthed (shūji)",
+          "Fun and Games (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Medicine",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Strike the Tsunami ♠ (invocation)",
+          "Civility Foremost (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Commerce",
+          "Culture"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "Rise, Air ♠ (invocation)",
+          "The Wind Blows Both Ways (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Meditation",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Wrath of Kaze-no-Kami ♠ (invocation)",
+          "Treaty Signing (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Composition",
+          "Command",
+          "Performance"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Buoyant Arrival (shūji)",
+          "Formal Tea Ceremony (ritual)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Shika Speardancer School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Games",
+          "Skulduggery",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Like a Ghost ♠ (ninjutsu)",
+          "Soaring Slice (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Culture"
+        ],
+        "techniqueGroup": "Kata [Close Combat]",
+        "techniques": [
+          "To Float or Sink ♠ (ninjutsu)",
+          "Crescent Moon Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Games",
+          "Smithing",
+          "Survival"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "Slicing Wind Kick ♠ (ninjutsu)",
+          "Pole Vault (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Command",
+          "Survival"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "Rouse the Soul ♠ (shūji)",
+          "Disappearing World Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Tactics",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Kata [General]",
+        "techniques": [
+          "Silent Elimination ♠ (ninjutsu)",
+          "The Ties that Bind (ritual)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Moshi Sun Sentinel School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Striking as Fire (kata)",
+          "Fires of Purity ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Crescent Moon Style (kata)",
+          "Iron Forest Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Thunderclap Strike (kata)",
+          "Crimson Leaves Strike (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Aesthetics",
+          "Performance"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Battle in the Mind (kata)",
+          "Heart of the Lady Sun ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Aesthetics",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Iron in the Mountains Style (kata)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ichirō Grappler School",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Games",
+          "Labor",
+          "Theology"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Lord Hida's Grip ♠ (kata)",
+          "Open-Hand Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Medicine",
+          "Martial Arts [Unarmed]",
+          "Fitness"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Beseech Hida's Might (ritual)",
+          "Thicket's Embrace Style ♠ (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Meditation",
+          "Performance"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Your Enemy's Arrows ♠ (shūji)",
+          "Shattering Tide Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Games",
+          "Sentiment",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "The Patient Viper ♠ (ninjutsu)",
+          "Steady the Hammer (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Martial Arts [Unarmed]",
+          "Fitness"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Victory Without a Sword ♠ (shūji)",
+          "Soul Sunder (kata)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Ichirō Ironsmith School",
+    "ranks": [
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Fitness",
+          "Martial Arts [Unarmed]",
+          "Survival"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Fierce Badger Style ♠ (kata)",
+          "Fortress of Necessity (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Smithing",
+          "Commerce"
+        ],
+        "techniqueGroup": "Kata",
+        "techniques": [
+          "Shattering Tide Style ♠ (kata)",
+          "Great Anvil's Measure (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Culture",
+          "Labor",
+          "Survival"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "A Samurai's Fate ♠ (shūji)",
+          "Thicket's Embrace Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Government",
+          "Smithing"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Striking as Void ♠ (kata)",
+          "Your Enemy's Arrows (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Martial Arts [Melee]",
+          "Courtesy",
+          "Fitness"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Wreak Havoc ♠ (ninjutsu)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsune Mediator School",
+    "ranks": [
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "Spiritual Survey ♠ (shūji)",
+          "Threshold Barrier (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Meditation"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Complementary Experience ♠ (shūji)",
+          "Solidify Gratitude (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Culture",
+          "Government",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Pillar of Calm ♠ (shūji)",
+          "Swaying Grass Evasion (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Fitness",
+          "Tactics"
+        ],
+        "techniqueGroup": "Rituals",
+        "techniques": [
+          "Nature's Touch (invocation)",
+          "A Samurai's Fate (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Aesthetics",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "By the Light of the Lord Moon ♠ (invocation)",
+          "Bend with the Sorm (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsune Naturalist School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Design",
+          "Games",
+          "Survival"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Wayfinder's Instincts ♠ (ritual)",
+          "Divination (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations",
+        "techniques": [
+          "Grasp of the Air Dragon ♠ (invocation)",
+          "Cunning Omission ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Survival",
+          "Meditation",
+          "Sentiment"
+        ],
+        "techniqueGroup": "Water Invocations",
+        "techniques": [
+          "False Realm of the Fox Spirits ♠ (invocation)",
+          "Power of the Earth Dragon (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Courtesy",
+          "Fitness",
+          "Survival"
+        ],
+        "techniqueGroup": "Fire Invocations",
+        "techniques": [
+          "Ever-Changing Waves ♠ (invocation)",
+          "Wolf's Proposal (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan Skills",
+        "skills": [
+          "Culture",
+          "Theology",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "The Soul's Blade (invocation)",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "lshiken Initiate School",
+    "ranks": [
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Meditation",
+          "Fitness",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Invocations ♠",
+        "techniques": [
+          "Inversions",
+          "Tea Ceremony ♠ (ritual)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Command",
+          "Composition",
+          "Theology"
+        ],
+        "techniqueGroup": "Fire Invocations ♠",
+        "techniques": [
+          "Inversions",
+          "All Arts Are One ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Government",
+          "Meditation",
+          "Theology"
+        ],
+        "techniqueGroup": "Water Invocations ♠",
+        "techniques": [
+          "Inversions",
+          "A Samurai's Fate ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Trade skills",
+        "skills": [
+          "Meditation",
+          "Courtesy",
+          "Theology"
+        ],
+        "techniqueGroup": "Earth Invocations ♠",
+        "techniques": [
+          "Inversions",
+          "The Immovable Hand of Peace ♠ (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Fitness",
+          "Survival",
+          "Meditation"
+        ],
+        "techniqueGroup": "Invocations ♠",
+        "techniques": [
+          "Inversions",
+          "Rouse the Soul (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Kitsune Impersonator Tradition",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Performance",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Fanning the Flames ♠ (shūji)",
+          "All in Jest (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Skulduggery",
+          "Survival",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Dazzling Performance ♠ (shūji)",
+          "False Realm of the Fox Spirits ♠ (invocation)"
+        ]
+      },
+      {
+        "skillGroup": "Artisan skills",
+        "skills": [
+          "Culture",
+          "Meditation",
+          "Theology"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Crashing Wave Style ♠ (kata)",
+          "Regal Bearing (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Meditation",
+          "Sentiment",
+          "Skulduggery"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Dissapearing World Style ♠ (kata)",
+          "Bravado (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Survival",
+          "Martial Arts [Unarmed]",
+          "Meditation"
+        ],
+        "techniqueGroup": "Air Invocations",
+        "techniques": [
+          "Soul Sunder ♠ (kata)",
+          "Buoyant Arrival (shūji)"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Champion of Days Gone Tradition",
+    "ranks": [
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Courtesy",
+          "Culture",
+          "Government"
+        ],
+        "techniqueGroup": "Air Shūji",
+        "techniques": [
+          "Pelting Hail Style ♠ (kata)",
+          "Striking as Air (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Fitness",
+          "Sentiment",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Water Shūji",
+        "techniques": [
+          "All Arts Are One ♠ (shūji)",
+          "Tactical Assessment (shūji)"
+        ]
+      },
+      {
+        "skillGroup": "Scholar skills",
+        "skills": [
+          "Command",
+          "Aesthetics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Fire Shūji",
+        "techniques": [
+          "A Samurai's Fate ♠ (shūji)",
+          "Breath of Wind Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Martial skills",
+        "skills": [
+          "Culture",
+          "Design",
+          "Government"
+        ],
+        "techniqueGroup": "Earth Shūji",
+        "techniques": [
+          "Pin the Fan ♠ (shūji)",
+          "Disappearing World Style (kata)"
+        ]
+      },
+      {
+        "skillGroup": "Social skills",
+        "skills": [
+          "Sentiment",
+          "Tactics",
+          "Martial Arts [Ranged]"
+        ],
+        "techniqueGroup": "Void Shūji",
+        "techniques": [
+          "Soul Sunder (kata)",
+          "Striking as Void (kata)"
+        ]
+      }
+    ]
+  }
+]

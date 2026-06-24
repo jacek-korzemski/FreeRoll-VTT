@@ -56,7 +56,7 @@ if exist "!ROOT!\frontend\.env" (
     echo VITE_BASE_PATH=/vtt/room1/
     echo VITE_API_PATH=backend/api.php
     echo VITE_LANGUAGE=en
-    echo VITE_ENABLE_L5R=false
+    echo VITE_ENABLE_L5R=!ENABLE_L5R!
 ) > "!ROOT!\frontend\.env"
 
 cd /d "!ROOT!\frontend"

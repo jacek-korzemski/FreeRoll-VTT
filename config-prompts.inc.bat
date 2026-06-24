@@ -58,9 +58,9 @@ if /i not "%LANGUAGE%"=="en" if /i not "%LANGUAGE%"=="pl" (
 :ask_l5r
 set "ENABLE_L5R="
 if /i "%PROMPT_LOCALE%"=="pl" (
-    set /p "ENABLE_L5R=Wlaczyc kostki L5R? (true/false) [false]: "
+    set /p "ENABLE_L5R=Wlaczyc wsparcie L5R - kostki, import, kompendium? (true/false) [false]: "
 ) else (
-    set /p "ENABLE_L5R=Enable L5R dice? (true/false) [false]: "
+    set /p "ENABLE_L5R=Enable L5R support - dice, import, compendium? (true/false) [false]: "
 )
 if "%ENABLE_L5R%"=="" set "ENABLE_L5R=false"
 if /i not "%ENABLE_L5R%"=="true" if /i not "%ENABLE_L5R%"=="false" (
@@ -89,7 +89,7 @@ if /i "%PROMPT_LOCALE%"=="pl" (
     echo    Haslo Mistrza Gry:   %GM_PASSWORD%
     echo    Sciezka bazowa:      %BASE_PATH%
     echo    Jezyk interfejsu:    %LANGUAGE%
-    echo    Kostki L5R wlaczone: %ENABLE_L5R%
+    echo    Wsparcie L5R:        %ENABLE_L5R%
     echo    Dozwolone originy:   %ALLOWED_ORIGINS%
 ) else (
     echo  Configuration summary:

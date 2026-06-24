@@ -1,0 +1,296 @@
+[
+  {
+    "name": "Hida",
+    "wealth": "4 koku",
+    "glory": "44",
+    "clan": "Crab",
+    "source": "Corebook p. 49"
+  },
+  {
+    "name": "Hiruma",
+    "wealth": "3 koku",
+    "glory": "39",
+    "clan": "Crab",
+    "source": "Corebook p. 49"
+  },
+  {
+    "name": "Kaiu",
+    "wealth": "5 koku",
+    "glory": "40",
+    "clan": "Crab",
+    "source": "Corebook p. 49"
+  },
+  {
+    "name": "Kuni",
+    "wealth": "4 koku",
+    "glory": "40",
+    "clan": "Crab",
+    "source": "Corebook p. 49"
+  },
+  {
+    "name": "Yasuki",
+    "wealth": "10 koku",
+    "glory": "39",
+    "clan": "Crab",
+    "source": "Corebook p. 49"
+  },
+  {
+    "name": "Asahina",
+    "wealth": "6 koku",
+    "glory": "40",
+    "clan": "Crane",
+    "source": "Corebook p. 50"
+  },
+  {
+    "name": "Daidoji",
+    "wealth": "7 koku",
+    "glory": "40",
+    "clan": "Crane",
+    "source": "Corebook p. 50"
+  },
+  {
+    "name": "Doji",
+    "wealth": "8 koku",
+    "glory": "44",
+    "clan": "Crane",
+    "source": "Corebook p. 50"
+  },
+  {
+    "name": "Kakita",
+    "wealth": "7 koku",
+    "glory": "44",
+    "clan": "Crane",
+    "source": "Corebook p. 50"
+  },
+  {
+    "name": "Agasha",
+    "wealth": "4 koku",
+    "glory": "40",
+    "clan": "Dragon",
+    "source": "Corebook p. 51"
+  },
+  {
+    "name": "Kitsuki",
+    "wealth": "6 koku",
+    "glory": "44",
+    "clan": "Dragon",
+    "source": "Corebook p. 51"
+  },
+  {
+    "name": "Mirumoto",
+    "wealth": "5 koku",
+    "glory": "44",
+    "clan": "Dragon",
+    "source": "Corebook p. 51"
+  },
+  {
+    "name": "Togashi",
+    "wealth": "3 koku",
+    "glory": "45",
+    "clan": "Dragon",
+    "source": "Corebook p. 51"
+  },
+  {
+    "name": "Akodo",
+    "wealth": "5 koku",
+    "glory": "44",
+    "clan": "Lion",
+    "source": "Corebook p. 52"
+  },
+  {
+    "name": "Ikoma",
+    "wealth": "5 koku",
+    "glory": "40",
+    "clan": "Lion",
+    "source": "Corebook p. 52"
+  },
+  {
+    "name": "Kitsu",
+    "wealth": "4 koku",
+    "glory": "40",
+    "clan": "Lion",
+    "source": "Corebook p. 52"
+  },
+  {
+    "name": "Matsu",
+    "wealth": "5 koku",
+    "glory": "44",
+    "clan": "Lion",
+    "source": "Corebook p. 52"
+  },
+  {
+    "name": "Asako",
+    "wealth": "5 koku",
+    "glory": "40",
+    "clan": "Phoenix",
+    "source": "Corebook p. 53"
+  },
+  {
+    "name": "Isawa",
+    "wealth": "5 koku",
+    "glory": "44",
+    "clan": "Phoenix",
+    "source": "Corebook p. 53"
+  },
+  {
+    "name": "Kaito",
+    "wealth": "4 koku",
+    "glory": "40",
+    "clan": "Phoenix",
+    "source": "Corebook p. 53"
+  },
+  {
+    "name": "Shiba",
+    "wealth": "5 koku",
+    "glory": "40",
+    "clan": "Phoenix",
+    "source": "Corebook p. 53"
+  },
+  {
+    "name": "Bayushi",
+    "wealth": "8 koku",
+    "glory": "44",
+    "clan": "Scorpion",
+    "source": "Corebook p. 54"
+  },
+  {
+    "name": "Shosuro",
+    "wealth": "6 koku",
+    "glory": "40",
+    "clan": "Scorpion",
+    "source": "Corebook p. 54"
+  },
+  {
+    "name": "Soshi",
+    "wealth": "6 koku",
+    "glory": "40",
+    "clan": "Scorpion",
+    "source": "Corebook p. 54"
+  },
+  {
+    "name": "Yogo",
+    "wealth": "4 koku",
+    "glory": "39",
+    "clan": "Scorpion",
+    "source": "Corebook p. 54"
+  },
+  {
+    "name": "Ide",
+    "wealth": "9 koku",
+    "glory": "40",
+    "clan": "Unicorn",
+    "source": "Corebook p. 55"
+  },
+  {
+    "name": "Iuchi",
+    "wealth": "5 koku",
+    "glory": "40",
+    "clan": "Unicorn",
+    "source": "Corebook p. 55"
+  },
+  {
+    "name": "Moto",
+    "wealth": "6 koku",
+    "glory": "40",
+    "clan": "Unicorn",
+    "source": "Corebook p. 55"
+  },
+  {
+    "name": "Shinjo",
+    "wealth": "8 koku",
+    "glory": "44",
+    "clan": "Unicorn",
+    "source": "Corebook p. 55"
+  },
+  {
+    "name": "Utaku",
+    "wealth": "6 koku",
+    "glory": "44",
+    "clan": "Unicorn",
+    "source": "Corebook p. 55"
+  },
+  {
+    "name": "Miya",
+    "wealth": "8 koku",
+    "glory": "44",
+    "clan": "Imperial families",
+    "source": "Emerald Empires p. 229"
+  },
+  {
+    "name": "Otomo",
+    "wealth": "9 koku",
+    "glory": "43",
+    "clan": "Imperial families",
+    "source": "Emerald Empires p. 230"
+  },
+  {
+    "name": "Seppun",
+    "wealth": "6 koku",
+    "glory": "45",
+    "clan": "Imperial families",
+    "source": "Emerald Empires p. 231"
+  },
+  {
+    "name": "Kasuga",
+    "wealth": "9 koku",
+    "glory": "33",
+    "clan": "Tortoise Minor",
+    "source": "GM's Kit - Dark Tides p. 8"
+  },
+  {
+    "name": "The Family of the Fleet",
+    "wealth": "7 koku",
+    "glory": "36",
+    "clan": "Mantis Minor",
+    "source": "Mantis Clan DLC p. 4"
+  },
+  {
+    "name": "Toritaka",
+    "wealth": "3 koku",
+    "glory": "35",
+    "clan": "Falcon Minor",
+    "source": "Shadowlands p. 87"
+  },
+  {
+    "name": "Shika",
+    "wealth": "5 koku",
+    "glory": "35",
+    "clan": "Deer Minor",
+    "source": "Courts of Stone p. 88"
+  },
+  {
+    "name": "Moshi",
+    "wealth": "3 koku",
+    "glory": "40",
+    "clan": "Centipede Minor",
+    "source": "Celestial Realms p. 79"
+  },
+  {
+    "name": "Ichirō",
+    "wealth": "3 koku",
+    "glory": "35",
+    "clan": "Badger Minor",
+    "source": "Fields of Victory p. 71"
+  },
+  {
+    "name": "Fureheshu",
+    "wealth": "4 koku",
+    "glory": "30",
+    "clan": "Badger Minor",
+    "source": "Legacies of War p. 16"
+  },
+  {
+    "name": "Tonbo",
+    "wealth": "1 koku, 2 Dragonfly glass ornaments",
+    "glory": "35",
+    "clan": "Dragonfly Minor",
+    "source": "Writ of the Wilds p. 86"
+  },
+  {
+    "name": "Kitsune",
+    "wealth": "2 koku",
+    "glory": "40",
+    "clan": "Fox Minor",
+    "source": "Children of the Five Winds"
+  }
+]

@@ -1,0 +1,362 @@
+[
+  {
+    "name": "Accustomed to Luxury",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You live a life of luxury and chafe at the idea of abiding the accommodations of your lessers or sleeping in the wilderness.",
+    "check": "A check that requires you to remain in unacceptable accommodations for an extended period (such as a Survival [Earth] check to set up a campsite or a Commerce [Earth] check to make arrangements to stay at a rural inn).",
+    "source": "Emerald Empire p. 246"
+  },
+  {
+    "name": "Addiction",
+    "ring": "Earth",
+    "traits": ", Mental, Physical",
+    "description": "Choose an addictive substance or experience; deprivation from this substance or experience for more than three days causes shakes, chills, distraction, or even more violent physical symptoms that become increasingly difficult to conceal.",
+    "check": "A check to resist the substance or experience (such as a Fitness [Earth] check to suppress signs of your addiction during long absences of the substance (or experience) or a Meditation [Earth] check to resist pursuing the experience or substance).",
+    "source": "Corebook p. 131"
+  },
+  {
+    "name": "Animal Signs",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "You assign supernatural meaning to animal behavior. Not all of this behavior portends doom or bad luck, however, so you have a broad range of knowledge on superstitions and methods of fortune-telling related to animals.",
+    "check": "A check to interpret the actions of an animal (such as a Survival [Void] check to see if the caw of a crow portends good luck or bad, or a Medicine [Void] check to see if a rat's behavior signifies the presence of a plague)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Battle Trauma",
+    "ring": "Fire",
+    "traits": ", Mental, Physical",
+    "description": "At the start of a duel, skirmish, or mass battle, your hands shake, your body tenses up, or your mind might even lock down. You can act normally, but your unsettled state is obvious to everyone around you, and others may try to exploit it.",
+    "check": "A check related to battle (such as a Martial Arts [Melee] [Fire] check to strike down a foe or a Tactics [Fire] check to generate initiative). (Your GM can choose not to inflict this strife after the you have taken a few turns and thematically overcome your trauma.)",
+    "source": "Corebook p. 131"
+  },
+  {
+    "name": "Belligerent",
+    "ring": "Earth",
+    "traits": ", Interpersonal",
+    "description": "You find it nearly impossible to keep your cool when provoked, and may even look for an excuse to fight with people you consider deserving of a good thrashing. Delicate social situations can easily spiral out of control when you suspect the other party of giving offense.",
+    "check": "A check to respond to provocation without resorting to violence or threats (such as a Performance [Earth] check to calmly sing a song that was originally composed to paint your lineage in an unflattering light or a Meditation [Earth] check to stay in formation when you spot a rival across the battlefield).",
+    "source": "Fields of Victory p. 85"
+  },
+  {
+    "name": "Braggart",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You can't resist an opportunity to share your great deeds with others, and you grow distressed when your audience isn't impressed by your accomplishments.",
+    "check": "A check to share your past deeds with others without emphasizing your own accomplishments or trying to impress your audience with your story (such as a Courtesy [Water] check to allow a superior to take credit for your deeds or a Performance [Water] check when recounting a tale in which you played a part).",
+    "source": "Fields of Victory p. 85"
+  },
+  {
+    "name": "Claustrophobia",
+    "ring": "Water",
+    "traits": ", Mental",
+    "description": "You are intensely afraid of being enclosed in a small space or a space without an easy exit. You avoid entering such places if at all possible, and you feel anxious and distracted while in such a place.",
+    "check": "A check that requires to you enter an enclosed space (such as a Fitness [Water] check to crawl through a narrow passage or a Survival [Water] check to investigate a cave).",
+    "source": "Emerald Empire p. 247"
+  },
+  {
+    "name": "Coming Storm",
+    "ring": "Void",
+    "traits": ", Mental",
+    "description": "Your family has endured some great hardship, such as a natural disaster, mistreatment by occupying forces, high susceptibility to illness, or recurring bad luck. As a result, you and your family are constantly vigilant for this same type of hardship and are wary of the bad fortune that will inevitably befall you.",
+    "check": "A check that involves planning or preparation for securing your or your family’s well-being (such as a Medicine [Void] check to sense a specific ailment or a Command [Void] check to warn others of the risk that your family hardship may occur again soon).",
+    "source": "Path of Waves p. 73"
+  },
+  {
+    "name": "Conspiracy",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are plagued by the knowledge that there are greater plots in the world than what most others can see. Everywhere, treacherous schemes wait to ruin the lives of good people, and you cannot help but warn others of these awful machinations.",
+    "check": "A check to interact with an unfamiliar authority figure (such as a Courtesy [Earth] check to be properly deferential or a Government [Earth] check to remember an authority figure's specific role).",
+    "source": "Celestial Realms p. 91"
+  },
+  {
+    "name": "Cynicism",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "When faced with a truly novel or unconventional idea, you always look for ways it can fail, and others must persuade you that it could work before you will try it (even if it is your idea).",
+    "check": "A check to think unconventionally (such as a Performance [Fire] check to improvise during a performance or a Tactics [Fire] check to develop a new strategy on the fly).",
+    "source": "Corebook p. 131"
+  },
+  {
+    "name": "Dark Secret",
+    "ring": "Void",
+    "traits": ", Interpersonal",
+    "description": "You have a dark secret that, if exposed, could bring ruin upon your house and disgrace your ancestors and descendants alike. If the details of this secret become public, your glory value decreases dramatically, as if you had lost staked glory (by 10 to 20). Depending on the secret, your status value might also decrease considerably (by 5 to 10), as if you had lost staked status.",
+    "check": "A check to assert your will over yourself or others (such as a Command [Void] check to order troops to fight to the bitter end or a Meditation [Void] check to find inner peace).",
+    "source": "Corebook p. 132"
+  },
+  {
+    "name": "Delusions of Grandeur",
+    "ring": "Void",
+    "traits": ", Mental, Interpersonal",
+    "description": "You believe yourself destined for greatness, and nothing will dissuade you from your fixation upon this goal. When you are presented with a chance to advance your glory, you must attempt to pursue it.",
+    "check": "A check that requires facing your humble place in an uncaring universe (such as a Labor [Void] check to eke out a living in the fields or a Meditation [Void] check to contemplate your place in the cosmos).",
+    "source": "Corebook p. 132"
+  },
+  {
+    "name": "Disdain for Urban Sprawl",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You do not like dense urban areas (though small towns are fine) due to a lack of plentiful nature, the crowds of people, the pace of life, or other reasons. You are not necessarily \"wild\", \"feral\" or \"uncivilized\" and may even be knowledgeable about city life. It simply brings you no joy.",
+    "check": "A check to overcome some facet of city life (such as a Goverment [Earth] check to recall a burdensome or complicated local city law or a Tactics [Earth] check fighting in the tight, cluttered alleways of a city)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Eyes of Many",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You are constantly worried that others are watching and judging you, whether maliciously or not. You are unable to relax in crowded places, and you tend to worry about your impressions on strangers more than most other people would.",
+    "check": "A check in a crowded place or where two or more strangers are actively listening to you (such as a Courtesy [Air] check to tell your employer your mission went very well when it did not in front of their other retainers or a Fitness [Air] check to avoid notice).",
+    "source": "Path of Waves p. 73"
+  },
+  {
+    "name": "Failure",
+    "ring": "Water",
+    "traits": ", Mental",
+    "description": "You are constantly worried about failing those to whom you have a commitment, such as family, friends, allies, a mentor, or a master. The thought of letting someone down when you have made a promise induces panic in you that manifests physically and can only be soothed by taking a step closer to accomplishing your goals.",
+    "check": "A check that shirks your obligations or works against keeping a promise you made (such as a Courtesy [Water] check to socialize pleasantly with no purpose when you have a duty to uphold or a Games [Water] check to gamble needlessly).",
+    "source": "Path of Waves p. 74"
+  },
+  {
+    "name": "Fallen Ancestor",
+    "ring": "Void",
+    "traits": ", Spiritual, Interpersonal",
+    "description": "Your ancestor fell to Jigoku’s seductive call, giving their name to an oni or committing a terrible atrocity. Now their spirit calls to you from Jigoku’s maw, tempting you into following them down the same dark path.",
+    "check": "A check that involves the spirits or your family history (such as a Theology [Void] check to perform a family ritual or a Sentiment [Void] check to show mercy to a wounded opponent).",
+    "source": "Shadowlands p. 98"
+  },
+  {
+    "name": "False Identity",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You have an elaborate false identity that you have maintained over a long period of time. Many of the people you interact with regularly know you by this identity, and you may even have a family that does not know the truth.",
+    "check": "A check to maintain your false identity (such as a Courtesy [Air] check to lie about your past or a Skulduggery [Air] check to surreptitiously hide evidence of the truth).",
+    "source": "Emerald Empire p. 247"
+  },
+  {
+    "name": "Fear of [common creature]",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You have an irrational fear of a creature that is commonly found in Rokugan. When you perceive such a creature, whether or not it is actually there, you become unnerved and your decision-making suffers.",
+    "check": "A check to make choices while in the presence of your feared creature (such as a Medicine [Earth] check to recall how to treat a particular type of wound or a Courtesy [Earth] check to act reasonably during a negotiation).",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Fear of Death",
+    "ring": "Earth",
+    "traits": ", Mental, Physical",
+    "description": "You cannot voluntarily choose to die or sacrifice your life (including committing seppuku when honor demands it), and if there is a chance you could live, you must always pursue it.",
+    "check": "A check to risk your life or accept your mortality (such as a Meditation [Earth] check to find inner tranquility before battle or a Tactics [Earth] check to hold a position against long odds).",
+    "source": "Corebook p. 132"
+  },
+  {
+    "name": "Fear of Mediocrity",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "Your fear of amounting to nothing causes you to seize up when faced with the need to innovate on the fly.",
+    "check": "A check to adapt to an unexpected situation (such as a Survival [Fire] check to find shelter when your tent is destroyed or a Culture [Fire] check to unexpectedly interact in an appropriate manner with someone of a higher status)",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Fear of Poison",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You have a fear of being poisoned by others. You would rather go hungry than accept food or drink from anyone you do not trust completely, unless you witness that food beingconsumed by someone else first. When you are offered food or drink by others you do not trust, you cannot help but wonder if they are secretly plotting your demise.",
+    "check": "A check to interact with someone you do not completely trust who has offered you food or drink (such as a Sentiment [Air] check to try to determine some else’s intentions or a Games [Air] check to play a game well against someone who has offered you food),",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Fear of Stagnation",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "Staying in one place for too long frustrates and unsettles you. You also have a fear of relational commitments that tie you to one place, and you much prefer to keep moving forward. You find it difficult to have work that requires you to stay in one location for an extended period of time, and doing so causes you to become irritable.",
+    "check": "A check to continue a task you have spent a lot of time on (such as a Labor [Earth] check to work on the same project for more than two days or a Courtesy [Earth] check to make arrangements to stay yet another night in the same city).",
+    "source": "Path of Waves p. 74"
+  },
+  {
+    "name": "Ferocity",
+    "ring": "Air",
+    "traits": ", Physical, Mental",
+    "description": "When you strike, you have trouble holding back your power, and you tend to lash out even when a subtler approach would be more appropriate. When you defeat a minion NPC, the minion is always killed, even if you would prefer to incapacitate them.",
+    "check": "A check to intentionally hold back or apply force subtly (such as a Games [Air] check to manipulate your opponent or a Martial Arts [Melee] [Air] check to strike a precise blow).",
+    "source": "Corebook p. 133"
+  },
+  {
+    "name": "Impatience",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You find it difficult to repress yourself, and when you are forced to wait, it causes you palpable discomfort. If given the choice between seizing an opportunity and waiting for a better moment, you strive to seize the opportunity despite risks that might be mitigated if you act later.when you are forced to wait, it causes you palpable discomfort. If given the choice between seizing an opportunity and waiting for a better moment, you strive to seize the opportunity despite risks that might be mitigated if you act later.",
+    "check": "A check to strategically weigh your options (such as a Government [Earth] check to think of a historical anecdote related to your situation or a Tactics [Earth] check to identify the right moment to strike).",
+    "source": "Corebook p. 133"
+  },
+  {
+    "name": "Intolerance",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "A particular hate festers within you for a group of people (or even supernatural beings), and it overwhelms your better judgment when you are faced with members or representatives of this group. Choose one group of people or supernatural beings to be your hated enemies. When you are in the presence of these beings (and even when they are mentioned), your enmity is evident to all who observe you.",
+    "check": "A check to interact with a member of the chosen group (such as a Commerce [Water] check to bargain with someone from a family that once wronged your own or a Composition [Water] check to translate from the language of a group of foreigners you dislike due to a battle you fought against their people).",
+    "source": "Corebook p. 133"
+  },
+  {
+    "name": "Irrepresible Flirtation",
+    "ring": "Earth",
+    "traits": ", Interpersonal",
+    "description": "You find it difficult to pass up the chance to flirt with people you find attractive, and when someone you find attractive flirts with you, you cannot help but return their advances with your own flirtation. Your interest is obvious to all onlookers.",
+    "check": "A check to interact with (or ignore) someone you are interested in without exceeding propriety (such as a Courtesy [Earth] check to make appropriate small talk or a Sentiment [Earth] check to know how to tread cautiously in a social scene).",
+    "source": "Corebook p. 134"
+  },
+  {
+    "name": "Isolation",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental",
+    "description": "To best serve your clan’s interests, you must ignore your own needs. You cannot sympathize with the people you intend to bring harm. Likewise, you cannot help people for selfish reasons. Your clan requires you to focus on the larger picture and to remove your individual wants from the equation. You are a tool for a greater purpose. The temptation to form genuine human connections is strong, and it can pull you away from your life’s mission.",
+    "check": "A check related to interacting with people you care for (such as a Command [Earth] check to issue orders to family members or a Sentiment [Earth] check to recall the feelings of your friends concerning a particular subject).",
+    "source": "Courts of Stone p. 103"
+  },
+  {
+    "name": "Jealousy",
+    "ring": "Air",
+    "traits": ", Physical, Mental",
+    "description": "You cannot voluntarily pass up an opportunity to one-up a rival or demonstrate your superiority over someone in the eyes of others.",
+    "check": "A check to compete with someone to demonstrate your excellence (such as a Performance [Air] check to convince an audience of something before a rival can or a Smithing [Air] check to refine a weapon to perfection before presenting it as a gift to your lord).",
+    "source": "Corebook p. 134"
+  },
+  {
+    "name": "Loathing for Peasants",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You find peasants to be repugnant, and even being around them makes your skin crawl. You do your best to avoid interacting with peasants, and your disgust is difficult to hide.",
+    "check": "A check that requires you to interact with peasants (such as a Culture [Water] check to observe the customs of farmers or a Courtesy [Water] check to question a village leader).",
+    "source": "Emerald Empire p. 247"
+  },
+  {
+    "name": "Loneliness",
+    "ring": "Void",
+    "traits": ", Interpersonal, Mental",
+    "description": "You derive energy and pleasure from social interactions, and being alone makes you uncomfortable or morose. You look for excuses to avoid being alone and find it difficult to turn down any social engagement.",
+    "check": "A check that requires you to be alone (such as a Composition [Void] check to write a letter declining an invitation to the theater or a Meditation [Void] check to spend a prolonged time in dedicated introspection).",
+    "source": "Emerald Empire p. 247"
+  },
+  {
+    "name": "Materialism",
+    "ring": "Void",
+    "traits": ", Mental",
+    "description": "You are obsessed with physical possessions and objects, despite what the Tao of Shinsei says about such material earthly bonds. You cannot refuse gifts of rarity 3 or higher.",
+    "check": "A check to give up a physical object in your possession or other thing of value (such as a Government [Void] check to find a way to sacrifice a holding to gain a political advantage over a rival).",
+    "source": "Corebook p. 134"
+  },
+  {
+    "name": "Meekness",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "You are extremely shy, and you struggle to stand up for yourself. You cannot interrupt people of higher status, and you find it very hard to assert yourself over anyone, including people of lower status.",
+    "check": "A check to stand out or get what you need (such as a Command [Fire] check to inspire troops under your command or a Government [Fire] check to assess your rights on a matter).",
+    "source": "Corebook p. 134"
+  },
+  {
+    "name": "Obtuse",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "Try as you may, you just cannot enjoy art, poetry, music, or other such needless frivolities. Subtlety is lost on you, beauty is something you don’t comprehend, art is a waste of resources, and anything but the purely functional is meaningless in your eyes. Your dour presence can be overwhelming in social settings, and you generally forget social niceties unless reminded.",
+    "check": "A check to analyze or react to the emotions of others (such as a Design [Air] check to compliment someone’s garb or a Sentiment (Air) to decode a double meaning in someone else’s speech).",
+    "source": "Shadowlands p. 98"
+  },
+  {
+    "name": "Omen of Bad Luck",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "Omens of bad luck seem to follow you wherever you go. Even if bad luck rarely befalls you, others see these signs and tend to respond negatively to them (and to you).",
+    "check": "A check to interact with someone (such as a Commerce [Water] check to trade for goods with a superstitious merchant or a Government [Water] check to gather information from people who have witnessed one of your bad omens).",
+    "source": "Celestial Realms p. 92"
+  },
+  {
+    "name": "Painful Honesty",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You are tormented by internal conflict when you lie or allow a lie to pass. You cannot make claims you know to be false, although you can say technically truthful things that imply untruths, if politeness or circumstances demand it.",
+    "check": "A check to mislead someone else (such as a Courtesy [Air] check to falsely besmirch someone’s reputation or a Command [Air] check to manipulate an underling).",
+    "source": "Corebook p. 135"
+  },
+  {
+    "name": "Paranoia",
+    "ring": "Water",
+    "traits": ", Physical, Mental",
+    "description": "In every shadow, you see assassins, and in every smile, you see a rival in pursuit of your undoing. This fear makes it very hard for you to rely upon others, and it might distract you from real threats. You cannot relax unless you have confirmed vital information (such as your current safety) for yourself.",
+    "check": "A check to identify danger in your environment (such as a Government [Water] check to know the political currents in a court or a Sentiment [Water] check to sense if someone’s intentions toward you are hostile).",
+    "source": "Corebook p. 135"
+  },
+  {
+    "name": "Perfectionism",
+    "ring": "Water",
+    "traits": ", Physical, Mental",
+    "description": "Anything short of perfection in your work is unacceptable to you, and you have been known to create works of beauty only to cast them aside over some perceived flaw. You cannot help but try to improve any work in which you identify a flaw, even if it means informing someone of higher status of an error they have made.",
+    "check": "A check in which you must interact with an imperfect or unfinished work (such as an Aesthetics [Water] check to improve an existing piece of art or a Composition [Water] check to translate a work without losing any of the nuance present in the original language).",
+    "source": "Corebook p. 135"
+  },
+  {
+    "name": "Phobia",
+    "ring": "Water",
+    "traits": ", Physical, Mental",
+    "description": "Choose something mundane. You have a debilitating fear of this thing. You cannot speak its name. In its presence, you cannot hide your fear, and you attempt to flee if at all possible.",
+    "check": "A check to deal with your phobia (such as a Courtesy [Water] check to talk pleasantly about the subject or a Survival [Water] check to identify it as the thing you fear).",
+    "source": "Corebook p. 136"
+  },
+  {
+    "name": "Reformed Mahō Tsukai",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Once you were a mahō-tsukai who wielded dreadful blood magics under the tutelage of the Bloodspeakers or your own occult study. But that was then. You have since seen the error of your ways and live a life of atonement. You’ve done everything you can to bury your past, but a bell cannot be unrung, and now and again it still catches up with you. The consequences of the atrocities you committed still find you out, oni you summoned still seek you, and the tsukai with whom you once consorted will stop at nothing to silence you. We cannot outrun our shadows; sooner or later, you known that yours will claim their due. If the details of this your terrible past life become public, your glory value decreases dramatically, as if you had lost staked glory (by 30 to 40). Your status value also decreases considerably by the same amount, as if you had lost staked status.",
+    "check": "A check that reminds you of your former life (such as a Courtesy [Water] check to speak pleasantly with a priest or religious scholar or a Meditation [Water] check to calm yourself when witnessing the aftermath of a blood magic sacrifice).",
+    "source": "Shadowlands p. 98"
+  },
+  {
+    "name": "Softheartedness",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "If given the choice to kill someone or show mercy, you always spare their life, even if it is not in your interest to let them live.",
+    "check": "A check that addresses or involves killing others or letting them die (such as a Government [Fire] check to estimate the burden a war would place on the common people or a Martial Arts [Ranged] [Fire] check to shoot to kill).",
+    "source": "Corebook p. 136"
+  },
+  {
+    "name": "Superstition",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "When faced with signs of the supernatural, you become visibly agitated, and you attempt to leave the scene, appease the being or phenomenon in question, or acquire supernatural protection of some kind.",
+    "check": "A check to interact with or learn about a supernatural being or phenomenon (such as a Meditation [Void] check to perceive the presence of a supernatural being or a Theology [Void] check to know a supernatural being’s designs or desires).",
+    "source": "Corebook p. 136"
+  },
+  {
+    "name": "Tip of the Tongue",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You know more than one language, perhaps several, and are fluent in all of them. So fluent that your mind mixes and matches words from all of them. While it does not hinder you socially, you find this frustrating when you cannot come up with that word you definitely know.",
+    "check": "A check to communicate that requires you to bridge cultural, religious, philosophical or regional differences (such as a Courtesy [Air] check to use veiled wordplay or metaphors to smooth out a dispute between the samurai and bonge or a Theology [Air] check to explain an equivalent religious idea from another culture)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Uncleaniness",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "Uncleanliness in places and on things that could be clean causes you physical and mental distress. Though the forest is meant to be dirty because it is natural, your kimono is meant to be pristine and clean.",
+    "check": "A check to interact with a person, place, or thing that is unclean (such as a Skulduggery [A ir] check to sneak down a filthy alleyway or a Sentiment [Air] check to focus on learning something from a dirt-covered peasant).",
+    "source": "Celestial Realms p. 92"
+  },
+  {
+    "name": "Vanity",
+    "ring": "Void",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are hyperfocused on your physical appearance, and you truly believe you should be adored for your beauty.",
+    "check": "A check in which your physical appearance is in jeopardy or is being challenged (such as a Courtesy [Void] check to explain your plan to someone you perceive as more beautiful than you or a Survival [Void] check to perform sweat-inducing labor in order to make camp).",
+    "source": "Celestial Realms p. 92"
+  },
+  {
+    "name": "Web of Lies",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You must be ever mindful of your elaborate, deceitful plots. You must know who was told what lie, which lies contradict each other, and what people are likely to say to one another. The more lies, the more intricate the web grows. One slip of the tongue could cause it all to implode, as you face a constant risk of contradicting yourself.",
+    "check": "A check to deceive someone you have deceived before (such as a Courtesy [Air] check to convince someone that you are a member of a clan when other clan members have never heard of you or a Skulduggery [Air] check to convince the victim of one of your previous cons that you didn’t mean to steal their money).",
+    "source": "Courts of Stone p. 103"
+  }
+]

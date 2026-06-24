@@ -5981,3 +5981,216 @@ body {
     height: 32px;
   }
 }
+
+/* ============================================
+   L5R: Compendium tab + card pickers
+   ============================================ */
+
+.l5r-dice-loading,
+.compendium-placeholder {
+  padding: 16px;
+  text-align: center;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.l5r-roll-label {
+  text-align: center;
+  font-weight: 700;
+  color: #f4e7c0;
+  background: rgba(122, 31, 31, 0.5);
+  border: 1px solid #7a1f1f;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 10px;
+}
+
+.l5r-compendium {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #1a1a2e;
+  color: #ddd;
+}
+
+.l5r-comp-toolbar {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-bottom: 1px solid #0f3460;
+  background: #16213e;
+}
+
+.l5r-comp-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.l5r-comp-cat {
+  padding: 3px 9px;
+  font-size: 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #bbb;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.l5r-comp-cat:hover {
+  background: rgba(233, 69, 96, 0.15);
+  color: #fff;
+}
+
+.l5r-comp-cat.active {
+  background: #7a1f1f;
+  border-color: #b8956a;
+  color: #f4e7c0;
+}
+
+.l5r-comp-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border: 1px solid #0f3460;
+  border-radius: 4px;
+  background: #0f1626;
+  color: #eee;
+  font-size: 0.85rem;
+}
+
+.l5r-comp-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+  position: relative;
+}
+
+.l5r-comp-count {
+  position: sticky;
+  top: 0;
+  align-self: flex-end;
+  font-size: 0.7rem;
+  color: #777;
+  text-align: right;
+  margin-bottom: 4px;
+}
+
+.l5r-comp-entry {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.l5r-comp-entry-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.l5r-comp-name {
+  font-weight: 700;
+  color: #f4e7c0;
+}
+
+.l5r-comp-subtitle {
+  font-size: 0.78rem;
+  color: #9fb4d6;
+}
+
+.l5r-comp-entry-body,
+.l5r-comp-curriculum {
+  font-size: 0.82rem;
+  color: #cfcfcf;
+  line-height: 1.4;
+}
+
+.l5r-comp-field {
+  margin-top: 2px;
+}
+
+.l5r-comp-field strong {
+  color: #b8956a;
+}
+
+.l5r-comp-rank {
+  margin-top: 3px;
+}
+
+.l5r-comp-rank strong {
+  color: #b8956a;
+}
+
+.l5r-comp-rank-tech {
+  color: #9fb4d6;
+  padding-left: 12px;
+}
+
+.l5r-comp-loading,
+.l5r-comp-empty {
+  padding: 18px;
+  text-align: center;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.l5r-comp-more {
+  text-align: center;
+  color: #777;
+  font-size: 0.8rem;
+  padding: 8px;
+}
+
+/* Picker modal (reuses .note-template-modal overlay) */
+.l5r-picker-modal .note-template-modal-content {
+  max-width: 560px;
+  max-height: 75vh;
+}
+
+.l5r-picker-modal .l5r-comp-search {
+  margin-bottom: 10px;
+}
+
+.l5r-picker-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.l5r-picker-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.l5r-picker-item:hover {
+  background: rgba(233, 69, 96, 0.15);
+  border-color: #e94560;
+  color: #fff;
+}
+
+.l5r-picker-detail {
+  font-size: 0.76rem;
+  color: #99a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

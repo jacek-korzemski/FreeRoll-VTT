@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'
-import L5RDicePanel from '../molecules/L5RDicePanel'
 import { parseRollExpression } from '../../utils/diceRollUtils'
 import { formatRoll, formatTotal } from '../../utils/diceFormat'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
+
+// Build-time literal: when EnableL5r is off this folds to false and the L5R panel
+// (plus its dice images) is dead-code-eliminated from the bundle.
+const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
+const L5RDicePanel = L5R_BUILD ? lazy(() => import('../molecules/L5RDicePanel')) : null
 
 const DICE_TYPES = [
   { type: 'd4', sides: 4, color: '#e74c3c' },
@@ -29,7 +33,7 @@ function loadMacros() {
   }
 }
 
-function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
+function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5RRollConsumed }) {
   const [mode, setMode] = useState('standard')
   const [selectedDice, setSelectedDice] = useState([])
   const [modifier, setModifier] = useState(0)
@@ -37,6 +41,12 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
   const [isRolling, setIsRolling] = useState(false)
   const [macros, setMacros] = useState([])
   const { getFieldValue: ctxGetFieldValue } = useNotesTemplate() || {}
+
+  // A pending L5R roll (from a character-sheet button) switches the panel to L5R mode.
+  useEffect(() => {
+    if (!ENABLE_L5R) return
+    if (pendingL5RRoll?.token) setMode('l5r')
+  }, [pendingL5RRoll])
 
   useEffect(() => {
     const saved = localStorage.getItem('vtt_player_name')
@@ -303,8 +313,15 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll }) {
           </>
         )}
 
-        {ENABLE_L5R && mode === 'l5r' && (
-          <L5RDicePanel playerName={playerName} onRoll={onRoll} />
+        {ENABLE_L5R && mode === 'l5r' && L5RDicePanel && (
+          <Suspense fallback={<div className="l5r-dice-loading">…</div>}>
+            <L5RDicePanel
+              playerName={playerName}
+              onRoll={onRoll}
+              prefill={pendingL5RRoll}
+              onPrefillConsumed={onL5RRollConsumed}
+            />
+          </Suspense>
         )}
 
         <div className="dice-history">

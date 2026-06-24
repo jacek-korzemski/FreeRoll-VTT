@@ -25,6 +25,8 @@ ALLOWED_ORIGINS=*
 - **`backend/api.php`** czyta ten sam plik (`../.env` w strukturze build) — m.in. `ALLOWED_ORIGINS` dla CORS.
 - Frontend dostaje `window.__VTT_CONFIG__` z `index.php` — nie wymaga przebudowy przy zmianie ścieżki ani języka.
 
+> **Wsparcie L5R to bramka BUILD-TIME.** Odpowiedź na prompt L5R w `build.bat` zapisuje się do `frontend/.env` jako `VITE_ENABLE_L5R` i decyduje, czy kod Legendy Pięciu Kręgów (panel kości, importer karty CSV/TSV, kompendium, pickery, dane gry, obrazki kości) w ogóle trafi do paczki. Gdy `false`, Vite całkowicie usuwa ten kod i assety (tree-shaking). Runtime `VTT_ENABLE_L5R` w `build/.env` może już tylko **wyłączyć** funkcje, które zostały zbudowane — nie włączy tego, czego nie ma w paczce. Dlatego `clone.bat` (bez `npm run build`) nie doda L5R do paczki zbudowanej bez wsparcia.
+
 ---
 
 ## 2. Przepływ build.bat

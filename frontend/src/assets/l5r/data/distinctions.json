@@ -1,0 +1,602 @@
+[
+  {
+    "name": "Affect of Harmlessness",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You appear earnest and perhaps a bit hapless, and your flaws generally come off as charming, at least at first glance. Additionally, people tend to underestimate you, and this works to your benefit.",
+    "check": "A check to ingratiate yourself with a stranger (such as a Courtesy [Air] check to be pleasant to someone of higher social status or a Performance [Air] check to conceal your true intentions toward a social equal).",
+    "source": "Courts of Stone p. 99"
+  },
+  {
+    "name": "Affinity with [animal type]",
+    "ring": "Void",
+    "traits": ", Fame, Interpersonal",
+    "description": "Sometime in the past, you assisted an animal in some way or saved its life. Now, any animal of that type you encounter gives you a little extra consideration, spraing you from its hunt or even helping you in return.",
+    "check": "A check when interacting with this specific type of animal (such as a Survival [Void] check to find food in wolf territory, if you have an affinity with wolves, or a Tactics [Void] check to cede territory to the enemy only to let the wolves overtake them).",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Ally [Name]",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You have proven yourself to a someone, who is willing to help you (within reason). They are open to sharing what they know about most topics, whether via a face-to-face meeting or written correspondence. They are also willing to arrange introductions for you with people they know.",
+    "check": "A check that benefits from your close relationship with the character (such as a Courtesy [Water] check to requisition an item through them or a Sentiment [Water] check to read their emotions).",
+    "source": "Corebook p. 101"
+  },
+  {
+    "name": "Ambidexterity",
+    "ring": "Air",
+    "traits": ", Physical",
+    "description": "As you have no dominant hand, you can compensate if your right hand is injured or lost.",
+    "check": "A check for which your equal skill with both hands is a benefit (such as a Martial Arts [Melee] [Air] check to strike an unexpected blow with a weapon in your left hand or a Skulduggery [Air] check to stealthily pick someone’s pocket).",
+    "source": "Corebook p. 102"
+  },
+  {
+    "name": "Animal Trainer",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are well versed in animal behaviors and effective techniques for training animals. You also know the telltale signs of hostility in both wild and domesticated animals.",
+    "check": "A check for which your animal training expertise is a benefit (such as a Medicine [Water] check to diagnose a sick animal or a Survival [Water] check to teach an animal to respond to a command).",
+    "source": "Emerald Empire p. 241"
+  },
+  {
+    "name": "Ardent Leader",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "You speak with a confidence that most find hard to ignore, and people are more likely to hear what you have to say, even if they are of a higher status than you. This does not mean that those who hear you will heed you, however, and your words may still have undesired consequences.",
+    "check": "A check for which your ardent leadership applies (such as a Tactics [Fire] check to deploy a group of peasants or a Courtesy [Fire] check to excite someone into believing in your plan).",
+    "source": "Path of Waves p. 68"
+  },
+  {
+    "name": "Benten's Blessing",
+    "ring": "Air",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "After interacting with a character for one or more scenes, you know with certainty whether they are open to your romantic aspirations or if they are categorically uninterested.",
+    "check": "A check for which the favor of the Fortune Benten is a benefit (such as an Aesthetics [Air] check to say something insightful about a piece of art or a Courtesy [Air] check to convince someone of your positive qualities).",
+    "source": "Corebook p. 102"
+  },
+  {
+    "name": "Bishamon's Blessing",
+    "ring": "Water",
+    "traits": ", Physical, Spiritual",
+    "description": "You recover from physical exhaustion twice as quickly as others.",
+    "check": "A check for which the favor of this Fortune is a benefit (such as a Fitness [Water] check to recover from exhaustion or a Martial Arts [Unarmed] [Water] check to subdue a foe).",
+    "source": "Corebook p. 102"
+  },
+  {
+    "name": "Blackmail on [Name]",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "You have incriminating information on an individual, which you use to force them to help you even when doing so may damage their reputation. They will share what knowledge they have about a given person, item, location, or situation, whether through a face-to-face meeting or through written correspondence. They will also arrange for introductions with exclusive members of society or places of business. Confer with the GM to select a campaign-appropriate NPC when choosing this advantage.",
+    "check": "A check to demand favors of the chosen individual (such as a Courtesy [Fire] check to remind them of the consequences of their disobeying you or a Command [Fire] check to order them to risk themself on your behalf).",
+    "source": "Corebook p. 102"
+  },
+  {
+    "name": "Blessed Lineage",
+    "ring": "Void",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "Characters with status of 50 or higher understand that they might suffer a loss of prestige if they harm you, and thus do not choose to kill you as their first option, even if you are a political obstacle they would otherwise eliminate without hesitation.",
+    "check": "A check for which your esteemed lineage is a benefit (such as a Command [Void] check to challenge someone’s perception of a situation or a Government [Void] check to know the likelihood of a political eventuality).",
+    "source": "Corebook p. 103"
+  },
+  {
+    "name": "Blissful Betrothal",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Your spouse fulfills certain social duties in your name when you are absent (such as attending events or caring for family members), provides assistance in their areas of expertise, and offers counsel when you face a difficult decision.",
+    "check": "A check for which your good relationship with your betrothed or spouse is a benefit (such as a Courtesy [Water] check to persuade someone from their family or clan to assist you).",
+    "source": "Corebook p. 103"
+  },
+  {
+    "name": "Blood of Osano-Wo",
+    "ring": "Fire",
+    "traits": ", Mental, Spiritual",
+    "description": "The Fortune of Storms grants you boldness and a desire not easily satisfied. You cannot be killed by storms (such as by lightning or going over-board in a tempest). If you would die this way, you instead wake up later in a place of the GM’s choice, miraculously safe and with 0 Void points.",
+    "check": "A check for which you need to take a great risk (such as a Games [Fire] check to wager the game on a single gambit or a Seafaring [Fire] check to chart a route through a deadly region).",
+    "source": "Mantis Clan DLC p. 7"
+  },
+  {
+    "name": "Criminal Connections",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You have cultivated useful allies and associates among Rokugan’s criminal underworld. You can use these contacts to find information or obtain illicit goods and services.",
+    "check": "A check that benefits from your criminal connections (such as a Skulduggery [Air] check to make contact with the underworld in an unfamiliar city or a Commerce [Air] check to sell stolen items at a higher price or without attracting attention).",
+    "source": "Emerald Empire p. 241"
+  },
+  {
+    "name": "Daikoku's Blessing",
+    "ring": "Water",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "After spending one or more scenes in a relevant market, you can always discern whether a given commodity or service’s value is going to rise or fall in the next month.",
+    "check": "A check for which your strong financial knowledge benefits (such as a Government [Water] check to know where to acquire goods).",
+    "source": "Corebook p. 103"
+  },
+  {
+    "name": "Dangerous Allure",
+    "ring": "Fire",
+    "traits": ", Physical, Interpersonal",
+    "description": "You always make an impression, and NPCs remember your name and face after interacting with you for one or more scenes (unless you take pains to disguise yourself).",
+    "check": "A check for which your good looks are a benefit (such as a Command [Fire] check to get someone to act in spite of the possible consequences or a Performance [Fire] check to incite emotion in someone).",
+    "source": "Corebook p. 103"
+  },
+  {
+    "name": "Dashing Scar",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You have a scar or other visible mark of an injury that adds to your heroic reputation. People who see your scar nearly always remember you and think of you positively unless given a reason not to.",
+    "check": "A check for which your scar could act as an asset (such as a Command [Air] check to speak with an authority you do not have or a Skulduggery [Air] check to use your scar to accentuate your roguish charm).",
+    "source": "Path of Waves p. 69"
+  },
+  {
+    "name": "Dead Eyes",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "After what of you’ve seen, the world holds no true dread for you any more. While you are not immune to stress or fear, during battle you go “dead in the eyes,” allowing you to act unclouded by terror, emotion, sentiment, or hesitation even while Compromised (though you still suffer the negative mechanical effects of this state). You are also more dour at other times, and struggle to find pleasure in many of life’s joys.",
+    "check": "A check that relies on avoiding fear or exuberant emotions (such as a Meditation [Earth] check to avoid running screaming from a monstrous oni or a Sentiment [Earth] check to avoid being caught up in a raucous crowd).",
+    "source": "Shadowlands p. 96"
+  },
+  {
+    "name": "Ebisu's Blessing",
+    "ring": "Earth",
+    "traits": ", Physical, Spiritual",
+    "description": "Laborers recognize you as a kindred spirit, and characters with status 30 or lower are innately trusting of you unless you give them reason not to be.",
+    "check": "A check for which the blessing of this Fortune is useful (such as a Commerce [Earth] check to safely transport goods or a Labor [Earth] check to plow a field).",
+    "source": "Corebook p. 104"
+  },
+  {
+    "name": "Expert Tracker",
+    "ring": "Air",
+    "traits": ", Mental, Physical",
+    "description": "You can detect subtle signs of a person or animal’s passage that others would overlook and can follow a trail across rivers, towns, and other obstacles that would cause most trackers to lose it.",
+    "check": "A check for which your tracking expertise applies (such as a Fitness [Air] check to follow an animal without being noticed or a Survival [Air] check to follow someone’s trail).",
+    "source": "Emerald Empire p. 241"
+  },
+  {
+    "name": "Famously Honest",
+    "ring": "Air",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your honesty, and they believe you by default unless given evidence to the contrary.",
+    "check": "A check for which you can leverage your reputation for telling the truth (such as a Command [Air] check to convince someone of a statement’s veracity, or a Commerce [Air] check to sell an item at an inflated price).",
+    "source": "Corebook p. 104"
+  },
+  {
+    "name": "Famously Kind",
+    "ring": "Water",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your exceptional kindness, and they believe it unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for being wellintentioned (such as a Courtesy [Water] check to convince an authority to give you access to a restricted area or a Survival [Water] check to befriend a woodland creature).",
+    "source": "Celestial Realms p. 89"
+  },
+  {
+    "name": "Famously Lucky",
+    "ring": "Void",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your good fortune, and they believe it by default unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for having things turn out your way (such as a Command [Void] check to get your troops to put their faith in you utterly or a Games [Void] check to let fate decide the match).",
+    "source": "Corebook p. 104"
+  },
+  {
+    "name": "Famously Neutral",
+    "ring": "Earth",
+    "traits": ", Fame, Interpersonal",
+    "description": "You are trusted to be unbiased and are therefore consulted by people looking for a fair perspective.",
+    "check": "A check to convince others of your trustworthiness or provide unbiased advice (such as a Command [Earth] check to reason with two feuding subordinates or a Sentiment [Earth] check to determine how to set someone else at ease).",
+    "source": "Courts of Stone p. 99"
+  },
+  {
+    "name": "Famously Reliable",
+    "ring": "Earth",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your remarkable adherence to your oaths and responsibilities, even over and above most samurai, and they believe it by default unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for keeping your oaths and bargains (such as a Command [Earth] check to calm a panicked soldier or a Performance [Earth] check to relate a tale that inspires patience).",
+    "source": "Corebook p. 104"
+  },
+  {
+    "name": "Famously Successful",
+    "ring": "Fire",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your ability to get results at any cost, and they believe it by default unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for efficiency (such as a Courtesy [Fire] check to convince your lord to give you a position or a Tactics [Fire] check to get enemy troops to withdraw in the face of a show of force).",
+    "source": "Corebook p. 105"
+  },
+  {
+    "name": "Famously Wealthy",
+    "ring": "Water",
+    "traits": ", Fame, Interpersonal",
+    "description": "Other people have heard of you for your riches or ability to procure wealth, and they believe it by default unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for access to resources (such as a Commerce [Water] check to buy goods on credit or a Courtesy [Water] check to win over a group of people).",
+    "source": "Corebook p. 105"
+  },
+  {
+    "name": "Flexibility",
+    "ring": "Water",
+    "traits": ", Physical",
+    "description": "You can fit through spaces too tight for most people, allowing you access to places others cannot reach.",
+    "check": "A check for which your physical flexibility is a benefit (such as a Performance [Water] check to perform a dance or a Martial Arts [Unarmed] [Water] check to grapple another person).",
+    "source": "Corebook p. 105"
+  },
+  {
+    "name": "Friend of the Brotherhood",
+    "ring": "Void",
+    "traits": ", Interpersonal",
+    "description": "You are known as a benefactor and ally of the Brotherhood of Shinsei, and others believe you to be a pious and generous person unless given evidence to the contrary.",
+    "check": "A check for which you need to leverage your reputation for Shinseist piety (such as a Courtesy [Void] check to establish a spiritual connection with a monk or a Theology [Void] check to glean deeper wisdom from the Tao of Shinsei).",
+    "source": "Emerald Empire p. 241"
+  },
+  {
+    "name": "Friend of the Nezumi",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Somehow you earned the respect and admiration of the nezumi, and you count them among your closest allies. You are an honorary member of a specific nezumi tribe, able to enter their warrens freely and enjoy the hospitality of their people. You speak their language at a basic level, understand their culture and customs, and may ask their leaders for favors.",
+    "check": "A check to interact with nezumi or one that relates to your status with them (such as a Courtesy [Water] check with a nezumi to help locate a secret tunnel near the Wall or a Performance [Water] check to convince a tribe to follow your lead).",
+    "source": "Shadowlands p. 96"
+  },
+  {
+    "name": "Fukurokujin's Blessing",
+    "ring": "Fire",
+    "traits": ", Mental, Spiritual",
+    "description": "You always know the nearest location where you can undertake research on a given subject, and can complete research in half the time it would take another character.",
+    "check": "A check for which the blessing of this Fortune is a benefit (such as a Medicine [Fire] check to experiment with a cure for a strange new malady or a Survival [Fire] check to speculate on a creature’s possible qualities based on its physiology).",
+    "source": "Corebook p. 105"
+  },
+  {
+    "name": "Guiding Ancestor",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "You are watched over by a benevolent ancestor spirit, or sorei, who has high hopes for you and your deeds. The spirit cannot communicate directly but may send cryptic omens in dreams and strange phenomena to help you achieve a great destiny.",
+    "check": "A check to interpret omens or to intuit a course of action (such as a Theology [Void) check to understand your dreams or a Tactics [Void] check to guess the plans of an unknown enemy general).",
+    "source": "Fields of Victory p. 82"
+  },
+  {
+    "name": "Hero of [Village]",
+    "ring": "Fire",
+    "traits": ", Fame, Interpersonal",
+    "description": "You have a heroic reputation for deeds you undertook that benefited a particular village. The residents of that village do their best to aid you with any request you make (and praise you at every opportunity).",
+    "check": "A check for which your heroic reputation is a benefit (such as a Command [Fire] check to rally peasants to defend their village against bandits or a Performance [Fire] check to impress others with tales of your heroics).",
+    "source": "Emerald Empire p. 242"
+  },
+  {
+    "name": "Indomitable Will",
+    "ring": "Earth",
+    "traits": ", Mental, Interpersonal",
+    "description": "You can always choose to stand your ground, even when faced with untenable odds, supernatural terrors, or sorcerous powers that bend the minds of lesser souls.",
+    "check": "A check for which you need to keep your cool when dealing with danger (such as a Command [Earth] check to give orders under pressure or a Meditation [Earth] check to resist the effects of fear).",
+    "source": "Corebook p. 106"
+  },
+  {
+    "name": "Jurojin's Blessing",
+    "ring": "Void",
+    "traits": ", Physical, Spiritual",
+    "description": "You do not contract mundane diseases, and you recover from poisons and supernatural maladies in half the time it would take someone else.",
+    "check": "A check for which you need to survive and remain vital (such as a Fitness [Void] check to resist spiritual contamination or a Survival [Void] check to get by on bare minimum supplies).",
+    "source": "Corebook p. 106"
+  },
+  {
+    "name": "Karmic Tie",
+    "ring": "Void",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "You have a supernatural tie with another character of your choosing, and as if you had a sixth sense, you can tell when the character to whom you are karmically tied is in danger or has died. You always know the general direction they are located in, even if they are separated from you by thousands of li.",
+    "check": "A check to act on behalf of the one with whom you share a bond (such as a Composition [Void] check to express your truest feelings in a poem or a Martial Arts [Melee] [Void] check to fight on their behalf).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Keen Balance",
+    "ring": "Earth",
+    "traits": ", Mental, Physical",
+    "description": "When moving across treacherous terrain (such as rooftops or the rigging of a ship), as long as nobody is hindering you, you do not fall.",
+    "check": "A check for which your balance is a benefit (such as a Fitness [Earth] check to resist being knocked down or moved or a Seafaring [Earth] check to withstand getting seasick during a storm).",
+    "source": "Corebook p. 106"
+  },
+  {
+    "name": "Keen Hearing",
+    "ring": "Air",
+    "traits": ", Physical, Mental",
+    "description": "You can hear noises that others do not detect, and you can assess your environment by sound alone. Even in darkness, you can accurately pinpoint the location of people and other moving objects in your immediate vicinity.",
+    "check": "A check for which you need to hear soft, distant, or subtle noises (such as a Courtesy [Air] check to eavesdrop at a distance where you are not noticed or a Survival [Air] check to listen to an animal’s movement before springing a trap).",
+    "source": "Corebook p. 107"
+  },
+  {
+    "name": "Keen Sight",
+    "ring": "Water",
+    "traits": ", Physical, Mental",
+    "description": "You can spot details of objects at a much greater distance than others can, and you pick up on small visual details that others might overlook.",
+    "check": "A check for which you need to spot details or see things at a distance (such as an Aesthetics [Water] check to spot minor details in an art piece or a Martial Arts [Ranged] [Water] check to hit a faraway target).",
+    "source": "Corebook p. 107"
+  },
+  {
+    "name": "Keen Smell",
+    "ring": "Fire",
+    "traits": ", Physical, Mental",
+    "description": "You always remember scents you have experienced before, and you can identify by smell things that others would certainly overlook.",
+    "check": "A check for which you need to use your sense of smell (such as a Labor [Fire] check to experiment with a new recipe or a Survival [Fire] check to determine if a plant is poisonous based on its smell).",
+    "source": "Corebook p. 107"
+  },
+  {
+    "name": "Kisshōten's Blessing",
+    "ring": "Water",
+    "traits": ", Physical, Spiritual",
+    "description": "Children enjoy being around you and are much more receptive to your demands. Your own children (if you have any) are particularly blessed with health, beauty, happiness, and luck.",
+    "check": "A check for which you need to communicate with children (such as a Command [Water] check to order them around or a Performance [Water] check to entertain them).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Knowledgeable Wilderness",
+    "ring": "Void",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "You are very comfortable in a particular wilderness environment. When you choose this distinction, pick one of the following wilderness types: Mountain, Forest, Plains, or Coastal. When you are in your selected environment you always know which way is north and you can identify the signs of creatures that tend to dwell in those areas.",
+    "check": "A check for which your experience as a wilderness guide in your selected environment is a benefit (such as a Survival [Void] check to determine whether a plant is safe to eat or a Sentiment [Void] check to sense the best way to fend off a hostile creature).",
+    "source": "Writ of the Wilds p. 102"
+  },
+  {
+    "name": "Kuge Lineage",
+    "ring": "Earth",
+    "traits": ", Interpersonal",
+    "description": "By dint of your birth, you are a member of the kuge, Rokugan’s nobility. Samurai of the buke caste must treat you with great respect.",
+    "check": "A check for which your hereditary authority is a benefit (such as a Command [Earth] check to silence a buke samurai or a Government [Earth] check to cite familiarity with the practices of the Imperial families).",
+    "source": "Emerald Empire p. 242"
+  },
+  {
+    "name": "Large Stature",
+    "ring": "Earth",
+    "traits": ", Physical",
+    "description": "You can easily reach objects on high shelves, are easy to spot in a crowd, can see over other people, and tend to hit your head on doorways.",
+    "check": "A check for which you can take advantage of your size (such as a Fitness [Earth] check to hold up a heavy object or a Labor [Earth] check to build the frame of a house).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Legal Scholarship",
+    "ring": "Air",
+    "traits": ", Interpersonal, Social",
+    "description": "Your family possesses old legal documents not only on Rokugani law but also from other cultures, such as Qamarist law, and perhaps even local, provincial laws, such as village elder's edict not to use the well after midnight.",
+    "check": "A check when interacting with some legal body or using a legal code (such as a Goverments [Air] to check to use an obscure Qamari law regarding land rights or a Commerce [Air] check to use an old Ujik agreement to renegotiate a trade).",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Light Sleeper",
+    "ring": "Water",
+    "traits": ", Physical",
+    "description": "You rouse from sleep very easily, a trick considered essential in hostile territory. You are trained to awaken before danger arrives, sleep with your weapons ready, and pretend to be in a deep sleep to lure enemies closer. You can go from a deep sleep to fully alert and fighting in the blink of an eye.",
+    "check": "A check that calls on rapidly recovering from sleep (such as a Survival [Water] check to detect a threatening sound while dozing or a Fitness [Water] check to react even when someone else is standing watch).",
+    "source": "Shadowlands p. 96"
+  },
+  {
+    "name": "Lucky Hunter",
+    "ring": "Void",
+    "traits": ", Physical, Spiritual",
+    "description": "You are exceptionally fortunate in hunting or fishing and are always able to identify the best spots for doing so.",
+    "check": "A check that relates to your luck in hunting animals, trapping animals, or fishing (such as a Survival [Void] check to locate where a vanished target is hiding in the brush or a Seafaring [Void] check to determine the best time to go fishing).",
+    "source": "Path of Waves p. 69"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Compassion]",
+    "ring": "Water",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Courage]",
+    "ring": "Fire",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Courtesy]",
+    "ring": "Air",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Duty and Loyalty]",
+    "ring": "Earth",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Honor]",
+    "ring": "Void",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Righteousness]",
+    "ring": "Void",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Paragon of a Bushidō Tenet [Sincerity]",
+    "ring": "Void",
+    "traits": ", Mental, Virtue",
+    "description": "You believe utterly in the chosen Bushidō tenet, and others instinctively discern that your actions are genuine when you act in accordance with it.",
+    "check": "A check for which you need to convince others of, or leverage your faith in, the Bushidō tenet (such as a Performance check to recount a tale that impresses its importance upon others or a Martial Arts [Melee] check to take up arms for this cause).",
+    "source": "Corebook p. 108"
+  },
+  {
+    "name": "Passion for [Foreign Performing Art Form]",
+    "ring": "Air",
+    "traits": ", Fame, Interpersonal",
+    "description": "You are skilled in some foreign artistry, such as puppetry, miming, a foreign dance or theater form, or the playing of a foreign instrument; you can also recognize all common forms of the art and know intricate details about its history. Confer with the GM to select a campaign-appropriate art form when choosing this passion.",
+    "check": "A check that relates to your talent (such as a Performance [Air] check to impress a stranger or a Design [Air] check to refine your craft or method).",
+    "source": "Path of Waves p. 71"
+  },
+  {
+    "name": "Portentous Birth",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "You are known among your clan or family group to have been born under blessed circumstances or have had some sort of mark or other indication of greatness bestowed upon you by the Heavens. When you interact with someone who knows of your portentous birth and believes in its power, they treat you favorably and may be inclined to give you special privileges as long as you do not give them a reason to treat you otherwise.",
+    "check": "A check for which your fortuitous birth is an asset (such as a Composition [Fire] check to craft a clever request to someone who believes in the legacy of your birth or a Theology [Fire] check to theorize about an omen).",
+    "source": "Celestial Realms p. 89"
+  },
+  {
+    "name": "Precise Memory",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You can recall anything you have read or heard within the current game session exactly, and you often dredge up older facts with much greater ease than others.",
+    "check": "A check for which you must recall details precisely (such as a Games [Earth] check to recall the opening moves of a classic defensive strategy in shōgi or a Government [Earth] check to remember the specifics of a historical event).",
+    "source": "Corebook p. 109"
+  },
+  {
+    "name": "Quick Reflexes",
+    "ring": "Fire",
+    "traits": ", Physical, Interpersonal",
+    "description": "At the start of each scene, you can always grab an item within reach or reposition it a few paces within your environment. The GM is the final arbiter of how much you can prepare or how much distance you can achieve before the rest of the scene begins.",
+    "check": "A check for which you must act swiftly (such as a Meditation [Fire] check to generate initiative during a duel or a Survival [Fire] check to put together a makeshift weapon).",
+    "source": "Corebook p. 109"
+  },
+  {
+    "name": "Scrappy",
+    "ring": "Fire",
+    "traits": ", Mental, Physical",
+    "description": "You have experience street fighting and brawling either outdoors or in organized settings. When you fight, you know how to employ dishonorable tactics slyly, such as by stealthily throwing dirt into your opponent’s eyes or “accidentally” landing a kick in a sensitive area.",
+    "check": "A check during combat to use dishonorable tactics (such as a Sentiment [Fire] check to determine how to offend someone or a Martial Arts [Fire] check to unnerve your foe).",
+    "source": "Path of Waves p. 69"
+  },
+  {
+    "name": "Scrounger",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are always able to find something to fill your belly and sustain you, though sometimes the only option is repulsive.",
+    "check": "A check for which your resourceful nature applies (such as a Labor [Water] check to find useful items for a task or an Aesthetics [Water] check to find inspiration for an art piece).",
+    "source": "Path of Waves p. 69"
+  },
+  {
+    "name": "Sea Legs",
+    "ring": "Water",
+    "traits": ", Physical",
+    "description": "You never get seasick, and can maintain your balance easily on a rocking ship. You always feel slightly disconcerted on stable ground, however.",
+    "check": "A check check for which you need stay balanced on a shifting surface (such as a Martial Arts [Ranged] [Water] check to make a bow shot during a boarding attack or Seafaring [Water] check to adjust the sails during a storm).",
+    "source": "Mantis Clan DLC p. 7"
+  },
+  {
+    "name": "Seasoned",
+    "ring": "Void",
+    "traits": ", Mental, Interpersonal",
+    "description": "You are older and more worldly than most of your fellows and have learned a few things along the way. While you do not start with additional experience, your experience expenditures might reflect “revealing” aspects of yourself you have held back to avoid overshadowing your younger companions. You have met members of many cultures and organizations, and you know how to properly behave in almost any city in Rokugan—and perhaps even beyond. You also know many other older people, and the number and variety of your acquaintances often surprises your younger companions.",
+    "check": "A check for which your hardearned wisdom is an advantage (such as a Courtesy [Void] check to impart wisdom to an impetuous comrade or a Theology [Void] check to intuit whether a spirit will appreciate your offering).",
+    "source": "Corebook p. 109"
+  },
+  {
+    "name": "Sixth Sense",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "You have an instinctive sense of supernatural beings, and you can feel the presence of spirits and similar entities even when they have not chosen to reveal themselves. This feeling is ominous in the presence of beings with evil intentions and neutral when the beings are simply going about their business as usual.",
+    "check": "A check for which you need to follow your hunches (such as a Meditation [Void] check to generate initiative during a duel or a Theology [Void] check to detect a snarl in the invisible threads of the universe).",
+    "source": "Corebook p. 110"
+  },
+  {
+    "name": "Skilled Midwife",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "You are exceptionally skilled in most aspects of pregnancy, childbirth, common illnesses children are prone to, and child-rearing and others are more likely to take your advice regarding such matters.",
+    "check": "A check for which your midwife skills are a benefit (such as a Culture [Fire] check to theorize why a particular village is experiencing a rash of illnesses in their youth or a Fitness [Fire] check to act quickly enough to save a child).",
+    "source": "Writ of the Wilds p. 102"
+  },
+  {
+    "name": "Small Stature",
+    "ring": "Air",
+    "traits": ", Physical",
+    "description": "You can fit into small spaces, can hide behind other people, are hard to spot in a crowd, and sometimes need assistance reaching objects on high shelves.",
+    "check": "A check for which being small is helpful (such as a Fitness [Air] check to resist a critical strike by evading or a Skulduggery [Air] check to pick someone’s pocket).",
+    "source": "Corebook p. 110"
+  },
+  {
+    "name": "Spiritual Protector",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "For reasons known or unknown, a spirit watches over you and intercedes in subtle ways to protect you from harm. It may alert you to danger or interpose a mild obstacle to those who wish you harm.",
+    "check": "A check for which your spiritual protector is a benefit (such as Fitness [Void] check to avoid a surprise attack through sheer instinct or a Survival [Void] check to notice an imminent hazard).",
+    "source": "Emerald Empire p. 242"
+  },
+  {
+    "name": "Student of Akodo",
+    "ring": "Void",
+    "traits": ", Interpersonal, Mental",
+    "description": "You have studied the famous text known as Akodo's Leadership (non-Lion character must spends a downtime activity studying this manuscript and succeeds at TN 4 Composition or Culture [Void] check to be able to purchase it for 3XP), which has given you an insight into Lion culture. You can identify the proper purpose of all Rokugani battlefield weapons, even if you are not personally proficient in their use, and you know about most common military maneuvers and engagements, especially those preferred by the Lion Clan.",
+    "check": "A check to understand the Lion Clan mindset or strategy (such as a Culture [Void] check to intuit the correct way to broach a difficult subject to a Lion Clan character of higher status or Tactics [Void] check to predict what strategy a Lion Clan general will employ).",
+    "source": "Blood of the Lioness p. 9"
+  },
+  {
+    "name": "Subtle Observer",
+    "ring": "Air",
+    "traits": ", Interpersonal, Mental",
+    "description": "You can understand the cues that people give off while speaking, and you can read people’s lips and facial expressions to understand what they are saying, even if you cannot hear them.",
+    "check": "A check for which you need to spot or use small details of other people nearby (such as a Courtesy [Air] check to reveal an unpleasant truth pleasantly or a Sentiment [Air] check to detect someone else’s weaknesses).",
+    "source": "Corebook p. 110"
+  },
+  {
+    "name": "Support of [one group]",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You have proven yourself to a particular group, which is willing to help you when doing so will not damage its reputation. Its members will offer you their hospitality, including meals, a place to rest, and medical attention if they have a healer. They will also grant you access to their other facilities, such as libraries, smithies, or stables. Confer with the GM to select a campaign-appropriate group when choosing this advantage.",
+    "check": "A check to interact with the members of the chosen group that relies on your rapport (such as a Command [Water] check to issue them orders or a Performance [Water] check to cause an audience of them to desire something).",
+    "source": "Corebook p. 110"
+  },
+  {
+    "name": "Syncretic Philosophy",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "Having studied or been brought up exposed to many cultures, philosophies and religion practisesm you can understand the nuances of a person's (or your own) moral stance and ethical decisions when you speak with them.",
+    "check": "A check to appeal to someone's personal sense of ethics, morality or philosophy (such as a Performance [Water] check to convince an angry group to spare someone's life or Meditation[Water] check to reexamine your own frustrating situation).",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Talented Herbalist",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You are always able to identify the properties of natural flora (including edibility, poisonousness, and basic uses) even if you have never seen it before.",
+    "check": "A check for which your talents in herbalism are useful (such as a Medicine [Earth] check to make a quick poultice or an Aesthetics [Earth] check to maintain a garden).",
+    "source": "Celestial Realms p. 89"
+  },
+  {
+    "name": "Thoughtful Arbiter",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Others are more likely to willingly tell you their grievances and hear your thoughts regarding disputes.",
+    "check": "A check to arbitrate between two or more parties (such as a Government [Water] check to gather all of the nuances of the situation or a Commerce [Water] check to organize a trade which will benefit all parties).",
+    "source": "Writ of the Wilds p. 102"
+  },
+  {
+    "name": "Traditional Adherent",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You have a mastery of tradition and routine, and are able to perform ceremonies and social functions exactly as you were taught without variation, even under trying circumstances.",
+    "check": "A check to maintain the traditions of the past (such as a Performance [Earth) check to recite a poem in a style long-since out of fashion in the courts, or a Composition [Earth) check to examine a historical account for inconsistencies).",
+    "source": "Fields of Victory p. 82"
+  },
+  {
+    "name": "Urbane and Worldly",
+    "ring": "Void",
+    "traits": ", Interpersonal, Physical",
+    "description": "Your experience traveling abroad has prepared you to expertly emulate and adapt to unfamiliar customs in foreign lands.",
+    "check": "A check when observing an unfamiliar cultural practice or ritual (such as a Performance [Void] check to showcase your ability to appropriately emulate local customs in a land foreign to you or a Commerce [Void] check to feign awareness of local customs during a trade negotiation).",
+    "source": "Path of Waves p. 70"
+  },
+  {
+    "name": "Well Connected",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You have a number of influential connections among the courts and leadership of Rokugan, whose names you can subtly invoke to establish your own importance.",
+    "check": "A check for which your connections are a benefit (such as a Courtesy [Water] check to impress someone at court or a Government [Water] check to identify a useful contact among the local aristocracy).",
+    "source": "Emerald Empire p. 242"
+  },
+  {
+    "name": "Well Connected in [City]",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Your lifestyle or upbringing introduced you to a multitude of diverse people at all levels of society in a particular city (such as Friendly Traveler Village or the City of Lies), and you know how to find people who can get you the resources you need in that place. While they do not provide those resources free of charge, they are happy to give you information and can sometimes broker deals. Additionally, you occasionally meet people from this city during your travels, and when you do, you can strike up a friendly rapport to get similar benefits in other places.",
+    "check": "A check to gather information, find items for sale or loan, or interact with people from the city you have chosen (such as a Commerce [Water] check to buy or sell something in that city or a Culture [Water] check to learn what current events in the city are generating gossip).",
+    "source": "Courts of Stone p. 99"
+  }
+]

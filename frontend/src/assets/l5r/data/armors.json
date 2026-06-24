@@ -1,0 +1,142 @@
+[
+  {
+    "name": "Ashigaru Armor",
+    "resistance": "Physical 3",
+    "qualities": "Wargear",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Ceremonial Clothes",
+    "resistance": "Physical 1",
+    "qualities": "Ceremonial, Resplendent",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Common Clothes",
+    "resistance": "Physical 1",
+    "qualities": "Mundane",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Concealed Armor",
+    "resistance": "Physical 2",
+    "qualities": "Concealable",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Firefighter’s Coat",
+    "resistance": "Physical 2",
+    "qualities": "Cumbersome",
+    "description": "a character ignores the effects of Dangerous terrain created by fire and treats their resistance against flames (physical and supernatural) as 4",
+    "source": "Courts of Stone p. 112"
+  },
+  {
+    "name": "Lacquered Armor",
+    "resistance": "Physical 4",
+    "qualities": "Ceremonial, Cumbersome, Wargear",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Mirror Armor",
+    "resistance": "Physical 3, Supernatural 1",
+    "qualities": "Wargear",
+    "description": "",
+    "source": "Children of the Five Winds p. 103"
+  },
+  {
+    "name": "Ō-yoroi",
+    "resistance": "Physical 6",
+    "qualities": "Cumbersome, Resplendent, Wargear",
+    "description": "if are suffering the Disoriented, Dazed, or Immobilized condition, treat your physical resistance as 3 as your foes can strike at your lightly armored back",
+    "source": "Shadowlands p. 105"
+  },
+  {
+    "name": "Plated Armor",
+    "resistance": "Physical 5",
+    "qualities": "Cumbersome, Durable, Wargear",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Robes of Judment",
+    "resistance": "Physical 1, Supernatural 4",
+    "qualities": "Ceremonial, Cumbersome, Wargear",
+    "description": "The signature garb of the shugenja of Emma-0",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Sailor’s Garb",
+    "resistance": "Physical 1",
+    "qualities": "Durable, Mundane",
+    "description": "Reduce the TN of checks to repair or maintain sailor’s garb by 1.",
+    "source": "Mantis Clan DLC p. 9"
+  },
+  {
+    "name": "Sanctified Robes",
+    "resistance": "Physical 1, Supernatural 3",
+    "qualities": "Ceremonial",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Shark Leather Armor",
+    "resistance": "Physical 2",
+    "qualities": "Resplendent",
+    "description": "When you succeed at a check to resist a critical strike while wearing this armor, add two bonus successes.",
+    "source": "Mantis Clan DLC p. 9"
+  },
+  {
+    "name": "Sleeping Garb",
+    "resistance": "-",
+    "qualities": "-",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Stealth Clothing",
+    "resistance": "Physical 2",
+    "qualities": "Forbidden, Subtle",
+    "description": "While a character is wearing stealth clothing set to the appropriate side and in Obscuring terrain, they increase the TN of Attack checks targeting them by an additional 1 (for a total of +2)",
+    "source": "Courts of Stone p. 112"
+  },
+  {
+    "name": "Tatami Gusoku",
+    "resistance": "Physical 3",
+    "qualities": "Wargear (while equipped)",
+    "description": "",
+    "source": "Shadowlands p. 106"
+  },
+  {
+    "name": "The Golden Obi of the Sun Goddess",
+    "resistance": "Physical 3, Supernatural 6",
+    "qualities": "Ceremonial, Resplendent, Sacred",
+    "description": "Armor of the Sun Goddess: while wearing it, you are immune to the damaging effects of fire, both supernatural and mundane. The Golden Obi of the Sun Goddess has the following Fire invocations sealed within it: Amaterasu's Gaze; Armor of Radiance; Fires of Purity; Heart of the Lady Sun. Sealed Invocations: Once per scene, you may activate one of the Obi's sealed invocations by making a Theology check as normal, treating the TN as 1 lower (to a minimum of 1).",
+    "source": "Celestial Realms p. 96"
+  },
+  {
+    "name": "Tosei-Gusoku",
+    "resistance": "Physical 4",
+    "qualities": "Cumbersome, Durable, Wargear",
+    "description": "While wearing tosei-gusoku, treat your physical resistance as 2 higher when reducing damage from projectile attacks",
+    "source": "Shadowlands p. 106"
+  },
+  {
+    "name": "Traveling Clothes",
+    "resistance": "Physical 2",
+    "qualities": "Durable, Mundane, Subtle",
+    "description": "",
+    "source": "Corebook p. 239"
+  },
+  {
+    "name": "Unicorn Barding",
+    "resistance": "Physical 2",
+    "qualities": "Ceremonial, Resplendent, Wargear",
+    "description": "",
+    "source": "Children of the Five Winds p. 103"
+  }
+]

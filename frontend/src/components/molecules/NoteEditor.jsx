@@ -1,10 +1,39 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react'
+import React, { useRef, useEffect, useState, useCallback, lazy, Suspense } from 'react'
 import SimpleWYSIWYG from '../atoms/SimpleWYSIWYG'
 import { t } from '../../lang'
-import { API_BASE } from '../../../config'
+import { API_BASE, ENABLE_L5R } from '../../../config'
 import { extractBodyContent } from '../../utils/noteTemplateMeta'
 import { mountTemplate } from '../../utils/templateRuntime'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
+
+// Build-time literal: when EnableL5r is off, the dynamic imports guarded by this
+// constant are unreachable and the L5R importer / compendium code is dropped from the bundle.
+const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
+const L5R_TEMPLATE_ID = 'l5r_5e.html'
+const CompendiumPicker = L5R_BUILD ? lazy(() => import('./CompendiumPicker')) : null
+
+// Maps a picked compendium entry onto the `<target>_<suffix>` fields of a sheet row.
+const PICKER_FIELD_MAP = {
+  weapon: (e) => ({
+    name: e.name,
+    range: e.range,
+    damage: e.damage,
+    qualities: [e.qualities, e.grips].filter(Boolean).join(' · '),
+  }),
+  armor: (e) => ({ name: e.name, resistance: e.resistance, qualities: e.qualities }),
+  technique: (e) => ({
+    name: e.name,
+    type: e.type,
+    rank: e.rank,
+    ring: e.ring,
+    activation: e.activation,
+    effects: e.effects,
+    opportunities: e.opportunities,
+  }),
+}
+
+// All field suffixes of a single technique slot, used when clearing / shifting rows.
+const TECH_FIELD_SUFFIXES = ['name', 'type', 'rank', 'ring', 'activation', 'effects', 'opportunities']
 
 function extractTitle(html) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
@@ -40,6 +69,8 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
   const [templatesLoading, setTemplatesLoading] = useState(false)
   const [templatesError, setTemplatesError] = useState(false)
   const [templateRenderKey, setTemplateRenderKey] = useState(0)
+  const [pickerState, setPickerState] = useState(null)
+  const [clearState, setClearState] = useState(null)
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey)
@@ -161,12 +192,100 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       registerNoteTemplate(id, { noteIndex, title, fieldNames, fieldLabels, getFieldValue: handle.getFieldValue })
     }
 
+    // L5R card pickers: only wired in builds with EnableL5r.
+    const pickerCleanups = []
+    if (ENABLE_L5R) {
+      container.querySelectorAll('[data-l5r-picker]').forEach((btn) => {
+        const onClick = (e) => {
+          e.preventDefault()
+          const category = btn.getAttribute('data-l5r-picker')
+          if (!category) return
+          // Fixed slot (e.g. weapon1) or auto first-free slot (e.g. tech1..tech6).
+          const target = btn.getAttribute('data-l5r-target')
+          const targetPrefix = btn.getAttribute('data-l5r-target-prefix')
+          const targetCount = parseInt(btn.getAttribute('data-l5r-target-count') || '0', 10)
+          if (targetPrefix && targetCount > 0) {
+            setPickerState({ category, targetPrefix, targetCount })
+          } else if (target) {
+            setPickerState({ category, target })
+          }
+        }
+        btn.addEventListener('click', onClick)
+        pickerCleanups.push(() => btn.removeEventListener('click', onClick))
+      })
+
+      // Clear / shift-up buttons (e.g. per technique slot).
+      container.querySelectorAll('[data-l5r-clear-prefix]').forEach((btn) => {
+        const onClick = (e) => {
+          e.preventDefault()
+          const prefix = btn.getAttribute('data-l5r-clear-prefix')
+          const index = parseInt(btn.getAttribute('data-l5r-clear-index') || '0', 10)
+          const count = parseInt(btn.getAttribute('data-l5r-clear-count') || '0', 10)
+          if (!prefix || index < 1 || count < 1) return
+          const name = String(mountHandleRef.current?.getFieldValue(`${prefix}${index}_name`) || '').trim()
+          setClearState({ prefix, index, count, name })
+        }
+        btn.addEventListener('click', onClick)
+        pickerCleanups.push(() => btn.removeEventListener('click', onClick))
+      })
+    }
+
     return () => {
       if (unregisterNoteTemplate) unregisterNoteTemplate(id)
+      pickerCleanups.forEach((fn) => fn())
       handle.unmount()
       mountHandleRef.current = null
     }
   }, [mode, templateHtml, templateRenderKey, id, noteIndex, title, registerNoteTemplate, unregisterNoteTemplate])
+
+  const applyPicker = useCallback((entry) => {
+    const handle = mountHandleRef.current
+    if (handle && pickerState) {
+      const builder = PICKER_FIELD_MAP[pickerState.category]
+      if (builder) {
+        // Auto mode: drop the entry into the first slot whose name field is empty
+        // (e.g. tech1..tech6); fall back to the last slot when all are filled.
+        let target = pickerState.target
+        if (!target && pickerState.targetPrefix && pickerState.targetCount > 0) {
+          const { targetPrefix, targetCount } = pickerState
+          target = `${targetPrefix}${targetCount}`
+          for (let i = 1; i <= targetCount; i++) {
+            const slot = `${targetPrefix}${i}`
+            if (!String(handle.getFieldValue(`${slot}_name`) || '').trim()) {
+              target = slot
+              break
+            }
+          }
+        }
+        if (target) {
+          const values = builder(entry)
+          for (const [suffix, value] of Object.entries(values)) {
+            handle.setFieldValue(`${target}_${suffix}`, value ?? '')
+          }
+        }
+      }
+    }
+    setPickerState(null)
+  }, [pickerState])
+
+  const handleClearConfirm = useCallback(() => {
+    const handle = mountHandleRef.current
+    if (handle && clearState) {
+      const { prefix, index, count } = clearState
+      // Shift every following slot up one row, then blank out the last slot.
+      for (let i = index; i < count; i++) {
+        for (const s of TECH_FIELD_SUFFIXES) {
+          handle.setFieldValue(`${prefix}${i}_${s}`, handle.getFieldValue(`${prefix}${i + 1}_${s}`) ?? '')
+        }
+      }
+      for (const s of TECH_FIELD_SUFFIXES) {
+        handle.setFieldValue(`${prefix}${count}_${s}`, '')
+      }
+    }
+    setClearState(null)
+  }, [clearState])
+
+  const handleClearCancel = useCallback(() => setClearState(null), [])
 
   // --- Export ---
   const handleExportHtml = useCallback(() => {
@@ -378,6 +497,66 @@ ${extraScripts}
     input.click()
   }, [templateId, title, applyJsonFields])
 
+  const handleImportL5R = useCallback(() => {
+    setShowLoadMenu(false)
+    if (!L5R_BUILD) return
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.csv,.tsv,.tab,.txt'
+    input.onchange = (e) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.onload = async (event) => {
+        const text = String(event.target?.result || '')
+        let fields
+        try {
+          const mod = await import('../../utils/l5rImport')
+          fields = mod.parseL5RCharacterSheet(text).fields
+        } catch {
+          return
+        }
+        if (!fields || Object.keys(fields).length === 0) return
+        const newTitle = fields.character_name || file.name.replace(/\.[^.]+$/, '')
+
+        // Already on the L5R template: just merge fields and refresh the title.
+        if (templateId === L5R_TEMPLATE_ID) {
+          applyJsonFields(fields)
+          setTitle(newTitle)
+          saveTemplate({ ...fieldsRef.current }, newTitle)
+          return
+        }
+
+        // Otherwise load the L5R template first, then apply the parsed fields.
+        try {
+          const res = await fetch(`${API_BASE}?action=get-template&id=${encodeURIComponent(L5R_TEMPLATE_ID)}`)
+          const html = await res.text()
+          fieldsRef.current = { ...fields }
+          setMode('template')
+          setTemplateHtml(html)
+          setTemplateId(L5R_TEMPLATE_ID)
+          setTemplateFields(fieldsRef.current)
+          setTitle(newTitle)
+          const data = {
+            mode: 'template',
+            templateHtml: html,
+            templateId: L5R_TEMPLATE_ID,
+            fields: fieldsRef.current,
+            title: newTitle,
+            lastModified: Date.now(),
+          }
+          localStorage.setItem(storageKey, JSON.stringify(data))
+          refreshNoteSources?.()
+          setTemplateRenderKey(k => k + 1)
+        } catch {
+          // silently fail
+        }
+      }
+      reader.readAsText(file)
+    }
+    input.click()
+  }, [templateId, applyJsonFields, saveTemplate, storageKey, refreshNoteSources])
+
   const handleMismatchConfirm = useCallback(() => {
     if (pendingJsonFields) {
       applyJsonFields(pendingJsonFields)
@@ -487,6 +666,10 @@ ${extraScripts}
               <div className="note-load-menu">
                 <button onClick={handleImportLocal}>{t('notes.importLocal')}</button>
                 <button onClick={handleImportTemplate}>{t('notes.importTemplate')}</button>
+                {ENABLE_L5R && (<>
+                  <hr className="note-load-menu-separator" />
+                  <button onClick={handleImportL5R}>{t('l5r.importCsv')}</button>
+                </>)}
                 {mode === 'template' && (<>
                   <hr className="note-load-menu-separator" />
                   <button onClick={handleImportJson}>{t('notes.importJson')}</button>
@@ -566,6 +749,16 @@ ${extraScripts}
         </div>
       )}
 
+      {ENABLE_L5R && CompendiumPicker && pickerState && (
+        <Suspense fallback={null}>
+          <CompendiumPicker
+            category={pickerState.category}
+            onSelect={applyPicker}
+            onClose={() => setPickerState(null)}
+          />
+        </Suspense>
+      )}
+
       {showMismatchModal && (
         <div className="note-template-modal">
           <div className="note-template-modal-content">
@@ -582,6 +775,25 @@ ${extraScripts}
               </button>
               <button onClick={handleMismatchConfirm} className="note-mismatch-confirm">
                 {t('notes.jsonMismatchConfirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {ENABLE_L5R && clearState && (
+        <div className="note-template-modal">
+          <div className="note-template-modal-content">
+            <h3>{t('l5r.clearTechTitle')}</h3>
+            <p className="note-mismatch-message">
+              {t('l5r.clearTechConfirm', { index: clearState.index, name: clearState.name || '—' })}
+            </p>
+            <div className="note-template-modal-footer">
+              <button onClick={handleClearCancel} className="note-template-cancel">
+                {t('l5r.cancel')}
+              </button>
+              <button onClick={handleClearConfirm} className="note-mismatch-confirm">
+                {t('l5r.clearTechOk')}
               </button>
             </div>
           </div>

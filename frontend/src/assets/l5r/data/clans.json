@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Crab",
+    "status": "30",
+    "source": "Corebook p. 42"
+  },
+  {
+    "name": "Crane",
+    "status": "35",
+    "source": "Corebook p. 43"
+  },
+  {
+    "name": "Dragon",
+    "status": "30",
+    "source": "Corebook p. 44"
+  },
+  {
+    "name": "Lion",
+    "status": "35",
+    "source": "Corebook p. 45"
+  },
+  {
+    "name": "Phoenix",
+    "status": "30",
+    "source": "Corebook p. 46"
+  },
+  {
+    "name": "Scorpion",
+    "status": "35",
+    "source": "Corebook p. 47"
+  },
+  {
+    "name": "Unicorn",
+    "status": "30",
+    "source": "Corebook p. 48"
+  },
+  {
+    "name": "Imperial families",
+    "status": "40",
+    "source": "Emerald Empires p. 228"
+  },
+  {
+    "name": "Tortoise",
+    "status": "25",
+    "source": "GM's Kit - Dark Tides p. 8"
+  },
+  {
+    "name": "Mantis",
+    "status": "25",
+    "source": "Mantis Clan DLC p. 4"
+  },
+  {
+    "name": "Falcon",
+    "status": "26",
+    "source": "Shadowlands p. 87"
+  },
+  {
+    "name": "Deer",
+    "status": "30",
+    "source": "Courts of Stone p. 88"
+  },
+  {
+    "name": "Centipede",
+    "status": "30",
+    "source": "Celestial Realms p. 79"
+  },
+  {
+    "name": "Badger",
+    "status": "25",
+    "source": "Fields of Victory p. 71"
+  },
+  {
+    "name": "Dragonfly",
+    "status": "30",
+    "source": "Writ of the Wilds p. 85"
+  },
+  {
+    "name": "Fox",
+    "status": "30",
+    "source": "Children of the Five Winds"
+  }
+]

@@ -12,8 +12,72 @@
  */
 
 import { executeDiceRoll, getEffectiveRollExpression } from './diceRollUtils'
+import { ENABLE_L5R } from '../../config'
 
 const INJECTED_ATTR = 'data-vtt-injected'
+
+/**
+ * Resolve an L5R roll button into { ring, skill, label }.
+ * Supported attributes:
+ *  - data-l5r-ring="@field" | "<ringName>" | "<number>"  (direct ring dice)
+ *  - data-l5r-ring-select="<field>" + data-l5r-ring-prefix="ring_"  (indirect: read select, look up prefix+value)
+ *  - data-l5r-skill="@field" | "<number>"  (direct skill dice)
+ *  - data-l5r-skill-select="<field>" + data-l5r-skill-prefix="skill_martial_"  (indirect)
+ *  - data-l5r-label="..."  (with @field substitution; ring name appended when known)
+ */
+function toInt(v) {
+  const n = parseInt(String(v ?? '').trim(), 10)
+  return isNaN(n) ? 0 : n
+}
+
+export function resolveL5RRoll(btn, getFieldValue) {
+  let ring = 0
+  let ringName = ''
+  const ringSelect = btn.getAttribute('data-l5r-ring-select')
+  const ringPrefix = btn.getAttribute('data-l5r-ring-prefix') || ''
+  const ringSpec = (btn.getAttribute('data-l5r-ring') || '').trim()
+  if (ringSelect) {
+    ringName = String(getFieldValue(ringSelect) || '').trim()
+    if (ringName) ring = toInt(getFieldValue(ringPrefix + ringName))
+  } else if (ringSpec) {
+    if (ringSpec[0] === '@') {
+      ring = toInt(getFieldValue(ringSpec.slice(1)))
+      const m = ringSpec.slice(1).match(/^ring_(\w+)$/)
+      if (m) ringName = m[1]
+    } else if (/^\d+$/.test(ringSpec)) {
+      ring = parseInt(ringSpec, 10)
+    } else {
+      ringName = ringSpec
+      ring = toInt(getFieldValue('ring_' + ringSpec))
+    }
+  }
+
+  let skill = 0
+  const skillSelect = btn.getAttribute('data-l5r-skill-select')
+  const skillPrefix = btn.getAttribute('data-l5r-skill-prefix') || ''
+  const skillSpec = (btn.getAttribute('data-l5r-skill') || '').trim()
+  if (skillSelect) {
+    const skName = String(getFieldValue(skillSelect) || '').trim()
+    if (skName) skill = toInt(getFieldValue(skillPrefix + skName))
+  } else if (skillSpec) {
+    if (skillSpec[0] === '@') skill = toInt(getFieldValue(skillSpec.slice(1)))
+    else if (/^\d+$/.test(skillSpec)) skill = parseInt(skillSpec, 10)
+  }
+
+  let label = btn.getAttribute('data-l5r-label') || ''
+  label = label
+    .replace(/@(\w+)/g, (_, name) => {
+      const v = getFieldValue(name)
+      return v === true || v === false ? '' : v || ''
+    })
+    .trim()
+  if (ringName) {
+    const capped = ringName.charAt(0).toUpperCase() + ringName.slice(1)
+    label = label ? `${label} – ${capped}` : capped
+  }
+
+  return { ring, skill, label }
+}
 
 /**
  * Parse a template HTML document and split it into body fragment, styles, and scripts.
@@ -431,6 +495,21 @@ export function mountTemplate({
     })
   }
 
+  // --- L5R roll handlers (only present in builds with EnableL5r) ---
+  if (!readOnly && ENABLE_L5R) {
+    container.querySelectorAll('[data-l5r-roll]').forEach((btn) => {
+      const handler = (e) => {
+        e.preventDefault()
+        const detail = resolveL5RRoll(btn, getFieldValue)
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('vtt:l5r-roll', { detail }))
+        }
+      }
+      btn.addEventListener('click', handler)
+      cleanups.push(() => btn.removeEventListener('click', handler))
+    })
+  }
+
   // --- script sandbox ---
   function notifyScriptListeners(name, value) {
     if (unmounted) return
@@ -509,6 +588,7 @@ export function mountTemplate({
   return {
     unmount,
     getFieldValue,
+    setFieldValue,
     getFieldElements: () => [...container.querySelectorAll('[data-field]')],
     serialize: () => serializeTemplate({ container, originalStyles: styles, originalScripts: scripts }),
   }

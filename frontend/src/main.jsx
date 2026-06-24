@@ -7,7 +7,7 @@ import './App.css'
 // Lokalne debugowanie: gdy localStorage.dev_gm === '1', każdy request do API dostaje nagłówek X-Dev-GM
 // (cookie dev_gm nie jest wysyłane przy cross-origin, np. Vite 5173 → API na innym porcie)
 if (import.meta.env.DEV) {
-  const apiPath = import.meta.env.VITE_API_PATH || 'api.php'
+  const apiPath = import.meta.env.VITE_API_PATH || 'http://localhost:8080/backend/api.php'
   const origFetch = window.fetch
   window.fetch = function (url, opts) {
     let finalOpts = opts || {}

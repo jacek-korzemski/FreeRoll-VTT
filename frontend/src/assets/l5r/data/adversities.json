@@ -1,0 +1,698 @@
+[
+  {
+    "name": "Adopted Peasant",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "Although adopted by a samurai family, you were born a peasant. Other samurai who know this fact are likely to look down upon you and may use this fact against you socially.",
+    "check": "A check to deal authoritatively or collegially with a samurai who knows of your peasant birth (such as a Command [Fire] check to give an order to a subordinate or a Courtesy [Fire] check to impugn another’s honor).",
+    "source": "Emerald Empire p. 245"
+  },
+  {
+    "name": "Allergy [choose one]",
+    "ring": "Air",
+    "traits": ", Physical",
+    "description": "Choose a common natural substance. You have a strong allergy to it, and exposure causes severe discomfort or even a life-threatening reaction.",
+    "check": "A check that exposes you to the source of your allergy (such as a Fitness [Air] check to run through a swarm of bees or a Courtesy [Air] check to sample a dish containing your allergen without offending your host).",
+    "source": "Emerald Empire p. 245"
+  },
+  {
+    "name": "Benten's Curse",
+    "ring": "Air",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "Your romantic efforts are always stymied by circumstances, and your gestures to get the romantic attention of others are usually misinterpreted.",
+    "check": "A check to express your admiration to someone (such as an Aesthetics [Air] check to find the right poem to read to express your feelings or a Courtesy [Air] check to tell someone your feelings without exceeding propriety).",
+    "source": "Corebook p. 116"
+  },
+  {
+    "name": "Bishamon's Curse",
+    "ring": "Water",
+    "traits": ", Physical, Spiritual",
+    "description": "You find it very difficult to lift heavy objects, and it takes you twice as long as others to regain your stamina after hard labor.",
+    "check": "A check that relies on recovering quickly (such as a Fitness [Water] check to recover from exhaustion or the Gravely Wounded condition or a Martial Arts [Unarmed] [Water] check to train for an extended period of time).",
+    "source": "Corebook p. 117"
+  },
+  {
+    "name": "Bitter Betrothal",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Something significantly complicates your relationship with your betrothed or spouse. As a result, they often undermine your efforts, whether out of malice, negligence, or an incompatible set of goals.",
+    "check": "A check that requires the collaboration of your betrothed or spouse (such as a Courtesy [Water] check to make a polite request to their family for political backing or a Culture [Water] check to know the proper thing to do at a social function involving their relatives).",
+    "source": "Corebook p. 117"
+  },
+  {
+    "name": "Blackmailed by [name]",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "Someone has incriminating information on you, which they use to try and force you to help them even when doing so may damage your reputation. You must share with them what knowledge you have about a given person, item, location, or situation, whether through a face-to-face meeting or through written correspondence. You must also arrange for introductions on their behalf with exclusive members of society or places of business.",
+    "check": "A check to evade complying with the character who is blackmailing you (such as a Courtesy [Air] check to nominally tell them what they want without giving away key pieces of information or a Performance [Air] check to pretend as though you will go through with something they have demanded of you).",
+    "source": "Corebook p. 117"
+  },
+  {
+    "name": "Blindness",
+    "ring": "Water",
+    "traits": ", Physical, Scar",
+    "description": "You are unable to see out of either eye. Your lack of sight does not mean you cannot perceive your surroundings (using your other senses), but you cannot observe things that can be perceived only by sight.",
+    "check": "A check for which sight is an asset that cannot easily be replaced by other senses (such as a Sentiment [Water] check to identify someone’s hostile intentions from across a noisy room or a Martial Arts [Ranged] [Water] check to hit a moving target with an arrow).",
+    "source": "Corebook p. 118"
+  },
+  {
+    "name": "Blood Feud",
+    "ring": "Water",
+    "traits": ", Interpersonal, Social",
+    "description": "Your bloodline is locked in a deadly struggle with another family or group, which makes members of that group hostile when they learn your affiliation. They may bar you from their courts and homes, refuse to meet with you, or even challenge you to duels over slights in which you had no personal involvement. Confer with the GM to select a campaign-appropriate family or group when choosing this disadvantage. Note that the family lines that participate in a given feud are much smaller than a full Great Clan family-this adversity represents a feud with a group such as the descendants of a specific Kakita lord, rather than the entire Kakita family.",
+    "check": "A check to interact with the chosen group or family that relies on their goodwill toward members of your family (such as a Courtesy [Water] check to seek hospitality on the road while traveling on family business, or a Performance [Water] check to impress them with a song attributed to you under your family name).",
+    "source": "Fields of Victory p. 83"
+  },
+  {
+    "name": "Bluntness",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You have difficulty expressing things indirectly, and you overlook insinuations and implications in the statements of others unless they are pointed out to you directly.",
+    "check": "A check to create or interpret subtext (such as a Design [Air] check to select a wardrobe that conveys the proper subtle message to your intended recipient or a Sentiment [Air] check to read someone’s unstated feelings).",
+    "source": "Corebook p. 118"
+  },
+  {
+    "name": "Bullheaded",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "When you are pursuing a goal directly related to your ninjō, you have a difficult time focusing on anything unrelated to that goal. Your bullheaded nature often creates barriers to your own success when the most direct path isn’t the best one.",
+    "check": "A check related to your goal or ninjō that requires planning, subtlety, or nuance (such as a Culture [Earth] check to recall the proper way to introduce yourself to someone you perceive as an enemy or a Courtesy [Earth] check to reason with a merchant who is standing in the way of your goal).",
+    "source": "Path of Waves p. 71"
+  },
+  {
+    "name": "Clumsiness",
+    "ring": "Fire",
+    "traits": ", Physical",
+    "description": "You are physically imprecise when dealing with tasks that require notable dexterity (or any physical task, really). At the GM’s discretion, you periodically drop items, make a mess of precise crafting efforts, or slip and fall onto people.",
+    "check": "A check that requires precise motor skills (such as a Fitness [Fire] check to vault over an obstacle or a Design [Fire] check to create an intricate piece of jewelry).",
+    "source": "Corebook p. 118"
+  },
+  {
+    "name": "Cognitive Lapses",
+    "ring": "Void",
+    "traits": ", Mental, Scar",
+    "description": "At the GM’s discretion, you sometimes lose your ability to focus or think consciously. Your body continues to act during these times according to your general instincts, and it does not undertake actions you would not consciously perform, but you do not form coherent memories of these times. After you suffer such a lapse that lasts for more than a few brief moments at the GM’s choice, you gain 1 Void point.",
+    "check": "A check for which you must recall anything that happened during a period of cognitive lapse (such as a Meditation [Void] check to understand your past decisions or a Sentiment [Void] check to guess what you might have said to someone based on their reaction to you).",
+    "source": "Corebook p. 118"
+  },
+  {
+    "name": "Cursed Lineage",
+    "ring": "Void",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "Your family carries a curse. Decide with the GM how this curse manifests.",
+    "check": "A check that does or could invoke the curse (such as a Culture [Void] check to understand your family history or a Theology [Void] check to seek your ancestors’ blessing).",
+    "source": "Emerald Empire p. 245"
+  },
+  {
+    "name": "Daikoku's Curse",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "When you gamble or speculate on the value of goods, even if you receive short-term gains, events conspire such that you always end up as poor (if not poorer) as when you started.",
+    "check": "A check to gain or preserve wealth (such as a Commerce [Water] check to haggle for a good price on an item or a Skulduggery [Water] check to find a fence for stolen items).",
+    "source": "Corebook p. 119"
+  },
+  {
+    "name": "Damaged Heart or Organ",
+    "ring": "Earth",
+    "traits": ", Physical, Scar",
+    "description": "Your heart or another vital organ is weak due to physical trauma or illness, and you can only engage in strenuous activity for half as long as other characters before needing to rest.",
+    "check": "A check to undertake strenuous activity over a long period of time (such as a Fitness [Earth] check to march for a long time or a Smithing [Earth] check to hammer plates back onto a damaged piece of armor).",
+    "source": "Corebook p. 119"
+  },
+  {
+    "name": "Deafness",
+    "ring": "Air",
+    "traits": ", Physical, Scar",
+    "description": "You are unable to hear, although you can perceive your surroundings through other senses.",
+    "check": "A check for which auditory cues are very useful (such as a Sentiment [Air] check to discern if someone is being sincere or a Courtesy [Air] check to pick up rumors via eavesdropping on someone’s faraway conversation).",
+    "source": "Corebook p. 119"
+  },
+  {
+    "name": "Debt to [Person or Organization]",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You are in terrible debt to a person or organization. If you do not make regular payments to your debtor or fail to fulfill your obligations, they will certainly hunt you down and make you pay, in one way or another…",
+    "check": "A check related to dodging or worsening your debt (such as making a Commerce [Water] check to purchase something unnecessary or a Courtesy [Water] check to convince someone to give you a loan).",
+    "source": "Path of Waves p. 71"
+  },
+  {
+    "name": "Demon Wound",
+    "ring": "Earth",
+    "traits": ", Spiritual, Scar",
+    "description": "You were wounded by an oni, and while the scar isn’t Tainted (or perhaps even isn’t visible anymore), it causes you to suffer from terrible nightmares.",
+    "check": "A check that involves your wound (such as a Fitness [Earth] check to get a good night’s sleep while in the Shadowlands or a Meditation [Earth] check to refrain from crying out in pain while near an oni).",
+    "source": "Shadowlands p. 97"
+  },
+  {
+    "name": "Despised in [City]",
+    "ring": "Water",
+    "traits": ", Fame, Interpersonal, Infamy",
+    "description": "You are infamous among the residents of a particular city (chosen with the GM). People within this city resist cooperating with you and may actively hinder your activities within the city.",
+    "check": "A check to gain assistance or cooperation from a resident of the city that despises you (such as a Courtesy [Water] check to learn the latest sake house rumors or a Commerce [Water] check to purchase goods within the city).",
+    "source": "Emerald Empire p. 246"
+  },
+  {
+    "name": "Discomfiting Countenance",
+    "ring": "Air",
+    "traits": ", Interpersonal, Physical",
+    "description": "Characters of lower status must generally be respectful of you to your face, but characters of higher status might try to use your looks as a way of attacking your character. Additionally, you are extremely memorable, and you find it difficult to act subtly without being remembered.",
+    "check": "A check to get someone to trust your word (such as a Courtesy [Air] check to make someone believe a lie or a Performance [Air] check to present a story as genuine).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Compassion]",
+    "ring": "Water",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Courage]",
+    "ring": "Fire",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Courtesy]",
+    "ring": "Air",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Duty and Loyalty]",
+    "ring": "Earth",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Honor]",
+    "ring": "Void",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Righteousness]",
+    "ring": "Void",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Disdain for a Bushidō Tenet [Sincerity]",
+    "ring": "Void",
+    "traits": ", Flaw, Mental",
+    "description": "You no longer believe in the chosen tenet of Bushidō, though you still lose honor for disobeying it. When you act in accordance with this tenet of Bushidō, others can sometimes sense your insincerity.",
+    "check": "A check to pay lip service to this tenet of Bushidō or to uphold it (such as a Courtesy check to express its importance or a Meditation check to use a belief in this tenet to your advantage).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Ebisu's Curse",
+    "ring": "Earth",
+    "traits": ", Physical, Spiritual",
+    "description": "Characters of lower status automatically distrust you, viewing you as a distant overlord who cannot possibly be competent at practical labor or understand their daily struggles (whether or not either of these is a fair assessment).",
+    "check": "A check to interact with laborers or partake in their work (such as a Commerce [Earth] check to mass produce items or a Labor [Earth] check to dig a ditch).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Elemental Deficiency [Air]",
+    "ring": "Air",
+    "traits": ", Mental, Physical, Spiritual",
+    "description": "For one reason or another, you lack a fundamental connection with the element of Air. You tend to have trouble in areas associated with the element, and you have a very poor relationship with air kami.",
+    "check": "A check to align yourself with the element of Air or interact with air kami (such as a Theology [Air] check to invoke the kami or a Courtesy [Air] check to appropriately respond to a religious rite).",
+    "source": "Celestial Realms p. 93"
+  },
+  {
+    "name": "Elemental Deficiency [Earth]",
+    "ring": "Earth",
+    "traits": ", Mental, Physical, Spiritual",
+    "description": "For one reason or another, you lack a fundamental connection with the element of Earth. You tend to have trouble in areas associated with the element, and you have a very poor relationship with earth kami.",
+    "check": "A check to align yourself with the element of Earth or interact with earth kami (such as a Theology [Earth] check to invoke the kami or a Fitness [Earth] check to hold a position while praying or contemplating).",
+    "source": "Celestial Realms p. 93"
+  },
+  {
+    "name": "Elemental Deficiency [Fire]",
+    "ring": "Fire",
+    "traits": ", Mental, Physical, Spiritual",
+    "description": "For one reason or another, you lack a fundamental connection with the element of Fire. You tend to have trouble in areas associated with the element, and you have a very poor relationship with fire kami.",
+    "check": "A check to align yourself with the element of Fire or interact with fire kami (such as a Theology [Fire] check to invoke the kami or a Performance [Fire] check to expound upon complex theories).",
+    "source": "Celestial Realms p. 94"
+  },
+  {
+    "name": "Elemental Deficiency [Water]",
+    "ring": "Water",
+    "traits": ", Mental, Physical, Spiritual",
+    "description": "For one reason or another, you lack a fundamental connection with the element of Water. You tend to have trouble in areas associated with the element, and you have a very poor relationship with water kami.",
+    "check": "A check to align yourself with the element of Water or interact with water kami (such as a Theology [Water] check to invoke the kami or a Meditation [Water] check to understand your own desires).",
+    "source": "Celestial Realms p. 94"
+  },
+  {
+    "name": "Encompassing Duty",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You have a duty to something: your family, a friend, a cause, or some other person or ideal. This duty should manifest into at least one discernible goal, one you can work out with the GM. A goal may be to provide for your family, rescue a friend, or achieve a similar aim. You have a difficult time relaxing or focusing on tasks that do not somehow advance your goal, and this may manifest in several ways, including frustration, anger, worry, or nervousness.",
+    "check": "A check related to overcoming something that could hinder you in achieving your duty (such as a Meditation [Earth] check to keep a cool head in an ambush or a Courtesy [Earth] check to reason with a stubborn shopkeeper).",
+    "source": "Path of Waves p. 72"
+  },
+  {
+    "name": "Fractured Spine",
+    "ring": "Earth",
+    "traits": ", Physical, Scar",
+    "description": "You have suffered major trauma to the spine, and harsh impacts cause you to be shot through with agonizing pain. You can lift and carry only half the weight that someone of your strength normally could.",
+    "check": "A check to resist harm or exhaustion (such as a Fitness [Earth] check to shrug off further injury or a Labor [Earth] check to carry heavy objects as part of building a structure).",
+    "source": "Corebook p. 120"
+  },
+  {
+    "name": "Fukurokujin's Curse",
+    "ring": "Fire",
+    "traits": ", Mental, Spiritual",
+    "description": "It takes you twice as long to gain a grasp of an academic field of study as it does another character.",
+    "check": "A check to extrapolate how to do something in a field of study (such as a Medicine [Fire] check to guess how to treat an unfamiliar aliment based on its symptoms or a Survival [Fire] check to guess an unknown creature’s qualities based on its physiology).",
+    "source": "Corebook p. 121"
+  },
+  {
+    "name": "Gaijin Appearance",
+    "ring": "Fire",
+    "traits": ", Physical",
+    "description": "People of higher and equal status tend to assume that you are uneducated at best and a barbarian at worst, while people of lower status respond to you with fear.",
+    "check": "A check to inspire others who do not share your culture or background (such as a Command [Fire] check to rally troops or a Commerce [Fire] check to create a product that people desire).",
+    "source": "Corebook p. 121"
+  },
+  {
+    "name": "Gaijin Culture",
+    "ring": "Fire",
+    "traits": ", Mental, Interpersonal",
+    "description": "People of higher and equal status tend to assume that you are uneducated at best and a barbarian at worst, while people of lower status respond to you with fear.",
+    "check": "A check to inspire others who do not share your culture or background (such as a Command [Fire] check to rally troops or a Commerce [Fire] check to create a product that people desire).",
+    "source": "Corebook p. 121"
+  },
+  {
+    "name": "Gaijin Name",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "People of higher and equal status tend to assume that you are uneducated at best and a barbarian at worst, while people of lower status respond to you with fear.",
+    "check": "A check to inspire others who do not share your culture or background (such as a Command [Fire] check to rally troops or a Commerce [Fire] check to create a product that people desire).",
+    "source": "Corebook p. 121"
+  },
+  {
+    "name": "Haunted by Chikushō-Dō",
+    "ring": "Earth",
+    "traits": ", Spiritual, Scar",
+    "description": "Animals dislike you and show it in a variety of ways. Dogs bark in your presence, cats hiss, and wild animals flee from you or become aggressive.",
+    "check": "A check to interact with an animal (such as a Survival [Earth] check to calm a frightened horse or a Fitness [Earth] check to go unnoticed by a hungry wolf).",
+    "source": "Emerald Empire p. 246"
+  },
+  {
+    "name": "Haunting",
+    "ring": "Void",
+    "traits": ", Interpersonal, Spiritual",
+    "description": "The spirit has their own agenda (determined by the GM), which interferes with yours at inopportune times.",
+    "check": "A check to defy the will of the spirit haunting you (such as a Meditation [Void] check to find solace in meditation or a Skulduggery [Void] check to perform disreputable acts to survive).",
+    "source": "Corebook p. 122"
+  },
+  {
+    "name": "Horrible Scar",
+    "ring": "Air",
+    "traits": ", Interpersonal, Mental",
+    "description": "You have gained an awful scar through your travels and it hinders your interactions with others. People stare at you, treat you unfairly, and otherwise judge you for your appearance.",
+    "check": "A check to interact socially with a stranger (such as a Courtesy [Air] check to request information or a Sentiment [Air] check to calm someone down).",
+    "source": "Path of Waves p. 72"
+  },
+  {
+    "name": "Incurable Illness",
+    "ring": "Earth",
+    "traits": ", Physical",
+    "description": "Periodically, if you push yourself too hard, you are afflicted by especially violent fits that significantly restrict your activity for a brief period of time.",
+    "check": "A check to remain active for long periods of time (such as a Labor [Earth] check to plow a field or a Survival [Earth] check to build a shelter).",
+    "source": "Corebook p. 122"
+  },
+  {
+    "name": "Insomniac",
+    "ring": "Void",
+    "traits": ", Mental",
+    "description": "You have difficulty falling and staying asleep. You recover only half the normal amount after a night’s rest.",
+    "check": "A check that requires intense focus (such as a Government [Void] check to sense the best way to approach a politically charged situation or a Smithing [Void] check to attune to a weapon you are making).",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Jurojin's Curse",
+    "ring": "Void",
+    "traits": ", Physical, Spiritual",
+    "description": "Poison and disease seem to strike you more easily, and it takes you twice as long as normal to recover from disease and injury.",
+    "check": "A check to sustain yourself (such as a Fitness [Void] check to resist a critical injury or a Survival [Void] check to live in harmony with a natural environment).",
+    "source": "Corebook p. 123"
+  },
+  {
+    "name": "Kisshōten's Curse",
+    "ring": "Water",
+    "traits": ", Physical, Spiritual",
+    "description": "Children instinctively dislike you and are obstinate in the face of your demands. Your own children (if you have any) are unlucky in matters of health, beauty, and happiness.",
+    "check": "A check for which you need to communicate with children (such as a Command [Water] check to order them around or a Performance [Water] check to entertain them).",
+    "source": "Corebook p. 123"
+  },
+  {
+    "name": "Lackluster",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "Try as you might, you cannot distinguish yourself within the court. Your talents or appearance cannot compete with those of the people around you. As a result, you are hardly noticed. When you try to leverage your reputation, even if people recognize who you are due to your glory or actions, they take far more interest in your companions than they do in you.",
+    "check": "A check to impress others or perform better than those around you (such as an Aesthetics [Fire] check to create a new painting or a Performance [Fire] check to perform a role in a play that moves your audience to tears).",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Lost Arm or Hand",
+    "ring": "Fire",
+    "traits": ", Physical, Scar",
+    "description": "You have only one usable hand or arm. You cannot wield weapons in a two-handed grip or hold anything in your missing hand. If you are missing only the hand, you can strap items to the arm for use.",
+    "check": "A check for which having two hands is very valuable (such as a Martial Arts [Unarmed] [Fire] check to grapple a foe into submission or a Survival [Fire] check to leap onto a galloping horse’s back).",
+    "source": "Corebook p. 123"
+  },
+  {
+    "name": "Lost Eye",
+    "ring": "Water",
+    "traits": ", Physical, Scar",
+    "description": "You have only one eye. Your field of vision is narrower, and your depth perception is somewhat diminished.",
+    "check": "A check for which your reduced ability to observe a wide field or discern the exact distance to faraway objects would cause difficulties (such as a Tactics [Water] check to spot incoming threats or a Martial Arts [Ranged] [Water] check to hit targets while moving).",
+    "source": "Corebook p. 124"
+  },
+  {
+    "name": "Lost Family History",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Material",
+    "description": "At some point, your family had an important historical record, whether scrolls and books, songs and poems, or a family genealogical chart or registry. Some event or a cathastrophe caused your family to lose these records. Your family may still have other records, so perhaps only a certain set has been lost.",
+    "check": "A check to recall or find something related to your lost history (such as a Culture [Earth] check to remember if your family ever dealt directly with a Hantei family member or a Skulduggery [Earth] check to remember your family has ever dealt with criminal organization)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Lost Fingers",
+    "ring": "Fire",
+    "traits": ", Physical, Scar",
+    "description": "You have fewer functional digits on one of your hands than most people. Checks to craft new items take you twice as long as they would take a character with their full complement of fingers.",
+    "check": "A check for which you must maintain a precise grip with both hands at once (such as a Design [Fire] check to weave cloth or a Martial Arts [Fire] check to draw your blade quickly).",
+    "source": "Corebook p. 124"
+  },
+  {
+    "name": "Lost Leg",
+    "ring": "Water",
+    "traits": ", Physical, Scar",
+    "description": "You have one fewer leg than most people. You use a crutch, cane, or other support to walk, and standing takes more effort than it does for people with two legs. Traveling by walking takes you twice as long as it does others without some form of compensatory tool.",
+    "check": "A check for which you must reposition yourself quickly or maintain your balance (such as a Fitness [Water] check to move across difficult ground quickly or a Seafaring [Water] check to operate a boat in difficult conditions such as a storm).",
+    "source": "Corebook p. 124"
+  },
+  {
+    "name": "Lost Memories",
+    "ring": "Void",
+    "traits": ", Mental, Scar",
+    "description": "There is a period of your life that you cannot remember at all. The less important this period is to your identity, the longer it should be (for example, a single day lost might be sufficient if the character committed a terrible act during that time and struggles to understand how or why, whereas a full decade of lost memories might be insufficient if they are not especially foundational to who the character is). The player and GM should work together to determine the amount and importance of memories lost. Skills and abilities acquired during the lost time are largely retained, even if the character does not remember the act of developing them.",
+    "check": "A check for which you must recall information you learned during the period of lost memories (such as a Culture [Void] check to intuit how to behave in a particular situation similar or related to one you encountered during that time or a Meditation [Void] check to understand your past decisions).",
+    "source": "Corebook p. 124"
+  },
+  {
+    "name": "Lost Name",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "Your name is no longer your own, and it now belongs to an oni. Perhaps it was stolen from you, taken in a moment of weakness. Or perhaps you gave it willingly in exchange for fell power. But now the oni knows your every secret, hears your every thought, and can see the world through your eyes. You are both bonded now, and it will surely end you if you cannot sever the connection.",
+    "check": "A check that involves personal convictions (such as a Meditation [Void] check as part of your quest for Enlightenment or a Survival [Void] check to create a spiritually harmonious rock garden).",
+    "source": "Shadowlands p. 97"
+  },
+  {
+    "name": "Maimed Arm",
+    "ring": "Fire",
+    "traits": ", Physical, Scar",
+    "description": "Your right or left arm is injured (your choice at the time the disadvantage is assigned), making it much harder to perform activities that involve use of that arm. You can use the arm, but gripping anything tightly causes you pain, and you might need a sling to help the arm heal properly.",
+    "check": "A check for which you need to use two hands at once (such as a Design [Fire] check to sew a new kimono or a Martial Arts [Melee] [Fire] check to overwhelm a foe with a powerful overhead slice).",
+    "source": "Corebook p. 125"
+  },
+  {
+    "name": "Maimed Visage",
+    "ring": "Air",
+    "traits": ", Physical, Interpersonal, Scar",
+    "description": "You have been struck in the face, causing a very noticeable and difficult-to-disguise sign of your altercation. Your injury is disquieting to many, and speaking causes you some pain, hampering your social endeavors that hinge on subtle implication and manipulation.",
+    "check": "A check to subtly convince others of something or speak an implication (such as a Commerce [Air] check to sell an item at a higher price than usual or a Courtesy [Air] check to insult someone by implication).",
+    "source": "Corebook p. 125"
+  },
+  {
+    "name": "Many Mouths",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental",
+    "description": "You have been saddled with the responsibility to provide food and shelter for many dependents (such as children, elders, or gravely ill loved ones) beyond your means. As a result, you are constantly looking for ways to provide for them, but nothing you do is ever enough to offer more than temporary respite.",
+    "check": "A check related to providing food, money, or care for yourself or your dependents (such as a Labor [Earth] check to produce food or a Sentiment [Earth] check to soothe your loved ones).",
+    "source": "Path of Waves p. 72"
+  },
+  {
+    "name": "Momoku",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "You do not detect supernatural presences even when they make themselves evident to everyone else, and you are blissfully unaware of the ripples in reality such entities and phenomena create. You can still discern effects they have on the physical world, but only when they become quite obvious.",
+    "check": "A check to understand or appeal to otherworldly powers (such as a Games [Void] check to put your faith in the power of the universe or a Theology [Void] check to call upon the cosmic energy around you).",
+    "source": "Corebook p. 126"
+  },
+  {
+    "name": "Muteness",
+    "ring": "Air",
+    "traits": ", Interpersonal, Physical or Mental, Scar",
+    "description": "You are physically or psychologically unable to produce intelligible spoken words. You can still make yourself understood through signing, gestures, and meaningful looks.",
+    "check": "A check for which you must make your tone of voice understood by others (such as a Command [Air] check to convey nuanced information to others or a Performance [Air] check to impersonate someone convincingly).",
+    "source": "Corebook p. 126"
+  },
+  {
+    "name": "Nerve Damage",
+    "ring": "Air",
+    "traits": ", Physical, Scar",
+    "description": "You have no feeling in certain parts of your body.",
+    "check": "A check for which physical sensitivity is helpful (such as an Aesthetics [Air] check to delicately paint glaze onto a ceramic piece or a Fitness [Air] check to maintain your posture exactly while moving).",
+    "source": "Corebook p. 126"
+  },
+  {
+    "name": "Out of Shape",
+    "ring": "Earth",
+    "traits": ", Physical",
+    "description": "You have neglected your physical fitness, whether by choice or due to a health issue. Regardless, you become noticeably more winded than others during physical activities.",
+    "check": "A check that requires physical exertion (such as a Martial Arts [Melee] [Earth] check to outlast your opponent in a duel or a Performance [Earth] check to recite a very long, taxing poem)",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Overconfidence in Charm",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You overestimate yourself dramatically in the chosen capacity. While truly talented people may worry that they fail to meet expectations even when they do, you are blissfully confident about some talent you do not possess. When faced with reality, you may entrench yourself in your delusion or take a devastating blow to your ego.",
+    "check": "A check for which you need to leverage the capacity about which you are overconfident.",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Overconfidence in Creativity",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "You overestimate yourself dramatically in the chosen capacity. While truly talented people may worry that they fail to meet expectations even when they do, you are blissfully confident about some talent you do not possess. When faced with reality, you may entrench yourself in your delusion or take a devastating blow to your ego.",
+    "check": "A check for which you need to leverage the capacity about which you are overconfident (such as a Composition [Fire] check to draft an exciting new poem that will awe courtiers at Winter Court).",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Overconfidence in Spiritual Sensitivity",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "You overestimate yourself dramatically in the chosen capacity. While truly talented people may worry that they fail to meet expectations even when they do, you are blissfully confident about some talent you do not possess. When faced with reality, you may entrench yourself in your delusion or take a devastating blow to your ego.",
+    "check": "A check for which you need to leverage the capacity about which you are overconfident.",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Overconfidence in Subtlety",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "You overestimate yourself dramatically in the chosen capacity. While truly talented people may worry that they fail to meet expectations even when they do, you are blissfully confident about some talent you do not possess. When faced with reality, you may entrench yourself in your delusion or take a devastating blow to your ego.",
+    "check": "A check for which you need to leverage the capacity about which you are overconfident.",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Overconfidence in Toughness",
+    "ring": "Earth",
+    "traits": ", Physical",
+    "description": "You overestimate yourself dramatically in the chosen capacity. While truly talented people may worry that they fail to meet expectations even when they do, you are blissfully confident about some talent you do not possess. When faced with reality, you may entrench yourself in your delusion or take a devastating blow to your ego.",
+    "check": "A check for which you need to leverage the capacity about which you are overconfident (such as a Fitness [Earth] check to run for several li without stopping).",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Penalty",
+    "ring": "Fire",
+    "traits": ", Infamy, Social",
+    "description": "You or your family have been charged with a minor offense, expressed as a fine or penalty you must pay to the aggrieved party over an extended period of time. The penalty is not necessarily the consequence of a crime; it could instead be part of an agreement for recompense to avoid further legal interference. The penalty most likely does not involve money and requires delivering material or symbolic goods, such as providing a magnificent horse or witing a set of humbling sutras.",
+    "check": "A check to avoid fulfilling the terms of the penalty (such as a Performance [Fire] check to publicly petition the aggrieved party to temporarily waive the penalty or a Theology [Fire] check to elicit a sign from the kami indicating how to absolve yourself of the penalty)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Pursued by [Individual or Group]",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are running from a pursuer who wishes to capture or kill you. It is only a matter of time until your past returns to hunt you down; you are constantly on guard and watching for agents who seek you out. You have difficulty relaxing in public spaces, as your pursuer could be around any corner. Work with your GM to determine the nature of your pursuer.",
+    "check": "A check that draws attention to you in public (such as a Commerce [Water] check to trade goods at a market or a Courtesy [Water] check to win the favor of a court).",
+    "source": "Path of Waves p. 72"
+  },
+  {
+    "name": "Sailor’s Tongue",
+    "ring": "Air",
+    "traits": ", Mental, Interpersonal",
+    "description": "Your speech is often punctuated by a combative tone or idioms that others find difficult to under-stand or even vulgar.",
+    "check": "A check to speak politely (such as a Courtesy [Air] check to pay a compliment at court or a Culture [Air] check to know if something is rude to discuss).",
+    "source": "Mantis Clan DLC p. 7"
+  },
+  {
+    "name": "Schism in Status",
+    "ring": "Water",
+    "traits": ", Infamy, Interpersonal",
+    "description": "You have a vastly lower status with a specific social group, either imagined or actual. The members of this group treat you as if your status value were 20 points lower. While your feelings toward this group may be friendly, neutral o antagonistic, it has no bearing on how they perceive you. You can try to improve the relationship by reducing the status gap, but it does not change your overall status value.",
+    "check": "A check to convince a member of this social group to listen to you (such as a Courtesy [Water] check to convince some artists to allow you to join their studio or a Commerce [Water] check to make a trade with a set of merchants)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Scorn of [one group]",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You have earned the ire of a particular group, which has seriously damaged your ability to work with its members or enlist their help. You have been barred from entering their facilities, and they refuse to meet or communicate with you directly. Confer with the GM to select a campaign-appropriate group when choosing this disadvantage.",
+    "check": "A check to interact with the chosen group that relies on your rapport with its members (such as a Courtesy [Water] check to persuade them to do something or a Performance [Water] check to impress a group of them).",
+    "source": "Corebook p. 127"
+  },
+  {
+    "name": "Shadowland's Taint",
+    "ring": "Air",
+    "traits": ", Curse, Interpersonal, Spiritual",
+    "description": "You are a Tainted being. You have trouble sympathizing with other humans, but you can understand the emotions of corrupted beings easily.",
+    "check": "A check to show compassion for other human beings (such as a Composition [Air] check to edit a work for emotional refinement or a Courtesy [Air] check to say something difficult without harming the recipient’s feelings).",
+    "source": "Corebook p. 127"
+  },
+  {
+    "name": "Shadowland's Taint",
+    "ring": "Earth",
+    "traits": ", Curse, Physical, Spiritual",
+    "description": "You are a Tainted being. Your ability to feel physical sensations is significantly diminished, and when you perish, your body rises as a Zombie Peasant (see page 321), which pursues your last goal with bestial purpose before turning on anyone else nearby.",
+    "check": "A check that relies upon physical sensitivity (such as a Design [Earth] check to repair a damaged item or a Martial Arts [Unarmed] [Earth] check to grapple with a foe).",
+    "source": "Corebook p. 127"
+  },
+  {
+    "name": "Shadowland's Taint",
+    "ring": "Fire",
+    "traits": ", Curse, Mental, Spiritual",
+    "description": "You are a Tainted being. You can identify Shadowlands creatures and forces, you know how to turn them to destructive ends, and you are drawn inexorably to such forbidden powers.",
+    "check": "A check to foresee possible negative outcomes of your actions (such as a Government [Fire] check to extrapolate whether your actions could lead to great destruction or a Theology [Fire] check to know whether the powers you are dealing with are likely to destroy you in the end).",
+    "source": "Corebook p. 128"
+  },
+  {
+    "name": "Shadowland's Taint",
+    "ring": "Void",
+    "traits": ", Curse, Spiritual",
+    "description": "You are a Tainted being. Each time you spend your last Void point, someone near you suffers a misfortune as the woven cord of fate frays.",
+    "check": "A check to discern your future (such as a Government [Void] check to know whether a course of action is likely to end in tragedy or a Seafaring [Void] check to detect the arrival of a storm before it hits).",
+    "source": "Corebook p. 128"
+  },
+  {
+    "name": "Shadowland's Taint",
+    "ring": "Water",
+    "traits": ", Curse, Physical, Spiritual",
+    "description": "You are a Tainted being. When your blood is spilled (such as after you suffer the Bleeding condition), foulness spills forth. Anyone who touches it suffers the Afflicted condition.",
+    "check": "A check to heal others or deal with food (such as a Medicine [Water] check to prepare treatments for a disease or a Survival [Water] check to forage for food).",
+    "source": "Corebook p. 128"
+  },
+  {
+    "name": "Skepticism",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "You do not believe in the divinity of the Kami, the existence of spirits, or the veracity of the Celestial Order. If discovered, this constitutes grave blasphemy and might even be a crime against the Emperor.",
+    "check": "A check that relies on the existence of the Spirit Realms (such as a Medicine [Void] check to diagnose a malady of the soul or a Theology [Void] check to detect the presence of a kami).",
+    "source": "Emerald Empire p. 246"
+  },
+  {
+    "name": "Stained Lineage",
+    "ring": "Void",
+    "traits": ", Interpersonal, Mental",
+    "description": "Your family has a bad reputation. Whether this reputation is hyperbole or truth, most people in your region know about your family’s history and know you belong to that family. These people make negative assumptions about your character, even when given evidence to the contrary. Even if you aren’t awful currently, it’s in your blood, and they believe you will live up to your family reputation one day.",
+    "check": "A check to interact with anyone from your home region (such as a Commerce [Void] check to attempt trade in the open market without drawing much attention or a Courtesy [Void] check to warn others of an incoming disaster).",
+    "source": "Path of Waves p. 73"
+  },
+  {
+    "name": "Stalked by [Creature]",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental, Spiritual",
+    "description": "You believe a creature of some kind is stalking you, whether or not that is true. The creature may be mundane or supernatural, and its obsession with hunting you makes being in the wilderness dangerous.",
+    "check": "Performing check that requires patience while in the wilderness (such as a Skulduggery [Earth] check to build a trap to protect your camp or a Fitness [Earth] check to stay calm while fleeing from the beast).",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Sworn Enemy",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental",
+    "description": "You and the GM should select or create a character to be your sworn enemy. Your sworn enemy exists within the world and periodically meddles in your affairs, directly or indirectly, at the GM’s discretion. If your sworn enemy perishes, you must either remove this disadvantage, acquire a new sworn enemy (perhaps someone who hates you because of your role in the demise of the previous one), or find a way for your deceased foe to continue playing a role in your life.",
+    "check": "A check to remain rational in the presence of this person you hate (such as a Courtesy [Earth] check to interact with this person without being provocative or a Meditation [Earth] check to stay stoic in the face of their insults).",
+    "source": "Corebook p. 129"
+  },
+  {
+    "name": "Unsavory Past",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "Your servants and old acquaintances know all manner of gossip and embarrassing stories about you. Foolish, unsavory, or even bloody actions of your youth come back to haunt you. You have aged and changed, but knowledge of your history lingers within your family lands, and old associations continue to cause you problems.",
+    "check": "A check by which your past may come back to haunt you (such as a Games [Water] check to relax and play an enjoyable game with people who know your penchant for cheating or a Tactics [Water] check to lead troops who know that you once fled the battlefield in terror).",
+    "source": "Courts of Stone p. 102"
+  },
+  {
+    "name": "Whispers of Cruelty",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Infamy",
+    "description": "You are well-known, but not for the right reasons. Characters who do not know you personally always assume that you will act in a ruthless and destructive manner, and they act accordingly.",
+    "check": "A check to attempt to calm others (such as a Courtesy [Earth] check to convince someone to cooperate with you or a Command [Earth] check to get someone to accept your authority calmly).",
+    "source": "Corebook p. 129"
+  },
+  {
+    "name": "Whispers of Doom",
+    "ring": "Void",
+    "traits": ", Interpersonal, Infamy",
+    "description": "You are well-known, but not for the right reasons. Characters who do not know you personally always assume that those around you will perish or meet bad ends, even if you survive to spread your ill fortune further.",
+    "check": "A check to dispel someone’s false preconceptions (such as a Courtesy [Void] check to get someone to question their decision or a Command [Void] check to get someone to see the pointlessness of their position).",
+    "source": "Corebook p. 129"
+  },
+  {
+    "name": "Whispers of Failure",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Infamy",
+    "description": "You are well-known, but not for the right reasons. Characters who do not know you personally always assume that you are incompetent, and they do not trust you with important tasks.",
+    "check": "A check to get others to follow your lead (such as a Command [Fire] check to lead a charge or a Performance [Fire] check to inspire others).",
+    "source": "Corebook p. 130"
+  },
+  {
+    "name": "Whispers of Poverty",
+    "ring": "Water",
+    "traits": ", Interpersonal, Infamy",
+    "description": "You are well-known, but not for the right reasons. Characters who do not know you personally always assume that you don’t have financial solvency and won’t be able to muster resources quickly.",
+    "check": "A check to acquire items quickly or make trade deals (such as a Command [Water] check to win over troops under your command with the promise of rewards or a Commerce [Water] check to secure a large supply of a commodity or service).",
+    "source": "Corebook p. 130"
+  },
+  {
+    "name": "Whispers of Treachery",
+    "ring": "Air",
+    "traits": ", Interpersonal, Infamy",
+    "description": "You are well-known, but not for the right reasons. Characters who do not know you personally always assume that you will plant poison in their tea or a knife in their back at the first opportunity.",
+    "check": "A check to get others to trust you (such as a Courtesy [Air] check to convince someone of your sincerity or a Skulduggery [Air] check to steal from someone who is aware of your presence).",
+    "source": "Corebook p. 130"
+  },
+  {
+    "name": "Custom - Not People Person",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You are not good with other people and it shows when you try to talk to them or read their motives.",
+    "check": "A check to understand people around you and act accordingly (such as a Courtesy [Water] check to be nice to others or a Sentiment [Water] check to study those around you)",
+    "source": ""
+  },
+  {
+    "name": "Custom - Prideful",
+    "ring": "Water",
+    "traits": ", Interpesonal",
+    "description": "There is limit to having a pride, but you don't have that limit.",
+    "check": "A check where your pride is on the line (such as a Courtesy [Water] check to be nice to people who look down upon you or Composition [Water] check to compose a poem in major competition",
+    "source": ""
+  }
+]

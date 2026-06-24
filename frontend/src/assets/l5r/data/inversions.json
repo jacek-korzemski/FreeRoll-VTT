@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Distance Distorted",
+    "rank": "2",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Scheme and Support action during a skirmish, intrigue, or narrative scene, you may make a TN 3 Theology (Void) check targeting two objects and/ or characters at range 0-3 of you.",
+    "effects": "If you succeed, you augment and curse the targets and choose one of the following numbers: 0, 1, 2, or 3. No matter where the targets move, each tar- get treats the other as being at the chosen number of range bands from itself for the purposes of determining distance between the two, targeting, and effects. This effect persists until the end of your next turn. If you succeed, each target that is a character receives 2 fatigue.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1-2: This effect persists for a number of additional rounds equal to the magnitude. Magnitude 3+: This effect persists until the end of the scene.",
+    "source": ""
+  },
+  {
+    "name": "Essence Eternal",
+    "rank": "5",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Support action, you may make a TN 4 Theology (Void) check targeting one character or object at range 0- 2.",
+    "effects": "If you succeed, you bind your target to its current state and location. Note your target's fatigue, strife, conditions, persistent effects, and critical strikes suffered, as well as their position. This effect persists until the end of your next turn, and when it ends, your target returns to this state and position, even if they no longer exist. Your target remembers everything they did once they revert back to this location.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1- 3: This effect persists for a number of additional rounds equal to the magnitude. Magnitude 4+: After the first effect ends, until the end of the scene, the target returns to the noted state and position at the end of each of your turns.",
+    "source": ""
+  },
+  {
+    "name": "Ethereal Flicker",
+    "rank": "2",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Scheme and Sup port action, you may make a TN 3 Theology (Void) check targeting yourself.",
+    "effects": "If you succeed, you augment and curse yourself to be slight ly out of phase with reality. Each time you make a check to reduce the severity of a critical strike, use Theology instead of Fitness; if you reduce the critical strike's severity to 0, you do not suffer it instead. This effect persists until the start of your next turn.",
+    "opportunities": "1: Each time you reduce a critical strike's severity to 0, you may immediately move 1 range band, vanishing and reappearing at the new position and ignoring the effects of intervening terrain during this travel.",
+    "magnitude": "Magnitude 1-2: This effect persists for a number of additional rounds equal to the magnitude. Magnitude 2+: Each time you reduce a critical strike's severity to 0, you may choose a character at range 0- 1 with vigilance lower than or equal to the magnitude. That character suffers a critical strike with severity equal to the critical strike you suffered (before reductions). Magnitude 3+: This effect persists until the end of the scene.",
+    "source": ""
+  },
+  {
+    "name": "Hurl from the Stream",
+    "rank": "3",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "Once per scene as a Scheme action, you may make a Theology (Void) check targeting one character or object at range 0-3. The TN is equal to your target's vigilance plus its silhouette (or only its silhouette if it is an object).",
+    "effects": "If you succeed, you bind your target to a space outside of reality. As your target is no longer present in reality, it is unaffected by anything that would otherwise affect it and does not affect anything. This effect persists for one round, after which your target returns to reality at its original position.",
+    "opportunities": "1+: If you succeed, your target returns to reality at an unobstructed position of your choice a number of range bands away from its original position equal to Opportunity spent this way. 1+ : Choose one additional target with vigilance plus silhouette lower than or equal to the original target's per Opportunity spent this way.",
+    "magnitude": "Magnitude 1-3: Your target is removed from reality for a number of additional rounds equal to the magnitude. Magnitude 4+: If your target is an Adversary NPC or PC or an object with mystical properties, it is removed until the end of the scene. If your target is a Minion NPC or a mundane object, it is lost to the Void and permanently ceases to exist.",
+    "source": ""
+  },
+  {
+    "name": "Moon on the Shifting Sea",
+    "rank": "3",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "Once per scene as a Scheme and Support action, you may make a TN 3 Theology (Void) check targeting one position at range 0-2. This position must be one you could reach via your normal means of movement.",
+    "effects": "If you succeed, you augment yourself, twisting the space around you so that you simultaneously exist at your current position and at the target position. You remain a single entity for the purposes of strife, fatigue, conditions, and effects, and other characters can target you by targeting you at any position you occupy. If an effect reaches you at multiple locations, it affects you multiple times. When you choose targets for an action you perform, you may receive 2 fatigue to choose one additional target that is within range of at least one position you occupy, or to choose the same target multiple times if that target is within range for the action from multiple positions you occupy. If you choose the same target multiple times this way, resolve the effect against them once for each time you chose them. This effect persists until the end of your next turn. When this effect ends, choose one of the positions you occupy: you cease to occupy all of your other positions. This effect persists a number of rounds equal to your ranks in Meditation.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1-2: This effect persists for a number of addit ional rounds equal to the magnitude. Magnitude 1 +: Choose one additional target position per magnitude. You exist at each of those positions as well. Magnitude 3+: This effect persists until the end of the scene. At the end of each round, receive 1 fatigue for each position you occupy.",
+    "source": ""
+  },
+  {
+    "name": "One within the Void",
+    "rank": "1",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Support action, you may make a TN 2 Sentiment (Void) check targeting yourself and one other character at range 0-3.",
+    "effects": "If you succeed, you augment all targets with the ability to communicate with each other without words, making their intentions clear even if they do not speak the same language. When any target makes a check, one other target may receive 2 fatigue to provide assistance on the check regardless of distance. This effect lasts until the end of the scene.",
+    "opportunities": "1+: Choose one additional target per Opportunity spent this way.",
+    "magnitude": "Magnitude 1+: When a target is dealt strife, one other target of your choice may receive that strife instead. Magnitude 3+: Choose a ring or skill. When any target makes a check using that ring or skill, they may use any other target's rank in that ring or skill instead of their own.",
+    "source": ""
+  },
+  {
+    "name": "Reality Stitch",
+    "rank": "4",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Scheme action, you may make a Theology (Void) check targeting a number of characters up to your ranks in Meditation at range 0-2. The TN of this check is equal to the highest vigilance among your targets.",
+    "effects": "If you succeed, you curse your targets. Whenever one receives strife or fatigue, all of your targets receive the same amount of strife or fatigue instead. This effect persists until the end of the scene.",
+    "opportunities": "1+: Choose one additional target per Opportunity spent this way.",
+    "magnitude": "Magnitude 1+: Whenever one of your targets suffers a condition, all of them suffer the same condition instead. Magnitude 2+: Whenever one of your targets suffers a critical strike, all of them suffer a critical strike with the same severity instead. Magnitude 3+: Whenever one of your targets is affected by a persistent effect, all of them are affected by that effect. When the persistent effect is removed from any target, it is removed from all targets instead.",
+    "source": ""
+  },
+  {
+    "name": "Shattering Caress",
+    "rank": "4",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As an Attack action using a readied melee weapon, you may make a TN 3 Martial Arts (Void) [Melee or Unarmed] check targeting one character or mundane, physical object in range of your weapon.",
+    "effects": "If you succeed and your target is a mundane object, you smite it, and it gains the Destroyed item quality as it falls to pieces. If you succeed and your target is a character, you smite your target, inflicting supernatural damage equal to your weapon's base damage. If this damage causes your target to become Incapacitated, they suffer the Dying [three rounds] condition.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1-2: Reduce the duration of the Dying condition the target character suffers by the magnitude. Magnitude 3+: Instead of suffering the Dying condition, the target character is killed outright.",
+    "source": ""
+  },
+  {
+    "name": "Shroud in Solitude",
+    "rank": "3",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Support action, you may make a TN 3 Theology (Void) check targeting one character at range 0.",
+    "effects": "If you succeed, you augment and curse your target. When defending against any type of damage, your target uses their Void Ring to reduce damage instead of the resistance value they would normally use, and whenever they would be dealt fatigue they receive that much strife instead. This effect persists until the end of your next turn.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1- 2: This effect persists for a number of additional rounds equal to the magnitude. Magnitude 3+: This effect persists until the end of the scene instead. If the target becomes Compromised while this effect persists, they must resist with a TN 5 Meditation check (Void 3); if they fail, their body is pulled into the Void and permanently ceases to exist.",
+    "source": ""
+  },
+  {
+    "name": "Sight beyond Existence",
+    "rank": "1",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "Once per session, immediately after you or another character at range 0- 3 performs an action or makes a choice of great consequence in a narrative scene, you may make a TN 2 Theology (Void) check targeting that character to peer beyond the lie of time and find another outcome.",
+    "effects": "If you succeed, you scry for another outcome and return to the moment before the action was performed. All effects and outcomes stemming from the action are undone, but only you and the target are aware of the reality that no longer is. If you are the target, you may choose the same or a different action or decision. If another character is the target, you may say up to five words to the target before they act or make a decision.",
+    "opportunities": "1: If you target another character and you succeed, you may perform an action immediately before the target performs their new action.",
+    "magnitude": "Magnitude 1+: You see one possible consequence of the original action or decision that would occur before the end of the scene. Magnitude 2+: You see one additional possible consequence of the original action or decision that would occur in the next year. Magnitude 3+: You see one additional possible consequence of the original action or decision that would occur in the next decades, or even further in the future.",
+    "source": ""
+  },
+  {
+    "name": "Slip the Cycle",
+    "rank": "5",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "Once per game session as a Movement and Support action, you may make a TN 3 Theology (Void) check. You can make this check even if you would normally be unable to make such checks, such as if you are physically restrained, Incapacitated, Unconscious, or have died or ceased to exist within the current scene.",
+    "effects": "If you succeed, you purify yourself and remove all conditions or persistent effects currently affecting you. Your fatigue and strife become 0. You may move to a position at range 0-2 of your current (or last) location, ignoring intervening obstacles. If you were dead or did not exist, you also return to life or return to existence for one round.",
+    "opportunities": "1: You may choose a character other than yourself as the target.",
+    "magnitude": "Magnitude 1: If you were dead or did not exist, you return until the end of the scene, at which point you revert to your prior state (dead or nonexistent). Magnitude 2-3: If you returned from death or nonexistence this way, you return until the end of the game session instead. Magnitude 4+: If you returned from death or nonexistence this way, you return permanently instead. Permanently increase the TN of the check for you to activate this technique by 1.",
+    "source": ""
+  },
+  {
+    "name": "The Lotus Blooms",
+    "rank": "2",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Scheme and Support action, you may make a TN 3 Theology (Void) check targeting one character at range 0-1.",
+    "effects": "If you succeed, you augment and curse your target. When your target makes a check, instead of keeping a number of dice up to the ring they used, they keep a number of dice up to their Void Ring (and must keep as many dice as possible within this limit). Your target does not receive strife for kept 0 resuIts, but for each kept 0 result, your target receives 1 fatigue. If they become Incapacitated this way, your target also gains the Exhausted condition. This effect persists until the end of your target's next turn.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1-2: This effect persists for a number of additional rounds equal to the magnitude. Magnitude 3+: This effect persists until the end of the scene.",
+    "source": ""
+  },
+  {
+    "name": "Three Heartbeats",
+    "rank": "4",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Support action, you may make a TN 4 Theology (Void) check targeting yourself.",
+    "effects": "If you succeed, you receive 3 fatigue. Then, after your turn, you may immediately take another turn. During this additional turn, other characters count as being unaware of you and cannot react to things you do (such as act on a preset condition for the Wait action or perform a finishing blow, as described on page 259 of the core rulebook). They still make checks to resist effects as usual and defend against damage.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1 +: After you take your first additional turn, you take additional turns equal to magnitude. After you take each additional turn beyond the first, you receive an additional 3 fatigue. If you become Incapacitated this way, you suffer the Dying [three rounds] and Exhausted conditions.",
+    "source": ""
+  },
+  {
+    "name": "Unweave",
+    "rank": "5",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As an Attack and Scheme action, you may make a TN 4 Theology (Void) check targeting one character or object of silhouette 0-3 at range 0-2.",
+    "effects": "If you succeed and the target is a mundane object or Minion NPC, you bind it to unreality and it ceases to exist. You receive fatigue equal to its silhouette plus its conflict rank (or just its silhouette, if it is an object). If you succeed and the target is a object with mystical properties, it gains the Damaged item quality, or the Destroyed item quality if it already has the Damaged item quality. If you succeed and the target is an Adversary NPC or PC, they suffer supernatural damage equal to your ranks in Theology that ignores all resistances.",
+    "opportunities": "",
+    "magnitude": "Magnitude 1+: Each target suffers additional damage equal to the magnitude. Magnitude 2+: The terrain within a number of range bands equal to the magnitude loses all terrain qualities. Magnitude 2+: If a target suffers a critical strike as a result of this damage (or the Destroyed item quality, if it is an object), it ceases to exist. Magnitude 3+: Each character in the scene with vigilance lower than or equal to the magnitude becomes a target.",
+    "source": ""
+  },
+  {
+    "name": "Whispered Blade",
+    "rank": "1",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Support action, you may make a TN 2 Theology (Void) check.",
+    "effects": "If you succeed, you summon a rift in reality that extends from your hand and can be used as a knife (see page 231 of the core rulebook) that ignores all resistances. This effect persists until the end of the scene or until you dismiss it as a Support action.",
+    "opportunities": "2: You may summon a rift that acts as a different one-handed melee weapon instead of a knife. 2: You may summon a second rift in your other hand that acts as a weapon identical to the one you have in your other hand.",
+    "magnitude": "Magnitude 1+ : After you perform an Attack action using a rift weapon, a rift echo is summoned at range 0 of your target. Any summoned echoes that are created this way persist for a number of rounds equal to the magnitude. In a skirmish, when this magnitude effect ends, each character, besides yourself, at range 0-1 of one or more echoes suffers a critical strike with severity equal to your weapon's deadliness times the number of echoes at range 0- 1 of them. In any other conflict type, each target treats all terrain as Dangerous while the echoes persist.",
+    "source": ""
+  },
+  {
+    "name": "Witness the End",
+    "rank": "1",
+    "type": "Inversion",
+    "ring": "Void",
+    "activation": "As a Scheme and Support action, you may make a Theology (Void) check targeting one character or one mundane, physical object at range 0- 1. The TN of this check is equal to the character's vigilance, or 2 if you are targeting an object.",
+    "effects": "If you succeed and your target is an object, you scry for the ways the target can be undone. The TN of your next check to damage, sabotage, or otherwise disable it is 1 (and cannot be increased). This effect persists until the end of your next turn. If you succeed and your target is a character, you scry for the moves that will lead to their downfall. The TN of your next Attack or Scheme action targeting that character is 1 (and cannot be increased). This effect persists until the end of your next turn.",
+    "opportunities": "1+:Choose one additional target per Opportunity spent this way.",
+    "magnitude": "Magnitude 1-3: This effect persists for a number of additional round s equal to the magnitude. Magnitude 2+: In addition to physical objects, you can choose metaphysical objects, such as the ongoing effects of invocations, mahō, kihō, or rituals (or other persistent mystical phenomena, at the GM's discretion). Magnitude 4+: This effect persists until the end of the scene instead.",
+    "source": ""
+  }
+]

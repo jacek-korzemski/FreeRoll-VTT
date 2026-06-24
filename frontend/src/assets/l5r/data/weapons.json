@@ -1,0 +1,911 @@
+[
+  {
+    "name": "Bisentō",
+    "range": "1, 2",
+    "damage": "4/6",
+    "grips": "1-hand: Range 1 2-hand: Damage +2",
+    "qualities": "Polearm; Cumbersome, Durable, Wargear",
+    "description": "scimitar on polearm",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Blowgun",
+    "range": "2-3",
+    "damage": "1/2",
+    "grips": "1-hand: –",
+    "qualities": "Specialist Ranged; Concealable",
+    "description": "",
+    "source": "Corebook p. 237"
+  },
+  {
+    "name": "Bō",
+    "range": "1-2",
+    "damage": "6/2",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Mundane",
+    "description": "wooden staff",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Bokken",
+    "range": "1",
+    "damage": "3/3",
+    "grips": "1-hand: – 2-hand: Damage +2",
+    "qualities": "Sword; Mundane",
+    "description": "wooden sword",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Buckler",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Shield; Ceremonial, Wargear",
+    "description": "While you have a readied buckler, treat your physical resistance as 3. As a Movement and Support action, if you have a buckler readied, you may increase the TN of the next attack action check made targeting you by 1. This effect persists until the end of your next turn",
+    "source": "Path of Waves p. 111"
+  },
+  {
+    "name": "Butterfy Sword",
+    "range": "0-1",
+    "damage": "3/4",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Concealable, Snaring",
+    "description": "blades with hooks above the guard, favorite of Mantis sailors",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Catalpa Bow",
+    "range": "2-5",
+    "damage": "5/3",
+    "grips": "2-hand: –",
+    "qualities": "Bow; Ceremonial, Sacred",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Chain Whip",
+    "range": "1-2",
+    "damage": "3/5",
+    "grips": "1-hand: –",
+    "qualities": "Specialist; Razor-Edged, Snaring",
+    "description": "stiff metal rods connected by chain loops",
+    "source": "Path of Waves p. 110"
+  },
+  {
+    "name": "Charging Lance",
+    "range": "1-2",
+    "damage": "4/3",
+    "grips": "2-hand: – 2-hand (after a Move action on horseback): Damage +3, Deadliness 7 2-hand (thrown): Martial Arts [Ranged], Range 2-3",
+    "qualities": "Polearm; Cumbersome, Wargear, Hewing (only after a Move action on horseback)",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Chokutō",
+    "range": "0-1",
+    "damage": "4/5",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Ceremonial, Razor-Edged",
+    "description": "precursor of katana",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Club",
+    "range": "0-1",
+    "damage": "5/2",
+    "grips": "1-hand: – 2-hand: Damage +1",
+    "qualities": "Blunt; Mundane",
+    "description": "",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Daikyū",
+    "range": "3-5",
+    "damage": "6/4",
+    "grips": "2-hand: –",
+    "qualities": "Bow; Wargear",
+    "description": "large, composite, asymmetric shape, intented to be fired from horseback",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Dao",
+    "range": "1",
+    "damage": "3/6",
+    "grips": "1-hand: –",
+    "qualities": "Sword;",
+    "description": "one handed, broad, cross between scimitar, saber and machete",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Doom Crossbow",
+    "range": "3-5",
+    "damage": "8/6",
+    "grips": "2-hand: –",
+    "qualities": "Crossbow; Cumbersome, Prepare, Wargear",
+    "description": "When you perform an Attack action with a doom crossbow that inflicts a critical strike, increase the severity by the silhouette of the target",
+    "source": "Shadowlands p. 103"
+  },
+  {
+    "name": "Eku",
+    "range": "2",
+    "damage": "6/4",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Cumbersome, Durable, Mundane",
+    "description": "weaponised oar",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Fire Lance (polearm)",
+    "range": "2",
+    "damage": "4/3",
+    "grips": "2-hand: – 2-hand (firework launch): Martial Arts [Ranged], Range 3-5, Damage +3, Deadliness 9",
+    "qualities": "Specialist; Cumbersome, Prepare (firework only), Wargear",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Flyssa",
+    "range": "1",
+    "damage": "4/4",
+    "grips": "1-hand: – 2-hand: Razor-Edged",
+    "qualities": "Sword; Wargear",
+    "description": "Gaijin weapon, similar to nodachi; While making an Attack action check using a flyssa, you may spend 2+ Opportunities: Ignore 1 point of your target’s physical resistance per 2 Opportunities spent this way.",
+    "source": "Shadowlands p. 102"
+  },
+  {
+    "name": "Folding Half-Bow",
+    "range": "2-3",
+    "damage": "4/3",
+    "grips": "2-hand: –",
+    "qualities": "Bow;",
+    "description": "",
+    "source": "Courts of Stone p. 110"
+  },
+  {
+    "name": "Gada",
+    "range": "1",
+    "damage": "6/3",
+    "grips": "1-hand: – 2-hand: Deadliness +3",
+    "qualities": "Blunt; Ceremonial, Cumbersome, Wargear",
+    "description": "Ivory Kingdoms' weapon, long shaft capped with a spherical head with a pointed spike at the very top",
+    "source": "Path of Waves p. 110"
+  },
+  {
+    "name": "Ganzu Ring Ax",
+    "range": "1-2",
+    "damage": "4/7",
+    "grips": "2-hand: –",
+    "qualities": "Ax; Cumbersome, Hewing, Wargear",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Gao",
+    "range": "1",
+    "damage": "4/3",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Snaring",
+    "description": "usually wielded in pairs, the main blade has a hook at one end and sharpened spike at the other",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Genno",
+    "range": "0-1",
+    "damage": "3/3",
+    "grips": "1-hand: – 2-hand: Damage +4",
+    "qualities": "Hammer; Durable, Mundane",
+    "description": "long-handled, demolition hammer; When you perform an Attack action check with this weapon, you may spend 2 Opportunities: If you succeed but your target reduces the damage of this Attack action to 0, they suffer the Dazed and Prone conditions.",
+    "source": "Shadowlands p. 102"
+  },
+  {
+    "name": "Gunbai",
+    "range": "1",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Specialist; Ceremonial, Wargear",
+    "description": "war fan",
+    "source": "Fields of Victory p. 91"
+  },
+  {
+    "name": "Hammer",
+    "range": "0-1",
+    "damage": "5/2",
+    "grips": "1-hand: – 2-hand: Damage +2",
+    "qualities": "Blunt; Mundane",
+    "description": "",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Horsebow",
+    "range": "2-4",
+    "damage": "4/5",
+    "grips": "2-hand: –",
+    "qualities": "Bow; Wargear",
+    "description": "small, compact,",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Ide Parasol Shield",
+    "range": "0",
+    "damage": "2/3",
+    "grips": "2-hand: –",
+    "qualities": "Shield; Concealed, Cumbersome",
+    "description": "While this parasol shield's canopy is fully extented and readied, you treat your physical resistance as 3. As a Movement action and Support action, while the canopy is readied, you may increase the TN of the next Attack check targeting you by 1. This effect persists until the end of your next turn.",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Ji",
+    "range": "2",
+    "damage": "5/2",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Snaring, Wargear",
+    "description": "staff with a blade on one end",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Jian",
+    "range": "0-1",
+    "damage": "4/4",
+    "grips": "1-hand: – 2-hand: Deadliness +1, Razor-Edged",
+    "qualities": "Sword;",
+    "description": "straigth, double-edged",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Jitte",
+    "range": "0",
+    "damage": "3/2",
+    "grips": "1-hand: –",
+    "qualities": "Hand; Concealable, Snaring",
+    "description": "metal rod with a branch (hook) attached to a handle, carried by law enforcers",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Kabutowari",
+    "range": "0-1",
+    "damage": "3/3",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Durable, Snaring",
+    "description": "similar to tekkan, blunt",
+    "source": "Shadowlands p. 102"
+  },
+  {
+    "name": "Kaiu no Oyumi",
+    "range": "2-5",
+    "damage": "7/3",
+    "grips": "2-hand: –",
+    "qualities": "Crossbow; Cumbersome, Prepare, Wargear",
+    "description": "rapid-fire oyumi; When performing an Attack action check with this weapon, you may spend 2 Opportunities: After performing the Attack action, immediately prepare this weapon for use again.",
+    "source": "Shadowlands p. 103"
+  },
+  {
+    "name": "Kama",
+    "range": "0-1",
+    "damage": "3/3",
+    "grips": "1-hand: –",
+    "qualities": "Specialist; Concealable",
+    "description": "Sickle",
+    "source": "Corebook p. 237"
+  },
+  {
+    "name": "Kamayari",
+    "range": "2",
+    "damage": "4/3",
+    "grips": "2-hand: –",
+    "qualities": "Specialist; Durable, Snaring",
+    "description": "Shinobi, a spear with a hooked protrusion on one or both sides of the blade",
+    "source": "Courts of Stone p. 111"
+  },
+  {
+    "name": "Katana",
+    "range": "1",
+    "damage": "4/5",
+    "grips": "1-hand: – 2-hand: Deadliness +2",
+    "qualities": "Sword; Ceremonial, Razor-Edged",
+    "description": "",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Katar",
+    "range": "0-1",
+    "damage": "3/5",
+    "grips": "1-hand: –",
+    "qualities": "Hand; Hewing, Razor-Edged",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Kiseru",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Blunt; Concealable, Mundane",
+    "description": "it's a smoking pipe",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Knife",
+    "range": "0",
+    "damage": "2/4",
+    "grips": "1-hand: – 2-hand: Deadliness +2",
+    "qualities": "Hand; Concealable, Mundane, Razor-Edged",
+    "description": "",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Kusari-Gama",
+    "range": "0 or 2-3",
+    "damage": "3/3",
+    "grips": "1-hand: – 2-hand: Range 2–3",
+    "qualities": "Specialist; Concealable, Snaring, Wargear",
+    "description": "Kama with a long chain and a metal ball",
+    "source": "Corebook p. 237"
+  },
+  {
+    "name": "Kusarifundo",
+    "range": "1",
+    "damage": "2/2",
+    "grips": "1-hand: – 2-hand: Snaring",
+    "qualities": "Specialist; Concealable",
+    "description": "Shinobi, two weights shaped like hexagonal prisms and connected by a length of chain",
+    "source": "Courts of Stone p. 111"
+  },
+  {
+    "name": "Kuwa",
+    "range": "1",
+    "damage": "4/2",
+    "grips": "1-hand: – 2-hand: Damage +2, Deadliness +2, Range 1–2",
+    "qualities": "Ax; Cumbersome, Mundane",
+    "description": "Hoe, wielded as an ax",
+    "source": "Path of Waves p. 110"
+  },
+  {
+    "name": "Kyoketsu Shoge",
+    "range": "1-2",
+    "damage": "2/3",
+    "grips": "2-hand: –",
+    "qualities": "Specialist Ranged; Concealable, Forbidden, Snaring",
+    "description": "long rope with an iron loop tied to one end and a dagger with an additional sideways barb tied to the other",
+    "source": "Courts of Stone p. 111"
+  },
+  {
+    "name": "Large Shield",
+    "range": "0",
+    "damage": "3/2",
+    "grips": "1-hand: –",
+    "qualities": "Shield; Cumbersome, Durable, Wargear",
+    "description": "While you have a readied large shield, treat your physical resistance as 6. As a Movement and Support action, if you have a shield readied, you may increase the TN of Attack action checks made targeting you by 2. This persists until the start of your next turn.",
+    "source": "Shadowlands p. 104"
+  },
+  {
+    "name": "lchirō Sapper Ax",
+    "range": "1",
+    "damage": "3/4",
+    "grips": "1-hand: – 1-hand (Blunt): Damage +2, Deadliness -3",
+    "qualities": "Ax, Blunt; Durable",
+    "description": "An lchiro sapper ax counts as an ax when wielded with its standard 1-hand profile, and as a blunt weapon when wielded with its blunt profile.",
+    "source": "Fields of Victory p. 88"
+  },
+  {
+    "name": "Magari Yari",
+    "range": "2",
+    "damage": "3/4",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Cumbersome, Razor-Edged, Wargear",
+    "description": "heavy-tipped, triple-headed spear; After performing an Attack action check, a character suffers the Disoriented condition unless they choose to receive 3 fatigue.",
+    "source": "Fields of Victory p. 88"
+  },
+  {
+    "name": "Masakari",
+    "range": "0-1",
+    "damage": "3/4",
+    "grips": "1-hand: – 2-hand: Deadliness +2",
+    "qualities": "Ax; Mundane",
+    "description": "resembles hatchet",
+    "source": "Corebook p. 233"
+  },
+  {
+    "name": "Moshi Sun Ax",
+    "range": "1-2",
+    "damage": "3/5",
+    "grips": "1-hand: – 2-hand: Damage +3",
+    "qualities": "Ax, Polearm; Ceremonial, Cumbersome, Resplendent",
+    "description": "poleax with a long, crescent moon-shaped 2-feet blade that curves upward, extending behind the 5-feet shaft",
+    "source": "Celestial Realms p. 98"
+  },
+  {
+    "name": "Nagae Yari",
+    "range": "2",
+    "damage": "5/2",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Wargear",
+    "description": "straight-headed spear",
+    "source": "Fields of Victory p. 88"
+  },
+  {
+    "name": "Nagamaki",
+    "range": "1-2",
+    "damage": "3/5",
+    "grips": "1-hand: Cumbersome 2-hand: Damage +2, Deadliness +2",
+    "qualities": "Polearm; Razor-Edged, Wargear",
+    "description": "single-edged blade with a significantly lengthened hilt",
+    "source": "Fields of Victory p. 88"
+  },
+  {
+    "name": "Naginata",
+    "range": "2",
+    "damage": "6/6",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Cumbersome, Razor-Edged, Wargear",
+    "description": "Polearm with slightly curved blade on top",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Ninjatō",
+    "range": "0-1",
+    "damage": "4/4",
+    "grips": "1-hand: – 2-hand: Deadliness +1",
+    "qualities": "Sword; Concealable, Forbidden, Razor-Edged",
+    "description": "Shinobi, single-edged sword that is shorter than a katana with a straight blade",
+    "source": "Courts of Stone p. 109"
+  },
+  {
+    "name": "Nodachi",
+    "range": "1-2",
+    "damage": "5/6",
+    "grips": "2-hand: –",
+    "qualities": "Sword; Ceremonial, Razor-Edged",
+    "description": "larger than katana,",
+    "source": "Corebook p. 232"
+  },
+  {
+    "name": "Nunchaku",
+    "range": "0-1",
+    "damage": "4/2",
+    "grips": "1-hand: – 2-hand: Snaring",
+    "qualities": "Specialist, Hand;",
+    "description": "",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Ono",
+    "range": "1-2",
+    "damage": "5/6",
+    "grips": "2-hand: –",
+    "qualities": "Ax; Wargear",
+    "description": "two-handed military ax, opposite the ax-head is normally either an ornate peen or a long spike, rare, unless in crab territories",
+    "source": "Corebook p. 233"
+  },
+  {
+    "name": "Ōtsuchi",
+    "range": "1",
+    "damage": "8/3",
+    "grips": "2-hand: –",
+    "qualities": "Blunt; Cumbersome, Wargear",
+    "description": "carpenter's hammer just bigger and deadlier",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Oyumi",
+    "range": "2-5",
+    "damage": "7/3",
+    "grips": "2-hand: –",
+    "qualities": "Crossbow; Prepare, Wargear",
+    "description": "crossbow",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Qamarist Heavy Shield",
+    "range": "0",
+    "damage": "4/2",
+    "grips": "1-hand: –",
+    "qualities": "Shield; Durable, Cumbersome, Wargear",
+    "description": "While you have a readied Qamarist Heavy Shield, treat your physical resistance as 4 and your supernatural resistance as 2. As a Movement and Support action, if you have a heavy shield readied, you may increase the TN of Attack action checks made targeting you by 3. This persists until the start of your next turn.",
+    "source": "Path of Waves p. 111"
+  },
+  {
+    "name": "Repeating Crossbow",
+    "range": "2-4",
+    "damage": "5/3",
+    "grips": "2-hand: –",
+    "qualities": "Crossbow; Cumbersome",
+    "description": "",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Rochin (a pair with tinbe)",
+    "range": "0-1",
+    "damage": "3/5",
+    "grips": "1-hand: –",
+    "qualities": "Polearm;",
+    "description": "short spear",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Saddle Cutter",
+    "range": "0-1",
+    "damage": "4/6",
+    "grips": "1-hand: –",
+    "qualities": "Polearm; Cumbersome, Wargear",
+    "description": "When you make an attack, you may spend Opportunities as follows: 1+: This attack deals no damage to the target; instead, it severs the target's stirrups, saddle, or other connection to their mount. The target must succeed on a TN 2 Fitness (Aerth or Water) check to remain mounted. The TN of this check increases by a number equal to the number of Opportunities spent.",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Sai",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Hand; Concealable, Snaring",
+    "description": "While you have a pair of sai readied, reduce the Opportunity you must spend to activate their Snaring quality by 1.",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Scimitar",
+    "range": "1",
+    "damage": "4/5",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Durable, Razor-Edged",
+    "description": "curved sword",
+    "source": "Corebook p. 233"
+  },
+  {
+    "name": "Shakuhachi",
+    "range": "0",
+    "damage": "3/2",
+    "grips": "1-hand: – 2-hand: Damage +1",
+    "qualities": "Specialist; Durable, Mundane, Subtle",
+    "description": "Shinobi, flute",
+    "source": "Courts of Stone p. 112"
+  },
+  {
+    "name": "Shakujō",
+    "range": "1",
+    "damage": "3/5",
+    "grips": "1-hand: – 2-hand: Damage +1",
+    "qualities": "Polearm; Ceremonial",
+    "description": "priest staff; If a shakujo is made with gold, its price increases to 10 koku, and it gains the Resplendent item quality.",
+    "source": "Celestial Realms p. 98"
+  },
+  {
+    "name": "Shinobigatana",
+    "range": "0-1",
+    "damage": "4/5",
+    "grips": "1-hand: – 2-hand: Deadliness +1",
+    "qualities": "Sword; Ceremonial (or Forbidden), Concealable, Razor-Edged",
+    "description": "Shinobi; A shinobigatana appears to be a katana until examined; a character examining it must either see it drawn or make a TN 4 Smithing check [Air 2, Water 5] to find the telltale details that betray the blade’s duplicity. If its true function is discovered, it loses the Ceremonial quality and gains the Forbidden quality",
+    "source": "Courts of Stone p. 109"
+  },
+  {
+    "name": "Shuriken",
+    "range": "0, 1-3",
+    "damage": "2/4",
+    "grips": "1-hand (stab or slash): – 1-hand (throw): –",
+    "qualities": "Specialist; Concealable",
+    "description": "Shinobi",
+    "source": "Corebook p. 237"
+  },
+  {
+    "name": "Sling",
+    "range": "2-3",
+    "damage": "3/3",
+    "grips": "1-hand: –",
+    "qualities": "Specialist Ranged; Concealable, Mundane",
+    "description": "",
+    "source": "Path of Waves p. 110"
+  },
+  {
+    "name": "Small Shield",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Shield; Cumbersome, Durable, Wargear",
+    "description": "While you have a readied small shield, treat your physical resistance as 5. As a Movement and Support action, if you have a shield readied, you may increase the TN of Attack action checks made targeting you by 1. This persists until the start of your next turn",
+    "source": "Shadowlands p. 104"
+  },
+  {
+    "name": "Sode",
+    "range": "0",
+    "damage": "1/1",
+    "grips": "Shoulder: –",
+    "qualities": "Shield; Durable, Wargear",
+    "description": "A set of sode do not require free hands to wield, but cannot be wielded with another shield. While wielding readied sode, treat your physical resistance as 1 higher when reducing damage from projectile attacks",
+    "source": "Shadowlands p. 103"
+  },
+  {
+    "name": "Standing Shield",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "2-hand: –",
+    "qualities": "Shield; Cumbersome, Durable",
+    "description": "While you have a readied standing shield or aile it is deployed standing on its own in front of you, you treat your physical resistance as 6. As a Movement and Support action, while you or a nearby bearer have the standing shield readied or deployed, you may increase the TN of Attack action checks made targeting you by 2. This effect persists until the start of your next turn, as long as you are behind the standing shield.",
+    "source": "Children of the Five Winds p. 100"
+  },
+  {
+    "name": "Storm Bow",
+    "range": "1-4",
+    "damage": "4/3",
+    "grips": "2-hand: –",
+    "qualities": "Crossbow; Cumbersome, Prepare, Wargear",
+    "description": "darts as ammunition; When performing an attack action check with this weapon, you may spend 1 Opportunity: Each character at range 0–1 of your initial target also becomes a target of this attack.",
+    "source": "Shadowlands p. 103"
+  },
+  {
+    "name": "Tachi",
+    "range": "1",
+    "damage": "5/5",
+    "grips": "1-hand: – 2-hand: Deadliness +1",
+    "qualities": "Sword; Ceremonial, Cumbersome, Razor-Edged",
+    "description": "ancestor of katana",
+    "source": "Celestial Realms p. 98"
+  },
+  {
+    "name": "Talwar",
+    "range": "1",
+    "damage": "4/6",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Cumbersome, Durable, Razor-Edged",
+    "description": "Ivory Kingdoms' Sword, a curved saber with one sharp edge and a cross-guarded hilt with a knuckle-bow",
+    "source": "Path of Waves p. 110"
+  },
+  {
+    "name": "Tekkan",
+    "range": "1-2",
+    "damage": "4/3",
+    "grips": "1-hand: Cumbersome 2-hand: Damage +2",
+    "qualities": "Sword; Durable, Wargear",
+    "description": "resembles a primitive nodachi in size and shape",
+    "source": "Shadowlands p. 102"
+  },
+  {
+    "name": "Tessen",
+    "range": "0-1",
+    "damage": "4/3",
+    "grips": "1-hand: –",
+    "qualities": "Hand; Ceremonial, Concealable",
+    "description": "Metal fan",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Tetsubō",
+    "range": "1-2",
+    "damage": "7/3",
+    "grips": "2-hand: –",
+    "qualities": "Blunt; Cumbersome, Durable, Wargear",
+    "description": "Studded club as tall as human",
+    "source": "Corebook p. 234"
+  },
+  {
+    "name": "Tinbe (a pair with rochin)",
+    "range": "0",
+    "damage": "2/2",
+    "grips": "1-hand: –",
+    "qualities": "Shield; Durable",
+    "description": "As a Movement and Support action, if you have a tinbe readied, you may increase the TN of the next Attack action check made targeting you by 1 and decrease the TN of your next Attack action check sing a rochin by 1. This effect persists until the end of your next turn.",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Tonfas",
+    "range": "0-1",
+    "damage": "3/3",
+    "grips": "1-hand: –",
+    "qualities": "Hand; Concealable, Durable",
+    "description": "As a Movement and Support action, if you have a tonfa readied, you may increase the TN of the next Attack action check targeting you by 1 and decrease the TN of your next Attack action check using a tonfa by 1. This effect persists until the end of your next turn.",
+    "source": "Mantis Clan DLC p. 8"
+  },
+  {
+    "name": "Trident",
+    "range": "2",
+    "damage": "4/4",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Snaring, Wargear",
+    "description": "",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Tsuruhashi",
+    "range": "1",
+    "damage": "4/3",
+    "grips": "1-hand: Cumbersome 2-hand: Deadliness +2",
+    "qualities": "Ax; Mundane",
+    "description": "Pickax; When you perform an Attack action check with this weapon, you may spend 2 Opportunities: If you succeed but your target reduces the damage of this Attack action to 0, their armor gains the Damaged quality and they suffer the Bleeding condition",
+    "source": "Shadowlands p. 102"
+  },
+  {
+    "name": "Uchigatana",
+    "range": "1",
+    "damage": "3/6",
+    "grips": "1-hand: –",
+    "qualities": "Sword; Razor-Edged, Wargear",
+    "description": "descendant of the tachi",
+    "source": "Celestial Realms p. 98"
+  },
+  {
+    "name": "Urumi",
+    "range": "1-2",
+    "damage": "4/5",
+    "grips": "1-hand: –",
+    "qualities": "Specialist, Sword; Cumbersome, Razor-Edged, Snaring",
+    "description": "Whip sword; Ivory Kingdoms",
+    "source": "Path of Waves p. 111"
+  },
+  {
+    "name": "Wakizashi",
+    "range": "0-1",
+    "damage": "3/5",
+    "grips": "1-hand: – 2-hand: Deadliness +2",
+    "qualities": "Sword; Ceremonial, Razor-Edged",
+    "description": "smaller than katana",
+    "source": "Corebook p. 233"
+  },
+  {
+    "name": "Whip",
+    "range": "2",
+    "damage": "3/2",
+    "grips": "1-hand: –",
+    "qualities": "Specialist; Snaring, Mundane",
+    "description": "",
+    "source": "Celestial Realms p. 98"
+  },
+  {
+    "name": "Yari",
+    "range": "2",
+    "damage": "5/3",
+    "grips": "2-hand: –",
+    "qualities": "Polearm; Wargear",
+    "description": "long-shafted spear",
+    "source": "Corebook p. 235"
+  },
+  {
+    "name": "Yoroi-Doshi",
+    "range": "0",
+    "damage": "2/4",
+    "grips": "1-hand: – 2-hand: Deadliness +3",
+    "qualities": "Hand; Concealable, Razor-Edged, Wargear",
+    "description": "Tanto blade; When performing an Attack action check, a character may spend Opportunity: Your target treats their physical resistance as 2 lower. This effect persists until the end of your next turn.",
+    "source": "Fields of Victory p. 89"
+  },
+  {
+    "name": "Yumi",
+    "range": "2-5",
+    "damage": "5/3",
+    "grips": "2-hand: –",
+    "qualities": "Bow;",
+    "description": "composite, asymmetric",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Zanbatō",
+    "range": "1-2",
+    "damage": "6/7",
+    "grips": "2-hand: –",
+    "qualities": "Sword; Cumbersome, Wargear",
+    "description": "sword with the reach of a spear, thick blade is attached to two-handed hilt",
+    "source": "Corebook p. 233"
+  },
+  {
+    "name": "Willow-Leaf Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "Standard",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Armor-Piercing Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "Ignore up to 2 points of the target’s physical resistance.",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Fire Blossom Arrows",
+    "range": "",
+    "damage": "-1 Damage",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "shines brightly till the end of the scene",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Flesh-Cutter Arrows",
+    "range": "",
+    "damage": "+2 Deadliness",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Hamaya Arrows",
+    "range": "",
+    "damage": "+3 Damage/ +3 Deadliness against Otherworldy beings",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Humming-Bulb Arrows",
+    "range": "",
+    "damage": "-2 Damage/ -2 Deadliness",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "These arrows produce a loud noise audible at range 0–4 of the archer and of the path the arrow travels.",
+    "source": "Corebook p. 236"
+  },
+  {
+    "name": "Smoke Arrows",
+    "range": "",
+    "damage": "-2 Damage/ -2 Deadliness",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "When jostled, emit a thin cloud of smoke in a variety of colors depending on the specific mixture",
+    "source": "Shadowlands p. 107"
+  },
+  {
+    "name": "Soul-Star (Air) Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "area 0-3 range becomes Obscuring terrain till the end of next turn",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Soul-Star (Earth) Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "An Otherworldly being struck by this arrow must make a TN 3 Fitness check (Air 2, Water 4) or receive 4 strife and suffer the Immobilized and Silenced conditions until the end of the wielder's next turn.",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Soul-Star (Fire) Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "area 0-3 range becomes Dangerous terrain; Otherworldly being if it was critical, suffers Burning Condition",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Soul-Star (Water) Arrows",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition",
+    "description": "area 0-3 range becomes Entangling terrain till the end of next turn",
+    "source": "Celestial Realms p. 97"
+  },
+  {
+    "name": "Jade Inlay Yajiri (Arrowhead)",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition; Sacred",
+    "description": "",
+    "source": "Fields of Victory p. 89"
+  },
+  {
+    "name": "Obsidian Splinter Yajiri (Arrowhead)",
+    "range": "",
+    "damage": "+4 Deadliness",
+    "grips": "",
+    "qualities": "Ammunition; Forbidden, Razor-Edged, Unholy",
+    "description": "",
+    "source": "Fields of Victory p. 89"
+  },
+  {
+    "name": "Steel-Tip Yariji (Arrowhead)",
+    "range": "",
+    "damage": "",
+    "grips": "",
+    "qualities": "Ammunition; Razor-Edged",
+    "description": "",
+    "source": "Fields of Victory p. 89"
+  }
+]

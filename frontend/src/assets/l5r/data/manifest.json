@@ -1,0 +1,54 @@
+[
+  {
+    "key": "weapons",
+    "count": 101
+  },
+  {
+    "key": "armors",
+    "count": 20
+  },
+  {
+    "key": "techniques",
+    "count": 380
+  },
+  {
+    "key": "schools",
+    "count": 84
+  },
+  {
+    "key": "clans",
+    "count": 16
+  },
+  {
+    "key": "families",
+    "count": 42
+  },
+  {
+    "key": "titles",
+    "count": 52
+  },
+  {
+    "key": "distinctions",
+    "count": 75
+  },
+  {
+    "key": "passions",
+    "count": 49
+  },
+  {
+    "key": "adversities",
+    "count": 87
+  },
+  {
+    "key": "anxieties",
+    "count": 45
+  },
+  {
+    "key": "inversions",
+    "count": 16
+  },
+  {
+    "key": "curriculum",
+    "count": 84
+  }
+]

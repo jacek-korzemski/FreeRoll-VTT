@@ -7,7 +7,7 @@ import {
   encodeToBase64, 
   decodeFromBase64,
 } from './utils/fogBitmap'
-import { BASE_PATH, API_BASE } from '../config'
+import { ASSET_BASE, API_BASE, ENABLE_L5R } from '../config'
 import { t } from './lang'
 
 const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug')
@@ -41,6 +41,7 @@ function App() {
   const [fogGmOpacity, setFogGmOpacity] = useState(false)
   const [dicePanelOpen, setDicePanelOpen] = useState(false)
   const [rollHistory, setRollHistory] = useState([])
+  const [pendingL5RRoll, setPendingL5RRoll] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(() => 
     typeof window !== 'undefined' && window.innerWidth >= 576
   )
@@ -532,6 +533,17 @@ useEffect(() => {
     window.addEventListener('vtt:dice-roll', handler)
     return () => window.removeEventListener('vtt:dice-roll', handler)
   }, [handleDiceRoll])
+
+  // L5R roll requests from character-sheet buttons open the dice panel pre-filled.
+  useEffect(() => {
+    if (!ENABLE_L5R) return
+    const handler = (e) => {
+      setPendingL5RRoll({ ...e.detail, token: Date.now() })
+      setDicePanelOpen(true)
+    }
+    window.addEventListener('vtt:l5r-roll', handler)
+    return () => window.removeEventListener('vtt:l5r-roll', handler)
+  }, [])
   
   const handleSelectAsset = useCallback((asset, type) => {
     setIsEraserActive(false)
@@ -1159,7 +1171,7 @@ useEffect(() => {
         onResetBackgroundScale={handleResetBackgroundScale}
         onResetBackgroundAll={handleResetBackgroundAll}
         onClear={handleClear}
-        basePath={BASE_PATH}
+        basePath={ASSET_BASE}
         zoomLevel={zoomLevel}
         onZoomChange={handleZoomChange}
         scenes={scenes}
@@ -1206,7 +1218,7 @@ useEffect(() => {
           onDuplicateToken={handleDuplicateToken}
           onDropPlace={handleDropOnGrid}
           onDeselectPlacement={handleDeselectAsset}
-          basePath={BASE_PATH}
+          basePath={ASSET_BASE}
           zoomLevel={zoomLevel}
           pingMode={pingMode}
           pingAnimation={pingAnimation}
@@ -1219,6 +1231,8 @@ useEffect(() => {
         onToggle={() => setDicePanelOpen(prev => !prev)}
         rollHistory={rollHistory}
         onRoll={handleDiceRoll}
+        pendingL5RRoll={pendingL5RRoll}
+        onL5RRollConsumed={() => setPendingL5RRoll(null)}
       />
 
       <RollSnackbarContainer

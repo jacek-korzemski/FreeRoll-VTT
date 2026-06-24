@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { t } from '../../lang'
 import { 
   RING_DICE_IMAGES, 
@@ -38,7 +38,7 @@ function rollDie(faces) {
   return { ...faces[faceIndex] }
 }
 
-function L5RDicePanel({ playerName, onRoll }) {
+function L5RDicePanel({ playerName, onRoll, prefill, onPrefillConsumed }) {
   const [phase, setPhase] = useState('setup')
   const [ringCount, setRingCount] = useState(2)
   const [skillCount, setSkillCount] = useState(2)
@@ -46,6 +46,21 @@ function L5RDicePanel({ playerName, onRoll }) {
   const [keptDice, setKeptDice] = useState([])
   const [selectedForKeep, setSelectedForKeep] = useState(new Set())
   const [selectedForExplode, setSelectedForExplode] = useState(new Set())
+  const [rollLabel, setRollLabel] = useState('')
+
+  // A roll request coming from a character sheet pre-fills the dice counts.
+  useEffect(() => {
+    if (!prefill?.token) return
+    setRingCount(Math.max(0, Math.min(10, Number(prefill.ring) || 0)))
+    setSkillCount(Math.max(0, Math.min(10, Number(prefill.skill) || 0)))
+    setRollLabel(prefill.label || '')
+    setPhase('setup')
+    setRolledDice([])
+    setKeptDice([])
+    setSelectedForKeep(new Set())
+    setSelectedForExplode(new Set())
+    onPrefillConsumed?.()
+  }, [prefill?.token])
 
   const getDieImage = (die) => {
     if (die.type === 'ring') {
@@ -161,8 +176,10 @@ function L5RDicePanel({ playerName, onRoll }) {
       strife: acc.strife + (die.strife ? 1 : 0)
     }), { success: 0, opportunity: 0, strife: 0 })
     
+    const baseName = playerName || 'Anonymous'
     const rollData = {
-      player: playerName || 'Anonymous',
+      player: rollLabel ? `${baseName} — ${rollLabel}` : baseName,
+      label: rollLabel || '',
       type: 'l5r',
       dice: keptDice.map(d => ({
         type: d.type,
@@ -178,7 +195,7 @@ function L5RDicePanel({ playerName, onRoll }) {
     
     onRoll(rollData)
     handleReset()
-  }, [keptDice, playerName, onRoll])
+  }, [keptDice, playerName, onRoll, rollLabel])
 
   const handleReset = useCallback(() => {
     setPhase('setup')
@@ -227,6 +244,7 @@ function L5RDicePanel({ playerName, onRoll }) {
     <div className="l5r-dice-panel">
       {phase === 'setup' && (
         <div className="l5r-setup">
+          {rollLabel && <div className="l5r-roll-label">{rollLabel}</div>}
           <div className="l5r-dice-selector">
             <div className="l5r-selector-row">
               <div className="l5r-selector-label">

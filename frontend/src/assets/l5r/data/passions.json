@@ -1,0 +1,394 @@
+[
+  {
+    "name": "Ancestry",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "The recollection of lineages comes easily to you. You know your own family history as far back as it has been recorded, and can swiftly recall the lineages of notable figures in Rokugan's history. With a few contextual cues, you can deduce the ancestry of those you meet and remember the great deeds of their forebears.",
+    "check": "A check to recall or determine the family history of another character (such as a Government [Earth] check to remember a past daimyo of a family, or a Command [Earth] check to remind a subordinate of the expectations their ancestors would have of them).",
+    "source": "Fields of Victory p. 83"
+  },
+  {
+    "name": "Animal Bond",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Mental",
+    "description": "Reciprocating your interest, a small, mundane animal of some kind has attached itself to you. Choose one silhouette 0 or 1 animal; it follows you around wherever you go and generally acts as your companion. It can be cajoled to do what you want, but it might need incentives (usually food) to perform difficult tasks on demand. If you are granted an animal as part of your starting outfit, that animal can be your companion (regardless of the usual size restrictions).",
+    "check": "A check to interact with an animal (such as a Medicine [Earth] check to mend its injuries or a Survival [Earth] check to calm it).",
+    "source": "Corebook p. 111"
+  },
+  {
+    "name": "Armament",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "Unless the piece comes from outside of the Emerald Empire, you know the name of any weapon or piece of armor you encounter, are aware of its function, and have a rudimentary understanding of how to equip and wield it.",
+    "check": "A check to make or study arms or armor (such as a Smithing [Earth] check to polish a suit of armor or a Tactics [Earth] check to know how to arrange a proper spear formation).",
+    "source": "Corebook p. 111"
+  },
+  {
+    "name": "Attention",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "At the start of each scene, you can always determine the most effective way to gain the attention of those around you.",
+    "check": "A check to capture someone’s attention (such as a Performance [Fire] check to entice a wealthy merchant with hints of future riches or a Games [Fire] check to draw a crowd with a daring move).",
+    "source": "Path of Waves p. 70"
+  },
+  {
+    "name": "Bathing",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are familiar with all of the nuances of bathhouses and the traditions of bathing, and are talented at overhearing gossip in such places.",
+    "check": "A check while bathing (such as a Sentiment [Water] check to eavesdrop on a conversation or a Composition [Water] check to ponder how to improve a poem).",
+    "source": "Celestial Realms p. 90"
+  },
+  {
+    "name": "Bonsai",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You know a great deal about the art of bonsai, including the tools and techniques used in its practice. You can judge the quality of a bonsai tree and tell when a piece has been neglected.",
+    "check": "A check to interact with a bonsai piece (such as an Aesthetics [Air] check to prune or maintain a tree or a Sentiment [Air] check to identify someone’s emotional response to a bonsai work).",
+    "source": "Emerald Empire p. 243"
+  },
+  {
+    "name": "Brushwork",
+    "ring": "Air",
+    "traits": ", Mental, Physical",
+    "description": "You can identify the signature styles of numerous different schools and individual artists, as well as common motifs and techniques.",
+    "check": "A check to study or practice brushwork (such as an Aesthetics [Air] check to assess a painting’s qualities and artist or a Composition [Air] check to add the finishing touches to a letter written in calligraphy).",
+    "source": "Corebook p. 111"
+  },
+  {
+    "name": "Charity",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "Your charitable nature makes those who have witnessed or heard of your generosity more likely to accept your reasonable requests foraid, even if giving you aid does not directly benefit the other party.",
+    "check": "A check with which your charitable history is a benefit (such as a Courtesy [Water] check to convince a peasant that you’re on their side or a Labor [Water] check to determine the best way to benefit the most amount of people with your physical efforts).",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "City [Choose one]",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "You know a particular city extremely well and have extensive practical knowledge about it. You know as much about the city as any lifelong resident, including the popular locations, dangerous or disreputable areas, and open secrets.",
+    "check": "A check to learn or share knowledge of the particular city (such as a Courtesy [Water] check to befriend a local resident or a Culture [Water] check to find an establishment offering a particular service).",
+    "source": "Emerald Empire p. 243"
+  },
+  {
+    "name": "Creature",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "You are fascinated by strange creatures, monsters, bakemono, and other such oddities. You can easily identify such creatures and know them by heart. Tales of monsters and local horror folklore transfix you, and you are always eager to build your wealth of monster lore further.",
+    "check": "A check to study or hear tales of odd creatures (such as a Culture [Fire] check to wonder about new creatures or a Performance [Fire] check to entice someone to offer you a tale of encounters with Shadowlands monsters).",
+    "source": "Shadowlands p. 97"
+  },
+  {
+    "name": "Curiosity",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "The first time you attempt a new task and fail, you always think of another route you could take to try to overcome or learn more about the problem.",
+    "check": "A check to seek answers to an intriguing question (such as a Medicine [Fire] check to create a new chemical concoction or a Theology [Fire] check to try to determine the metaphysical underpinnings of a particular kami’s behavior).",
+    "source": "Corebook p. 112"
+  },
+  {
+    "name": "Daredevil",
+    "ring": "Fire",
+    "traits": ", Mental, Physical",
+    "description": "You can risk your life without consideration or hesitation, even if the potential consequences are obvious and dire.",
+    "check": "A check to risk your life (such as a Fitness [Fire] check to resist a critical strike or a Games [Fire] check to win a contest in a flashy and physically risky way).",
+    "source": "Corebook p. 112"
+  },
+  {
+    "name": "Decorum",
+    "ring": "Water",
+    "traits": ", Interpersonal, Mental",
+    "description": "Polite society is your natural habitat. Etiquette, traditions, and all of the subtle courtly minutiae are second nature to you.",
+    "check": "A check to ensure that you or your allies adhere to all the strictures of courtly etiquette (such as a Command [Water] check to be formally polite to your guests or a Culture [Water] check to ascertain who is adhering to court etiquette during an audience and who is making a fool of themself).",
+    "source": "Courts of Stone p. 100"
+  },
+  {
+    "name": "Enlightenment",
+    "ring": "Void",
+    "traits": ", Spiritual",
+    "description": "You feel no attachment to mundane items and earthly titles; you cannot be tempted with material wealth or the promise of power.",
+    "check": "A check to detach yourself from material concerns (such as a Meditation [Void] check to contemplate your place in the universe or a Survival [Void] check to exist in harmony with your environment).",
+    "source": "Corebook p. 112"
+  },
+  {
+    "name": "Fashion",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "You always know the current trends in your home region, and you can identify what is in vogue (and how to take advantage of that fact) in a new place after spending one or more scenes there.",
+    "check": "A check to interact with clothes, jewelry, or other worn works of art (such as a Culture [Fire] check to theorize about what others might wear at the next Winter Court or a Design [Fire] check to create a stunning work).",
+    "source": "Corebook p. 112"
+  },
+  {
+    "name": "Festivals",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "You can always find the best activities at festivals, and you never have an issue finding someone in a crowded place.",
+    "check": "A check to inte ract at a festival (such as a Skuldugge ry [Fire] check to determine where clandestine dealings are happening or a Courtesy [Fire] check to ensure a guest has a good time).",
+    "source": "Celestial Realms p. 90"
+  },
+  {
+    "name": "Fortune-telling",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "You can identify any common portents (such as constellations and other stellar phenomena, the cracks in oracle bones, the appearance of certain animals, and various other signs of things to come), along with their implications for the future.",
+    "check": "A check to discern the future (such as a Survival [Void] check to look for small omens in your earthly environs or a Theology [Void] check to perform a divination by reading the stars).",
+    "source": "Corebook p. 112"
+  },
+  {
+    "name": "Generosity",
+    "ring": "Water",
+    "traits": ", Interpersonal",
+    "description": "You can always identify a proper gift for a particular person that does not risk giving offense or slighting them publicly.",
+    "check": "A check to acquire or give a gift (such as a Design [Water] check to select an item that complements someone’s wardrobe or a Commerce [Water] check to find and select a gift at a market).",
+    "source": "Corebook p. 113"
+  },
+  {
+    "name": "Glorious Deeds",
+    "ring": "Fire",
+    "traits": ", Martial, Social",
+    "description": "You find risking your life to be a simple matter, as long as there is a witness to remember your bravery. No threat or challenge deters you if you might be remembered for it, making even the most daunting tasks easy ones for which to prepare.",
+    "check": "A check to improve your reputation or gain fame as a great samurai (such as a Performance [Fire] check to impress a court with your new melody, or a Tactics [Fire] check to execute a daring raid on the enemy).",
+    "source": "Fields of Victory p. 83"
+  },
+  {
+    "name": "Gossip",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "At the start of each scene, you can always identify the character present who will know the juiciest rumors (besides yourself, obviously).",
+    "check": "A check to spread or receive rumors (such as a Courtesy [Air] check to cast someone in a certain light when telling a story about them or a Culture [Air] check to read people’s current anxieties from the subtle ways they obey or break etiquette).",
+    "source": "Corebook p. 113"
+  },
+  {
+    "name": "Gourmet",
+    "ring": "Water",
+    "traits": ", Mental, Interpersonal",
+    "description": "You can identify regional variations in cuisine and know a great deal about techniques of food preparation. You can always identify the ingredients in a dish, including those that are potentially dangerous.",
+    "check": "A check involving high-quality food (such as a Culture [Water] check to locate a place to dine in an unfamiliar city or a Labor [Water] check to prepare a fine meal).",
+    "source": "Emerald Empire p. 243"
+  },
+  {
+    "name": "History",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "After a short time spent studying it, you can discern the era and context of any object, structure, or text you encounter - or else you know for certain that no chronicler of the Emerald Empire has encountered this thing before.",
+    "check": "A check to remember a historical anecdote (such as a Government [Earth] check to draw parallels to past events or a Smithing [Earth] check to know about past uses of and trends in the creation of tools and artifacts).",
+    "source": "Corebook p. 113"
+  },
+  {
+    "name": "Honest Work",
+    "ring": "Earth",
+    "traits": ", Mental, Interpersonal",
+    "description": "You are always able to determine how much work is needed to complete a physical, hands-on task, and your work on such tasks is always markedly better than that of others due to your eye for detail.",
+    "check": "A check that requires physical labor (such as a Labor [Earth] check to till a field or a Smithing [Earth] check to fix a damaged tool).",
+    "source": "Path of Waves p. 70"
+  },
+  {
+    "name": "Horse Racing",
+    "ring": "Air",
+    "traits": ", Physical",
+    "description": "You do not enjoy just the speed of racing but also the bond of horse and rider coming together in competition. You (and your horse) understand how racing requires skill, perception and endurance.",
+    "check": "A check to push your horse or steed to its limits (such as a Fitness [Air] check to duck an weave on the polo firld or a Survival [Air] check to get your horse to rush down a frightening or dangerous path).",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Hot Pot",
+    "ring": "Earth",
+    "traits": ", Interpersonal, Physical",
+    "description": "You know how to prepare a good, hearty, flavorful meal in a communal environment. You can identify the meats, tubers, vegetables, and spices to make hot pot, as well as what might spoil or be poisonous to the meal. Because of the strong associatons, you can also recall memories connected to sharing hot pot with friends and family.",
+    "check": "A check involving the preparations of a communal meal of hot pot (such as a Labor [Earth] to check ito stretch limited rations into satisfying meal or a Courtesy [Earth] check to make o guest feel disarmed and at ease over dinner)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Ikebana",
+    "ring": "Water",
+    "traits": ", Mental",
+    "description": "You can always identify a plant by any of its parts, and you know its physical properties and its hanakotoba (“language of flowers”) meaning.",
+    "check": "A check related to flower arrangement (such as an Aesthetics [Water] check to rearrange or improve an ikebana piece or a Survival [Water] check to acquire flowers from a marketplace).",
+    "source": "Corebook p. 113"
+  },
+  {
+    "name": "Kabuki",
+    "ring": "Air",
+    "traits": ", Interpersonal, Mental",
+    "description": "You are a seasoned viewer of (or participant in) Kabuki, and you have many connections in the world of theater.",
+    "check": "A check to engage with Kabuki (such as a Culture [Air] check to make an insightful comment about a performance or a Performance [Air] check to put on an impromptu show to distract someone).",
+    "source": "Celestial Realms p. 90"
+  },
+  {
+    "name": "Kintsugi",
+    "ring": "Earth",
+    "traits": ", Mental, Physical",
+    "description": "You have a particular fondness and skill for kintsugi, the art of mending broken pottery with gold or other similar substances.",
+    "check": "A check to mend an object with kintsugi or interact with a piece of kintsugi-repaired pottery (such as a Culture [Earth] check to recall the name of a particular practitioner of kintsugi by their artist’s mark on a piece of pottery or a Labor [Earth] check to produce a breathtaking piece).",
+    "source": "Writ of the Wilds"
+  },
+  {
+    "name": "Knotwork",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You can identify and tie dozens of different knots, and know their appropriate uses and the meanings each one carries.",
+    "check": "A check to interact with a knot (such as a Design [Air] check to add a decorative knot to your garb or a Seafaring [Air] check to secure your vessel’s rigging).",
+    "source": "Mantis Clan DLC p. 7"
+  },
+  {
+    "name": "Kyūdō",
+    "ring": "Void",
+    "traits": ", Mental, Physical",
+    "description": "You are familiar with most forms of archery and are able to identify the relative skill of anyone who wields a bow simply by how they hold it.",
+    "check": "A check to participate in the art of kyūdō (such as a Smithing [Void] check to examine and attune to a bow or a Games [Void] check to enlighten another on a particular technique).",
+    "source": "Celestial Realms p. 90"
+  },
+  {
+    "name": "Local Flare for [Region]",
+    "ring": "Earth",
+    "traits": ", Interpersonal",
+    "description": "Your knowledge extends beyond the court to the surrounding lands. You are familiar with secret scenic hideaways, undiscovered talent, and intriguing local customs within the region. Every clan boasts incredible palaces, but such settings can grow tiresome. A change of scenery works wonders for one’s spirit.",
+    "check": "A check to remember information about the specific region you have chosen (such as a Culture [Earth] check to know what is currently going on in the region or a Sentiment [Earth] check to recall the attitudes and opinions of local inhabitants).",
+    "source": "Courts of Stone p. 100"
+  },
+  {
+    "name": "Military History",
+    "ring": "Earth",
+    "traits": ", Mental",
+    "description": "You can quickly identify historical or traditional military ploys from memory and can almost always suggest an appropriate tactic for the situation at hand based on a similar historical situation.",
+    "check": "A check related to your knowledge of military history (such as a Command [Earth] check to bolster troops’ resolve with a story of a similar historical battle or a Tactics [Earth] check to prepare a defense based on the attacker’s known strategies).",
+    "source": "Emerald Empire p. 244"
+  },
+  {
+    "name": "Navigator",
+    "ring": "Fire",
+    "traits": ", Mental",
+    "description": "You can quickly make sense of even the most archaic, poor, or unfamiliar maps, and you always know which direction is north.",
+    "check": "A check to navigate (such as a Seafaring [Fire] check to chart a formerly unknown route at sea or a Survival [Fire] check to extrapolate your location in the wilderness based on the stars).",
+    "source": "Emerald Empire p. 244"
+  },
+  {
+    "name": "Passion for [Foreign Performing Art Form]",
+    "ring": "Air",
+    "traits": ", Fame, Interpersonal",
+    "description": "You are skilled in some foreign artistry, such as puppetry, miming, a foreign dance or theater form, or the playing of a foreign instrument; you can also recognize all common forms of the art and know intricate details about its history. Confer with the GM to select a campaign-appropriate art form when choosing this passion.",
+    "check": "Performing a check that relates to your talent (such as a Performance [Air] check to impress a stranger or a Design [Air] check to refine your craft or method).",
+    "source": "Path of Waves p. 71"
+  },
+  {
+    "name": "Playfulness",
+    "ring": "Air",
+    "traits": ", Interpersonal",
+    "description": "When you say something untoward to someone of lower or equal status, they write it off as your playful nature instead of being significantly angered or saddened by it.",
+    "check": "A check to gently mock or chide someone (such as a Composition [Air] check to find the parts of a rival’s poem that you can echo with parody in your next piece or a Courtesy [Air] check to tease someone with a clever pun on their name).",
+    "source": "Corebook p. 114"
+  },
+  {
+    "name": "Pot Stirrer",
+    "ring": "Fire",
+    "traits": ", Interpersonal, Mental",
+    "description": "After spending a few minutes studying a room, you can extrapolate who might have a grudge against whom, which two people are on edge around each other, and other social pressure points you could exploit.",
+    "check": "A check to stir up social chaos (such as a Courtesy [Fire] check to incite anger in someone about a perceived insult or a Theology [Fire] check to encourage two people to argue about the finer points of their religious beliefs).",
+    "source": "Courts of Stone p. 101"
+  },
+  {
+    "name": "Provocation",
+    "ring": "Fire",
+    "traits": ", Interpersonal",
+    "description": "You can always identify a point of sensitivity that you can push upon in another person—though not whether they will take your comment as slightly aggressive banter or a grave insult.",
+    "check": "A check to get a rise out of someone (such as a Courtesy [Fire] check to call someone by an aggravating nickname or a Command [Fire] check to get a group of soldiers passionate and angry enough to storm an enemy position).",
+    "source": "Corebook p. 114"
+  },
+  {
+    "name": "Religious Study",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "After you spend a short time studying a religious object, text, ritual, or other observance, you are able to discern its purpose and determine what religion it belongs to (unless the religion has not been chronicled by anyone in the Emerald Empire).",
+    "check": "A check to contemplate an aspect of religion (such as a Meditation [Void] check to ponder the meaning of a particular passage of the Tao of Shinsei or a Composition [Void] check to write down your thoughts about a religious ritual you witnessed).",
+    "source": "Celestial Realms p. 91"
+  },
+  {
+    "name": "Researcher",
+    "ring": "Air",
+    "traits": ", Mental",
+    "description": "You can cite the most authoritative works on most topics from memory and are never at a loss for where to begin researching a matter.",
+    "check": "A check to research a topic (such as a Culture [Air] check to locate a particular poem or a Medicine [Air] check to find all known records of a mysterious illness).",
+    "source": "Emerald Empire p. 244"
+  },
+  {
+    "name": "Rock Gardening",
+    "ring": "Void",
+    "traits": ", Mental",
+    "description": "You know the proper methods of arranging a rock garden (karesansui) according to popular manuals on the topic, and you can explain the symbolism and significance of different arrangements and features.",
+    "check": "A check related to rock gardening (such as an Aesthetics [Void] check to detect a hidden meaning in a rock garden’s arrangement or a Meditation [Void] check to make sense of events while reflecting on a rock garden).",
+    "source": "Emerald Empire p. 244"
+  },
+  {
+    "name": "Sake",
+    "ring": "Water",
+    "traits": ", Mental",
+    "description": "You can identify regional variations in sake and other alcohol, and you know a great deal about the various processes involved in making sake. It takes you twice as much alcohol as it does anyone else to become intoxicated.",
+    "check": "A check to interact with the fine art of fermented beverages (such as a Courtesy [Water] check to serve alcohol according to proper procedure in a social setting or a Labor [Water] check to ferment rice).",
+    "source": "Corebook p. 114"
+  },
+  {
+    "name": "Secrets",
+    "ring": "Void",
+    "traits": ", Mental, Interpersonal",
+    "description": "You never forget a secret you have heard, and you instinctively know if something you have heard is common knowledge or information someone wants concealed (even if you do not know who or why).",
+    "check": "A check to acquire or preserve a secret (such as a Meditation [Void] check to resist efforts to pry a secret from you or a Sentiment [Void] check to have a hunch about whether someone is concealing a dreadful secret).",
+    "source": "Corebook p. 115"
+  },
+  {
+    "name": "Stargazing",
+    "ring": "Void",
+    "traits": ", Mental, Spiritual",
+    "description": "You can use the stars not only to navigate but also to tell the time, be it hour or season, You also know many astrological myths and stories related to heavenly phenomena such as meteor showers, supernovae, comets and constellations.",
+    "check": "A check to recall an astronomical fact (such as Theology [Void] check to interpret wheter a specific comet means doom or blessing or a Composition [Void] check to layer double meaning into a poem using a reference to a constellation)",
+    "source": "Children of the Five Winds"
+  },
+  {
+    "name": "Stories",
+    "ring": "Earth",
+    "traits": ", Mental, Interpersonal",
+    "description": "You can recall any story you have been told, including the details that others would gloss over or forget.",
+    "check": "A check to recall or tell a story (such as a Performance [Earth] check to spin a tale to hearten comrades or a Theology [Earth] check to recite a passage from the Tao of Shinsei or Akodo’s Leadership that is applicable to your situation).",
+    "source": "Corebook p. 115"
+  },
+  {
+    "name": "Tea",
+    "ring": "Void",
+    "traits": ", Physical, Spiritual",
+    "description": "You can identify regional variations in tea, and you know a great deal about the process of preparing and drying leaves. In the wilderness, you can acquire the natural ingredients required to make rustic teas of various sorts with relative ease.",
+    "check": "A check to interact with tea (such as a Medicine [Void] check to brew a tea with ingredients that help the body recover from illness or a Performance [Void] check to perform a tea ceremony that helps the recipients contemplate their state in life).",
+    "source": "Corebook p. 115"
+  },
+  {
+    "name": "Travel",
+    "ring": "Water",
+    "traits": ", Mental, Physical",
+    "description": "You are not unsettled by foreign customs, and you can comfortably fit in even in strange environments.",
+    "check": "A check to travel to a new location or interact with a novel thing (such as a Survival [Water] check to try to identify a new plant, animal, or phenomenon, or a Seafaring [Water] check to travel by boat).",
+    "source": "Corebook p. 115"
+  },
+  {
+    "name": "Wordplay",
+    "ring": "Air",
+    "traits": ", Interpersonal, Mental",
+    "description": "You can always identify rhetorical and literary patterns in the works of others when reading or listening to them.",
+    "check": "A check to interpret or create a play on words (such as a Composition [Air] check to write a poem with a perfectly executed poetic pun or a Performance [Air] check to subtly imply something to your audience via a double meaning).",
+    "source": "Corebook p. 116"
+  },
+  {
+    "name": "Custom - Craftsmanship",
+    "ring": "Earth",
+    "traits": ", Mental, Interpersonal",
+    "description": "You love crafting. Is it trinkets, metalwork or sculpture, you need to have your hands occupied. You also know what materials are needed for a peculiar craft, how to usually get them and you can recognise most notable artworks of craftmanship.",
+    "check": "A check concerning a crafting project of yours or others (such as a Design [Earth] to craft an object or Culture [Earth] to remeber an artisian).",
+    "source": ""
+  },
+  {
+    "name": "Custom - Medicine",
+    "ring": "Water",
+    "traits": ", Mental, Physical",
+    "description": "You always try to expand you knowledge about medicine. Even though you know it is not acceptable to touch dead bodies and study blood, you can't help yourself. As you can't help to talk about your medical discoveries,",
+    "check": "A check to understand medical case (such as a Medicine [Water] to study the wound or Courtesy [Water] to share enthusiastically your toughts on medical topics).",
+    "source": ""
+  }
+]

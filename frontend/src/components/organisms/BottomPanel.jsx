@@ -2,10 +2,16 @@ import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react'
 import NotesPanel from './NotesPanel'
 import { NotesTemplateProvider } from '../../contexts/NotesTemplateContext'
 import { t } from '../../lang'
+import { ENABLE_L5R } from '../../../config'
 
 const PdfPanel = lazy(() => import('./PdfPanel'))
 const MacroEditor = lazy(() => import('./MacroEditor'))
 const CountersPanel = lazy(() => import('./CountersPanel'))
+
+// Build-time literal: the compendium tab (and the JSON data chunks it pulls in)
+// are only emitted into the bundle when EnableL5r is set at build time.
+const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
+const CompendiumPanel = L5R_BUILD ? lazy(() => import('./CompendiumPanel')) : null
 
 const STORAGE_KEY = 'vtt_bottom_panel_height'
 const MIN_HEIGHT_PERCENT = 30
@@ -17,6 +23,7 @@ const PANELS = [
   { id: 'pdf', icon: '📄', titleKey: 'pdf.title' },
   { id: 'macros', icon: '⚡', titleKey: 'macros.title' },
   { id: 'counters', icon: '🔢', titleKey: 'counters.title' },
+  ...(ENABLE_L5R ? [{ id: 'compendium', icon: '📚', titleKey: 'l5r.compendium' }] : []),
 ]
 
 function BottomPanel({
@@ -193,6 +200,13 @@ function BottomPanel({
                   apiBase={apiBase}
                   onCountersMutation={onCountersMutation}
                 />
+              </Suspense>
+            </div>
+          )}
+          {ENABLE_L5R && CompendiumPanel && mountedTabs.has('compendium') && (
+            <div className={`bottom-panel-tab-pane ${activeTab !== 'compendium' ? 'hidden' : ''}`}>
+              <Suspense fallback={<div className="compendium-placeholder">{t('l5r.loading')}</div>}>
+                <CompendiumPanel />
               </Suspense>
             </div>
           )}

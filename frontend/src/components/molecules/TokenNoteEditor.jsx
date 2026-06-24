@@ -4,6 +4,7 @@ import { t } from '../../lang'
 import { API_BASE } from '../../../config'
 import { extractBodyContent } from '../../utils/noteTemplateMeta'
 import { mountTemplate } from '../../utils/templateRuntime'
+import { useAnchoredMenuPosition } from '../../hooks/useAnchoredMenuPosition'
 
 function extractTitle(html) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
@@ -15,6 +16,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
   const editorRef = useRef(null)
   const templateRef = useRef(null)
   const menuRef = useRef(null)
+  const loadMenuRef = useRef(null)
   const fieldsRef = useRef({})
   const handleFieldChangeRef = useRef(null)
   const mountHandleRef = useRef(null)
@@ -153,6 +155,8 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showLoadMenu])
+
+  useAnchoredMenuPosition(menuRef, loadMenuRef, showLoadMenu, [mode])
 
   const handleImportLocal = useCallback(() => {
     setShowLoadMenu(false)
@@ -348,7 +352,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
               📂
             </button>
             {showLoadMenu && (
-              <div className="note-load-menu">
+              <div className="note-load-menu" ref={loadMenuRef}>
                 <button onClick={handleImportLocal}>{t('notes.importLocal')}</button>
                 <button onClick={handleImportTemplate}>{t('notes.importTemplate')}</button>
                 {mode === 'template' && (

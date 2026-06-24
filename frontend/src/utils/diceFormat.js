@@ -1,11 +1,15 @@
 import { t } from '../lang'
+import { l5rRollHasDiceFaces, formatL5RLegacyTotal } from './l5rDiceDisplay'
 
 export function formatRoll(roll) {
   if (roll.type === 'l5r') {
+    if (l5rRollHasDiceFaces(roll)) {
+      return roll.label || ''
+    }
     return t('l5r.rollResult', {
-      success: roll.totals.success,
-      opportunity: roll.totals.opportunity,
-      strife: roll.totals.strife
+      success: roll.totals?.success ?? 0,
+      opportunity: roll.totals?.opportunity ?? 0,
+      strife: roll.totals?.strife ?? 0
     })
   }
 
@@ -29,7 +33,8 @@ export function formatRoll(roll) {
 
 export function formatTotal(roll) {
   if (roll.type === 'l5r') {
-    return `✓${roll.totals.success} 🌀${roll.totals.opportunity} 💢${roll.totals.strife}`
+    if (l5rRollHasDiceFaces(roll)) return ''
+    return formatL5RLegacyTotal(roll)
   }
   return `= ${roll.total}`
 }

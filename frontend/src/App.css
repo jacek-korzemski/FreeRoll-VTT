@@ -2309,6 +2309,45 @@ body {
 }
 .history-item.l5r-roll .history-total { color: #ccc; font-size: 0.9rem; }
 
+.history-dice,
+.roll-snackbar-dice {
+  margin-top: 0.25rem;
+}
+
+.l5r-roll-dice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.l5r-roll-die {
+  display: inline-flex;
+  line-height: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.l5r-roll-die.ring {
+  box-shadow: 0 0 0 1px rgba(74, 74, 106, 0.5);
+}
+
+.l5r-roll-die.skill {
+  box-shadow: 0 0 0 1px rgba(42, 90, 140, 0.5);
+}
+
+.l5r-roll-die-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
+.history-dice .l5r-roll-die-img {
+  width: 28px;
+  height: 28px;
+}
+
 .dice-panel-content::-webkit-scrollbar { width: 12px; }
 .dice-panel-content::-webkit-scrollbar-track { background: transparent; }
 .dice-panel-content::-webkit-scrollbar-thumb { background: #adf; border-radius: 3px; }
@@ -4749,6 +4788,14 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   padding: 4px 0;
   margin-top: 2px;
+}
+
+.note-load-menu--floating {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: 0;
+  z-index: 791001;
 }
 
 .note-load-menu button {

@@ -3,12 +3,14 @@ import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'
 import { parseRollExpression } from '../../utils/diceRollUtils'
 import { formatRoll, formatTotal } from '../../utils/diceFormat'
+import { l5rRollHasDiceFaces } from '../../utils/l5rDiceDisplay'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 
 // Build-time literal: when EnableL5r is off this folds to false and the L5R panel
 // (plus its dice images) is dead-code-eliminated from the bundle.
 const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
 const L5RDicePanel = L5R_BUILD ? lazy(() => import('../molecules/L5RDicePanel')) : null
+const L5RRollDice = L5R_BUILD ? lazy(() => import('../molecules/L5RRollDice')) : null
 
 const DICE_TYPES = [
   { type: 'd4', sides: 4, color: '#e74c3c' },
@@ -330,17 +332,35 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
             {rollHistory.length === 0 ? (
               <p className="history-empty">{t('dice.historyEmpty')}</p>
             ) : (
-              rollHistory.slice().reverse().map((roll, idx) => (
+              rollHistory.slice().reverse().map((roll, idx) => {
+                const formula = formatRoll(roll)
+                const total = formatTotal(roll)
+                const showL5RDice = roll.type === 'l5r' && l5rRollHasDiceFaces(roll) && L5RRollDice
+                return (
                 <div key={roll.id || idx} className={`history-item ${roll.type === 'l5r' ? 'l5r-roll' : ''}`}>
                   <div className="history-header">
                     <span className="history-player">{roll.player}</span>
                     {roll.type === 'l5r' && <span className="history-badge">L5R</span>}
                     <span className="history-time">{timeAgo(roll.timestamp)}</span>
                   </div>
-                  <div className="history-formula">{formatRoll(roll)}</div>
-                  <div className="history-total">{formatTotal(roll)}</div>
+                  {showL5RDice ? (
+                    <>
+                      {formula && <div className="history-formula">{formula}</div>}
+                      <div className="history-dice">
+                        <Suspense fallback={total ? <div className="history-total">{total}</div> : null}>
+                          <L5RRollDice dice={roll.dice} />
+                        </Suspense>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {formula && <div className="history-formula">{formula}</div>}
+                      {total && <div className="history-total">{total}</div>}
+                    </>
+                  )}
                 </div>
-              ))
+                )
+              })
             )}
           </div>
         </div>

@@ -950,15 +950,23 @@ try {
                     $rollType = $input['type'] ?? 'standard';
                     
                     if ($rollType === 'l5r') {
-                        // Rzut L5R
+                        // Rzut L5R — faceId per die enables dice-face history on the frontend;
+                        // totals are kept for legacy rolls and snackbar fallback.
                         $newRoll = [
                             'id' => generateId(),
                             'player' => htmlspecialchars(mb_substr($input['player'] ?? 'Anonymous', 0, 100)),
+                            'label' => htmlspecialchars(mb_substr($input['label'] ?? '', 0, 200)),
                             'type' => 'l5r',
                             'dice' => array_map(function($die) {
+                                $dieType = (($die['type'] ?? 'ring') === 'skill') ? 'skill' : 'ring';
+                                $faceId = intval($die['faceId'] ?? 0);
+                                $maxFace = $dieType === 'skill' ? 12 : 6;
+                                if ($faceId < 1 || $faceId > $maxFace) {
+                                    $faceId = 0;
+                                }
                                 return [
-                                    'type' => $die['type'] ?? 'ring',
-                                    'symbol' => htmlspecialchars($die['symbol'] ?? ''),
+                                    'type' => $dieType,
+                                    'faceId' => $faceId,
                                     'success' => intval($die['success'] ?? 0),
                                     'opportunity' => intval($die['opportunity'] ?? 0),
                                     'strife' => (bool)($die['strife'] ?? false),

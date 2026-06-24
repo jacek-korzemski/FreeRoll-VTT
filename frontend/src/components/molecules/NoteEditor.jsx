@@ -5,6 +5,7 @@ import { API_BASE, ENABLE_L5R } from '../../../config'
 import { extractBodyContent } from '../../utils/noteTemplateMeta'
 import { mountTemplate } from '../../utils/templateRuntime'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
+import { useAnchoredMenuPosition } from '../../hooks/useAnchoredMenuPosition'
 
 // Build-time literal: when EnableL5r is off, the dynamic imports guarded by this
 // constant are unreachable and the L5R importer / compendium code is dropped from the bundle.
@@ -49,7 +50,9 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
   const editorRef = useRef(null)
   const templateRef = useRef(null)
   const menuRef = useRef(null)
+  const loadMenuRef = useRef(null)
   const saveMenuRef = useRef(null)
+  const saveDropdownRef = useRef(null)
   const fieldsRef = useRef({})
   const handleFieldChangeRef = useRef(null)
   const mountHandleRef = useRef(null)
@@ -70,7 +73,8 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
   const [templatesError, setTemplatesError] = useState(false)
   const [templateRenderKey, setTemplateRenderKey] = useState(0)
   const [pickerState, setPickerState] = useState(null)
-  const [clearState, setClearState] = useState(null)
+  const [techClearState, setTechClearState] = useState(null)
+  const [confirmAction, setConfirmAction] = useState(null)
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey)
@@ -223,7 +227,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
           const count = parseInt(btn.getAttribute('data-l5r-clear-count') || '0', 10)
           if (!prefix || index < 1 || count < 1) return
           const name = String(mountHandleRef.current?.getFieldValue(`${prefix}${index}_name`) || '').trim()
-          setClearState({ prefix, index, count, name })
+          setTechClearState({ prefix, index, count, name })
         }
         btn.addEventListener('click', onClick)
         pickerCleanups.push(() => btn.removeEventListener('click', onClick))
@@ -268,10 +272,10 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
     setPickerState(null)
   }, [pickerState])
 
-  const handleClearConfirm = useCallback(() => {
+  const handleTechClearConfirm = useCallback(() => {
     const handle = mountHandleRef.current
-    if (handle && clearState) {
-      const { prefix, index, count } = clearState
+    if (handle && techClearState) {
+      const { prefix, index, count } = techClearState
       // Shift every following slot up one row, then blank out the last slot.
       for (let i = index; i < count; i++) {
         for (const s of TECH_FIELD_SUFFIXES) {
@@ -282,10 +286,10 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
         handle.setFieldValue(`${prefix}${count}_${s}`, '')
       }
     }
-    setClearState(null)
-  }, [clearState])
+    setTechClearState(null)
+  }, [techClearState])
 
-  const handleClearCancel = useCallback(() => setClearState(null), [])
+  const handleTechClearCancel = useCallback(() => setTechClearState(null), [])
 
   // --- Export ---
   const handleExportHtml = useCallback(() => {
@@ -381,6 +385,9 @@ ${extraScripts}
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showSaveMenu])
+
+  useAnchoredMenuPosition(menuRef, loadMenuRef, showLoadMenu, [mode, ENABLE_L5R])
+  useAnchoredMenuPosition(saveMenuRef, saveDropdownRef, showSaveMenu && mode === 'template', [mode])
 
   const handleImportLocal = useCallback(() => {
     setShowLoadMenu(false)
@@ -619,29 +626,41 @@ ${extraScripts}
     setShowTemplateModal(false)
   }, [storageKey, refreshNoteSources])
 
-  const handleClear = useCallback(() => {
-    if (confirm(t('notes.clearConfirm'))) {
-      if (mode === 'notepad') {
-        editorRef.current?.clear()
-      }
-      setMode('notepad')
-      setTemplateHtml('')
-      setTemplateId('')
-      fieldsRef.current = {}
-      setTemplateFields({})
-      setTitle('')
-      setInitialContent('Notatnik')
-      localStorage.removeItem(storageKey)
-      refreshNoteSources?.()
+  const executeClearNotepad = useCallback(() => {
+    if (mode === 'notepad') {
+      editorRef.current?.clear()
     }
+    setMode('notepad')
+    setTemplateHtml('')
+    setTemplateId('')
+    fieldsRef.current = {}
+    setTemplateFields({})
+    setTitle('')
+    setInitialContent('Notatnik')
+    localStorage.removeItem(storageKey)
+    refreshNoteSources?.()
   }, [storageKey, mode, refreshNoteSources])
 
-  const handleRemove = useCallback(() => {
-    if (confirm(t('notes.removeConfirm'))) {
-      localStorage.removeItem(storageKey)
-      onRemove(id)
-    }
+  const executeRemoveNotepad = useCallback(() => {
+    localStorage.removeItem(storageKey)
+    onRemove(id)
   }, [storageKey, onRemove, id])
+
+  const handleClear = useCallback(() => {
+    setConfirmAction('clear')
+  }, [])
+
+  const handleRemove = useCallback(() => {
+    setConfirmAction('remove')
+  }, [])
+
+  const handleConfirmAction = useCallback(() => {
+    if (confirmAction === 'clear') executeClearNotepad()
+    else if (confirmAction === 'remove') executeRemoveNotepad()
+    setConfirmAction(null)
+  }, [confirmAction, executeClearNotepad, executeRemoveNotepad])
+
+  const handleConfirmCancel = useCallback(() => setConfirmAction(null), [])
 
   return (
     <div className="note-editor">
@@ -663,7 +682,7 @@ ${extraScripts}
               📂
             </button>
             {showLoadMenu && (
-              <div className="note-load-menu">
+              <div className="note-load-menu" ref={loadMenuRef}>
                 <button onClick={handleImportLocal}>{t('notes.importLocal')}</button>
                 <button onClick={handleImportTemplate}>{t('notes.importTemplate')}</button>
                 {ENABLE_L5R && (<>
@@ -688,18 +707,18 @@ ${extraScripts}
               💾
             </button>
             {showSaveMenu && mode === 'template' && (
-              <div className="note-load-menu">
+              <div className="note-load-menu" ref={saveDropdownRef}>
                 <button onClick={handleExportJson}>{t('notes.saveJson')}</button>
                 <button onClick={handleExportHtml}>{t('notes.saveHtml')}</button>
               </div>
             )}
           </div>
           <button onClick={handleClear} title={t('notes.clear')} className="note-btn-danger">
-            🗑️
+            🧽
           </button>
           {canRemove && (
             <button onClick={handleRemove} title={t('notes.remove')} className="note-btn-close">
-              ✕
+              🗑️
             </button>
           )}
         </div>
@@ -781,19 +800,40 @@ ${extraScripts}
         </div>
       )}
 
-      {ENABLE_L5R && clearState && (
+      {ENABLE_L5R && techClearState && (
         <div className="note-template-modal">
           <div className="note-template-modal-content">
             <h3>{t('l5r.clearTechTitle')}</h3>
             <p className="note-mismatch-message">
-              {t('l5r.clearTechConfirm', { index: clearState.index, name: clearState.name || '—' })}
+              {t('l5r.clearTechConfirm', { index: techClearState.index, name: techClearState.name || '—' })}
             </p>
             <div className="note-template-modal-footer">
-              <button onClick={handleClearCancel} className="note-template-cancel">
+              <button onClick={handleTechClearCancel} className="note-template-cancel">
                 {t('l5r.cancel')}
               </button>
-              <button onClick={handleClearConfirm} className="note-mismatch-confirm">
+              <button onClick={handleTechClearConfirm} className="note-mismatch-confirm">
                 {t('l5r.clearTechOk')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmAction && (
+        <div className="note-template-modal">
+          <div className="note-template-modal-content">
+            <h3>
+              {confirmAction === 'clear' ? t('notes.clearConfirmTitle') : t('notes.removeConfirmTitle')}
+            </h3>
+            <p className="note-mismatch-message">
+              {confirmAction === 'clear' ? t('notes.clearConfirm') : t('notes.removeConfirm')}
+            </p>
+            <div className="note-template-modal-footer">
+              <button onClick={handleConfirmCancel} className="note-template-cancel">
+                {t('notes.templateCancel')}
+              </button>
+              <button onClick={handleConfirmAction} className="note-mismatch-confirm">
+                {confirmAction === 'clear' ? t('notes.clearConfirmOk') : t('notes.removeConfirmOk')}
               </button>
             </div>
           </div>

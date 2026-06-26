@@ -15,6 +15,7 @@ function BackgroundSection({
   onResetBackgroundPosition,
   onResetBackgroundScale,
   onResetBackgroundAll,
+  onToggleGridHidden,
   onDeselectAsset,
 }) {
   return (
@@ -76,6 +77,7 @@ function BackgroundSection({
           onScaleBackground={onScaleBackground}
           onResetBackgroundPosition={onResetBackgroundPosition}
           onResetBackgroundScale={onResetBackgroundScale}
+          onToggleGridHidden={onToggleGridHidden}
         />
       )}
     </CollapsibleSection>

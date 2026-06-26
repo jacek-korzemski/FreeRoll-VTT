@@ -610,7 +610,8 @@ useEffect(() => {
           height: bgConfig.height,
           offsetX: bgConfig.offsetX ?? 0,
           offsetY: bgConfig.offsetY ?? 0,
-          scale: bgConfig.scale ?? 1
+          scale: bgConfig.scale ?? 1,
+          gridHidden: bgConfig.gridHidden ?? false
         })
       })
         .then(res => res.json())
@@ -724,6 +725,42 @@ useEffect(() => {
       return next
     })
   }, [scheduleBackgroundSave])
+
+  const handleToggleGridHidden = useCallback(() => {
+    setBackground(prev => {
+      if (!prev) return prev
+      const next = {
+        ...prev,
+        gridHidden: !prev.gridHidden
+      }
+
+      fetch(`${API_BASE}?action=set-background`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          src: next.src,
+          name: next.name,
+          width: next.width,
+          height: next.height,
+          offsetX: next.offsetX ?? 0,
+          offsetY: next.offsetY ?? 0,
+          scale: next.scale ?? 1,
+          gridHidden: next.gridHidden
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setBackground(data.background)
+            setVersion(data.version)
+          }
+        })
+        .catch(console.error)
+
+      return next
+    })
+  }, [])
 
   
   const handleRemoveBackground = useCallback(() => {
@@ -1170,6 +1207,7 @@ useEffect(() => {
         onResetBackgroundPosition={handleResetBackgroundPosition}
         onResetBackgroundScale={handleResetBackgroundScale}
         onResetBackgroundAll={handleResetBackgroundAll}
+        onToggleGridHidden={handleToggleGridHidden}
         onClear={handleClear}
         basePath={ASSET_BASE}
         zoomLevel={zoomLevel}

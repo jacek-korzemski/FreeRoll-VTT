@@ -732,6 +732,12 @@ try {
                             : 1.0;
                     }
 
+                    if (isset($input['gridHidden'])) {
+                        $background['gridHidden'] = (bool)$input['gridHidden'];
+                    } else {
+                        $background['gridHidden'] = $activeScene['background']['gridHidden'] ?? false;
+                    }
+
                     $activeScene['background'] = $background;
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);

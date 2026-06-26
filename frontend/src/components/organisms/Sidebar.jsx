@@ -58,6 +58,7 @@ function Sidebar({
   onResetBackgroundPosition,
   onResetBackgroundScale,
   onResetBackgroundAll,
+  onToggleGridHidden,
   onClear,
   basePath,
   zoomLevel,
@@ -154,6 +155,7 @@ function Sidebar({
                 onResetBackgroundPosition={onResetBackgroundPosition}
                 onResetBackgroundScale={onResetBackgroundScale}
                 onResetBackgroundAll={onResetBackgroundAll}
+                onToggleGridHidden={onToggleGridHidden}
                 onDeselectAsset={onDeselectAsset}
               />
             )}

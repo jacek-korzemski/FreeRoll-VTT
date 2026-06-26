@@ -329,7 +329,11 @@ const Grid = forwardRef(function Grid(props, ref) {
           }}
         >
         <div 
-          className={`grid ${background ? 'has-background' : ''}`}
+          className={[
+            'grid',
+            background && 'has-background',
+            background?.gridHidden && 'grid-hidden'
+          ].filter(Boolean).join(' ')}
           style={{
             width: GRID_SIZE * CELL_SIZE,
             height: GRID_SIZE * CELL_SIZE,

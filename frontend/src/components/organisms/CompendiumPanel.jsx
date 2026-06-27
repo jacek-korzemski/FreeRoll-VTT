@@ -101,19 +101,29 @@ function FieldLine({ fieldKey, value }) {
 }
 
 function CurriculumEntry({ entry }) {
+  const ranks = Array.isArray(entry.ranks) ? entry.ranks : []
+  if (ranks.length === 0) return null
+
   return (
     <div className="l5r-comp-curriculum">
-      {entry.ranks.map((rank, i) => (
-        <div key={i} className="l5r-comp-rank">
-          <strong>Rank {i + 1}:</strong>{' '}
-          {[rank.skillGroup, ...rank.skills].filter(Boolean).join(', ')}
-          {(rank.techniqueGroup || rank.techniques.length > 0) && (
-            <div className="l5r-comp-rank-tech">
-              {[rank.techniqueGroup, ...rank.techniques].filter(Boolean).join(', ')}
-            </div>
-          )}
-        </div>
-      ))}
+      {ranks.map((rank, i) => {
+        if (!rank) return null
+        const skills = Array.isArray(rank.skills) ? rank.skills : []
+        const techniques = Array.isArray(rank.techniques) ? rank.techniques : []
+        const hasTechniques = rank.techniqueGroup || techniques.length > 0
+
+        return (
+          <div key={i} className="l5r-comp-rank">
+            <strong>Rank {i + 1}:</strong>{' '}
+            {[rank.skillGroup, ...skills].filter(Boolean).join(', ')}
+            {hasTechniques && (
+              <div className="l5r-comp-rank-tech">
+                {[rank.techniqueGroup, ...techniques].filter(Boolean).join(', ')}
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -127,6 +137,8 @@ function CompendiumPanel() {
   useEffect(() => {
     let cancelled = false
     setLoading(true)
+    setData([])
+
     LOADERS[category]()
       .then((mod) => {
         if (!cancelled) setData(mod.default || [])
@@ -162,6 +174,8 @@ function CompendiumPanel() {
               onClick={() => {
                 setCategory(key)
                 setQuery('')
+                setLoading(true)
+                setData([])
               }}
             >
               {t(`l5r.cat_${key}`)}

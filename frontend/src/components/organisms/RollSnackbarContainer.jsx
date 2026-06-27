@@ -14,25 +14,28 @@ function getRollKey(roll, index) {
   return `idx-${index}`
 }
 
-function RollSnackbarContainer({ rollHistory, dicePanelOpen }) {
+function RollSnackbarContainer({ rollHistory, dicePanelOpen, rollsHydrated }) {
   const [active, setActive] = useState([])
-  const seenIdsRef = useRef(null)
-
-  if (seenIdsRef.current === null) {
-    const initial = new Set()
-    ;(rollHistory || []).forEach((roll, i) => initial.add(getRollKey(roll, i)))
-    seenIdsRef.current = initial
-  }
+  const seenIdsRef = useRef(new Set())
+  const hydratedRef = useRef(false)
 
   useEffect(() => {
-    if (!Array.isArray(rollHistory) || rollHistory.length === 0) return
+    if (!rollsHydrated || !Array.isArray(rollHistory)) return
+
+    if (!hydratedRef.current) {
+      rollHistory.forEach((roll, i) => seenIdsRef.current.add(getRollKey(roll, i)))
+      hydratedRef.current = true
+      return
+    }
 
     const newOnes = []
     rollHistory.forEach((roll, i) => {
       const key = getRollKey(roll, i)
       if (!seenIdsRef.current.has(key)) {
         seenIdsRef.current.add(key)
-        newOnes.push({ ...roll, __key: key })
+        if (roll.snackbar) {
+          newOnes.push({ ...roll, __key: key })
+        }
       }
     })
 
@@ -40,11 +43,11 @@ function RollSnackbarContainer({ rollHistory, dicePanelOpen }) {
     if (dicePanelOpen) return
 
     setActive(prev => {
-      const combined = [...newOnes.reverse(), ...prev]
+      const combined = [...newOnes, ...prev]
       if (combined.length <= MAX_STACK) return combined
       return combined.slice(0, MAX_STACK)
     })
-  }, [rollHistory, dicePanelOpen])
+  }, [rollHistory, dicePanelOpen, rollsHydrated])
 
   useEffect(() => {
     if (dicePanelOpen) {

@@ -41,6 +41,7 @@ function App() {
   const [fogGmOpacity, setFogGmOpacity] = useState(false)
   const [dicePanelOpen, setDicePanelOpen] = useState(false)
   const [rollHistory, setRollHistory] = useState([])
+  const [rollsHydrated, setRollsHydrated] = useState(false)
   const [pendingL5RRoll, setPendingL5RRoll] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(() => 
     typeof window !== 'undefined' && window.innerWidth >= 576
@@ -395,6 +396,7 @@ useEffect(() => {
           if (data.success) {
             onSuccess()
             setRollHistory(data.rolls || [])
+            setRollsHydrated(true)
           } else {
             onError()
           }
@@ -511,7 +513,7 @@ useEffect(() => {
   }, [])
 
   const handleDiceRoll = useCallback((rollData) => {
-    setRollHistory(prev => [...prev, { ...rollData, id: Date.now().toString() }])
+    setRollHistory(prev => [{ ...rollData, id: Date.now().toString() }, ...prev].slice(0, 20))
     
     fetch(`${API_BASE}?action=roll`, {
       method: 'POST',
@@ -523,6 +525,23 @@ useEffect(() => {
       .then(data => {
         if (data.success) {
           setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleClearRollHistory = useCallback(() => {
+    if (!confirm(t('dice.clearHistoryConfirm'))) return
+
+    fetch(`${API_BASE}?action=clear-rolls`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setRollHistory([])
         }
       })
       .catch(console.error)
@@ -1130,6 +1149,7 @@ useEffect(() => {
       .then(data => {
         if (data.success) {
           setRollHistory(data.rolls || [])
+          setRollsHydrated(true)
         }
       })
       .catch(console.error)
@@ -1271,11 +1291,14 @@ useEffect(() => {
         onRoll={handleDiceRoll}
         pendingL5RRoll={pendingL5RRoll}
         onL5RRollConsumed={() => setPendingL5RRoll(null)}
+        isGameMaster={isGameMaster}
+        onClearHistory={handleClearRollHistory}
       />
 
       <RollSnackbarContainer
         rollHistory={rollHistory}
         dicePanelOpen={dicePanelOpen}
+        rollsHydrated={rollsHydrated}
       />
 
       <BottomPanel

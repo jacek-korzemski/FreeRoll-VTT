@@ -3,8 +3,14 @@ import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import TemplateEditor from './TemplateEditor'
-import { mountTemplate } from '../../utils/templateRuntime'
+import ConfirmModal from '../atoms/ConfirmModal'
+import {
+  collectClientTemplateUsage,
+  getTemplateClientUseSources,
+  isTemplateInClientUse,
+} from '../../utils/assetUsage'
 import { detectTemplateKind, htmlToModel } from '../../utils/templateEditorUtils'
+import { mountTemplate } from '../../utils/templateRuntime'
 
 function TemplateManager() {
   const [templates, setTemplates] = useState([])
@@ -19,6 +25,7 @@ function TemplateManager() {
   const [showCustomWarning, setShowCustomWarning] = useState(false)
   const [cloning, setCloning] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const previewContainerRef = useRef(null)
   const fileInputRef = useRef(null)
 
@@ -42,32 +49,50 @@ function TemplateManager() {
 
   useEffect(() => {
     fetchTemplates()
+    const onTemplatesChanged = () => fetchTemplates()
+    window.addEventListener('vtt:templates-changed', onTemplatesChanged)
+    return () => window.removeEventListener('vtt:templates-changed', onTemplatesChanged)
   }, [fetchTemplates])
 
-  const handleDelete = useCallback(async (template) => {
-    if (!confirm(t('templates.deleteConfirm'))) return
+  const handleDeleteRequest = useCallback((template) => {
+    const clientUsage = collectClientTemplateUsage()
+    if (isTemplateInClientUse(template.id, clientUsage)) {
+      const sources = getTemplateClientUseSources(template.id, clientUsage).join(', ')
+      alert(t('materialsDelete.inUseTemplate', { sources }))
+      return
+    }
+    setDeleteTarget(template)
+  }, [])
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!deleteTarget) return
+    const template = deleteTarget
+    setDeleteTarget(null)
     try {
-      const res = await fetch(`${API_BASE}?action=delete-template`, {
+      const res = await fetch(`${API_BASE}?action=delete-assets`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: template.id }),
+        body: JSON.stringify({ items: [{ type: 'template', id: template.id }] }),
       })
       const data = await res.json()
-      if (data.success) {
+      if (data.success && (data.deleted?.length || 0) > 0) {
         if (previewId === template.id) {
           setPreviewId(null)
           setPreviewHtml('')
           setPreviewName('')
         }
         fetchTemplates()
+        window.dispatchEvent(new CustomEvent('vtt:templates-changed'))
+      } else if ((data.blocked?.length || 0) > 0) {
+        alert(t('materialsDelete.blocked', { count: data.blocked.length }))
       } else {
-        alert(data.error || t('templates.deleteFailed'))
+        alert(data.errors?.[0]?.message || t('templates.deleteFailed'))
       }
-    } catch (err) {
+    } catch {
       alert(t('templates.deleteFailed'))
     }
-  }, [fetchTemplates, previewId])
+  }, [deleteTarget, fetchTemplates, previewId])
 
   const handlePreview = useCallback(async (template) => {
     try {
@@ -246,7 +271,7 @@ function TemplateManager() {
                 <button
                   type="button"
                   className="clear-btn template-manager-btn-delete"
-                  onClick={() => handleDelete(tmpl)}
+                  onClick={() => handleDeleteRequest(tmpl)}
                   title={t('templates.delete')}
                 >
                   <span className="template-manager-icon-white">🗑</span>
@@ -315,6 +340,18 @@ function TemplateManager() {
           </div>,
           document.body
         )}
+
+      {deleteTarget && (
+        <ConfirmModal
+          title={t('materialsDelete.confirmTitle')}
+          message={t('templates.deleteConfirm')}
+          confirmLabel={t('materialsDelete.confirmOk')}
+          cancelLabel={t('notes.templateCancel')}
+          danger
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
 
       {showEditor &&
         createPortal(

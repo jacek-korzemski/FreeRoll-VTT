@@ -107,6 +107,8 @@
       "rolling": "Rolling...",
       "history": "Roll history",
       "historyEmpty": "No rolls yet",
+      "clearHistory": "Clear history",
+      "clearHistoryConfirm": "Clear all roll history for everyone?",
       "now": "now",
       "minutesAgo": "m ago",
       "hoursAgo": "h ago",
@@ -204,7 +206,8 @@
       "removed": "Removed",
       "loading": "Loading...",
       "collapseSidebar": "Collapse file list",
-      "expandSidebar": "Expand file list"
+      "expandSidebar": "Expand file list",
+      "openInNewTab": "Open in new tab"
     },
     "macros": {
       "title": "Macro Editor",
@@ -318,6 +321,25 @@
       "invalidTemplateExtension": "Template must be a .html or .htm file.",
       "invalidPdfExtension": "File must be in .pdf format.",
       "tooBigPdf": "PDF is too large for server limits – such big files must be uploaded manually on the server."
+    },
+    "materialsDelete": {
+      "title": "Remove materials",
+      "empty": "No materials of this type.",
+      "loadError": "Failed to load materials list.",
+      "selectAll": "Select all available",
+      "clearSelection": "Clear selection",
+      "selectedCount": "Selected: {count}",
+      "deleteSelected": "Delete selected",
+      "deleting": "Deleting...",
+      "confirmTitle": "Confirm deletion",
+      "confirmMessage": "Permanently delete {count} file(s)? This cannot be undone.",
+      "confirmOk": "Delete",
+      "success": "Deleted {count} file(s).",
+      "blocked": "{count} file(s) could not be deleted because they are in use.",
+      "failed": "Failed to delete selected files.",
+      "inUseBadge": "In use",
+      "inUseScene": "Used on scene: {scenes}",
+      "inUseTemplate": "Used in: {sources}"
     },
     "token": {
       "upperLabelPlaceholder": "Top label",
@@ -497,6 +519,8 @@
       "rolling": "Rzucam...",
       "history": "Historia rzutów",
       "historyEmpty": "Brak rzutów",
+      "clearHistory": "Wyczyść historię",
+      "clearHistoryConfirm": "Wyczyścić całą historię rzutów dla wszystkich?",
       "now": "teraz",
       "minutesAgo": "m temu",
       "hoursAgo": "h temu",
@@ -594,7 +618,8 @@
       "removed": "Usunięty",
       "loading": "Ładowanie...",
       "collapseSidebar": "Zwiń listę plików",
-      "expandSidebar": "Rozwiń listę plików"
+      "expandSidebar": "Rozwiń listę plików",
+      "openInNewTab": "Otwórz w nowej karcie"
     },
     "macros": {
       "title": "Edytor makr",
@@ -708,6 +733,25 @@
       "invalidTemplateExtension": "Szablon musi być plikiem .html lub .htm.",
       "invalidPdfExtension": "Plik musi być w formacie .pdf.",
       "tooBigPdf": "Plik PDF jest zbyt duży dla ograniczeń serwera – tak duże materiały trzeba wgrać ręcznie na serwer."
+    },
+    "materialsDelete": {
+      "title": "Usuń materiały",
+      "empty": "Brak materiałów tego typu.",
+      "loadError": "Nie udało się wczytać listy materiałów.",
+      "selectAll": "Zaznacz dostępne",
+      "clearSelection": "Wyczyść zaznaczenie",
+      "selectedCount": "Zaznaczone: {count}",
+      "deleteSelected": "Usuń zaznaczone",
+      "deleting": "Usuwanie...",
+      "confirmTitle": "Potwierdź usunięcie",
+      "confirmMessage": "Trwale usunąć {count} plik(ów)? Tej operacji nie można cofnąć.",
+      "confirmOk": "Usuń",
+      "success": "Usunięto {count} plik(ów).",
+      "blocked": "Nie usunięto {count} plik(ów), bo są w użyciu.",
+      "failed": "Nie udało się usunąć zaznaczonych plików.",
+      "inUseBadge": "W użyciu",
+      "inUseScene": "Używane na scenie: {scenes}",
+      "inUseTemplate": "Używane w: {sources}"
     },
     "token": {
       "upperLabelPlaceholder": "Etykieta górna",

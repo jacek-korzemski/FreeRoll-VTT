@@ -8,6 +8,7 @@ import FogOfWarSection from './FogOfWarSection'
 import AssetBrowser from './AssetBrowser'
 import ZoomControls from '../atoms/ZoomControls'
 import UploadSection from './UploadSection'
+import MaterialsDeleteSection from './MaterialsDeleteSection'
 import TemplateManager from './TemplateManager'
 import { t } from '../../lang'
 
@@ -106,6 +107,14 @@ function Sidebar({
                   onUploadedBackgrounds={onRefreshBackgroundAssets}
                   onUploadedTemplates={null}
                   onUploadedPapers={onRefreshPapers}
+                />
+                <MaterialsDeleteSection
+                  onDeleted={(type) => {
+                    if (type === 'token') onRefreshTokenAssets?.()
+                    else if (type === 'map') onRefreshMapAssets?.()
+                    else if (type === 'background') onRefreshBackgroundAssets?.()
+                    else if (type === 'paper') onRefreshPapers?.()
+                  }}
                 />
               </CollapsibleSection>
             )}

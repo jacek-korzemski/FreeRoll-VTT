@@ -59,6 +59,36 @@ function isGameMaster() {
     return isAuthenticated() && isset($_SESSION['vtt_is_gm']) && $_SESSION['vtt_is_gm'] === true;
 }
 
+define('ROLLS_HISTORY_MAX', 20);
+define('ROLL_SNACKBAR_MAX_AGE_SEC', 600);
+
+function loadRolls($rollsFile) {
+    if (!file_exists($rollsFile)) {
+        return [];
+    }
+    $rolls = json_decode(file_get_contents($rollsFile), true);
+    if (!is_array($rolls)) {
+        return [];
+    }
+    usort($rolls, fn($a, $b) => ($b['timestamp'] ?? 0) <=> ($a['timestamp'] ?? 0));
+    return array_slice($rolls, 0, ROLLS_HISTORY_MAX);
+}
+
+function saveRolls($rollsFile, array $rolls) {
+    $rolls = array_slice($rolls, 0, ROLLS_HISTORY_MAX);
+    file_put_contents($rollsFile, json_encode($rolls, JSON_PRETTY_PRINT));
+}
+
+function annotateRollsForSnackbar(array $rolls): array {
+    $nowMs = (int) round(microtime(true) * 1000);
+    $cutoffMs = $nowMs - (ROLL_SNACKBAR_MAX_AGE_SEC * 1000);
+    return array_map(function ($roll) use ($cutoffMs) {
+        $ts = (int) ($roll['timestamp'] ?? 0);
+        $roll['snackbar'] = $ts >= $cutoffMs;
+        return $roll;
+    }, $rolls);
+}
+
 // ============================================
 // Ładowanie konfiguracji z .env
 // ============================================
@@ -258,6 +288,163 @@ function getSceneById(&$state, $sceneId) {
         }
     }
     return null;
+}
+
+function getAssetBaseDirMap() {
+    return [
+        'token' => __DIR__ . '/assets/tokens',
+        'map' => __DIR__ . '/assets/map',
+        'background' => __DIR__ . '/assets/backgrounds',
+        'template' => __DIR__ . '/assets/templates',
+        'paper' => __DIR__ . '/assets/papers',
+    ];
+}
+
+function tokenMapAssetRef($item) {
+    if (!is_array($item)) {
+        return '';
+    }
+    if (!empty($item['assetId']) && is_string($item['assetId'])) {
+        return trim(str_replace('\\', '/', $item['assetId']), '/');
+    }
+    if (!empty($item['src']) && is_string($item['src'])) {
+        $src = str_replace('\\', '/', $item['src']);
+        if (preg_match('#backend/assets/(?:tokens|map)/(.+)$#i', $src, $m)) {
+            return trim($m[1], '/');
+        }
+    }
+    return '';
+}
+
+function collectAssetUsageFromState($state) {
+    $usage = [
+        'token' => [],
+        'map' => [],
+        'background' => [],
+    ];
+
+    foreach ($state['scenes'] ?? [] as $scene) {
+        $sceneName = is_string($scene['name'] ?? null) ? $scene['name'] : 'Scene';
+
+        if (!empty($scene['background']['src']) && is_string($scene['background']['src'])) {
+            $filename = basename(str_replace('\\', '/', $scene['background']['src']));
+            if ($filename !== '') {
+                if (!isset($usage['background'][$filename])) {
+                    $usage['background'][$filename] = [];
+                }
+                if (!in_array($sceneName, $usage['background'][$filename], true)) {
+                    $usage['background'][$filename][] = $sceneName;
+                }
+            }
+        }
+
+        foreach ($scene['tokens'] ?? [] as $token) {
+            $ref = tokenMapAssetRef($token);
+            if ($ref === '') {
+                continue;
+            }
+            if (!isset($usage['token'][$ref])) {
+                $usage['token'][$ref] = [];
+            }
+            if (!in_array($sceneName, $usage['token'][$ref], true)) {
+                $usage['token'][$ref][] = $sceneName;
+            }
+        }
+
+        foreach ($scene['mapElements'] ?? [] as $element) {
+            $ref = tokenMapAssetRef($element);
+            if ($ref === '') {
+                continue;
+            }
+            if (!isset($usage['map'][$ref])) {
+                $usage['map'][$ref] = [];
+            }
+            if (!in_array($sceneName, $usage['map'][$ref], true)) {
+                $usage['map'][$ref][] = $sceneName;
+            }
+        }
+    }
+
+    return $usage;
+}
+
+function normalizeDeleteAssetId($type, $id) {
+    if (!is_string($id)) {
+        return '';
+    }
+    $id = trim(str_replace('\\', '/', $id), '/');
+    if ($id === '' || strpos($id, '..') !== false) {
+        return '';
+    }
+    if ($type === 'background' || $type === 'paper' || $type === 'template') {
+        return basename($id);
+    }
+    return $id;
+}
+
+function isAssetInUse($type, $id, $usage) {
+    if (!in_array($type, ['token', 'map', 'background'], true)) {
+        return false;
+    }
+    $normalized = normalizeDeleteAssetId($type, $id);
+    if ($normalized === '') {
+        return false;
+    }
+    return !empty($usage[$type][$normalized]);
+}
+
+function getAssetInUseScenes($type, $id, $usage) {
+    $normalized = normalizeDeleteAssetId($type, $id);
+    if ($normalized === '' || !isset($usage[$type][$normalized])) {
+        return [];
+    }
+    return $usage[$type][$normalized];
+}
+
+function resolveAssetFilePath($type, $id) {
+    $baseDirMap = getAssetBaseDirMap();
+    if (!isset($baseDirMap[$type])) {
+        return null;
+    }
+
+    $baseDir = realpath($baseDirMap[$type]);
+    if ($baseDir === false) {
+        return null;
+    }
+
+    $normalized = normalizeDeleteAssetId($type, $id);
+    if ($normalized === '') {
+        return null;
+    }
+
+    if ($type === 'template' && !preg_match('/\.html?$/i', $normalized)) {
+        return null;
+    }
+    if ($type === 'paper' && !preg_match('/\.pdf$/i', $normalized)) {
+        return null;
+    }
+
+    if (in_array($type, ['background', 'paper', 'template'], true)) {
+        $candidate = $baseDir . DIRECTORY_SEPARATOR . $normalized;
+    } else {
+        $candidate = $baseDir . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalized);
+    }
+
+    if (!is_file($candidate)) {
+        return null;
+    }
+
+    $resolved = realpath($candidate);
+    if ($resolved === false) {
+        return null;
+    }
+
+    $basePrefix = $baseDir . DIRECTORY_SEPARATOR;
+    if ($resolved !== $baseDir && strpos($resolved, $basePrefix) !== 0) {
+        return null;
+    }
+
+    return $resolved;
 }
 
 /**
@@ -563,13 +750,12 @@ try {
 
                 case 'rolls':
                     $rollsFile = __DIR__ . '/data/rolls.json';
-                    if (file_exists($rollsFile)) {
-                        $rolls = json_decode(file_get_contents($rollsFile), true);
-                    } else {
-                        $rolls = [];
-                    }
-                    $rolls = array_slice($rolls, -50);
-                    echo json_encode(['success' => true, 'rolls' => $rolls]);
+                    $rolls = annotateRollsForSnackbar(loadRolls($rollsFile));
+                    echo json_encode([
+                        'success' => true,
+                        'rolls' => $rolls,
+                        'serverNow' => time()
+                    ]);
                     break;
 
                 default:
@@ -946,12 +1132,7 @@ try {
 
                 case 'roll':
                     $rollsFile = __DIR__ . '/data/rolls.json';
-                    if (file_exists($rollsFile)) {
-                        $rolls = json_decode(file_get_contents($rollsFile), true);
-                    } else {
-                        $rolls = [];
-                    }
-                    
+                    $rolls = loadRolls($rollsFile);
                     // Sprawdź typ rzutu
                     $rollType = $input['type'] ?? 'standard';
                     
@@ -1005,14 +1186,8 @@ try {
                         ];
                     }
                     
-                    $rolls[] = $newRoll;
-                    
-                    // Zachowaj tylko ostatnie 100 rzutów
-                    if (count($rolls) > 100) {
-                        $rolls = array_slice($rolls, -100);
-                    }
-                    
-                    file_put_contents($rollsFile, json_encode($rolls, JSON_PRETTY_PRINT));
+                    array_unshift($rolls, $newRoll);
+                    saveRolls($rollsFile, $rolls);
                     
                     // Zwiększ wersję stanu
                     $state = getState();
@@ -1022,8 +1197,13 @@ try {
                     break;
 
                 case 'clear-rolls':
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
                     $rollsFile = __DIR__ . '/data/rolls.json';
-                    file_put_contents($rollsFile, json_encode([], JSON_PRETTY_PRINT));
+                    saveRolls($rollsFile, []);
                     echo json_encode(['success' => true]);
                     break;
 
@@ -1224,9 +1404,8 @@ try {
                         echo json_encode(['success' => false, 'error' => 'Invalid template id']);
                         break;
                     }
-                    $templatesDir = __DIR__ . '/assets/templates';
-                    $filePath = $templatesDir . '/' . $id;
-                    if (!is_file($filePath)) {
+                    $filePath = resolveAssetFilePath('template', $id);
+                    if ($filePath === null) {
                         http_response_code(404);
                         echo json_encode(['success' => false, 'error' => 'Template not found']);
                         break;
@@ -1237,6 +1416,113 @@ try {
                         break;
                     }
                     echo json_encode(['success' => true]);
+                    break;
+
+                case 'get-asset-usage':
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $state = getState();
+                    echo json_encode([
+                        'success' => true,
+                        'usage' => collectAssetUsageFromState($state),
+                    ]);
+                    break;
+
+                case 'delete-assets':
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+
+                    $items = $input['items'] ?? null;
+                    if (!is_array($items) || count($items) === 0) {
+                        http_response_code(400);
+                        echo json_encode(['success' => false, 'error' => 'No items to delete']);
+                        break;
+                    }
+
+                    $allowedTypes = ['token', 'map', 'background', 'template', 'paper'];
+                    $state = getState();
+                    $usage = collectAssetUsageFromState($state);
+                    $deleted = [];
+                    $blocked = [];
+                    $errors = [];
+
+                    foreach ($items as $item) {
+                        if (!is_array($item)) {
+                            $errors[] = ['message' => 'Invalid item'];
+                            continue;
+                        }
+
+                        $type = $item['type'] ?? '';
+                        $type = is_string($type) ? trim($type) : '';
+                        $id = $item['id'] ?? '';
+                        $id = is_string($id) ? $id : '';
+
+                        if (!in_array($type, $allowedTypes, true)) {
+                            $errors[] = [
+                                'type' => $type,
+                                'id' => $id,
+                                'message' => 'Invalid type',
+                            ];
+                            continue;
+                        }
+
+                        $normalizedId = normalizeDeleteAssetId($type, $id);
+                        if ($normalizedId === '') {
+                            $errors[] = [
+                                'type' => $type,
+                                'id' => $id,
+                                'message' => 'Invalid asset id',
+                            ];
+                            continue;
+                        }
+
+                        if (isAssetInUse($type, $normalizedId, $usage)) {
+                            $blocked[] = [
+                                'type' => $type,
+                                'id' => $normalizedId,
+                                'scenes' => getAssetInUseScenes($type, $normalizedId, $usage),
+                                'message' => 'Asset is in use',
+                            ];
+                            continue;
+                        }
+
+                        $filePath = resolveAssetFilePath($type, $normalizedId);
+                        if ($filePath === null) {
+                            $errors[] = [
+                                'type' => $type,
+                                'id' => $normalizedId,
+                                'message' => 'File not found',
+                            ];
+                            continue;
+                        }
+
+                        if (!unlink($filePath)) {
+                            $errors[] = [
+                                'type' => $type,
+                                'id' => $normalizedId,
+                                'message' => 'Failed to delete file',
+                            ];
+                            continue;
+                        }
+
+                        $deleted[] = [
+                            'type' => $type,
+                            'id' => $normalizedId,
+                        ];
+                    }
+
+                    echo json_encode([
+                        'success' => count($deleted) > 0,
+                        'deleted' => $deleted,
+                        'blocked' => $blocked,
+                        'errors' => $errors,
+                    ]);
                     break;
 
                 case 'save-template':

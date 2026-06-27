@@ -319,6 +319,11 @@ function PdfPanel() {
     ? basePageWidth * (zoomPercent / 100)
     : undefined
 
+  const handleOpenInNewTab = useCallback(() => {
+    if (!pdfUrl) return
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer')
+  }, [pdfUrl])
+
   return (
     <div className="pdf-panel">
       <div className={`pdf-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
@@ -453,6 +458,14 @@ function PdfPanel() {
               disabled={zoomPercent >= ZOOM_MAX}
             >
               +
+            </button>
+            <button
+              className="pdf-zoom-btn pdf-open-tab-btn"
+              type="button"
+              onClick={handleOpenInNewTab}
+              title={t('pdf.openInNewTab')}
+            >
+              ↗
             </button>
           </div>
         )}

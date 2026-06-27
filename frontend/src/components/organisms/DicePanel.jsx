@@ -35,7 +35,7 @@ function loadMacros() {
   }
 }
 
-function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5RRollConsumed }) {
+function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5RRollConsumed, isGameMaster, onClearHistory }) {
   const [mode, setMode] = useState('standard')
   const [selectedDice, setSelectedDice] = useState([])
   const [modifier, setModifier] = useState(0)
@@ -327,12 +327,24 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
         )}
 
         <div className="dice-history">
-          <h3>{t('dice.history')}</h3>
+          <div className="dice-history-header">
+            <h3>{t('dice.history')}</h3>
+            {isGameMaster && (
+              <button
+                type="button"
+                className="dice-history-clear-btn"
+                onClick={onClearHistory}
+                disabled={rollHistory.length === 0}
+              >
+                🗑️ {t('dice.clearHistory')}
+              </button>
+            )}
+          </div>
           <div className="history-list">
             {rollHistory.length === 0 ? (
               <p className="history-empty">{t('dice.historyEmpty')}</p>
             ) : (
-              rollHistory.slice().reverse().map((roll, idx) => {
+              rollHistory.map((roll, idx) => {
                 const formula = formatRoll(roll)
                 const total = formatTotal(roll)
                 const showL5RDice = roll.type === 'l5r' && l5rRollHasDiceFaces(roll) && L5RRollDice

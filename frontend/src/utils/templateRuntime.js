@@ -24,6 +24,7 @@ const INJECTED_ATTR = 'data-vtt-injected'
  *  - data-l5r-skill="@field" | "<number>"  (direct skill dice)
  *  - data-l5r-skill-select="<field>" + data-l5r-skill-prefix="skill_martial_"  (indirect)
  *  - data-l5r-label="..."  (with @field substitution; ring name appended when known)
+ *  - data-l5r-active-ring="active_ring"  (optional; field updated when rolling a ring-only button)
  */
 function toInt(v) {
   const n = parseInt(String(v ?? '').trim(), 10)
@@ -76,7 +77,11 @@ export function resolveL5RRoll(btn, getFieldValue) {
     label = label ? `${label} – ${capped}` : capped
   }
 
-  return { ring, skill, label }
+  const hasSkill = !!(skillSelect || skillSpec)
+  const isDirectRing = !!(ringSpec && !ringSelect)
+  const activeRingToSet = isDirectRing && ringName && !hasSkill ? ringName : null
+
+  return { ring, skill, label, activeRingToSet }
 }
 
 /**
@@ -432,7 +437,7 @@ export function mountTemplate({
       }
       if (!isApplyingFieldUpdate) notifyScriptListeners(name, value)
     }
-    const evt = el.type === 'checkbox' ? 'change' : 'input'
+    const evt = el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input'
     el.addEventListener(evt, handler)
     cleanups.push(() => el.removeEventListener(evt, handler))
   })
@@ -501,8 +506,13 @@ export function mountTemplate({
       const handler = (e) => {
         e.preventDefault()
         const detail = resolveL5RRoll(btn, getFieldValue)
+        if (detail.activeRingToSet) {
+          const activeRingField = btn.getAttribute('data-l5r-active-ring') || 'active_ring'
+          setFieldValue(activeRingField, detail.activeRingToSet)
+        }
+        const { activeRingToSet: _drop, ...rollDetail } = detail
         if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('vtt:l5r-roll', { detail }))
+          window.dispatchEvent(new CustomEvent('vtt:l5r-roll', { detail: rollDetail }))
         }
       }
       btn.addEventListener('click', handler)

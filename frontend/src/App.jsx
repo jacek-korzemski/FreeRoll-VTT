@@ -62,6 +62,11 @@ function App() {
   const [isTokenEraserActive, setIsTokenEraserActive] = useState(false)
   const [sharedCounters, setSharedCounters] = useState([])
   const [serverNow, setServerNow] = useState(null)
+  const [ttrpgManager, setTtrpgManager] = useState({
+    configured: false,
+    baseUrl: null,
+    campaignId: null,
+  })
 
   const fogUpdateTimeoutRef = useRef(null)
   const backgroundUpdateTimeoutRef = useRef(null)
@@ -125,6 +130,19 @@ function App() {
       if (id) {
         setSharedCounters((prev) => prev.filter((c) => c.id !== id))
       }
+    }
+  }, [])
+
+  const handleTtrpgStatusChange = useCallback((status, nextVersion) => {
+    if (status && typeof status === 'object') {
+      setTtrpgManager({
+        configured: !!status.configured,
+        baseUrl: status.baseUrl ?? null,
+        campaignId: status.campaignId ?? null,
+      })
+    }
+    if (typeof nextVersion === 'number') {
+      setVersion(nextVersion)
     }
   }, [])
 
@@ -304,6 +322,13 @@ useEffect(() => {
         if (typeof data.data.serverNow === 'number') {
           setServerNow(data.data.serverNow)
         }
+        if (data.data.ttrpgManager) {
+          setTtrpgManager({
+            configured: !!data.data.ttrpgManager.configured,
+            baseUrl: data.data.ttrpgManager.baseUrl ?? null,
+            campaignId: data.data.ttrpgManager.campaignId ?? null,
+          })
+        }
       }
       setIsLoading(false)
     })
@@ -336,6 +361,14 @@ useEffect(() => {
             const sn = data.hasChanges ? data.data?.serverNow : data.serverNow
             if (typeof sn === 'number') {
               setServerNow(sn)
+            }
+            const tm = data.hasChanges ? data.data?.ttrpgManager : data.ttrpgManager
+            if (tm && typeof tm === 'object') {
+              setTtrpgManager({
+                configured: !!tm.configured,
+                baseUrl: tm.baseUrl ?? null,
+                campaignId: tm.campaignId ?? null,
+              })
             }
             if (data.hasChanges) {
               setScenes(data.data.scenes || [])
@@ -1309,6 +1342,8 @@ useEffect(() => {
         isGameMaster={isGameMaster}
         apiBase={API_BASE}
         onCountersMutation={handleCountersMutation}
+        ttrpgManager={ttrpgManager}
+        onTtrpgStatusChange={handleTtrpgStatusChange}
       />
 
       {DEBUG_MODE && <DebugOverlay />}

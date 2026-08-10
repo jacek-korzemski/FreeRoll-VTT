@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react'
+import React, { useState, useCallback, useEffect, Suspense, lazy, useMemo } from 'react'
 import NotesPanel from './NotesPanel'
 import { NotesTemplateProvider } from '../../contexts/NotesTemplateContext'
 import { t } from '../../lang'
@@ -7,6 +7,7 @@ import { ENABLE_L5R } from '../../../config'
 const PdfPanel = lazy(() => import('./PdfPanel'))
 const MacroEditor = lazy(() => import('./MacroEditor'))
 const CountersPanel = lazy(() => import('./CountersPanel'))
+const TtrpgManagerPanel = lazy(() => import('./TtrpgManagerPanel'))
 
 // Build-time literal: the compendium tab (and the JSON data chunks it pulls in)
 // are only emitted into the bundle when EnableL5r is set at build time.
@@ -18,7 +19,7 @@ const MIN_HEIGHT_PERCENT = 30
 const MAX_HEIGHT_PERCENT = 90
 const DEFAULT_HEIGHT_PERCENT = 50
 
-const PANELS = [
+const BASE_PANELS = [
   { id: 'notes', icon: '📝', titleKey: 'notes.title' },
   { id: 'pdf', icon: '📄', titleKey: 'pdf.title' },
   { id: 'macros', icon: '⚡', titleKey: 'macros.title' },
@@ -34,17 +35,36 @@ function BottomPanel({
   isGameMaster = false,
   apiBase = '',
   onCountersMutation,
+  ttrpgManager = { configured: false, baseUrl: null, campaignId: null },
+  onTtrpgStatusChange,
 }) {
   const [heightPercent, setHeightPercent] = useState(DEFAULT_HEIGHT_PERCENT)
   const [isResizing, setIsResizing] = useState(false)
   const [mountedTabs, setMountedTabs] = useState(new Set())
   const isOpen = activeTab !== null
+  const configured = !!ttrpgManager?.configured
+
+  const visiblePanels = useMemo(() => {
+    const panels = [...BASE_PANELS]
+    if (configured) {
+      panels.push({ id: 'ttrpg', icon: '🎲', titleKey: 'ttrpg.managerTitle' })
+    } else if (isGameMaster) {
+      panels.push({ id: 'ttrpg', icon: '💥', titleKey: 'ttrpg.connectTab' })
+    }
+    return panels
+  }, [configured, isGameMaster])
 
   useEffect(() => {
     if (activeTab && !mountedTabs.has(activeTab)) {
       setMountedTabs(prev => new Set([...prev, activeTab]))
     }
   }, [activeTab, mountedTabs])
+
+  useEffect(() => {
+    if (activeTab === 'ttrpg' && !configured && !isGameMaster) {
+      onTabChange(null)
+    }
+  }, [activeTab, configured, isGameMaster, onTabChange])
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -80,21 +100,17 @@ function BottomPanel({
   useEffect(() => {
     if (!isResizing) return
 
-    const updateFromClientY = (clientY) => {
-      const windowHeight = window.innerHeight
-      const newHeightPercent = ((windowHeight - clientY) / windowHeight) * 100
-      const clamped = Math.min(MAX_HEIGHT_PERCENT, Math.max(MIN_HEIGHT_PERCENT, newHeightPercent))
-      setHeightPercent(clamped)
-    }
-
     const handleMouseMove = (e) => {
-      updateFromClientY(e.clientY)
+      const vh = window.innerHeight
+      const newHeight = ((vh - e.clientY) / vh) * 100
+      setHeightPercent(Math.min(MAX_HEIGHT_PERCENT, Math.max(MIN_HEIGHT_PERCENT, newHeight)))
     }
 
     const handleTouchMove = (e) => {
-      if (!e.touches || e.touches.length === 0) return
-      const touch = e.touches[0]
-      updateFromClientY(touch.clientY)
+      if (e.touches.length === 0) return
+      const vh = window.innerHeight
+      const newHeight = ((vh - e.touches[0].clientY) / vh) * 100
+      setHeightPercent(Math.min(MAX_HEIGHT_PERCENT, Math.max(MIN_HEIGHT_PERCENT, newHeight)))
     }
 
     const handleMouseUp = () => {
@@ -138,7 +154,7 @@ function BottomPanel({
       >
         <div className="bottom-panel-toolbar">
           <div className="bottom-panel-tabs">
-            {PANELS.map(panel => (
+            {visiblePanels.map(panel => (
               <button
                 key={panel.id}
                 className={`bottom-panel-tab ${activeTab === panel.id ? 'active' : ''}`}
@@ -207,6 +223,18 @@ function BottomPanel({
             <div className={`bottom-panel-tab-pane ${activeTab !== 'compendium' ? 'hidden' : ''}`}>
               <Suspense fallback={<div className="compendium-placeholder">{t('l5r.loading')}</div>}>
                 <CompendiumPanel />
+              </Suspense>
+            </div>
+          )}
+          {mountedTabs.has('ttrpg') && (configured || isGameMaster) && (
+            <div className={`bottom-panel-tab-pane ${activeTab !== 'ttrpg' ? 'hidden' : ''}`}>
+              <Suspense fallback={<div className="ttrpg-placeholder">{t('ttrpg.loading')}</div>}>
+                <TtrpgManagerPanel
+                  apiBase={apiBase}
+                  isGameMaster={isGameMaster}
+                  ttrpgManager={ttrpgManager}
+                  onStatusChange={onTtrpgStatusChange}
+                />
               </Suspense>
             </div>
           )}

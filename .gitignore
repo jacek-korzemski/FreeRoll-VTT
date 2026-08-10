@@ -8,6 +8,9 @@
 backend/data/*
 !backend/data/.gitkeep
 
+# Composer (backend TTRPG layer)
+backend/vendor/
+
 # Backend assets (tylko templates trafia do repo)
 backend/assets/*
 !backend/assets/templates/

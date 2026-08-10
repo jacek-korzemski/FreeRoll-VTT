@@ -7,6 +7,50 @@ if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');
 }
 
+// Optional Composer autoload (TTRPG Manager integration layer).
+$ttrpgAutoload = __DIR__ . '/vendor/autoload.php';
+$ttrpgReady = is_file($ttrpgAutoload);
+if ($ttrpgReady) {
+    require_once $ttrpgAutoload;
+}
+
+/**
+ * Public TTRPG Manager integration snapshot (never includes API key).
+ *
+ * @return array{configured: bool, baseUrl: ?string, campaignId: ?int}
+ */
+function ttrpgPublicStatus(): array {
+    global $ttrpgReady;
+    if (!$ttrpgReady || !class_exists(\FreeRoll\Ttrpg\Actions::class)) {
+        return ['configured' => false, 'baseUrl' => null, 'campaignId' => null];
+    }
+    try {
+        return \FreeRoll\Ttrpg\Actions::publicStatus();
+    } catch (Throwable $e) {
+        return ['configured' => false, 'baseUrl' => null, 'campaignId' => null];
+    }
+}
+
+function ttrpgRequireReady(): bool {
+    global $ttrpgReady;
+    if ($ttrpgReady && class_exists(\FreeRoll\Ttrpg\Actions::class)) {
+        return true;
+    }
+    http_response_code(503);
+    echo json_encode([
+        'success' => false,
+        'error' => 'TTRPG integration unavailable. Run composer install in backend/.',
+    ]);
+    return false;
+}
+
+/** Bump state.json version so clients poll a refresh (ttrpgManager is not stored in state). */
+function ttrpgBumpStateVersion(): int {
+    $state = getState();
+    $state = saveState($state);
+    return (int) ($state['version'] ?? 0);
+}
+
 // ============================================
 // Sprawdzanie autoryzacji
 // ============================================
@@ -519,7 +563,8 @@ try {
                             'scene' => $activeScene,
                             'counters' => $state['counters'] ?? [],
                             'version' => $state['version'],
-                            'serverNow' => time()
+                            'serverNow' => time(),
+                            'ttrpgManager' => ttrpgPublicStatus(),
                         ]
                     ]);
                     break;
@@ -533,6 +578,7 @@ try {
                 case 'check':
                     $clientVersion = intval($_GET['version'] ?? 0);
                     $state = getState();
+                    $ttrpgManager = ttrpgPublicStatus();
                     
                     if ($state['version'] > $clientVersion) {
                         $activeScene = getActiveScene($state);
@@ -547,7 +593,8 @@ try {
                                 'scene' => $activeScene,
                                 'counters' => $state['counters'] ?? [],
                                 'version' => $state['version'],
-                                'serverNow' => time()
+                                'serverNow' => time(),
+                                'ttrpgManager' => $ttrpgManager,
                             ]
                         ]);
                     } else {
@@ -555,9 +602,17 @@ try {
                             'success' => true,
                             'hasChanges' => false,
                             'version' => $state['version'],
-                            'serverNow' => time()
+                            'serverNow' => time(),
+                            'ttrpgManager' => $ttrpgManager,
                         ]);
                     }
+                    break;
+
+                case 'ttrpg-status':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    echo json_encode(\FreeRoll\Ttrpg\Actions::status());
                     break;
 
                 case 'list-map':
@@ -1880,6 +1935,101 @@ try {
                     echo json_encode(['success' => false, 'error' => 'Invalid type']);
                     break;
                     
+                case 'ttrpg-set-key':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $result = \FreeRoll\Ttrpg\Actions::setKey(is_array($input) ? $input : []);
+                    if (!empty($result['success'])) {
+                        $result['version'] = ttrpgBumpStateVersion();
+                    }
+                    echo json_encode($result);
+                    break;
+
+                case 'ttrpg-clear-key':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $result = \FreeRoll\Ttrpg\Actions::clearKey();
+                    $result['version'] = ttrpgBumpStateVersion();
+                    echo json_encode($result);
+                    break;
+
+                case 'ttrpg-select-campaign':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $result = \FreeRoll\Ttrpg\Actions::selectCampaign(is_array($input) ? $input : []);
+                    if (!empty($result['success'])) {
+                        $result['version'] = ttrpgBumpStateVersion();
+                    }
+                    echo json_encode($result);
+                    break;
+
+                case 'ttrpg-proxy':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    echo json_encode(\FreeRoll\Ttrpg\Actions::proxy(
+                        is_array($input) ? $input : [],
+                        isGameMaster()
+                    ));
+                    break;
+
+                case 'ttrpg-upload-asset':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $campaignId = intval($_POST['campaignId'] ?? $_POST['campaign_id'] ?? 0);
+                    $file = $_FILES['image'] ?? null;
+                    if (!is_array($file)) {
+                        echo json_encode(['success' => false, 'error' => 'image file required']);
+                        break;
+                    }
+                    echo json_encode(\FreeRoll\Ttrpg\Actions::uploadAsset($campaignId, $file));
+                    break;
+
+                case 'ttrpg-upload-handbook':
+                    if (!ttrpgRequireReady()) {
+                        break;
+                    }
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    $file = $_FILES['pdf'] ?? null;
+                    if (!is_array($file)) {
+                        echo json_encode(['success' => false, 'error' => 'pdf file required']);
+                        break;
+                    }
+                    echo json_encode(\FreeRoll\Ttrpg\Actions::uploadHandbook($file, [
+                        'title' => $_POST['title'] ?? '',
+                        'language' => $_POST['language'] ?? null,
+                        'campaign_id' => $_POST['campaign_id'] ?? $_POST['campaignId'] ?? null,
+                    ]));
+                    break;
+
                 default:
                     http_response_code(400);
                     echo json_encode(['success' => false, 'error' => 'Unknown action']);

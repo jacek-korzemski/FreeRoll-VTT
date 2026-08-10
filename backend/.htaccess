@@ -5,7 +5,7 @@
 </FilesMatch>
 
 # Blokada dostępu do plików danych
-<FilesMatch "state\.json$|rolls\.json$">
+<FilesMatch "state\.json$|rolls\.json$|ttrpg\.sqlite$|ttrpg\.sqlite-(journal|wal|shm)$|secrets\.json$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>

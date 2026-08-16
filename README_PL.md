@@ -1,6 +1,8 @@
 ## FreeRoll VTT – prosty, samodzielny wirtualny stół
 
-FreeRoll VTT to **lekki Virtual TableTop**, który budujesz raz, a potem hostujesz na **zwykłym serwerze PHP/Apache (lub nginx)** – bez baz danych, Dockera czy działającego non‑stop Node’a.
+FreeRoll VTT to **lekki Virtual TableTop**, który budujesz raz, a potem hostujesz na **zwykłym serwerze PHP/Apache (lub nginx)** – bez Dockera czy działającego non‑stop Node’a.
+
+Możesz wdrożyć **jeden pokój**, wgrywając katalog `build/`, albo uruchomić **Table Manager** (`table-manager/`), w którym gracze zakładają konta i tworzą własne stoły (każdy stół to kopia zbudowanej paczki VTT).
 
 ### Najważniejsze funkcje
 
@@ -129,6 +131,130 @@ Skrypt kopiuje paczkę do nowego folderu i zapisuje świeży `build/.env`. Dane 
 Następnie otwórz w przeglądarce skonfigurowany adres (np. `https://twojadomena.pl/vtt/room1/`) i zaloguj się wybranym hasłem gracza / MG.
 
 Aby później zmienić hasła lub ścieżkę, edytuj `build/.env` na serwerze (albo uruchom lokalnie `clone.bat` i wgraj ponownie).
+
+---
+
+## Table Manager (wiele stołów, konta użytkowników)
+
+[Table Manager](table-manager/) to panel Laravel + Livewire + SQLite. Użytkownicy się rejestrują, zakładają do **3 stołów** na konto i grają pod `/vtt/user/<username>/<slug>/`. Każdy stół to pełna kopia paczki VTT z `table-manager/current-source/` (ten sam pomysł co `clone.bat`).
+
+Wybierz ten wariant, gdy chcesz jeden hosting z wieloma pokojami zamiast ręcznego wgrywania `build/` na każdą sesję.
+
+### Dodatkowe wymagania (Table Manager)
+
+- **PHP 8.3+** (samodzielny pokój z `build/` może działać na starszym PHP)
+- **Composer**
+- **Node.js 18+** (tylko do zbudowania CSS/JS panelu: `npm run build` w `table-manager/`)
+- Apache z `mod_rewrite` albo nginx (patrz niżej)
+- Katalogi zapisywalne przez serwer WWW: `table-manager/database/`, `table-manager/storage/`, `table-manager/public/vtt/`
+
+### 1. Przygotuj paczkę źródłową VTT
+
+Table Manager **nie** odpala `npm run build` ani `composer install` przy tworzeniu stołu. Paczka VTT musi być już złożona.
+
+1. W **katalogu głównym** repozytorium FreeRoll odpal `build.bat` albo `build_pl.bat` (Node.js + Composer).
+2. Skrypt zapisuje `build/` **i** kopiuje go do `table-manager/current-source/` (zostawia `current-source/README.md`).
+3. W `current-source/` powinny być m.in.:
+   - `index.php`
+   - `assets/index.js`
+   - `backend/api.php`
+   - `backend/vendor/autoload.php` (Composer, integracja TTRPG)
+   - `backend/src/Ttrpg/`
+   - `backend/include/telemetry.php`
+   - `deploy-env.php`
+
+Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby nowe stoły miały L5R, zbuduj paczkę z włączonym L5R.
+
+Jeśli pominiesz automatyczne kopiowanie, wklej **zawartość** katalogu `build/` (nie sam folder) do `table-manager/current-source/`.
+
+### 2. Zainstaluj Table Manager
+
+```bash
+cd table-manager
+composer install
+copy .env.example .env          # Linux/macOS: cp .env.example .env
+php artisan key:generate
+```
+
+W `.env` zostaw `DB_CONNECTION=sqlite` (domyślnie). Następnie:
+
+```bash
+php artisan migrate
+npm install
+npm run build
+```
+
+Ustaw `APP_URL` na publiczny adres strony (np. `https://twojadomena.pl`), a na produkcji `APP_ENV=production` i `APP_DEBUG=false`.
+
+### 3. Skieruj serwer WWW na `table-manager/public`
+
+**DocumentRoot musi wskazywać na `table-manager/public`**, nie na korzeń repozytorium i nie na pojedynczy folder `build/` VTT.
+
+| Adres | Co to jest |
+|-------|------------|
+| `https://twojadomena.pl/` | Logowanie / rejestracja / lista stołów |
+| `https://twojadomena.pl/vtt/user/<username>/<slug>/` | Gotowy stół VTT |
+| `https://twojadomena.pl/admin` | Panel admina (tylko z paska adresu — bez linku w UI gracza) |
+
+Laravelowe `.htaccess` serwuje istniejące pliki pod `/vtt/` jak zwykłe PHP/statyki, więc sklonowane stoły działają jak samodzielny upload `build/`.
+
+**Szkic nginx:**
+
+```nginx
+root /sciezka/table-manager/public;
+index index.php;
+
+location /vtt/ {
+    try_files $uri $uri/ $uri/index.php?$query_string;
+}
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_pass unix:/run/php/php-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+```
+
+Na nginx dodatkowo zablokuj HTTP do `.env` i `backend/data/` (Apache korzysta z `.htaccess` dołączonych do paczki VTT).
+
+### 4. Utwórz stół (jako gracz)
+
+1. Wejdź na stronę, **zarejestruj się** (imię, **username** w URL — później się nie zmienia, e-mail, hasło).
+2. Po zalogowaniu otwórz **Stoły**.
+3. Podaj nazwę stołu, **hasło gracza**, **hasło MG**, język interfejsu (`pl` / `en`) i kliknij **Utwórz stół**.
+4. Wyślij grupie adres stołu i hasło gracza. Hasło MG zostaw Mistrzowi Gry.
+
+Hasła VTT i język można potem zmienić z dashboardu. Usunięcie stołu kasuje rekord w bazie i pliki na dysku.
+
+### 5. Skonfiguruj panel admina
+
+Logowanie admina **nie** jest w bazie danych. Przed produkcją edytuj [`table-manager/config/admin.php`](table-manager/config/admin.php):
+
+```php
+'username' => 'admin',
+'password' => 'freeroll-admin',  // zmień to
+```
+
+Potem otwórz w przeglądarce **`/admin`** (wpisz adres ręcznie; w publicznym UI nie ma do niego linku).
+
+Panel pokazuje wszystkie stoły, **hasła VTT** (gracz/MG, nie hasła kont), wgrane pliki, `state.json` / `rolls.json` oraz telemetrię (logowania, sesje obecności, interakcje).
+
+Telemetrię zapisuje instancja VTT w `backend/data/telemetry/`. Stoły z **starej** paczki (sprzed tych plików w buildzie) nie będą miały statystyk, dopóki nie przebudujesz `current-source/` i nie **utworzysz nowego stołu** (albo nie skopiujesz do istniejącego katalogu nowych `index.php`, `backend/api.php` i `backend/include/telemetry.php`).
+
+### Podgląd lokalny
+
+```bash
+cd table-manager
+php artisan serve
+```
+
+Wbudowany serwer PHP serwuje `public/`, więc `/vtt/user/...` działa, o ile `current-source/` jest wgrane.
+
+Więcej szczegółów: [`table-manager/README.md`](table-manager/README.md).
 
 ---
 

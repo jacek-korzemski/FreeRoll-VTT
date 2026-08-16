@@ -1,6 +1,8 @@
 ## FreeRoll VTT – simple self‑hosted virtual table
 
-FreeRoll VTT is a **lightweight Virtual TableTop** that you can build once and host on a **simple PHP/Apache (or nginx) server** – no databases, no Docker, no always‑on Node server.
+FreeRoll VTT is a **lightweight Virtual TableTop** that you can build once and host on a **simple PHP/Apache (or nginx) server** – no Docker, no always‑on Node server.
+
+You can deploy **one room** by uploading the `build/` folder, or run **Table Manager** (`table-manager/`) so players register accounts and create their own tables (each table is a copy of the built VTT package).
 
 ### Key features
 
@@ -129,6 +131,130 @@ The script copies the existing package to a new folder and writes a fresh `build
 Then open your configured URL (e.g. `https://yourdomain.com/vtt/room1/`) and log in with the configured player / GM password.
 
 To change passwords or base path later, edit `build/.env` on the server (or run `clone.bat` locally and re‑upload).
+
+---
+
+## Table Manager (many tables, user accounts)
+
+[Table Manager](table-manager/) is a Laravel + Livewire + SQLite panel. Users sign up, create up to **3 tables** each, and play at `/vtt/user/<username>/<slug>/`. Each table is a full copy of the VTT package from `table-manager/current-source/` (same idea as `clone.bat`).
+
+Use this when you want a shared host with many rooms instead of uploading `build/` by hand for every session.
+
+### Extra requirements (Table Manager)
+
+- **PHP 8.3+** (the standalone `build/` room can still run on older PHP)
+- **Composer**
+- **Node.js 18+** (only to compile the panel CSS/JS: `npm run build` inside `table-manager/`)
+- Apache with `mod_rewrite`, or nginx (see below)
+- Writable directories: `table-manager/database/`, `table-manager/storage/`, `table-manager/public/vtt/`
+
+### 1. Prepare the VTT source package
+
+Table Manager does **not** run `npm run build` or `composer install` when a user creates a table. The VTT bundle must already be complete.
+
+1. In the **FreeRoll repo root** run `build.bat` or `build_pl.bat` (Node.js + Composer).
+2. The script writes `build/` **and** copies it to `table-manager/current-source/` (it keeps `current-source/README.md`).
+3. Confirm `current-source/` contains at least:
+   - `index.php`
+   - `assets/index.js`
+   - `backend/api.php`
+   - `backend/vendor/autoload.php` (Composer, TTRPG integration)
+   - `backend/src/Ttrpg/`
+   - `backend/include/telemetry.php`
+   - `deploy-env.php`
+
+The L5R flag is inherited from `current-source/.env` (`VTT_ENABLE_L5R`). Build with L5R enabled if you want that module on every new table.
+
+If you skip the automatic copy, paste the **contents** of `build/` (not the folder itself) into `table-manager/current-source/`.
+
+### 2. Install Table Manager
+
+```bash
+cd table-manager
+composer install
+copy .env.example .env          # Linux/macOS: cp .env.example .env
+php artisan key:generate
+```
+
+In `.env` keep `DB_CONNECTION=sqlite` (default). Then:
+
+```bash
+php artisan migrate
+npm install
+npm run build
+```
+
+Set `APP_URL` to the public site URL (e.g. `https://yourdomain.com`) and `APP_ENV=production`, `APP_DEBUG=false` on a live server.
+
+### 3. Point the web server at `table-manager/public`
+
+**DocumentRoot must be `table-manager/public`**, not the repo root and not a single VTT `build/` folder.
+
+| URL | What it is |
+|-----|------------|
+| `https://yourdomain.com/` | Sign in / register / list your tables |
+| `https://yourdomain.com/vtt/user/<username>/<slug>/` | A playable VTT table |
+| `https://yourdomain.com/admin` | Admin panel (direct URL only — not linked from the player UI) |
+
+Laravel’s `.htaccess` serves real files under `/vtt/` as normal PHP/static files, so cloned tables work like a standalone `build/` upload.
+
+**nginx sketch:**
+
+```nginx
+root /path/to/table-manager/public;
+index index.php;
+
+location /vtt/ {
+    try_files $uri $uri/ $uri/index.php?$query_string;
+}
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_pass unix:/run/php/php-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+```
+
+On nginx, also deny HTTP access to `.env` and `backend/data/` (Apache uses the `.htaccess` files shipped with the VTT package).
+
+### 4. Create a table (as a player)
+
+1. Open the site, **register** (name, **username** used in the URL — it cannot be changed later, email, password).
+2. After login, open **Stoły** / dashboard.
+3. Fill in table name, **player password**, **GM password**, UI language (`pl` / `en`), then **Utwórz stół**.
+4. Share the table URL and the player password with the group. Keep the GM password for the game master.
+
+You can change VTT passwords and language later from the dashboard. Deleting a table removes both the database row and the files on disk.
+
+### 5. Configure the admin panel
+
+Admin login is **not** stored in the database. Edit [`table-manager/config/admin.php`](table-manager/config/admin.php) **before production**:
+
+```php
+'username' => 'admin',
+'password' => 'freeroll-admin',  // change this
+```
+
+Then open **`/admin`** in the browser (type the address yourself; there is no link in the public UI).
+
+The admin panel can list all tables, show **VTT table passwords** (player/GM, not account passwords), browse uploaded files, inspect `state.json` / `rolls.json`, and view telemetry (logins, presence sessions, interactions).
+
+Telemetry is written by the VTT instance into `backend/data/telemetry/`. Tables created from an **old** package (before the telemetry files were part of the build) will show empty stats until you rebuild `current-source/` and create a **new** table (or copy the new `index.php`, `backend/api.php`, and `backend/include/telemetry.php` into an existing table folder).
+
+### Local preview
+
+```bash
+cd table-manager
+php artisan serve
+```
+
+The built-in PHP server uses `public/` as the docroot, so `/vtt/user/...` works if `current-source/` is populated.
+
+More detail: [`table-manager/README.md`](table-manager/README.md).
 
 ---
 

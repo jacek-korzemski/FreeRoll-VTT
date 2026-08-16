@@ -23,4 +23,5 @@ Options -Indexes
     RewriteEngine On
     RewriteRule ^vendor/ - [F]
     RewriteRule ^src/ - [F]
+    RewriteRule ^include/ - [F]
 </IfModule>

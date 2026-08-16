@@ -3,20 +3,29 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './App.css'
+import { getOrCreateClientId } from './utils/clientId'
 
-// Lokalne debugowanie: gdy localStorage.dev_gm === '1', każdy request do API dostaje nagłówek X-Dev-GM
-// (cookie dev_gm nie jest wysyłane przy cross-origin, np. Vite 5173 → API na innym porcie)
-if (import.meta.env.DEV) {
-  const apiPath = import.meta.env.VITE_API_PATH || 'http://localhost:8080/backend/api.php'
-  const origFetch = window.fetch
-  window.fetch = function (url, opts) {
-    let finalOpts = opts || {}
-    const urlStr = typeof url === 'string' ? url : (url && url.url)
-    if (urlStr && urlStr.includes(apiPath) && localStorage.getItem('dev_gm') === '1') {
-      finalOpts = { ...finalOpts, headers: { ...(finalOpts.headers || {}), 'X-Dev-GM': '1' } }
+const origFetch = window.fetch
+window.fetch = function (url, opts) {
+  let finalOpts = opts || {}
+  const urlStr = typeof url === 'string' ? url : (url && url.url) || ''
+  if (urlStr.includes('api.php')) {
+    const headers = { ...(finalOpts.headers || {}) }
+    headers['X-VTT-Client-Id'] = getOrCreateClientId()
+    try {
+      const name = localStorage.getItem('vtt_player_name')
+      if (name) {
+        headers['X-VTT-Player-Name'] = String(name).slice(0, 80)
+      }
+    } catch {
+      /* ignore */
     }
-    return origFetch.call(this, url, finalOpts)
+    if (import.meta.env.DEV && localStorage.getItem('dev_gm') === '1') {
+      headers['X-Dev-GM'] = '1'
+    }
+    finalOpts = { ...finalOpts, headers }
   }
+  return origFetch.call(this, url, finalOpts)
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

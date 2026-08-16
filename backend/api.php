@@ -162,6 +162,11 @@ $envFile = resolveBackendEnvFile(__DIR__);
 $env = loadEnv($envFile);
 startVttSession(dirname(__DIR__));
 
+$vttTelemetryFile = __DIR__ . '/include/telemetry.php';
+if (is_file($vttTelemetryFile)) {
+    require_once $vttTelemetryFile;
+}
+
 // ============================================
 // CORS
 // ============================================
@@ -531,6 +536,16 @@ try {
         http_response_code(401);
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
         exit;
+    }
+
+    if (function_exists('vttTelemetryTouchPresence') && $action !== '' && $action !== 'auth' && (isAuthenticated() || $isDevBypass || isDevMode())) {
+        $presenceOnly = in_array($action, ['check', 'ping', 'rolls'], true);
+        if ($presenceOnly) {
+            vttTelemetryTouchPresence($action);
+        } else {
+            vttTelemetryRecordInteraction($action);
+            vttTelemetryTouchPresence($action);
+        }
     }
 
     switch ($method) {

@@ -34,6 +34,10 @@ echo !TV_INFO!
 
 if not exist "!ROOT!\build\backend\src" mkdir "!ROOT!\build\backend\src"
 xcopy /E /I /Y /Q "!ROOT!\backend\src" "!ROOT!\build\backend\src\" >nul
+if exist "!ROOT!\backend\include" (
+    if not exist "!ROOT!\build\backend\include" mkdir "!ROOT!\build\backend\include"
+    xcopy /E /I /Y /Q "!ROOT!\backend\include" "!ROOT!\build\backend\include\" >nul
+)
 copy /y "!ROOT!\backend\composer.json" "!ROOT!\build\backend\" >nul
 if exist "!ROOT!\backend\composer.lock" copy /y "!ROOT!\backend\composer.lock" "!ROOT!\build\backend\" >nul
 
@@ -60,5 +64,12 @@ if not exist "!ROOT!\build\backend\vendor\autoload.php" (
     echo Order Allow,Deny
     echo Deny from all
 ) > "!ROOT!\build\backend\src\.htaccess"
+
+if exist "!ROOT!\build\backend\include" (
+    (
+        echo Order Allow,Deny
+        echo Deny from all
+    ) > "!ROOT!\build\backend\include\.htaccess"
+)
 
 exit /b 0

@@ -40,6 +40,7 @@ Katalogi `database/` oraz `storage/` i `public/vtt/` muszą być zapisywalne prz
    - `backend/api.php`
    - `backend/vendor/autoload.php`
    - `backend/src/Ttrpg/`
+   - `backend/include/telemetry.php`
    - `deploy-env.php`
 
 Table Manager **nie** odpala `npm run build` ani `composer install` przy tworzeniu stołu. Paczka musi być już złożona. Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby stoły miały L5R, zbuduj paczkę z włączonym L5R.
@@ -86,6 +87,14 @@ Zablokuj odczyt `.env` i `backend/data/*.json` (paczka VTT ma własne `.htaccess
 
 Adres stołu: `/vtt/user/{username}/{slug}/`  
 To samo trafia do `VTT_BASE_PATH` w `.env` instancji.
+
+## Panel admina
+
+Dostęp **tylko** przez bezpośredni adres `/admin` (brak linku w UI gracza). Login i hasło są w [`config/admin.php`](config/admin.php), nie w bazie — zmień je przed produkcją.
+
+Domyślnie: `admin` / `freeroll-admin`.
+
+Panel pokazuje stoły, hasła VTT (gracz/MG), pliki uploadów, `state.json` i analitykę (logowania, sesje obecności, interakcje). Telemetria powstaje w instancji VTT (`backend/data/telemetry/`) po zbudowaniu nowej paczki i utworzeniu stołu.
 
 ## Dev lokalnie
 

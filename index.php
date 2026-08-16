@@ -6,9 +6,17 @@ startVttSession($cfg);
 $login = $cfg['loginStrings'];
 $basePath = $cfg['basePath'];
 
+$vttTelemetryFile = __DIR__ . '/backend/include/telemetry.php';
+if (is_file($vttTelemetryFile)) {
+    require_once $vttTelemetryFile;
+}
+
 $error = '';
 
 if (isset($_GET['logout'])) {
+    if (function_exists('vttTelemetryRecordLogout')) {
+        vttTelemetryRecordLogout();
+    }
     unset($_SESSION['vtt_authenticated']);
     unset($_SESSION['vtt_is_gm']);
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
@@ -23,16 +31,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
         if ($password === $cfg['gmPassword']) {
             $_SESSION['vtt_authenticated'] = true;
             $_SESSION['vtt_is_gm'] = true;
+            if (function_exists('vttTelemetryRecordLogin')) {
+                vttTelemetryRecordLogin(true, true);
+            }
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
+        }
+        if (function_exists('vttTelemetryRecordLogin')) {
+            vttTelemetryRecordLogin(false, true);
         }
         $error = $login['loginError'];
     } else {
         if ($password === $cfg['password']) {
             $_SESSION['vtt_authenticated'] = true;
             $_SESSION['vtt_is_gm'] = false;
+            if (function_exists('vttTelemetryRecordLogin')) {
+                vttTelemetryRecordLogin(true, false);
+            }
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit;
+        }
+        if (function_exists('vttTelemetryRecordLogin')) {
+            vttTelemetryRecordLogin(false, false);
         }
         $error = $login['loginError'];
     }
@@ -135,6 +155,7 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             <div class="error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         <form method="POST">
+            <input type="hidden" name="client_id" id="vtt_client_id" value="">
             <input type="password" name="password" placeholder="<?= htmlspecialchars($login['loginPlaceholder']) ?>" required autofocus>
             <div class="gm-checkbox">
                 <input type="checkbox" id="is_gm" name="is_gm" value="1">
@@ -143,6 +164,21 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             <button type="submit"><?= htmlspecialchars($login['loginSubmit']) ?></button>
         </form>
     </div>
+    <script>
+    (function () {
+        var key = 'vtt_client_id';
+        var el = document.getElementById('vtt_client_id');
+        if (!el) return;
+        try {
+            var id = localStorage.getItem(key);
+            if (!id || !/^[a-zA-Z0-9-]{8,64}$/.test(id)) {
+                id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('fb-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12));
+                localStorage.setItem(key, id);
+            }
+            el.value = id;
+        } catch (e) {}
+    })();
+    </script>
 </body>
 </html>
 <?php

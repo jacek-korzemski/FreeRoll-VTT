@@ -19,6 +19,23 @@ function HtmlView({ html }) {
   return <div className="ttrpg-html" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
+function LoadingSpinner({ label, inline = false }) {
+  return (
+    <div className={`ttrpg-loading${inline ? ' inline' : ''}`} role="status" aria-live="polite">
+      <span className="ttrpg-spinner" aria-hidden="true" />
+      <span>{label || t('ttrpg.loadingData')}</span>
+    </div>
+  )
+}
+
+function NeedCampaign() {
+  return (
+    <div className="ttrpg-pane">
+      <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.needCampaign')}</p>
+    </div>
+  )
+}
+
 function ErrorBanner({ error, onDismiss }) {
   if (!error) return null
   return (
@@ -58,35 +75,41 @@ function ConnectForm({ apiBase, onConnected }) {
   }
 
   return (
-    <form className="ttrpg-connect" onSubmit={submit}>
-      <h3>{t('ttrpg.connectTitle')}</h3>
-      <p className="ttrpg-muted">{t('ttrpg.connectHint')}</p>
-      <label className="ttrpg-field">
-        <span>{t('ttrpg.baseUrl')}</span>
-        <input
-          type="url"
-          value={baseUrl}
-          onChange={(e) => setBaseUrl(e.target.value)}
-          required
-          autoComplete="off"
-        />
-      </label>
-      <label className="ttrpg-field">
-        <span>{t('ttrpg.apiKey')}</span>
-        <input
-          type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          required
-          autoComplete="off"
-          placeholder="3|…"
-        />
-      </label>
-      <ErrorBanner error={error} onDismiss={() => setError(null)} />
-      <button type="submit" className="ttrpg-btn" disabled={busy}>
-        {busy ? t('ttrpg.connecting') : t('ttrpg.connect')}
-      </button>
-    </form>
+    <div className="ttrpg-connect-shell">
+      <form className="ttrpg-connect" onSubmit={submit}>
+        <h3>{t('ttrpg.connectTitle')}</h3>
+        <p className="ttrpg-muted">{t('ttrpg.connectHint')}</p>
+        <label className="ttrpg-field">
+          <span>{t('ttrpg.baseUrl')}</span>
+          <input
+            type="url"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+            required
+            autoComplete="off"
+          />
+        </label>
+        <label className="ttrpg-field">
+          <span>{t('ttrpg.apiKey')}</span>
+          <input
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            required
+            autoComplete="off"
+            placeholder="3|…"
+          />
+        </label>
+        <ErrorBanner error={error} onDismiss={() => setError(null)} />
+        {busy ? (
+          <LoadingSpinner label={t('ttrpg.connecting')} inline />
+        ) : (
+          <button type="submit" className="ttrpg-btn" disabled={busy}>
+            {t('ttrpg.connect')}
+          </button>
+        )}
+      </form>
+    </div>
   )
 }
 
@@ -96,14 +119,21 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
   const [error, setError] = useState(null)
   const [form, setForm] = useState({ name: '', description: '', is_archived: false })
   const [creating, setCreating] = useState(false)
+  const [listLoading, setListLoading] = useState(true)
+  const [detailLoading, setDetailLoading] = useState(false)
 
   const load = useCallback(async () => {
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/campaigns' })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/campaigns' })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setCampaigns(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setCampaigns(unwrapList(res))
   }, [apiBase])
 
   const loadDetail = useCallback(async (id) => {
@@ -111,19 +141,24 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
       setDetail(null)
       return
     }
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${id}` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
-    }
-    const item = unwrapItem(res)
-    setDetail(item)
-    if (item) {
-      setForm({
-        name: item.name || '',
-        description: item.description || '',
-        is_archived: !!item.is_archived,
-      })
+    setDetailLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${id}` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      const item = unwrapItem(res)
+      setDetail(item)
+      if (item) {
+        setForm({
+          name: item.name || '',
+          description: item.description || '',
+          is_archived: !!item.is_archived,
+        })
+      }
+    } finally {
+      setDetailLoading(false)
     }
   }, [apiBase])
 
@@ -183,28 +218,32 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
   return (
     <div className="ttrpg-pane">
       <ErrorBanner error={error} onDismiss={() => setError(null)} />
-      <div className="ttrpg-toolbar">
-        <label className="ttrpg-field inline">
-          <span>{t('ttrpg.campaign')}</span>
-          <select
-            value={campaignId || ''}
-            onChange={(e) => select(e.target.value || null)}
-            disabled={!isGameMaster}
-          >
-            <option value="">{t('ttrpg.selectCampaign')}</option>
-            {campaigns.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}{c.is_archived ? ` (${t('ttrpg.archived')})` : ''}
-              </option>
-            ))}
-          </select>
-        </label>
-        {isGameMaster && (
-          <button type="button" className="ttrpg-btn" onClick={() => setCreating((v) => !v)}>
-            {creating ? t('ttrpg.cancel') : t('ttrpg.newCampaign')}
-          </button>
-        )}
-      </div>
+      {listLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className="ttrpg-toolbar center">
+          <label className="ttrpg-field inline">
+            <span>{t('ttrpg.campaign')}</span>
+            <select
+              value={campaignId || ''}
+              onChange={(e) => select(e.target.value || null)}
+              disabled={!isGameMaster}
+            >
+              <option value="">{t('ttrpg.selectCampaign')}</option>
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}{c.is_archived ? ` (${t('ttrpg.archived')})` : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+          {isGameMaster && (
+            <button type="button" className="ttrpg-btn" onClick={() => setCreating((v) => !v)}>
+              {creating ? t('ttrpg.cancel') : t('ttrpg.newCampaign')}
+            </button>
+          )}
+        </div>
+      )}
 
       {creating && isGameMaster && (
         <div className="ttrpg-card">
@@ -220,7 +259,8 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
         </div>
       )}
 
-      {detail && (
+      {detailLoading && <LoadingSpinner />}
+      {!detailLoading && detail && (
         <div className="ttrpg-card">
           {isGameMaster ? (
             <>
@@ -263,36 +303,47 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
   const [selected, setSelected] = useState(null)
   const [error, setError] = useState(null)
   const [editing, setEditing] = useState(null)
+  const [listLoading, setListLoading] = useState(false)
+  const [detailLoading, setDetailLoading] = useState(false)
 
   const load = useCallback(async () => {
     if (!campaignId) return
-    const query = typeFilter ? { type: typeFilter } : undefined
-    const res = await ttrpgProxy(apiBase, {
-      method: 'GET',
-      path: `gm/campaigns/${campaignId}/contents`,
-      query,
-    })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const query = typeFilter ? { type: typeFilter } : undefined
+      const res = await ttrpgProxy(apiBase, {
+        method: 'GET',
+        path: `gm/campaigns/${campaignId}/contents`,
+        query,
+      })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setItems(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setItems(unwrapList(res))
   }, [apiBase, campaignId, typeFilter])
 
   useEffect(() => { load() }, [load])
 
   const open = async (id) => {
-    const res = await ttrpgProxy(apiBase, {
-      method: 'GET',
-      path: `gm/campaigns/${campaignId}/contents/${id}`,
-    })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
-    }
-    const item = unwrapItem(res)
-    setSelected(item)
+    setDetailLoading(true)
     setEditing(null)
+    try {
+      const res = await ttrpgProxy(apiBase, {
+        method: 'GET',
+        path: `gm/campaigns/${campaignId}/contents/${id}`,
+      })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setSelected(unwrapItem(res))
+    } finally {
+      setDetailLoading(false)
+    }
   }
 
   const startCreate = () => {
@@ -384,7 +435,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
     await open(selected.id)
   }
 
-  if (!campaignId) return <p className="ttrpg-muted">{t('ttrpg.needCampaign')}</p>
+  if (!campaignId) return <NeedCampaign />
 
   return (
     <div className="ttrpg-pane ttrpg-split">
@@ -401,23 +452,29 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
           )}
         </div>
         <ErrorBanner error={error} onDismiss={() => setError(null)} />
-        <ul className="ttrpg-list">
-          {items.map((item) => (
-            <li key={item.id}>
-              <button
-                type="button"
-                className={selected?.id === item.id ? 'active' : ''}
-                onClick={() => open(item.id)}
-              >
-                <span className="ttrpg-badge">{item.type}</span> {item.title}
-              </button>
-            </li>
-          ))}
-          {items.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
-        </ul>
+        {listLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ul className="ttrpg-list">
+            {items.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={selected?.id === item.id ? 'active' : ''}
+                  onClick={() => open(item.id)}
+                >
+                  <span className="ttrpg-badge">{item.type}</span> {item.title}
+                </button>
+              </li>
+            ))}
+            {items.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
+          </ul>
+        )}
       </div>
       <div className="ttrpg-detail-col">
-        {editing && isGameMaster ? (
+        {detailLoading ? (
+          <LoadingSpinner />
+        ) : editing && isGameMaster ? (
           <div className="ttrpg-card">
             <label className="ttrpg-field">
               <span>{t('ttrpg.typeLabel')}</span>
@@ -457,7 +514,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
               <h4>{selected.title}</h4>
               {isGameMaster && (
                 <>
-                  <button type="button" className="ttrpg-btn" onClick={startEdit}>{t('ttrpg.edit')}</button>
+                  <button type="button" className="ttrpg-btn-accent" onClick={startEdit}>{t('ttrpg.edit')}</button>
                   <button type="button" className="ttrpg-btn-danger" onClick={remove}>{t('ttrpg.delete')}</button>
                   <label className="ttrpg-btn">
                     {t('ttrpg.uploadCover')}
@@ -484,7 +541,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
             <HtmlView html={selected.content_html} />
           </div>
         ) : (
-          <p className="ttrpg-muted">{t('ttrpg.selectItem')}</p>
+          <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.selectItem')}</p>
         )}
       </div>
     </div>
@@ -499,33 +556,45 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
   const [mapForm, setMapForm] = useState(null)
   const [pinForm, setPinForm] = useState(null)
   const [assetId, setAssetId] = useState('')
+  const [listLoading, setListLoading] = useState(false)
+  const [detailLoading, setDetailLoading] = useState(false)
 
   const loadMaps = useCallback(async () => {
     if (!campaignId) return
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setMaps(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setMaps(unwrapList(res))
   }, [apiBase, campaignId])
 
   useEffect(() => { loadMaps() }, [loadMaps])
 
   const openMap = async (id) => {
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps/${id}` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
-    }
-    const item = unwrapItem(res)
-    setMap(item)
-    const pinsRes = await ttrpgProxy(apiBase, {
-      method: 'GET',
-      path: `gm/campaigns/${campaignId}/maps/${id}/pins`,
-    })
-    setPins(pinsRes.ok ? unwrapList(pinsRes) : (item?.pins || []))
+    setDetailLoading(true)
     setPinForm(null)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps/${id}` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      const item = unwrapItem(res)
+      setMap(item)
+      const pinsRes = await ttrpgProxy(apiBase, {
+        method: 'GET',
+        path: `gm/campaigns/${campaignId}/maps/${id}/pins`,
+      })
+      setPins(pinsRes.ok ? unwrapList(pinsRes) : (item?.pins || []))
+    } finally {
+      setDetailLoading(false)
+    }
   }
 
   const createMap = async () => {
@@ -623,7 +692,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
     await loadMaps()
   }
 
-  if (!campaignId) return <p className="ttrpg-muted">{t('ttrpg.needCampaign')}</p>
+  if (!campaignId) return <NeedCampaign />
 
   return (
     <div className="ttrpg-pane ttrpg-split">
@@ -640,110 +709,123 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
           )}
         </div>
         <ErrorBanner error={error} onDismiss={() => setError(null)} />
-        <ul className="ttrpg-list">
-          {maps.map((m) => (
-            <li key={m.id}>
-              <button type="button" className={map?.id === m.id ? 'active' : ''} onClick={() => openMap(m.id)}>
-                {m.title}
-              </button>
-            </li>
-          ))}
-          {maps.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
-        </ul>
+        {listLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ul className="ttrpg-list">
+            {maps.map((m) => (
+              <li key={m.id}>
+                <button type="button" className={map?.id === m.id ? 'active' : ''} onClick={() => openMap(m.id)}>
+                  {m.title}
+                </button>
+              </li>
+            ))}
+            {maps.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
+          </ul>
+        )}
       </div>
       <div className="ttrpg-detail-col">
-        {mapForm && isGameMaster && (
-          <div className="ttrpg-card">
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.title')}</span>
-              <input value={mapForm.title} onChange={(e) => setMapForm({ ...mapForm, title: e.target.value })} />
-            </label>
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.description')}</span>
-              <textarea value={mapForm.description} onChange={(e) => setMapForm({ ...mapForm, description: e.target.value })} rows={3} />
-            </label>
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.mapImage')}</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setMapForm({ ...mapForm, file: e.target.files?.[0] || null })}
-              />
-            </label>
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.orAssetId')}</span>
-              <input value={assetId} onChange={(e) => setAssetId(e.target.value)} placeholder="asset id" />
-            </label>
-            <div className="ttrpg-toolbar">
-              <button type="button" className="ttrpg-btn" onClick={createMap}>{t('ttrpg.create')}</button>
-              <button type="button" className="ttrpg-btn-ghost" onClick={() => setMapForm(null)}>{t('ttrpg.cancel')}</button>
-            </div>
-          </div>
-        )}
-        {map && (
-          <div className="ttrpg-card">
-            <div className="ttrpg-toolbar">
-              <h4>{map.title}</h4>
-              {isGameMaster && (
-                <>
-                  <button
-                    type="button"
-                    className="ttrpg-btn"
-                    onClick={() => setPinForm({ title: '', x: 0.5, y: 0.5, content_html: '', color: '#cc3333', visibility: 'players' })}
-                  >
-                    {t('ttrpg.addPin')}
-                  </button>
-                  <button type="button" className="ttrpg-btn-danger" onClick={deleteMap}>{t('ttrpg.delete')}</button>
-                </>
-              )}
-            </div>
-            {map.image?.url && (
-              <img className="ttrpg-map-img" src={map.image.url} alt={map.title} />
-            )}
-            <p className="ttrpg-muted">{map.description}</p>
-            <h5>{t('ttrpg.pins')}</h5>
-            <ul className="ttrpg-list">
-              {pins.map((p) => (
-                <li key={p.id}>
-                  <button
-                    type="button"
-                    onClick={() => isGameMaster && setPinForm({ ...p })}
-                  >
-                    {p.title} ({Number(p.x).toFixed(2)}, {Number(p.y).toFixed(2)})
-                  </button>
-                  {isGameMaster && (
-                    <button type="button" className="ttrpg-btn-ghost" onClick={() => deletePin(p.id)}>×</button>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {pinForm && isGameMaster && (
-              <div className="ttrpg-card nested">
+        {detailLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {mapForm && isGameMaster && (
+              <div className="ttrpg-card">
                 <label className="ttrpg-field">
                   <span>{t('ttrpg.title')}</span>
-                  <input value={pinForm.title} onChange={(e) => setPinForm({ ...pinForm, title: e.target.value })} />
+                  <input value={mapForm.title} onChange={(e) => setMapForm({ ...mapForm, title: e.target.value })} />
                 </label>
-                <div className="ttrpg-row">
-                  <label className="ttrpg-field">
-                    <span>X (0–1)</span>
-                    <input type="number" step="0.01" min="0" max="1" value={pinForm.x} onChange={(e) => setPinForm({ ...pinForm, x: e.target.value })} />
-                  </label>
-                  <label className="ttrpg-field">
-                    <span>Y (0–1)</span>
-                    <input type="number" step="0.01" min="0" max="1" value={pinForm.y} onChange={(e) => setPinForm({ ...pinForm, y: e.target.value })} />
-                  </label>
-                </div>
                 <label className="ttrpg-field">
-                  <span>{t('ttrpg.bodyHtml')}</span>
-                  <textarea rows={4} value={pinForm.content_html || ''} onChange={(e) => setPinForm({ ...pinForm, content_html: e.target.value })} />
+                  <span>{t('ttrpg.description')}</span>
+                  <textarea value={mapForm.description} onChange={(e) => setMapForm({ ...mapForm, description: e.target.value })} rows={3} />
+                </label>
+                <label className="ttrpg-field">
+                  <span>{t('ttrpg.mapImage')}</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setMapForm({ ...mapForm, file: e.target.files?.[0] || null })}
+                  />
+                </label>
+                <label className="ttrpg-field">
+                  <span>{t('ttrpg.orAssetId')}</span>
+                  <input value={assetId} onChange={(e) => setAssetId(e.target.value)} placeholder="asset id" />
                 </label>
                 <div className="ttrpg-toolbar">
-                  <button type="button" className="ttrpg-btn" onClick={savePin}>{t('ttrpg.save')}</button>
-                  <button type="button" className="ttrpg-btn-ghost" onClick={() => setPinForm(null)}>{t('ttrpg.cancel')}</button>
+                  <button type="button" className="ttrpg-btn" onClick={createMap}>{t('ttrpg.create')}</button>
+                  <button type="button" className="ttrpg-btn-ghost" onClick={() => setMapForm(null)}>{t('ttrpg.cancel')}</button>
                 </div>
               </div>
             )}
-          </div>
+            {map && (
+              <div className="ttrpg-card">
+                <div className="ttrpg-toolbar">
+                  <h4>{map.title}</h4>
+                  {isGameMaster && (
+                    <>
+                      <button
+                        type="button"
+                        className="ttrpg-btn"
+                        onClick={() => setPinForm({ title: '', x: 0.5, y: 0.5, content_html: '', color: '#cc3333', visibility: 'players' })}
+                      >
+                        {t('ttrpg.addPin')}
+                      </button>
+                      <button type="button" className="ttrpg-btn-danger" onClick={deleteMap}>{t('ttrpg.delete')}</button>
+                    </>
+                  )}
+                </div>
+                {map.image?.url && (
+                  <img className="ttrpg-map-img" src={map.image.url} alt={map.title} />
+                )}
+                <p className="ttrpg-muted">{map.description}</p>
+                <h5>{t('ttrpg.pins')}</h5>
+                <ul className="ttrpg-list">
+                  {pins.map((p) => (
+                    <li key={p.id}>
+                      <button
+                        type="button"
+                        onClick={() => isGameMaster && setPinForm({ ...p })}
+                      >
+                        {p.title} ({Number(p.x).toFixed(2)}, {Number(p.y).toFixed(2)})
+                      </button>
+                      {isGameMaster && (
+                        <button type="button" className="ttrpg-btn-ghost" onClick={() => deletePin(p.id)}>×</button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {pinForm && isGameMaster && (
+                  <div className="ttrpg-card nested">
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.title')}</span>
+                      <input value={pinForm.title} onChange={(e) => setPinForm({ ...pinForm, title: e.target.value })} />
+                    </label>
+                    <div className="ttrpg-row">
+                      <label className="ttrpg-field">
+                        <span>X (0–1)</span>
+                        <input type="number" step="0.01" min="0" max="1" value={pinForm.x} onChange={(e) => setPinForm({ ...pinForm, x: e.target.value })} />
+                      </label>
+                      <label className="ttrpg-field">
+                        <span>Y (0–1)</span>
+                        <input type="number" step="0.01" min="0" max="1" value={pinForm.y} onChange={(e) => setPinForm({ ...pinForm, y: e.target.value })} />
+                      </label>
+                    </div>
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.bodyHtml')}</span>
+                      <textarea rows={4} value={pinForm.content_html || ''} onChange={(e) => setPinForm({ ...pinForm, content_html: e.target.value })} />
+                    </label>
+                    <div className="ttrpg-toolbar">
+                      <button type="button" className="ttrpg-btn" onClick={savePin}>{t('ttrpg.save')}</button>
+                      <button type="button" className="ttrpg-btn-ghost" onClick={() => setPinForm(null)}>{t('ttrpg.cancel')}</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {!map && !mapForm && (
+              <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.selectItem')}</p>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -757,32 +839,44 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
   const [error, setError] = useState(null)
   const [form, setForm] = useState(null)
   const [entryForm, setEntryForm] = useState(null)
+  const [listLoading, setListLoading] = useState(false)
+  const [detailLoading, setDetailLoading] = useState(false)
 
   const load = useCallback(async () => {
     if (!campaignId) return
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setTrackers(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setTrackers(unwrapList(res))
   }, [apiBase, campaignId])
 
   useEffect(() => { load() }, [load])
 
   const open = async (id) => {
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers/${id}` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setDetailLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers/${id}` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      const item = unwrapItem(res)
+      setTracker(item)
+      const er = await ttrpgProxy(apiBase, {
+        method: 'GET',
+        path: `gm/campaigns/${campaignId}/trackers/${id}/entries`,
+      })
+      setEntries(er.ok ? unwrapList(er) : (item?.entries || []))
+    } finally {
+      setDetailLoading(false)
     }
-    const item = unwrapItem(res)
-    setTracker(item)
-    const er = await ttrpgProxy(apiBase, {
-      method: 'GET',
-      path: `gm/campaigns/${campaignId}/trackers/${id}/entries`,
-    })
-    setEntries(er.ok ? unwrapList(er) : (item?.entries || []))
   }
 
   const saveTracker = async () => {
@@ -846,7 +940,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
     await load()
   }
 
-  if (!campaignId) return <p className="ttrpg-muted">{t('ttrpg.needCampaign')}</p>
+  if (!campaignId) return <NeedCampaign />
 
   return (
     <div className="ttrpg-pane ttrpg-split">
@@ -863,85 +957,98 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
           )}
         </div>
         <ErrorBanner error={error} onDismiss={() => setError(null)} />
-        <ul className="ttrpg-list">
-          {trackers.map((tr) => (
-            <li key={tr.id}>
-              <button type="button" className={tracker?.id === tr.id ? 'active' : ''} onClick={() => open(tr.id)}>
-                {tr.title}
-                {tr.current_label ? ` — ${tr.current_label}` : ''}
-              </button>
-            </li>
-          ))}
-          {trackers.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
-        </ul>
+        {listLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ul className="ttrpg-list">
+            {trackers.map((tr) => (
+              <li key={tr.id}>
+                <button type="button" className={tracker?.id === tr.id ? 'active' : ''} onClick={() => open(tr.id)}>
+                  {tr.title}
+                  {tr.current_label ? ` — ${tr.current_label}` : ''}
+                </button>
+              </li>
+            ))}
+            {trackers.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
+          </ul>
+        )}
       </div>
       <div className="ttrpg-detail-col">
-        {form && isGameMaster && (
-          <div className="ttrpg-card">
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.title')}</span>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            </label>
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.currentLabel')}</span>
-              <input value={form.current_label || ''} onChange={(e) => setForm({ ...form, current_label: e.target.value })} />
-            </label>
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.mode')}</span>
-              <select value={form.mode || 'list'} onChange={(e) => setForm({ ...form, mode: e.target.value })}>
-                <option value="list">list</option>
-                <option value="calendar">calendar</option>
-              </select>
-            </label>
-            <div className="ttrpg-toolbar">
-              <button type="button" className="ttrpg-btn" onClick={saveTracker}>{t('ttrpg.save')}</button>
-              <button type="button" className="ttrpg-btn-ghost" onClick={() => setForm(null)}>{t('ttrpg.cancel')}</button>
-            </div>
-          </div>
-        )}
-        {tracker && (
-          <div className="ttrpg-card">
-            <div className="ttrpg-toolbar">
-              <h4>{tracker.title}</h4>
-              {isGameMaster && (
-                <>
-                  <button type="button" className="ttrpg-btn" onClick={() => setForm({ ...tracker })}>{t('ttrpg.edit')}</button>
-                  <button type="button" className="ttrpg-btn" onClick={() => setEntryForm({ at_label: '', content_html: '' })}>{t('ttrpg.addEntry')}</button>
-                  <button type="button" className="ttrpg-btn-danger" onClick={removeTracker}>{t('ttrpg.delete')}</button>
-                </>
-              )}
-            </div>
-            <p className="ttrpg-muted">{t('ttrpg.currentLabel')}: {tracker.current_label || '—'}</p>
-            <ul className="ttrpg-list">
-              {entries.map((en) => (
-                <li key={en.id}>
-                  <div>
-                    <strong>{en.at_label || '—'}</strong>
-                    <HtmlView html={en.content_html} />
-                  </div>
-                  {isGameMaster && (
-                    <button type="button" className="ttrpg-btn-ghost" onClick={() => setEntryForm({ ...en })}>{t('ttrpg.edit')}</button>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {entryForm && isGameMaster && (
-              <div className="ttrpg-card nested">
+        {detailLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {form && isGameMaster && (
+              <div className="ttrpg-card">
                 <label className="ttrpg-field">
-                  <span>{t('ttrpg.atLabel')}</span>
-                  <input value={entryForm.at_label || ''} onChange={(e) => setEntryForm({ ...entryForm, at_label: e.target.value })} />
+                  <span>{t('ttrpg.title')}</span>
+                  <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
                 </label>
                 <label className="ttrpg-field">
-                  <span>{t('ttrpg.bodyHtml')}</span>
-                  <textarea rows={5} value={entryForm.content_html || ''} onChange={(e) => setEntryForm({ ...entryForm, content_html: e.target.value })} />
+                  <span>{t('ttrpg.currentLabel')}</span>
+                  <input value={form.current_label || ''} onChange={(e) => setForm({ ...form, current_label: e.target.value })} />
+                </label>
+                <label className="ttrpg-field">
+                  <span>{t('ttrpg.mode')}</span>
+                  <select value={form.mode || 'list'} onChange={(e) => setForm({ ...form, mode: e.target.value })}>
+                    <option value="list">list</option>
+                    <option value="calendar">calendar</option>
+                  </select>
                 </label>
                 <div className="ttrpg-toolbar">
-                  <button type="button" className="ttrpg-btn" onClick={saveEntry}>{t('ttrpg.save')}</button>
-                  <button type="button" className="ttrpg-btn-ghost" onClick={() => setEntryForm(null)}>{t('ttrpg.cancel')}</button>
+                  <button type="button" className="ttrpg-btn" onClick={saveTracker}>{t('ttrpg.save')}</button>
+                  <button type="button" className="ttrpg-btn-ghost" onClick={() => setForm(null)}>{t('ttrpg.cancel')}</button>
                 </div>
               </div>
             )}
-          </div>
+            {tracker && (
+              <div className="ttrpg-card">
+                <div className="ttrpg-toolbar">
+                  <h4>{tracker.title}</h4>
+                  {isGameMaster && (
+                    <>
+                      <button type="button" className="ttrpg-btn-accent" onClick={() => setForm({ ...tracker })}>{t('ttrpg.edit')}</button>
+                      <button type="button" className="ttrpg-btn" onClick={() => setEntryForm({ at_label: '', content_html: '' })}>{t('ttrpg.addEntry')}</button>
+                      <button type="button" className="ttrpg-btn-danger" onClick={removeTracker}>{t('ttrpg.delete')}</button>
+                    </>
+                  )}
+                </div>
+                <p className="ttrpg-muted">{t('ttrpg.currentLabel')}: {tracker.current_label || '—'}</p>
+                <ul className="ttrpg-list">
+                  {entries.map((en) => (
+                    <li key={en.id}>
+                      <div>
+                        <strong>{en.at_label || '—'}</strong>
+                        <HtmlView html={en.content_html} />
+                      </div>
+                      {isGameMaster && (
+                        <button type="button" className="ttrpg-btn-ghost" onClick={() => setEntryForm({ ...en })}>{t('ttrpg.edit')}</button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {entryForm && isGameMaster && (
+                  <div className="ttrpg-card nested">
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.atLabel')}</span>
+                      <input value={entryForm.at_label || ''} onChange={(e) => setEntryForm({ ...entryForm, at_label: e.target.value })} />
+                    </label>
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.bodyHtml')}</span>
+                      <textarea rows={5} value={entryForm.content_html || ''} onChange={(e) => setEntryForm({ ...entryForm, content_html: e.target.value })} />
+                    </label>
+                    <div className="ttrpg-toolbar">
+                      <button type="button" className="ttrpg-btn" onClick={saveEntry}>{t('ttrpg.save')}</button>
+                      <button type="button" className="ttrpg-btn-ghost" onClick={() => setEntryForm(null)}>{t('ttrpg.cancel')}</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {!tracker && !form && (
+              <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.selectItem')}</p>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -954,15 +1061,22 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
   const [error, setError] = useState(null)
   const [form, setForm] = useState(null)
   const [pin, setPin] = useState('')
+  const [listLoading, setListLoading] = useState(false)
+  const [detailLoading, setDetailLoading] = useState(false)
 
   const load = useCallback(async () => {
     if (!campaignId) return
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setSheets(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setSheets(unwrapList(res))
   }, [apiBase, campaignId])
 
   useEffect(() => { load() }, [load])
@@ -973,13 +1087,18 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
       setSheet(meta || { id, name: t('ttrpg.sheetLocked') })
       return
     }
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets/${id}` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
-    }
-    setSheet(unwrapItem(res))
+    setDetailLoading(true)
     setForm(null)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets/${id}` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setSheet(unwrapItem(res))
+    } finally {
+      setDetailLoading(false)
+    }
   }
 
   const save = async () => {
@@ -1049,7 +1168,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
     await load()
   }
 
-  if (!campaignId) return <p className="ttrpg-muted">{t('ttrpg.needCampaign')}</p>
+  if (!campaignId) return <NeedCampaign />
 
   return (
     <div className="ttrpg-pane ttrpg-split">
@@ -1066,74 +1185,87 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
           )}
         </div>
         <ErrorBanner error={error} onDismiss={() => setError(null)} />
-        <ul className="ttrpg-list">
-          {sheets.map((s) => (
-            <li key={s.id}>
-              <button type="button" className={sheet?.id === s.id ? 'active' : ''} onClick={() => open(s.id)}>
-                {s.name}
-              </button>
-            </li>
-          ))}
-          {sheets.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
-        </ul>
+        {listLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ul className="ttrpg-list">
+            {sheets.map((s) => (
+              <li key={s.id}>
+                <button type="button" className={sheet?.id === s.id ? 'active' : ''} onClick={() => open(s.id)}>
+                  {s.name}
+                </button>
+              </li>
+            ))}
+            {sheets.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
+          </ul>
+        )}
       </div>
       <div className="ttrpg-detail-col">
-        {form && isGameMaster && (
-          <div className="ttrpg-card">
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.name')}</span>
-              <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            </label>
-            {!form.id && (
-              <>
+        {detailLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {form && isGameMaster && (
+              <div className="ttrpg-card">
                 <label className="ttrpg-field">
-                  <span>{t('ttrpg.ownerUserId')}</span>
-                  <input value={form.owner_user_id} onChange={(e) => setForm({ ...form, owner_user_id: e.target.value })} />
+                  <span>{t('ttrpg.name')}</span>
+                  <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                 </label>
+                {!form.id && (
+                  <>
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.ownerUserId')}</span>
+                      <input value={form.owner_user_id} onChange={(e) => setForm({ ...form, owner_user_id: e.target.value })} />
+                    </label>
+                    <label className="ttrpg-field">
+                      <span>{t('ttrpg.pin')}</span>
+                      <input value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value })} />
+                    </label>
+                  </>
+                )}
                 <label className="ttrpg-field">
-                  <span>{t('ttrpg.pin')}</span>
-                  <input value={form.pin} onChange={(e) => setForm({ ...form, pin: e.target.value })} />
+                  <span>{t('ttrpg.bodyHtml')}</span>
+                  <textarea rows={10} value={form.content_html || ''} onChange={(e) => setForm({ ...form, content_html: e.target.value })} />
                 </label>
-              </>
-            )}
-            <label className="ttrpg-field">
-              <span>{t('ttrpg.bodyHtml')}</span>
-              <textarea rows={10} value={form.content_html || ''} onChange={(e) => setForm({ ...form, content_html: e.target.value })} />
-            </label>
-            <div className="ttrpg-toolbar">
-              <button type="button" className="ttrpg-btn" onClick={save}>{t('ttrpg.save')}</button>
-              <button type="button" className="ttrpg-btn-ghost" onClick={() => setForm(null)}>{t('ttrpg.cancel')}</button>
-            </div>
-          </div>
-        )}
-        {sheet && !form && (
-          <div className="ttrpg-card">
-            <div className="ttrpg-toolbar">
-              <h4>{sheet.name}</h4>
-              {isGameMaster && (
-                <>
-                  <button type="button" className="ttrpg-btn" onClick={() => setForm({ ...sheet })}>{t('ttrpg.edit')}</button>
-                  <button type="button" className="ttrpg-btn-danger" onClick={remove}>{t('ttrpg.delete')}</button>
-                </>
-              )}
-            </div>
-            {isGameMaster ? (
-              <>
-                <HtmlView html={sheet.content_html} />
                 <div className="ttrpg-toolbar">
-                  <input
-                    type="text"
-                    placeholder={t('ttrpg.newPin')}
-                    value={pin}
-                    onChange={(e) => setPin(e.target.value)}
-                  />
-                  <button type="button" className="ttrpg-btn" onClick={resetPin}>{t('ttrpg.resetPin')}</button>
+                  <button type="button" className="ttrpg-btn" onClick={save}>{t('ttrpg.save')}</button>
+                  <button type="button" className="ttrpg-btn-ghost" onClick={() => setForm(null)}>{t('ttrpg.cancel')}</button>
                 </div>
-              </>
-            ) : (
-              <p className="ttrpg-muted">{t('ttrpg.sheetPlayerHint')}</p>
+              </div>
             )}
-          </div>
+            {sheet && !form && (
+              <div className="ttrpg-card">
+                <div className="ttrpg-toolbar">
+                  <h4>{sheet.name}</h4>
+                  {isGameMaster && (
+                    <>
+                      <button type="button" className="ttrpg-btn-accent" onClick={() => setForm({ ...sheet })}>{t('ttrpg.edit')}</button>
+                      <button type="button" className="ttrpg-btn-danger" onClick={remove}>{t('ttrpg.delete')}</button>
+                    </>
+                  )}
+                </div>
+                {isGameMaster ? (
+                  <>
+                    <HtmlView html={sheet.content_html} />
+                    <div className="ttrpg-toolbar">
+                      <input
+                        type="text"
+                        placeholder={t('ttrpg.newPin')}
+                        value={pin}
+                        onChange={(e) => setPin(e.target.value)}
+                      />
+                      <button type="button" className="ttrpg-btn-accent" onClick={resetPin}>{t('ttrpg.resetPin')}</button>
+                    </div>
+                  </>
+                ) : (
+                  <p className="ttrpg-muted">{t('ttrpg.sheetPlayerHint')}</p>
+                )}
+              </div>
+            )}
+            {!sheet && !form && (
+              <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.selectItem')}</p>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -1168,7 +1300,7 @@ function HandbookPdfModal({ preview, onClose }) {
           <h3>{label}</h3>
           <div className="ttrpg-toolbar">
             <a
-              className="ttrpg-btn"
+              className="ttrpg-btn-accent"
               href={preview.url}
               target="_blank"
               rel="noreferrer"
@@ -1200,14 +1332,23 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
   const [uploadTitle, setUploadTitle] = useState('')
   const [preview, setPreview] = useState(null)
   const [previewBusy, setPreviewBusy] = useState(false)
+  const [listLoading, setListLoading] = useState(true)
+  const [detailLoading, setDetailLoading] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const load = useCallback(async () => {
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/handbooks' })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setListLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/handbooks' })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setBooks(unwrapList(res))
+    } finally {
+      setListLoading(false)
     }
-    setBooks(unwrapList(res))
   }, [apiBase])
 
   useEffect(() => { load() }, [load])
@@ -1218,30 +1359,40 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
   }, [books])
 
   const openMeta = async (id) => {
-    const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/handbooks/${id}` })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      return
+    setDetailLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/handbooks/${id}` })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        return
+      }
+      setBook(unwrapItem(res))
+    } finally {
+      setDetailLoading(false)
     }
-    setBook(unwrapItem(res))
   }
 
   const search = async () => {
     const ids = books.filter((b) => b.status === 'ready').map((b) => b.id)
     if (!query.trim() || ids.length === 0) return
     setSearched(true)
-    const res = await ttrpgProxy(apiBase, {
-      method: 'POST',
-      path: 'gm/handbooks/search',
-      json: { query: query.trim(), handbook_ids: ids, limit: 30 },
-    })
-    if (!res.ok) {
-      setError(res.error || t('ttrpg.loadFailed'))
-      setResults([])
-      return
+    setSearchLoading(true)
+    try {
+      const res = await ttrpgProxy(apiBase, {
+        method: 'POST',
+        path: 'gm/handbooks/search',
+        json: { query: query.trim(), handbook_ids: ids, limit: 30 },
+      })
+      if (!res.ok) {
+        setError(res.error || t('ttrpg.loadFailed'))
+        setResults([])
+        return
+      }
+      const body = res.data
+      setResults(Array.isArray(body?.data) ? body.data : (Array.isArray(body) ? body : []))
+    } finally {
+      setSearchLoading(false)
     }
-    const body = res.data
-    setResults(Array.isArray(body?.data) ? body.data : (Array.isArray(body) ? body : []))
   }
 
   const openPreview = async (handbookId, pageNumber) => {
@@ -1287,18 +1438,28 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
       setError(t('ttrpg.needTitle'))
       return
     }
-    const up = await ttrpgUploadHandbook(apiBase, {
-      file,
-      title: uploadTitle.trim(),
-      language: 'pl',
-      campaignId: campaignId || null,
-    })
-    if (!up.success) {
-      setError(up.error || t('ttrpg.saveFailed'))
-      return
+    setUploading(true)
+    setError(null)
+    try {
+      const up = await ttrpgUploadHandbook(apiBase, {
+        file,
+        title: uploadTitle.trim(),
+        language: 'pl',
+        campaignId: campaignId || null,
+      })
+      if (!up.success) {
+        setError(up.error || t('ttrpg.saveFailed'))
+        return
+      }
+      setUploadTitle('')
+      const created = unwrapItem({ data: up.data })
+      await load()
+      if (created?.id) {
+        await openMeta(created.id)
+      }
+    } finally {
+      setUploading(false)
     }
-    setUploadTitle('')
-    await load()
   }
 
   const rename = async () => {
@@ -1344,8 +1505,13 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
               }
             }}
           />
-          <button type="button" className="ttrpg-btn" onClick={search} disabled={previewBusy}>
-            {t('ttrpg.search')}
+          <button
+            type="button"
+            className="ttrpg-btn-accent"
+            onClick={search}
+            disabled={previewBusy || searchLoading || listLoading}
+          >
+            {searchLoading ? t('ttrpg.searching') : t('ttrpg.search')}
           </button>
         </div>
         {isGameMaster && (
@@ -1354,94 +1520,112 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
               value={uploadTitle}
               onChange={(e) => setUploadTitle(e.target.value)}
               placeholder={t('ttrpg.title')}
+              disabled={uploading}
             />
-            <label className="ttrpg-btn">
-              {t('ttrpg.uploadPdf')}
-              <input
-                type="file"
-                accept="application/pdf"
-                hidden
-                onChange={(e) => {
-                  const f = e.target.files?.[0]
-                  if (f) upload(f)
-                  e.target.value = ''
-                }}
-              />
-            </label>
+            {uploading ? (
+              <LoadingSpinner label={t('ttrpg.uploading')} inline />
+            ) : (
+              <label className="ttrpg-btn">
+                {t('ttrpg.uploadPdf')}
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  hidden
+                  onChange={(e) => {
+                    const f = e.target.files?.[0]
+                    if (f) upload(f)
+                    e.target.value = ''
+                  }}
+                />
+              </label>
+            )}
           </div>
         )}
         <ErrorBanner error={error} onDismiss={() => setError(null)} />
-        <ul className="ttrpg-list">
-          {books.map((b) => (
-            <li key={b.id}>
-              <button type="button" className={book?.id === b.id ? 'active' : ''} onClick={() => openMeta(b.id)}>
-                {b.title} <span className="ttrpg-badge">{b.status}</span>
-              </button>
-            </li>
-          ))}
-          {books.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
-        </ul>
+        {listLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ul className="ttrpg-list">
+            {books.map((b) => (
+              <li key={b.id}>
+                <button type="button" className={book?.id === b.id ? 'active' : ''} onClick={() => openMeta(b.id)}>
+                  <span className="ttrpg-badge">{b.status}</span>
+                  {b.title}
+                </button>
+              </li>
+            ))}
+            {books.length === 0 && <li className="ttrpg-muted">{t('ttrpg.empty')}</li>}
+          </ul>
+        )}
       </div>
       <div className="ttrpg-detail-col">
-        {book && (
-          <div className="ttrpg-card">
-            <div className="ttrpg-toolbar">
-              <h4>{book.title}</h4>
-              {isGameMaster && (
-                <>
-                  <button type="button" className="ttrpg-btn" onClick={rename}>{t('ttrpg.edit')}</button>
-                  <button type="button" className="ttrpg-btn-danger" onClick={remove}>{t('ttrpg.delete')}</button>
-                </>
-              )}
-            </div>
-            <p className="ttrpg-muted">
-              {book.original_name} · {book.page_count} {t('ttrpg.pages')} · {book.status}
-            </p>
-          </div>
-        )}
-
-        {!searched && (
-          <p className="ttrpg-muted">{t('ttrpg.searchEmpty')}</p>
-        )}
-
-        {searched && (
-          <div className="ttrpg-card">
-            <h5>{t('ttrpg.searchResults')}</h5>
-            {results.length === 0 ? (
-              <p className="ttrpg-muted">{t('ttrpg.noSearchHits')}</p>
-            ) : (
-              <ul className="ttrpg-list">
-                {results.map((r, i) => {
-                  const excerpt = r.excerpt || r.snippet || r.content || ''
-                  const title = r.handbook_title || bookTitle(r.handbook_id)
-                  return (
-                    <li key={`${r.handbook_id}-${r.page_number}-${i}`}>
-                      <button
-                        type="button"
-                        className="ttrpg-search-hit"
-                        disabled={previewBusy}
-                        onClick={() => openPreview(r.handbook_id, r.page_number)}
-                      >
-                        <span className="ttrpg-search-hit-meta">
-                          <strong>{title}</strong>
-                          {' — '}
-                          {t('ttrpg.page')} {r.page_number ?? '?'}
-                        </span>
-                        {excerpt ? (
-                          <span
-                            className="ttrpg-search-hit-excerpt"
-                            dangerouslySetInnerHTML={{ __html: excerpt }}
-                          />
-                        ) : (
-                          <span className="ttrpg-muted">{t('ttrpg.emptyBody')}</span>
-                        )}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
+        {detailLoading || previewBusy ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {book && (
+              <div className="ttrpg-card">
+                <div className="ttrpg-toolbar">
+                  <h4>{book.title}</h4>
+                  {isGameMaster && (
+                    <>
+                      <button type="button" className="ttrpg-btn-accent" onClick={rename}>{t('ttrpg.edit')}</button>
+                      <button type="button" className="ttrpg-btn-danger" onClick={remove}>{t('ttrpg.delete')}</button>
+                    </>
+                  )}
+                </div>
+                <p className="ttrpg-muted">
+                  {book.original_name} · {book.page_count} {t('ttrpg.pages')} · {book.status}
+                </p>
+              </div>
             )}
-          </div>
+
+            {searchLoading && <LoadingSpinner label={t('ttrpg.searching')} />}
+
+            {!searched && !searchLoading && (
+              <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.searchEmpty')}</p>
+            )}
+
+            {searched && !searchLoading && (
+              <div className="ttrpg-card">
+                <h5>{t('ttrpg.searchResults')}</h5>
+                {results.length === 0 ? (
+                  <p className="ttrpg-muted">{t('ttrpg.noSearchHits')}</p>
+                ) : (
+                  <ul className="ttrpg-list">
+                    {results.map((r, i) => {
+                      const excerpt = r.excerpt || r.snippet || r.content || ''
+                      const title = r.handbook_title || bookTitle(r.handbook_id)
+                      return (
+                        <li key={`${r.handbook_id}-${r.page_number}-${i}`}>
+                          <button
+                            type="button"
+                            className="ttrpg-search-hit"
+                            disabled={previewBusy}
+                            onClick={() => openPreview(r.handbook_id, r.page_number)}
+                          >
+                            <span className="ttrpg-search-hit-meta">
+                              <strong>{title}</strong>
+                              {' — '}
+                              {t('ttrpg.page')} {r.page_number ?? '?'}
+                            </span>
+                            {excerpt ? (
+                              <span
+                                className="ttrpg-search-hit-excerpt"
+                                dangerouslySetInnerHTML={{ __html: excerpt }}
+                              />
+                            ) : (
+                              <span className="ttrpg-muted">{t('ttrpg.emptyBody')}</span>
+                            )}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
       <HandbookPdfModal preview={preview} onClose={closePreview} />
@@ -1475,7 +1659,11 @@ function TtrpgManagerPanel({
 
   if (!configured) {
     if (!isGameMaster) {
-      return <div className="ttrpg-panel"><p className="ttrpg-muted">{t('ttrpg.waitingGm')}</p></div>
+      return (
+        <div className="ttrpg-panel">
+          <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.waitingGm')}</p>
+        </div>
+      )
     }
     return (
       <div className="ttrpg-panel">

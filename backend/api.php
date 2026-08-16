@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Treat all string operations as UTF-8 by default. Prevents `substr`-style
 // byte truncation from cutting Polish/UTF-8 characters in half.
 if (function_exists('mb_internal_encoding')) {
@@ -162,6 +160,7 @@ require_once __DIR__ . '/../deploy-env.php';
 
 $envFile = resolveBackendEnvFile(__DIR__);
 $env = loadEnv($envFile);
+startVttSession(dirname(__DIR__));
 
 // ============================================
 // CORS

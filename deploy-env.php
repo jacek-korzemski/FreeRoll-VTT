@@ -99,3 +99,30 @@ function resolveBackendEnvFile($backendDir) {
 
     return $localEnv;
 }
+
+/**
+ * Start a PHP session scoped to this table's VTT_BASE_PATH so multiple
+ * rooms on the same domain do not share login cookies.
+ *
+ * @param array{basePath?: string}|string $cfgOrRootDir Deploy config or package root dir
+ */
+function startVttSession($cfgOrRootDir) {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
+
+    $cfg = is_array($cfgOrRootDir) ? $cfgOrRootDir : getDeployConfig($cfgOrRootDir);
+    $basePath = normalizeBasePath($cfg['basePath'] ?? '/vtt/room1/');
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+
+    session_name('VTTSESS_' . substr(hash('sha256', $basePath), 0, 12));
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => $basePath,
+        'secure' => $secure,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+}

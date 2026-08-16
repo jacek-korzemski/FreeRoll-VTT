@@ -1,9 +1,8 @@
 <?php
-session_start();
-
 require_once __DIR__ . '/deploy-env.php';
 
 $cfg = getDeployConfig(__DIR__);
+startVttSession($cfg);
 $login = $cfg['loginStrings'];
 $basePath = $cfg['basePath'];
 

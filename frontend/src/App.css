@@ -2889,10 +2889,28 @@ body {
   background: #16213e;
   border-top: 2px solid #0f3460;
   z-index: 791000;
-  transition: height 0.3s ease;
+  transition: height 0.3s ease, left 0.3s ease, right 0.3s ease;
   display: flex;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (min-width: 1140px) {
+  .app:has(.sidebar.open) .bottom-panel {
+    left: 280px;
+  }
+  .app:has(.dice-panel.open) .bottom-panel {
+    right: 320px;
+  }
+
+  @supports not selector(:has(*)) {
+    .sidebar.open ~ .bottom-panel {
+      left: 280px;
+    }
+    .dice-panel.open ~ .bottom-panel {
+      right: 320px;
+    }
+  }
 }
 
 /* Wyłącz transition podczas zmiany rozmiaru – wtedy wysokość reaguje od razu na przeciąganie */

@@ -17,3 +17,10 @@
 
 # Blokada listowania katalogów
 Options -Indexes
+
+# vendor/ i src/ są tylko do include z api.php — nie serwuj ich HTTP
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^vendor/ - [F]
+    RewriteRule ^src/ - [F]
+</IfModule>

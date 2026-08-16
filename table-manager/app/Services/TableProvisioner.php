@@ -22,7 +22,9 @@ class TableProvisioner
         $source = $this->sourcePath();
 
         return File::isFile($source.DIRECTORY_SEPARATOR.'index.php')
-            && File::isFile($source.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'index.js');
+            && File::isFile($source.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'index.js')
+            && File::isFile($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php')
+            && File::isFile($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Ttrpg'.DIRECTORY_SEPARATOR.'Actions.php');
     }
 
     public function assertSourceReady(): void

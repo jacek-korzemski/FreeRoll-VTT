@@ -27,8 +27,12 @@ class TableProvisioningTest extends TestCase
 
         File::ensureDirectoryExists($source.DIRECTORY_SEPARATOR.'assets');
         File::ensureDirectoryExists($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'data');
+        File::ensureDirectoryExists($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'vendor');
+        File::ensureDirectoryExists($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Ttrpg');
         File::put($source.DIRECTORY_SEPARATOR.'index.php', "<?php echo 'vtt';\n");
         File::put($source.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'index.js', "console.log('ok');\n");
+        File::put($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php', "<?php\n");
+        File::put($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Ttrpg'.DIRECTORY_SEPARATOR.'Actions.php', "<?php\n");
         File::put($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'state.json', '{"version":1}');
         File::put($source.DIRECTORY_SEPARATOR.'.env', "VTT_ENABLE_L5R=true\nVTT_PASSWORD=old\n");
 
@@ -63,6 +67,7 @@ class TableProvisioningTest extends TestCase
         $dir = $table->absolutePath();
         $this->assertFileExists($dir.DIRECTORY_SEPARATOR.'index.php');
         $this->assertFileExists($dir.DIRECTORY_SEPARATOR.'assets'.DIRECTORY_SEPARATOR.'index.js');
+        $this->assertFileExists($dir.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
         $this->assertFileDoesNotExist($dir.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'state.json');
 
         $env = File::get($dir.DIRECTORY_SEPARATOR.'.env');
@@ -123,6 +128,13 @@ class TableProvisioningTest extends TestCase
             'gm_password' => 'g',
             'language' => 'pl',
         ]);
+    }
+
+    public function test_source_without_vendor_is_not_ready(): void
+    {
+        File::delete($this->tempRoot.DIRECTORY_SEPARATOR.'source'.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
+
+        $this->assertFalse(app(TableProvisioner::class)->sourceIsReady());
     }
 
     public function test_livewire_can_create_a_table(): void

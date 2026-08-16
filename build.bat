@@ -16,6 +16,14 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+where composer >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Composer is not installed!
+    echo Download from: https://getcomposer.org/
+    pause
+    exit /b 1
+)
+
 echo  This script will guide you through the build process.
 echo  Press ENTER to use default values shown in [brackets].
 echo.
@@ -35,7 +43,7 @@ echo.
 set "ROOT=%~dp0"
 if "!ROOT:~-1!"=="\" set "ROOT=!ROOT:~0,-1!"
 
-echo [1/5] Creating build folder...
+echo [1/6] Creating build folder...
 if exist "build" rmdir /s /q "build"
 mkdir "build"
 mkdir "build\backend"
@@ -48,7 +56,7 @@ mkdir "build\backend\assets\papers"
 mkdir "build\backend\assets\templates"
 mkdir "build\assets"
 
-echo [2/5] Building frontend (this may take a while)...
+echo [2/6] Building frontend (this may take a while)...
 if exist "!ROOT!\frontend\.env" (
     ren "!ROOT!\frontend\.env" ".env.devbackup"
 )
@@ -85,7 +93,7 @@ if !errorlevel! neq 0 (
 cd /d "!ROOT!"
 call :restore_frontend_env
 
-echo [3/5] Copying files...
+echo [3/6] Copying files...
 xcopy /s /y "frontend\dist\assets\*" "build\assets\" >nul 2>nul
 copy /y "backend\api.php" "build\backend\" >nul
 copy /y "index.php" "build\" >nul
@@ -95,13 +103,20 @@ if exist "backend\assets\templates\*.html" (
     xcopy /y "backend\assets\templates\*.html" "build\backend\assets\templates\" >nul 2>nul
 )
 
+echo [4/6] Installing TTRPG backend (Composer)...
+call "%~dp0install-ttrpg-vendor.inc.bat"
+if !errorlevel! neq 0 (
+    pause
+    exit /b 1
+)
+
 (
     echo ^<FilesMatch "^\.env"^>
     echo     Order Allow,Deny
     echo     Deny from all
     echo ^</FilesMatch^>
     echo.
-    echo ^<FilesMatch "state\.json$^|rolls\.json$"^>
+    echo ^<FilesMatch "state\.json$^|rolls\.json$^|ttrpg\.sqlite$^|ttrpg\.sqlite-(journal^|wal^|shm)$^|secrets\.json$"^>
     echo     Order Allow,Deny
     echo     Deny from all
     echo ^</FilesMatch^>
@@ -120,7 +135,7 @@ powershell -Command "'' | Out-File -FilePath 'build\backend\assets\backgrounds\.
 powershell -Command "'' | Out-File -FilePath 'build\backend\assets\papers\.gitkeep' -Encoding ASCII"
 powershell -Command "'' | Out-File -FilePath 'build\backend\data\.gitkeep' -Encoding ASCII"
 
-echo [4/5] Writing deployment configuration...
+echo [5/6] Writing deployment configuration...
 powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "build\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%"
 if !errorlevel! neq 0 (
     echo [ERROR] Writing build\.env failed!
@@ -128,7 +143,7 @@ if !errorlevel! neq 0 (
     exit /b 1
 )
 
-echo [5/5] Creating .htaccess files...
+echo [6/6] Creating .htaccess files...
 (
     echo Options -Indexes
     echo.
@@ -142,6 +157,12 @@ echo [5/5] Creating .htaccess files...
     echo     AddType application/javascript .mjs
     echo ^</IfModule^>
 ) > "build\.htaccess"
+
+call "%~dp0sync-current-source.inc.bat"
+if !errorlevel! neq 0 (
+    pause
+    exit /b 1
+)
 
 echo.
 echo  ========================================
@@ -161,9 +182,10 @@ echo.
 echo   Next steps:
 echo   1. Upload contents of 'build' folder to server
 echo      at location: %BASE_PATH%
-echo   2. Or run clone.bat to create another room from this build
-echo   3. Add images to backend/assets/ on the server
-echo   4. Ensure backend/data/ folder is writable
+echo   2. Or create a table in Table Manager (current-source is already updated)
+echo   3. Or run clone.bat to create another room from this build
+echo   4. Add images to backend/assets/ on the server
+echo   5. Ensure backend/data/ folder is writable
 echo.
 echo  ========================================
 echo.

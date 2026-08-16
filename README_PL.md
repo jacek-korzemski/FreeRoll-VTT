@@ -72,6 +72,7 @@ FreeRoll VTT to **lekki Virtual TableTop**, który budujesz raz, a potem hostuje
 ### Do zbudowania aplikacji (maintainerzy)
 
 - **Node.js 18+** (`https://nodejs.org/`)
+- **Composer** (`https://getcomposer.org/`) — instaluje warstwę TTRPG Manager do `build/backend/vendor`
 - **Windows** (jeśli chcesz używać dostarczonych skryptów `build.bat` / `build_pl.bat`)
 
 ### Do utworzenia kolejnego pokoju z gotowej paczki (bez Node)
@@ -99,7 +100,7 @@ W katalogu głównym projektu uruchom **jeden** z poniższych skryptów:
 - `build.bat` – interaktywne budowanie (komunikaty po angielsku, domyślny język UI: **en**)
 - `build_pl.bat` – interaktywne budowanie (komunikaty po polsku, domyślny język UI: **pl**)
 
-Skrypt zbiera ustawienia wdrożenia (hasła, ścieżka, język, L5R, CORS), uruchamia `npm run build` i składa katalog `build/`.
+Skrypt zbiera ustawienia wdrożenia (hasła, ścieżka, język, L5R, CORS), uruchamia `npm run build`, `composer install --no-dev` w backendzie, składa katalog `build/` i kopiuje paczkę do `table-manager/current-source/`.
 
 Wszystkie ustawienia wdrożenia trafiają do **`build/.env`** (patrz [`deploy.env.example`](deploy.env.example)). Paczka frontendu jest niezależna od ścieżki i języka – `index.php` czyta `.env` w runtime.
 

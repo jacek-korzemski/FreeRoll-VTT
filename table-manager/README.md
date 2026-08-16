@@ -32,15 +32,17 @@ Katalogi `database/` oraz `storage/` i `public/vtt/` muszą być zapisywalne prz
 
 ## Paczka źródłowa (`current-source/`)
 
-1. W katalogu głównym FreeRoll odpal `build.bat` (albo `build_pl.bat`).
-2. **Skopiuj zawartość** katalogu `build/` (nie sam folder) do `table-manager/current-source/`.
+1. W katalogu głównym FreeRoll odpal `build.bat` (albo `build_pl.bat`). Wymaga **Node.js** i **Composer**.
+2. Skrypt sam wgrywa gotową paczkę do `table-manager/current-source/` (z vendorami PHP i warstwą TTRPG). Możesz też ręcznie skopiować zawartość `build/` (nie sam folder).
 3. W `current-source/` muszą być m.in.:
    - `index.php`
    - `assets/index.js`
    - `backend/api.php`
+   - `backend/vendor/autoload.php`
+   - `backend/src/Ttrpg/`
    - `deploy-env.php`
 
-Table Manager **nie** odpala `npm run build` przy tworzeniu stołu. Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby stoły miały L5R, zbuduj paczkę z włączonym L5R.
+Table Manager **nie** odpala `npm run build` ani `composer install` przy tworzeniu stołu. Paczka musi być już złożona. Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby stoły miały L5R, zbuduj paczkę z włączonym L5R.
 
 ## Apache
 

@@ -144,4 +144,30 @@ class TableProvisioningTest extends TestCase
             'language' => 'en',
         ]);
     }
+
+    public function test_create_form_renders_native_inputs(): void
+    {
+        $user = User::factory()->create(['username' => 'inputs']);
+
+        $html = Livewire::actingAs($user)
+            ->test(TablesDashboard::class)
+            ->html();
+
+        $this->assertStringContainsString('wire:model="name"', $html);
+        $this->assertStringContainsString('<input', $html);
+        $this->assertStringNotContainsString('<x-text-input', $html);
+    }
+
+    public function test_create_table_shows_polish_validation_errors(): void
+    {
+        $user = User::factory()->create(['username' => 'walidacja']);
+
+        Livewire::actingAs($user)
+            ->test(TablesDashboard::class)
+            ->call('createTable')
+            ->assertHasErrors(['name', 'player_password', 'gm_password'])
+            ->assertSee('Podaj nazwę stołu.')
+            ->assertSee('Podaj hasło gracza.')
+            ->assertSee('Podaj hasło Mistrza Gry.');
+    }
 }

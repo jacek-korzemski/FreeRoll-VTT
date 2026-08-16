@@ -115,6 +115,37 @@ class TablesDashboard extends Component
     }
 
     /**
+     * @return array<string, string>
+     */
+    protected function messages(): array
+    {
+        return [
+            'name.required' => 'Podaj nazwę stołu.',
+            'name.max' => 'Nazwa stołu może mieć maksymalnie :max znaków.',
+            'player_password.required' => 'Podaj hasło gracza.',
+            'player_password.min' => 'Podaj hasło gracza.',
+            'player_password.max' => 'Hasło gracza może mieć maksymalnie :max znaków.',
+            'player_password.not_regex' => 'Hasło gracza nie może zawierać znaków nowej linii.',
+            'gm_password.required' => 'Podaj hasło Mistrza Gry.',
+            'gm_password.min' => 'Podaj hasło Mistrza Gry.',
+            'gm_password.max' => 'Hasło Mistrza Gry może mieć maksymalnie :max znaków.',
+            'gm_password.not_regex' => 'Hasło Mistrza Gry nie może zawierać znaków nowej linii.',
+            'language.required' => 'Wybierz język interfejsu stołu.',
+            'language.in' => 'Wybierz język: polski lub angielski.',
+            'edit_player_password.required' => 'Podaj hasło gracza.',
+            'edit_player_password.min' => 'Podaj hasło gracza.',
+            'edit_player_password.max' => 'Hasło gracza może mieć maksymalnie :max znaków.',
+            'edit_player_password.not_regex' => 'Hasło gracza nie może zawierać znaków nowej linii.',
+            'edit_gm_password.required' => 'Podaj hasło Mistrza Gry.',
+            'edit_gm_password.min' => 'Podaj hasło Mistrza Gry.',
+            'edit_gm_password.max' => 'Hasło Mistrza Gry może mieć maksymalnie :max znaków.',
+            'edit_gm_password.not_regex' => 'Hasło Mistrza Gry nie może zawierać znaków nowej linii.',
+            'edit_language.required' => 'Wybierz język interfejsu stołu.',
+            'edit_language.in' => 'Wybierz język: polski lub angielski.',
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function createRules(): array

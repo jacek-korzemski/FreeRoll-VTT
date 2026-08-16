@@ -55,7 +55,7 @@
                             </div>
                             <div>
                                 <x-input-label for="edit_language_{{ $table->id }}" value="Język" />
-                                <select wire:model="edit_language" id="edit_language_{{ $table->id }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                                <select wire:model="edit_language" id="edit_language_{{ $table->id }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
                                     <option value="pl">Polski</option>
                                     <option value="en">English</option>
                                 </select>
@@ -97,22 +97,22 @@
             <form wire:submit="createTable" class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">
                     <x-input-label for="name" value="Nazwa stołu" />
-                    <x-text-input wire:model="name" id="name" type="text" class="mt-1 block w-full" required @disabled(! $sourceReady) />
+                    <x-text-input wire:model="name" id="name" type="text" class="mt-1 block w-full" required :disabled="! $sourceReady" />
                     <x-input-error class="mt-1" :messages="$errors->get('name')" />
                 </div>
                 <div>
                     <x-input-label for="player_password" value="Hasło gracza" />
-                    <x-text-input wire:model="player_password" id="player_password" type="text" class="mt-1 block w-full" required @disabled(! $sourceReady) />
+                    <x-text-input wire:model="player_password" id="player_password" type="text" class="mt-1 block w-full" required :disabled="! $sourceReady" />
                     <x-input-error class="mt-1" :messages="$errors->get('player_password')" />
                 </div>
                 <div>
                     <x-input-label for="gm_password" value="Hasło Mistrza Gry" />
-                    <x-text-input wire:model="gm_password" id="gm_password" type="text" class="mt-1 block w-full" required @disabled(! $sourceReady) />
+                    <x-text-input wire:model="gm_password" id="gm_password" type="text" class="mt-1 block w-full" required :disabled="! $sourceReady" />
                     <x-input-error class="mt-1" :messages="$errors->get('gm_password')" />
                 </div>
                 <div>
                     <x-input-label for="language" value="Język interfejsu stołu" />
-                    <select wire:model="language" id="language" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300" @disabled(! $sourceReady)>
+                    <select wire:model="language" id="language" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-50" @disabled(! $sourceReady)>
                         <option value="pl">Polski</option>
                         <option value="en">English</option>
                     </select>

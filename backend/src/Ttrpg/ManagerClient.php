@@ -16,7 +16,10 @@ final class ManagerClient
     ) {
         $this->http = new Client([
             'base_uri' => rtrim($baseUrl, '/') . '/',
-            'timeout' => 60,
+            // Keep short so a dead/revoked Manager API cannot block PHP workers
+            // (and thus block local actions like disconnect) for a long time.
+            'timeout' => 12,
+            'connect_timeout' => 4,
             'http_errors' => false,
             'headers' => [
                 'Authorization' => 'Bearer ' . $apiKey,
@@ -69,6 +72,9 @@ final class ManagerClient
         }
         if ($multipart !== null) {
             $options['multipart'] = $multipart;
+            // PDF / asset uploads need more time than normal JSON proxy calls.
+            $options['timeout'] = 120;
+            $options['connect_timeout'] = 10;
         } elseif ($json !== null) {
             $options['json'] = $json;
             $options['headers']['Content-Type'] = 'application/json';

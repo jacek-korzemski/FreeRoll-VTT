@@ -6502,12 +6502,20 @@ body {
   background: #0f3460;
   flex-shrink: 0;
   border-bottom: 1px solid #16213e;
+  flex-wrap: nowrap;
+}
+
+.ttrpg-header > .ttrpg-btn-danger,
+.ttrpg-header > .ttrpg-btn-ghost {
+  flex-shrink: 0;
 }
 
 .ttrpg-subtabs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .ttrpg-subtabs button {

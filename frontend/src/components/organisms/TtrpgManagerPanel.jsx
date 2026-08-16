@@ -7,6 +7,7 @@ import {
   ttrpgSelectCampaign,
   ttrpgUploadAsset,
   ttrpgUploadHandbook,
+  abortTtrpgProxyRequests,
   unwrapList,
   unwrapItem,
 } from '../../utils/ttrpgApi'
@@ -48,6 +49,13 @@ function ErrorBanner({ error, onDismiss }) {
       )}
     </div>
   )
+}
+
+function proxyErrorMessage(res, fallbackKey = 'ttrpg.loadFailed') {
+  if (!res) return t(fallbackKey)
+  if (res.status === 401 || res.status === 403) return t('ttrpg.authFailed')
+  if (res.error === 'Request timed out' || res.status === 0) return t('ttrpg.requestTimeout')
+  return res.error || t(fallbackKey)
 }
 
 function ConnectForm({ apiBase, onConnected }) {
@@ -127,7 +135,7 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/campaigns' })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setCampaigns(unwrapList(res))
@@ -145,7 +153,7 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${id}` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       const item = unwrapItem(res)
@@ -191,7 +199,7 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
       },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     await load()
@@ -206,7 +214,7 @@ function CampaignPane({ apiBase, isGameMaster, campaignId, onCampaignChange, onS
       json: { name: form.name.trim(), description: form.description || null },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setCreating(false)
@@ -317,7 +325,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
         query,
       })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setItems(unwrapList(res))
@@ -337,7 +345,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
         path: `gm/campaigns/${campaignId}/contents/${id}`,
       })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setSelected(unwrapItem(res))
@@ -392,7 +400,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
           json,
         })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setEditing(null)
@@ -408,7 +416,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
       path: `gm/campaigns/${campaignId}/contents/${selected.id}`,
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setSelected(null)
@@ -419,7 +427,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
     if (!file || !selected) return
     const up = await ttrpgUploadAsset(apiBase, campaignId, file)
     if (!up.success) {
-      setError(up.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(up, 'ttrpg.saveFailed'))
       return
     }
     const asset = up.data?.data || up.data
@@ -429,7 +437,7 @@ function ContentsPane({ apiBase, isGameMaster, campaignId }) {
       json: { cover_asset_id: asset?.id },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     await open(selected.id)
@@ -565,7 +573,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setMaps(unwrapList(res))
@@ -582,7 +590,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/maps/${id}` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       const item = unwrapItem(res)
@@ -603,7 +611,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
     if (!imageAssetId && mapForm.file) {
       const up = await ttrpgUploadAsset(apiBase, campaignId, mapForm.file)
       if (!up.success) {
-        setError(up.error || t('ttrpg.saveFailed'))
+        setError(proxyErrorMessage(up, 'ttrpg.saveFailed'))
         return
       }
       imageAssetId = (up.data?.data || up.data)?.id
@@ -623,7 +631,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
       },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setMapForm(null)
@@ -657,7 +665,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
           json,
         })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setPinForm(null)
@@ -671,7 +679,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
       path: `gm/campaigns/${campaignId}/maps/${map.id}/pins/${id}`,
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     await openMap(map.id)
@@ -684,7 +692,7 @@ function MapsPane({ apiBase, isGameMaster, campaignId }) {
       path: `gm/campaigns/${campaignId}/maps/${map.id}`,
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setMap(null)
@@ -848,7 +856,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setTrackers(unwrapList(res))
@@ -864,7 +872,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/trackers/${id}` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       const item = unwrapItem(res)
@@ -891,7 +899,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
       ? await ttrpgProxy(apiBase, { method: 'PUT', path: `gm/campaigns/${campaignId}/trackers/${form.id}`, json })
       : await ttrpgProxy(apiBase, { method: 'POST', path: `gm/campaigns/${campaignId}/trackers`, json })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setForm(null)
@@ -918,7 +926,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
           json,
         })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setEntryForm(null)
@@ -932,7 +940,7 @@ function TrackersPane({ apiBase, isGameMaster, campaignId }) {
       path: `gm/campaigns/${campaignId}/trackers/${tracker.id}`,
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setTracker(null)
@@ -1070,7 +1078,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setSheets(unwrapList(res))
@@ -1092,7 +1100,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/campaigns/${campaignId}/sheets/${id}` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setSheet(unwrapItem(res))
@@ -1115,7 +1123,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
         },
       })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.saveFailed'))
+        setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
         return
       }
       setForm(null)
@@ -1133,7 +1141,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
       },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setForm(null)
@@ -1148,7 +1156,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
       json: { pin },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setPin('')
@@ -1161,7 +1169,7 @@ function SheetsPane({ apiBase, isGameMaster, campaignId }) {
       path: `gm/campaigns/${campaignId}/sheets/${sheet.id}`,
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setSheet(null)
@@ -1342,7 +1350,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: 'gm/handbooks' })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setBooks(unwrapList(res))
@@ -1363,7 +1371,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
     try {
       const res = await ttrpgProxy(apiBase, { method: 'GET', path: `gm/handbooks/${id}` })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         return
       }
       setBook(unwrapItem(res))
@@ -1384,7 +1392,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
         json: { query: query.trim(), handbook_ids: ids, limit: 30 },
       })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.loadFailed'))
+        setError(proxyErrorMessage(res))
         setResults([])
         return
       }
@@ -1410,7 +1418,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
         query: queryParams,
       })
       if (!res.ok) {
-        setError(res.error || t('ttrpg.previewFailed'))
+        setError(proxyErrorMessage(res, 'ttrpg.previewFailed'))
         return
       }
       const item = unwrapItem(res)
@@ -1448,7 +1456,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
         campaignId: campaignId || null,
       })
       if (!up.success) {
-        setError(up.error || t('ttrpg.saveFailed'))
+        setError(proxyErrorMessage(up, 'ttrpg.saveFailed'))
         return
       }
       setUploadTitle('')
@@ -1472,7 +1480,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
       json: { title },
     })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     await load()
@@ -1483,7 +1491,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
     if (!book || !window.confirm(t('ttrpg.confirmDelete'))) return
     const res = await ttrpgProxy(apiBase, { method: 'DELETE', path: `gm/handbooks/${book.id}` })
     if (!res.ok) {
-      setError(res.error || t('ttrpg.saveFailed'))
+      setError(proxyErrorMessage(res, 'ttrpg.saveFailed'))
       return
     }
     setBook(null)
@@ -1559,7 +1567,7 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
         )}
       </div>
       <div className="ttrpg-detail-col">
-        {detailLoading || previewBusy ? (
+        {detailLoading ? (
           <LoadingSpinner />
         ) : (
           <>
@@ -1581,6 +1589,10 @@ function HandbooksPane({ apiBase, isGameMaster, campaignId }) {
             )}
 
             {searchLoading && <LoadingSpinner label={t('ttrpg.searching')} />}
+
+            {previewBusy && (
+              <LoadingSpinner label={t('ttrpg.loadingData')} inline />
+            )}
 
             {!searched && !searchLoading && (
               <p className="ttrpg-muted ttrpg-muted-center">{t('ttrpg.searchEmpty')}</p>
@@ -1642,6 +1654,7 @@ function TtrpgManagerPanel({
   const configured = !!ttrpgManager?.configured
   const [subTab, setSubTab] = useState('contents')
   const [localCampaignId, setLocalCampaignId] = useState(ttrpgManager?.campaignId ?? null)
+  const [disconnecting, setDisconnecting] = useState(false)
 
   useEffect(() => {
     setLocalCampaignId(ttrpgManager?.campaignId ?? null)
@@ -1653,9 +1666,27 @@ function TtrpgManagerPanel({
 
   const disconnect = async () => {
     if (!window.confirm(t('ttrpg.confirmDisconnect'))) return
-    const data = await ttrpgClearKey(apiBase)
-    if (data.success) handleStatus(data.ttrpgManager, data.version)
+    // Stop hanging Manager proxy calls so PHP/local clear-key can run immediately.
+    abortTtrpgProxyRequests()
+    setDisconnecting(true)
+    try {
+      const data = await ttrpgClearKey(apiBase)
+      if (data.success) handleStatus(data.ttrpgManager, data.version)
+    } finally {
+      setDisconnecting(false)
+    }
   }
+
+  const disconnectButton = isGameMaster ? (
+    <button
+      type="button"
+      className="ttrpg-btn-danger"
+      onClick={disconnect}
+      disabled={disconnecting}
+    >
+      {disconnecting ? t('ttrpg.loadingData') : t('ttrpg.disconnect')}
+    </button>
+  ) : null
 
   if (!configured) {
     if (!isGameMaster) {
@@ -1689,11 +1720,7 @@ function TtrpgManagerPanel({
             </button>
           ))}
         </div>
-        {isGameMaster && (
-          <button type="button" className="ttrpg-btn-ghost" onClick={disconnect}>
-            {t('ttrpg.disconnect')}
-          </button>
-        )}
+        {disconnectButton}
       </div>
 
       {subTab === 'campaign' && (

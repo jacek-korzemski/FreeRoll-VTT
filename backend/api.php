@@ -176,12 +176,14 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $allowedOriginsStr = $env['ALLOWED_ORIGINS'] ?? 'http://localhost:5173';
 $allowedOrigins = array_map('trim', explode(',', $allowedOriginsStr));
 
-if (in_array($origin, $allowedOrigins) || in_array('*', $allowedOrigins)) {
+$isLocalOrigin = (bool) preg_match('#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#i', $origin);
+if ($origin !== '' && (in_array($origin, $allowedOrigins, true) || in_array('*', $allowedOrigins, true) || $isLocalOrigin)) {
     header("Access-Control-Allow-Origin: $origin");
 }
 
+header('Vary: Origin');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Dev-GM');
+header('Access-Control-Allow-Headers: Content-Type, X-Dev-GM, X-VTT-Client-Id, X-VTT-Player-Name');
 header('Access-Control-Allow-Credentials: true');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

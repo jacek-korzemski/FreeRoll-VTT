@@ -178,6 +178,7 @@ class TableProvisioningTest extends TestCase
 
         $this->assertStringContainsString('wire:model="name"', $html);
         $this->assertStringContainsString('wire:model="color_template"', $html);
+        $this->assertStringContainsString('openThemePreview', $html);
         $this->assertStringContainsString('<input', $html);
         $this->assertStringNotContainsString('<x-text-input', $html);
     }
@@ -217,5 +218,20 @@ class TableProvisioningTest extends TestCase
         $env = File::get($table->absolutePath().DIRECTORY_SEPARATOR.'.env');
         $this->assertStringContainsString('VTT_LANGUAGE=en', $env);
         $this->assertStringContainsString('VTT_COLOR_TEMPLATE=ember', $env);
+    }
+
+    public function test_theme_preview_modal_can_select_template(): void
+    {
+        $user = User::factory()->create(['username' => 'preview']);
+
+        Livewire::actingAs($user)
+            ->test(TablesDashboard::class)
+            ->assertSet('showThemePreview', false)
+            ->call('openThemePreview', 'create')
+            ->assertSet('showThemePreview', true)
+            ->assertSee('Szablony kolorystyczne')
+            ->call('pickColorTemplate', 'ember')
+            ->assertSet('showThemePreview', false)
+            ->assertSet('color_template', 'ember');
     }
 }

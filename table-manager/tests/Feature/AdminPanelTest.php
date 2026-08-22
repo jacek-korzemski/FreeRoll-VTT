@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Livewire\Admin\Dashboard;
 use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -104,8 +106,9 @@ class AdminPanelTest extends TestCase
         $this->withSession(['admin_authenticated' => true])
             ->get(route('admin.dashboard'))
             ->assertOk()
-            ->assertSee('Odpal migracje')
-            ->assertSee('php artisan migrate --force');
+            ->assertSee('Aktualizuj bazę')
+            ->assertSee('php artisan migrate --force')
+            ->assertSee('vtt_tables.color_template');
     }
 
     public function test_guest_cannot_run_migrations_via_livewire(): void
@@ -125,5 +128,22 @@ class AdminPanelTest extends TestCase
 
         $this->assertIsString($component->get('migrateOutput'));
         $this->assertNotSame('', $component->get('migrateOutput'));
+        $this->assertTrue(Schema::hasColumn('vtt_tables', 'color_template'));
+    }
+
+    public function test_run_migrations_adds_missing_color_template_column(): void
+    {
+        Schema::table('vtt_tables', function (Blueprint $table) {
+            $table->dropColumn('color_template');
+        });
+        $this->assertFalse(Schema::hasColumn('vtt_tables', 'color_template'));
+
+        session(['admin_authenticated' => true]);
+
+        Livewire::test(Dashboard::class)
+            ->call('runMigrations')
+            ->assertHasNoErrors();
+
+        $this->assertTrue(Schema::hasColumn('vtt_tables', 'color_template'));
     }
 }

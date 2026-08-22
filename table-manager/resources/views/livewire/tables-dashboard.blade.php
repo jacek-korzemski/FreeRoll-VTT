@@ -65,11 +65,18 @@
                             </div>
                             <div>
                                 <x-input-label for="edit_color_template_{{ $table->id }}" value="Szablon kolorystyczny" />
-                                <select wire:model="edit_color_template" id="edit_color_template_{{ $table->id }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
-                                    @foreach ($colorThemes as $theme)
-                                        <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
-                                    @endforeach
-                                </select>
+                                <div class="mt-1 flex gap-2">
+                                    <select wire:model="edit_color_template" id="edit_color_template_{{ $table->id }}" class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                                        @foreach ($colorThemes as $theme)
+                                            <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="button" wire:click="openThemePreview('edit')" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white" title="Podgląd szablonów" aria-label="Podgląd szablonów">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                        </svg>
+                                    </button>
+                                </div>
                                 <x-input-error class="mt-1" :messages="$errors->get('edit_color_template')" />
                             </div>
                             <div class="flex gap-2">
@@ -131,11 +138,18 @@
                 </div>
                 <div>
                     <x-input-label for="color_template" value="Szablon kolorystyczny" />
-                    <select wire:model="color_template" id="color_template" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-50" @disabled(! $sourceReady)>
-                        @foreach ($colorThemes as $theme)
-                            <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
-                        @endforeach
-                    </select>
+                    <div class="mt-1 flex gap-2">
+                        <select wire:model="color_template" id="color_template" class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-50" @disabled(! $sourceReady)>
+                            @foreach ($colorThemes as $theme)
+                                <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
+                            @endforeach
+                        </select>
+                        <button type="button" wire:click="openThemePreview('create')" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50" title="Podgląd szablonów" aria-label="Podgląd szablonów" @disabled(! $sourceReady)>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                        </button>
+                    </div>
                     <x-input-error class="mt-1" :messages="$errors->get('color_template')" />
                 </div>
                 <div class="flex items-end">
@@ -144,4 +158,57 @@
             </form>
         @endif
     </section>
+
+    @if ($showThemePreview)
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+            wire:keydown.escape.window="closeThemePreview"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="theme-preview-title"
+        >
+            <div class="absolute inset-0 bg-black/70" wire:click="closeThemePreview"></div>
+            <div class="relative z-10 flex h-auto max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-white/10 bg-vtt-panel shadow-2xl">
+                <div class="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
+                    <div>
+                        <h3 id="theme-preview-title" class="text-lg font-semibold text-white">Szablony kolorystyczne</h3>
+                        <p class="mt-1 text-sm text-gray-400">Kliknij wariant, żeby go wybrać.</p>
+                    </div>
+                    <button type="button" wire:click="closeThemePreview" class="rounded-md p-1 text-gray-400 hover:bg-white/10 hover:text-white" aria-label="Zamknij">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
+                    <ul class="grid gap-4 sm:grid-cols-2">
+                        @foreach ($colorThemes as $theme)
+                            @php
+                                $isSelected = $themePreviewTarget === 'edit'
+                                    ? $edit_color_template === $theme['id']
+                                    : $color_template === $theme['id'];
+                            @endphp
+                            <li>
+                                <button
+                                    type="button"
+                                    wire:click="pickColorTemplate('{{ $theme['id'] }}')"
+                                    class="group w-full overflow-hidden rounded-lg border text-left transition {{ $isSelected ? 'border-vtt-accent ring-1 ring-vtt-accent' : 'border-white/10 hover:border-white/25' }}"
+                                >
+                                    @if (! empty($theme['preview']))
+                                        <img src="{{ $theme['preview'] }}" alt="{{ $theme['name']['pl'] }}" class="aspect-video w-full object-cover object-top bg-black">
+                                    @else
+                                        <div class="flex aspect-video items-center justify-center bg-black/40 text-sm text-gray-500">Brak podglądu</div>
+                                    @endif
+                                    <div class="flex items-center justify-between gap-2 px-3 py-2">
+                                        <span class="text-sm font-medium text-white">{{ $theme['name']['pl'] }}</span>
+                                        <span class="font-mono text-xs uppercase text-gray-400">{{ $theme['id'] }}</span>
+                                    </div>
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

@@ -34,6 +34,7 @@ class ThemeCatalog
                             'en' => (string) ($name['en'] ?? $id),
                             'pl' => (string) ($name['pl'] ?? $id),
                         ],
+                        'preview' => $this->previewUrl($id),
                     ];
                 }
                 if ($themes !== []) {
@@ -53,6 +54,7 @@ class ThemeCatalog
                 'crimson' => [
                     'id' => 'crimson',
                     'name' => ['en' => 'Crimson', 'pl' => 'Karmazyn'],
+                    'preview' => $this->previewUrl('crimson'),
                 ],
             ],
         ];
@@ -69,5 +71,19 @@ class ThemeCatalog
     public function defaultId(): string
     {
         return $this->catalog()['default'];
+    }
+
+    public function previewUrl(string $id): ?string
+    {
+        if ($id === '' || ! preg_match('/^[a-z0-9_-]+$/i', $id)) {
+            return null;
+        }
+
+        $path = public_path('color-themes'.DIRECTORY_SEPARATOR.$id.'.jpg');
+        if (! File::isFile($path)) {
+            return null;
+        }
+
+        return asset('color-themes/'.$id.'.jpg');
     }
 }

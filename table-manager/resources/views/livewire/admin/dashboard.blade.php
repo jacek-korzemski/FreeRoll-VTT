@@ -40,9 +40,17 @@
             <h2 class="text-sm font-semibold text-white">Baza danych</h2>
             <p class="mt-1 text-sm text-gray-400">
                 Odpowiednik <code class="font-mono text-gray-300">php artisan migrate --force</code>
-                — tylko brakujące migracje, bez czyszczenia danych.
+                oraz dociągnięcie brakujących kolumn (np. <code class="font-mono text-gray-300">color_template</code>), bez czyszczenia danych.
             </p>
         </div>
+
+        <ul class="text-sm space-y-1">
+            @foreach ($schemaStatus as $column => $ok)
+                <li class="{{ $ok ? 'text-emerald-400' : 'text-amber-200' }}">
+                    {{ $column }}: {{ $ok ? 'OK' : 'brak' }}
+                </li>
+            @endforeach
+        </ul>
 
         @if (count($pendingMigrations) > 0)
             <p class="text-sm text-amber-200">Oczekujące migracje ({{ count($pendingMigrations) }}):</p>
@@ -56,7 +64,7 @@
         @endif
 
         <x-primary-button type="button" wire:click="runMigrations" wire:loading.attr="disabled">
-            <span wire:loading.remove wire:target="runMigrations">Odpal migracje</span>
+            <span wire:loading.remove wire:target="runMigrations">Aktualizuj bazę</span>
             <span wire:loading wire:target="runMigrations">Uruchamiam…</span>
         </x-primary-button>
 

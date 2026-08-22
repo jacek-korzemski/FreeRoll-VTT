@@ -81,4 +81,10 @@ class VttTelemetryTest extends TestCase
         $this->assertLessThan(9000, $count);
         $this->assertGreaterThan(100, $count);
     }
+
+    public function test_player_name_decodes_percent_encoded_unicode(): void
+    {
+        $_SERVER['HTTP_X_VTT_PLAYER_NAME'] = rawurlencode('Michał');
+        $this->assertSame('Michał', vttTelemetryPlayerName());
+    }
 }

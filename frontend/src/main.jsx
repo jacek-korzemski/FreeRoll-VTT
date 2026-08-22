@@ -9,6 +9,16 @@ import { getOrCreateClientId } from './utils/clientId'
 
 applyTheme(COLOR_TEMPLATE)
 
+function iso88591HeaderValue(value) {
+  const text = String(value)
+  for (let i = 0; i < text.length; i++) {
+    if (text.charCodeAt(i) > 255) {
+      return encodeURIComponent(text)
+    }
+  }
+  return text
+}
+
 const origFetch = window.fetch
 window.fetch = function (url, opts) {
   let finalOpts = opts || {}
@@ -19,7 +29,7 @@ window.fetch = function (url, opts) {
     try {
       const name = localStorage.getItem('vtt_player_name')
       if (name) {
-        headers['X-VTT-Player-Name'] = String(name).slice(0, 80)
+        headers['X-VTT-Player-Name'] = iso88591HeaderValue(String(name).slice(0, 80))
       }
     } catch {
       /* ignore */

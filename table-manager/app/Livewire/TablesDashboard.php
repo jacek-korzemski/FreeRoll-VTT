@@ -34,6 +34,37 @@ class TablesDashboard extends Component
 
     public ?int $confirmingDeleteId = null;
 
+    public bool $showThemePreview = false;
+
+    public string $themePreviewTarget = 'create';
+
+    public function openThemePreview(string $target = 'create'): void
+    {
+        $this->themePreviewTarget = $target === 'edit' ? 'edit' : 'create';
+        $this->showThemePreview = true;
+        $this->confirmingDeleteId = null;
+    }
+
+    public function closeThemePreview(): void
+    {
+        $this->showThemePreview = false;
+    }
+
+    public function pickColorTemplate(string $id): void
+    {
+        if (! in_array($id, $this->themeIds(), true)) {
+            return;
+        }
+
+        if ($this->themePreviewTarget === 'edit') {
+            $this->edit_color_template = $id;
+        } else {
+            $this->color_template = $id;
+        }
+
+        $this->showThemePreview = false;
+    }
+
     public function createTable(TableProvisioner $provisioner): void
     {
         $validated = $this->validate($this->createRules());
@@ -61,6 +92,7 @@ class TablesDashboard extends Component
         $this->edit_language = $table->language;
         $this->edit_color_template = $table->color_template ?: 'crimson';
         $this->confirmingDeleteId = null;
+        $this->showThemePreview = false;
     }
 
     public function cancelEdit(): void
@@ -98,6 +130,7 @@ class TablesDashboard extends Component
         $this->ownedTable($tableId);
         $this->confirmingDeleteId = $tableId;
         $this->editingId = null;
+        $this->showThemePreview = false;
     }
 
     public function deleteTable(TableProvisioner $provisioner): void

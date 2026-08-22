@@ -94,6 +94,19 @@ function vttTelemetryPlayerName(): ?string
     if ($name === '') {
         return null;
     }
+    if (str_contains($name, '%')) {
+        $decoded = rawurldecode($name);
+        $validUtf8 = function_exists('mb_check_encoding')
+            ? mb_check_encoding($decoded, 'UTF-8')
+            : (bool) preg_match('//u', $decoded);
+        if ($validUtf8) {
+            $name = $decoded;
+        }
+    }
+    $name = trim($name);
+    if ($name === '') {
+        return null;
+    }
 
     return function_exists('mb_substr') ? mb_substr($name, 0, 80) : substr($name, 0, 80);
 }

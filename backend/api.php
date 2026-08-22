@@ -184,6 +184,7 @@ if ($origin !== '' && (in_array($origin, $allowedOrigins, true) || in_array('*',
 header('Vary: Origin');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Dev-GM, X-VTT-Client-Id, X-VTT-Player-Name');
+header('Access-Control-Expose-Headers: X-VTT-Version');
 header('Access-Control-Allow-Credentials: true');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -195,9 +196,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // ============================================
 
 $dataFile = __DIR__ . '/data/state.json';
+$versionFile = __DIR__ . '/data/state.version';
 
 if (!file_exists(__DIR__ . '/data')) {
     mkdir(__DIR__ . '/data', 0755, true);
+}
+
+function writeStateVersionSidecar($version) {
+    global $versionFile;
+    file_put_contents($versionFile, (string) (int) $version, LOCK_EX);
+}
+
+function peekStateVersion(): int {
+    global $versionFile;
+    if (is_file($versionFile)) {
+        $raw = trim((string) file_get_contents($versionFile));
+        if ($raw !== '' && ctype_digit($raw)) {
+            return (int) $raw;
+        }
+    }
+    $state = getState();
+    $version = (int) ($state['version'] ?? 0);
+    writeStateVersionSidecar($version);
+    return $version;
 }
 
 function generateId() {
@@ -228,6 +249,7 @@ function getState() {
             'version' => 0
         ];
         file_put_contents($dataFile, json_encode($initialState, JSON_PRETTY_PRINT));
+        writeStateVersionSidecar(0);
         return $initialState;
     }
     
@@ -305,7 +327,26 @@ function saveState($state) {
     $state['lastUpdate'] = time();
     $state['version'] = ($state['version'] ?? 0) + 1;
     file_put_contents($dataFile, json_encode($state, JSON_PRETTY_PRINT));
+    writeStateVersionSidecar($state['version']);
     return $state;
+}
+
+function tableSyncPayload(array $state): array {
+    $rollsFile = __DIR__ . '/data/rolls.json';
+    $activeScene = getActiveScene($state);
+    return [
+        'activeSceneId' => $state['activeSceneId'],
+        'scenes' => array_map(static function ($s) {
+            return ['id' => $s['id'], 'name' => $s['name']];
+        }, $state['scenes'] ?? []),
+        'scene' => $activeScene,
+        'counters' => $state['counters'] ?? [],
+        'ping' => $state['ping'] ?? null,
+        'rolls' => annotateRollsForSnackbar(loadRolls($rollsFile)),
+        'version' => $state['version'] ?? 0,
+        'serverNow' => time(),
+        'ttrpgManager' => ttrpgPublicStatus(),
+    ];
 }
 
 function getActiveScene(&$state) {
@@ -540,6 +581,10 @@ try {
         exit;
     }
 
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
     if (function_exists('vttTelemetryTouchPresence') && $action !== '' && $action !== 'auth' && (isAuthenticated() || $isDevBypass || isDevMode())) {
         $presenceOnly = in_array($action, ['check', 'ping', 'rolls'], true);
         if ($presenceOnly) {
@@ -568,20 +613,9 @@ try {
 
                 case 'state':
                     $state = getState();
-                    $activeScene = getActiveScene($state);
                     echo json_encode([
                         'success' => true,
-                        'data' => [
-                            'activeSceneId' => $state['activeSceneId'],
-                            'scenes' => array_map(function($s) {
-                                return ['id' => $s['id'], 'name' => $s['name']];
-                            }, $state['scenes']),
-                            'scene' => $activeScene,
-                            'counters' => $state['counters'] ?? [],
-                            'version' => $state['version'],
-                            'serverNow' => time(),
-                            'ttrpgManager' => ttrpgPublicStatus(),
-                        ]
+                        'data' => tableSyncPayload($state),
                     ]);
                     break;
 
@@ -593,35 +627,20 @@ try {
 
                 case 'check':
                     $clientVersion = intval($_GET['version'] ?? 0);
-                    $state = getState();
-                    $ttrpgManager = ttrpgPublicStatus();
-                    
-                    if ($state['version'] > $clientVersion) {
-                        $activeScene = getActiveScene($state);
-                        echo json_encode([
-                            'success' => true,
-                            'hasChanges' => true,
-                            'data' => [
-                                'activeSceneId' => $state['activeSceneId'],
-                                'scenes' => array_map(function($s) {
-                                    return ['id' => $s['id'], 'name' => $s['name']];
-                                }, $state['scenes']),
-                                'scene' => $activeScene,
-                                'counters' => $state['counters'] ?? [],
-                                'version' => $state['version'],
-                                'serverNow' => time(),
-                                'ttrpgManager' => $ttrpgManager,
-                            ]
-                        ]);
-                    } else {
-                        echo json_encode([
-                            'success' => true,
-                            'hasChanges' => false,
-                            'version' => $state['version'],
-                            'serverNow' => time(),
-                            'ttrpgManager' => $ttrpgManager,
-                        ]);
+                    $serverVersion = peekStateVersion();
+                    header('X-VTT-Version: ' . $serverVersion);
+
+                    if ($serverVersion === $clientVersion) {
+                        http_response_code(204);
+                        break;
                     }
+
+                    $state = getState();
+                    echo json_encode([
+                        'success' => true,
+                        'hasChanges' => true,
+                        'data' => tableSyncPayload($state),
+                    ]);
                     break;
 
                 case 'ttrpg-status':
@@ -1275,7 +1294,8 @@ try {
                     }
                     $rollsFile = __DIR__ . '/data/rolls.json';
                     saveRolls($rollsFile, []);
-                    echo json_encode(['success' => true]);
+                    $state = saveState(getState());
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
                     break;
 
                 case 'send-ping':

@@ -51,6 +51,10 @@ function App() {
   const [pingAnimation, setPingAnimation] = useState(null)
   const [activePing, setActivePing] = useState(null)
   const lastPingTimestampRef = useRef(0)
+  const versionRef = useRef(0)
+  const activeSceneIdRef = useRef(null)
+  const fogEditModeRef = useRef(false)
+  const pollInFlightRef = useRef(false)
   const gridContainerRef = useRef(null)
   const isInitialMapFetch = useRef(true)
   const isInitialTokenFetch = useRef(true)
@@ -71,6 +75,10 @@ function App() {
   const fogUpdateTimeoutRef = useRef(null)
   const backgroundUpdateTimeoutRef = useRef(null)
   const backgroundRemovedRef = useRef(false)
+
+  versionRef.current = version
+  activeSceneIdRef.current = activeSceneId
+  fogEditModeRef.current = fogEditMode
 
   // Sprawdź rolę użytkownika na początku
   useEffect(() => {
@@ -217,6 +225,18 @@ function App() {
       setPingAnimation(null)
     }, 2000)
   }, [zoomLevel])
+
+  const applyPingFromSync = useCallback((ping) => {
+    if (ping) {
+      setActivePing(ping)
+      if (ping.timestamp > lastPingTimestampRef.current) {
+        lastPingTimestampRef.current = ping.timestamp
+        scrollToPoint(ping.x, ping.y)
+      }
+    } else {
+      setActivePing(null)
+    }
+  }, [scrollToPoint])
   
   useEffect(() => {
     fetch(API_BASE + '?action=assets', { credentials: 'include' })
@@ -314,20 +334,26 @@ useEffect(() => {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        setScenes(data.data.scenes || [])
-        setActiveSceneId(data.data.activeSceneId)
-        updateSceneState(data.data.scene)
-        setVersion(data.data.version || 0)
-        setSharedCounters(data.data.counters || [])
-        if (typeof data.data.serverNow === 'number') {
-          setServerNow(data.data.serverNow)
+        const sync = data.data || {}
+        setScenes(sync.scenes || [])
+        setActiveSceneId(sync.activeSceneId)
+        updateSceneState(sync.scene)
+        setVersion(sync.version || 0)
+        setSharedCounters(sync.counters || [])
+        if (typeof sync.serverNow === 'number') {
+          setServerNow(sync.serverNow)
         }
-        if (data.data.ttrpgManager) {
+        if (sync.ttrpgManager) {
           setTtrpgManager({
-            configured: !!data.data.ttrpgManager.configured,
-            baseUrl: data.data.ttrpgManager.baseUrl ?? null,
-            campaignId: data.data.ttrpgManager.campaignId ?? null,
+            configured: !!sync.ttrpgManager.configured,
+            baseUrl: sync.ttrpgManager.baseUrl ?? null,
+            campaignId: sync.ttrpgManager.campaignId ?? null,
           })
+        }
+        applyPingFromSync(sync.ping ?? null)
+        if (Array.isArray(sync.rolls)) {
+          setRollHistory(sync.rolls)
+          setRollsHydrated(true)
         }
       }
       setIsLoading(false)
@@ -336,109 +362,90 @@ useEffect(() => {
       console.error(err)
       setIsLoading(false)
     })
-}, [updateSceneState])
+}, [updateSceneState, applyPingFromSync])
 
   
   useEffect(() => {
-    const interval = setInterval(() => {
-      const onSuccess = () => {
-        setApiStatus('ok')
-        setApiFlashTrigger(t => t + 1)
-      }
-      const onError = () => {
-        setApiStatus('error')
-        setApiFlashTrigger(t => t + 1)
-      }
+    const onSuccess = () => {
+      setApiStatus('ok')
+      setApiFlashTrigger(t => t + 1)
+    }
+    const onError = () => {
+      setApiStatus('error')
+      setApiFlashTrigger(t => t + 1)
+    }
 
-      fetch(`${API_BASE}?action=check&version=${version}`, { credentials: 'include' })
-        .then(res => {
-          if (!res.ok) onError()
-          return res.json()
-        })
-        .then(data => {
-          if (data.success) {
-            onSuccess()
-            const sn = data.hasChanges ? data.data?.serverNow : data.serverNow
-            if (typeof sn === 'number') {
-              setServerNow(sn)
-            }
-            const tm = data.hasChanges ? data.data?.ttrpgManager : data.ttrpgManager
-            if (tm && typeof tm === 'object') {
-              setTtrpgManager({
-                configured: !!tm.configured,
-                baseUrl: tm.baseUrl ?? null,
-                campaignId: tm.campaignId ?? null,
-              })
-            }
-            if (data.hasChanges) {
-              setScenes(data.data.scenes || [])
-              if (Array.isArray(data.data.counters)) {
-                setSharedCounters(data.data.counters)
-              }
-              // Sprawdź czy zmieniono aktywną scenę
-              if (data.data.activeSceneId !== activeSceneId) {
-                setActiveSceneId(data.data.activeSceneId)
-                updateSceneState(data.data.scene)
-                // Reset narzędzi przy zmianie sceny
-                setSelectedAsset(null)
-                setSelectedType(null)
-                setIsEraserActive(false)
-                setFogEditMode(false)
-              } else if (!fogEditMode) {
-                // Aktualizuj tylko jeśli nie edytujemy mgły
-                updateSceneState(data.data.scene)
-              }
-              setVersion(data.data.version)
-            }
-          } else {
-            onError()
-          }
-        })
-        .catch(() => { onError(); console.error })
+    const poll = () => {
+      if (pollInFlightRef.current) return
+      pollInFlightRef.current = true
 
-      fetch(`${API_BASE}?action=ping`, { credentials: 'include' })
+      fetch(`${API_BASE}?action=check&version=${versionRef.current}`, { credentials: 'include' })
         .then(res => {
-          if (!res.ok) onError()
-          return res.json()
-        })
-        .then(data => {
-          if (data.success) {
+          if (res.status === 204) {
             onSuccess()
-            if (data.ping) {
-              setActivePing(data.ping)
-              if (data.ping.timestamp > lastPingTimestampRef.current) {
-                lastPingTimestampRef.current = data.ping.timestamp
-                scrollToPoint(data.ping.x, data.ping.y)
-              }
-            } else {
-              setActivePing(null)
-            }
-          } else {
-            onError()
+            return null
           }
-        })
-        .catch(() => { onError(); console.error })
-      
-      // Pobierz rzuty
-      fetch(`${API_BASE}?action=rolls`, { credentials: 'include' })
-        .then(res => {
-          if (!res.ok) onError()
+          if (!res.ok) {
+            onError()
+            return null
+          }
           return res.json()
         })
         .then(data => {
-          if (data.success) {
-            onSuccess()
-            setRollHistory(data.rolls || [])
+          if (!data) return
+          if (!data.success) {
+            onError()
+            return
+          }
+          onSuccess()
+          if (!data.hasChanges || !data.data) return
+
+          const sync = data.data
+          if (typeof sync.serverNow === 'number') {
+            setServerNow(sync.serverNow)
+          }
+          if (sync.ttrpgManager && typeof sync.ttrpgManager === 'object') {
+            setTtrpgManager({
+              configured: !!sync.ttrpgManager.configured,
+              baseUrl: sync.ttrpgManager.baseUrl ?? null,
+              campaignId: sync.ttrpgManager.campaignId ?? null,
+            })
+          }
+          setScenes(sync.scenes || [])
+          if (Array.isArray(sync.counters)) {
+            setSharedCounters(sync.counters)
+          }
+          if (sync.activeSceneId !== activeSceneIdRef.current) {
+            setActiveSceneId(sync.activeSceneId)
+            updateSceneState(sync.scene)
+            setSelectedAsset(null)
+            setSelectedType(null)
+            setIsEraserActive(false)
+            setFogEditMode(false)
+          } else if (!fogEditModeRef.current) {
+            updateSceneState(sync.scene)
+          }
+          if (typeof sync.version === 'number') {
+            setVersion(sync.version)
+          }
+          applyPingFromSync(sync.ping ?? null)
+          if (Array.isArray(sync.rolls)) {
+            setRollHistory(sync.rolls)
             setRollsHydrated(true)
-          } else {
-            onError()
           }
         })
-        .catch(() => { onError(); console.error })
-    }, 2000)
+        .catch(err => {
+          onError()
+          console.error(err)
+        })
+        .finally(() => {
+          pollInFlightRef.current = false
+        })
+    }
 
+    const interval = setInterval(poll, 2000)
     return () => clearInterval(interval)
-  }, [version, activeSceneId, fogEditMode, updateSceneState, scrollToPoint])
+  }, [updateSceneState, applyPingFromSync])
 
   const handleSwitchScene = useCallback((sceneId) => {
     fetch(`${API_BASE}?action=switch-scene`, {
@@ -575,6 +582,9 @@ useEffect(() => {
       .then(data => {
         if (data.success) {
           setRollHistory([])
+          if (typeof data.version === 'number') {
+            setVersion(data.version)
+          }
         }
       })
       .catch(console.error)
@@ -1174,18 +1184,6 @@ useEffect(() => {
         clearTimeout(backgroundUpdateTimeoutRef.current)
       }
     }
-  }, [])
-
-  useEffect(() => {
-    fetch(`${API_BASE}?action=rolls`, { credentials: 'include' })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setRollHistory(data.rolls || [])
-          setRollsHydrated(true)
-        }
-      })
-      .catch(console.error)
   }, [])
 
   if (isLoading) {

@@ -1,3 +1,9 @@
+# Freeware, opne source Virtual Table Top for RPGs
+
+You can create your table and play here: http://vtt.angrymaya.pl/
+
+Just please remember - this is just a fun project, don't use your main e-mail account, password that you use in other services etc. I'm just learning and I cannot guarantee my security methods are good enough for production. Treat this more like a free toy.
+
 ## FreeRoll VTT – simple self‑hosted virtual table
 
 FreeRoll VTT is a **lightweight Virtual TableTop** that you can build once and host on a **simple PHP/Apache (or nginx) server** – no Docker, no always‑on Node server.

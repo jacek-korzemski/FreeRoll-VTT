@@ -44,3 +44,7 @@ export const CELL_SIZE = 64
 // actually built in — it can never enable code that was never emitted.
 const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
 export const ENABLE_L5R = L5R_BUILD && (runtime?.enableL5r ?? true)
+
+export const COLOR_TEMPLATE = import.meta.env.DEV
+  ? (import.meta.env.VITE_COLOR_TEMPLATE || runtime?.colorTemplate || 'crimson')
+  : (runtime?.colorTemplate ?? import.meta.env.VITE_COLOR_TEMPLATE ?? 'crimson')

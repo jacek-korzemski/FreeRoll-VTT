@@ -98,6 +98,7 @@ xcopy /s /y "frontend\dist\assets\*" "build\assets\" >nul 2>nul
 copy /y "backend\api.php" "build\backend\" >nul
 copy /y "index.php" "build\" >nul
 copy /y "deploy-env.php" "build\" >nul
+copy /y "frontend\src\themes\themes.json" "build\themes.json" >nul
 
 if exist "backend\assets\templates\*.html" (
     xcopy /y "backend\assets\templates\*.html" "build\backend\assets\templates\" >nul 2>nul
@@ -136,7 +137,7 @@ powershell -Command "'' | Out-File -FilePath 'build\backend\assets\papers\.gitke
 powershell -Command "'' | Out-File -FilePath 'build\backend\data\.gitkeep' -Encoding ASCII"
 
 echo [5/6] Writing deployment configuration...
-powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "build\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%"
+powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "build\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%" -ColorTemplate "%COLOR_TEMPLATE%"
 if !errorlevel! neq 0 (
     echo [ERROR] Writing build\.env failed!
     pause
@@ -176,8 +177,9 @@ echo   Configuration used:
 echo     Player password: %PASSWORD%
 echo     GM password:     %GM_PASSWORD%
 echo     Base path:       %BASE_PATH%
-echo     Language:        %LANGUAGE%
-echo     L5R enabled:     %ENABLE_L5R%
+    echo     Language:        %LANGUAGE%
+    echo     Color template:  %COLOR_TEMPLATE%
+    echo     L5R enabled:     %ENABLE_L5R%
 echo.
 echo   Next steps:
 echo   1. Upload contents of 'build' folder to server

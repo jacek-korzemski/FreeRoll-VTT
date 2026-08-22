@@ -35,7 +35,7 @@ class TableProvisioner
     }
 
     /**
-     * @param  array{name: string, player_password: string, gm_password: string, language: string}  $data
+     * @param  array{name: string, player_password: string, gm_password: string, language: string, color_template?: string}  $data
      */
     public function create(User $user, array $data): VttTable
     {
@@ -56,6 +56,7 @@ class TableProvisioner
                 'player_password' => $data['player_password'],
                 'gm_password' => $data['gm_password'],
                 'language' => $data['language'],
+                'color_template' => $data['color_template'] ?? app(ThemeCatalog::class)->defaultId(),
             ]);
 
             $table->setRelation('user', $locked);
@@ -138,6 +139,7 @@ class TableProvisioner
             'VTT_GM_PASSWORD='.$table->gm_password,
             'VTT_BASE_PATH='.$table->publicPath(),
             'VTT_LANGUAGE='.$table->language,
+            'VTT_COLOR_TEMPLATE='.($table->color_template ?: 'crimson'),
             'VTT_ENABLE_L5R='.$this->sourceEnableL5r(),
             'ALLOWED_ORIGINS='.config('vtt.allowed_origins'),
         ])."\n";

@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Admin\Dashboard;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AdminPanelTest extends TestCase
@@ -95,5 +97,33 @@ class AdminPanelTest extends TestCase
         $this->get(route('admin.tables'))->assertOk()->assertSee('Stoły VTT');
         $this->get(route('admin.files'))->assertOk()->assertSee('Pliki graczy');
         $this->get(route('admin.analytics'))->assertOk()->assertSee('Analityka stołów');
+    }
+
+    public function test_admin_dashboard_shows_migrate_button(): void
+    {
+        $this->withSession(['admin_authenticated' => true])
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Odpal migracje')
+            ->assertSee('php artisan migrate --force');
+    }
+
+    public function test_guest_cannot_run_migrations_via_livewire(): void
+    {
+        Livewire::test(Dashboard::class)
+            ->call('runMigrations')
+            ->assertForbidden();
+    }
+
+    public function test_admin_can_run_migrations_from_dashboard(): void
+    {
+        session(['admin_authenticated' => true]);
+
+        $component = Livewire::test(Dashboard::class)
+            ->call('runMigrations')
+            ->assertHasNoErrors();
+
+        $this->assertIsString($component->get('migrateOutput'));
+        $this->assertNotSame('', $component->get('migrateOutput'));
     }
 }

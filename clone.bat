@@ -70,7 +70,7 @@ if not exist "%DEST_FOLDER%\backend\data" mkdir "%DEST_FOLDER%\backend\data"
 powershell -Command "if (-not (Test-Path '%DEST_FOLDER%\backend\data\.gitkeep')) { '' | Out-File -FilePath '%DEST_FOLDER%\backend\data\.gitkeep' -Encoding ASCII }"
 
 echo [3/3] Writing deployment configuration...
-powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "%DEST_FOLDER%\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%"
+powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "%DEST_FOLDER%\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%" -ColorTemplate "%COLOR_TEMPLATE%"
 if !errorlevel! neq 0 (
     echo [ERROR] Writing %DEST_FOLDER%\.env failed!
     pause
@@ -89,8 +89,9 @@ echo   Configuration used:
 echo     Player password: %PASSWORD%
 echo     GM password:     %GM_PASSWORD%
 echo     Base path:       %BASE_PATH%
-echo     Language:        %LANGUAGE%
-echo     L5R enabled:     %ENABLE_L5R%
+    echo     Language:        %LANGUAGE%
+    echo     Color template:  %COLOR_TEMPLATE%
+    echo     L5R enabled:     %ENABLE_L5R%
 echo.
 echo   Next steps:
 echo   1. Upload contents of '%DEST_FOLDER%' to your server

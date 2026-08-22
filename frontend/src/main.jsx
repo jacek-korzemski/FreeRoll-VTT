@@ -3,7 +3,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './App.css'
+import { COLOR_TEMPLATE } from '../config'
+import { applyTheme } from './themes/applyTheme'
 import { getOrCreateClientId } from './utils/clientId'
+
+applyTheme(COLOR_TEMPLATE)
 
 const origFetch = window.fetch
 window.fetch = function (url, opts) {

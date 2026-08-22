@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language'])]
+#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language', 'color_template'])]
 class VttTable extends Model
 {
     public function user(): BelongsTo

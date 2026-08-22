@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
 if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !== true):
 ?>
 <!DOCTYPE html>
-<html lang="<?= htmlspecialchars($cfg['language']) ?>">
+<html lang="<?= htmlspecialchars($cfg['language']) ?>" <?= colorTemplateHtmlAttributes($cfg) ?>>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,12 +70,12 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-panel) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
+            color: var(--color-text-strong);
         }
         .login-container {
             background: rgba(255, 255, 255, 0.05);
@@ -88,12 +88,12 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             max-width: 400px;
             width: 90%;
         }
-        h1 { margin-bottom: 0.5rem; color: #e94560; font-size: 2rem; }
-        .subtitle { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
+        h1 { margin-bottom: 0.5rem; color: var(--color-accent); font-size: 2rem; }
+        .subtitle { color: var(--color-text-dim); margin-bottom: 2rem; font-size: 0.9rem; }
         .error {
-            background: rgba(233, 69, 96, 0.2);
-            border: 1px solid #e94560;
-            color: #ff6b6b;
+            background: rgba(var(--color-accent-rgb), 0.2);
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent-hover);
             padding: 0.75rem;
             border-radius: 6px;
             margin-bottom: 1rem;
@@ -105,12 +105,12 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            color: var(--color-text-strong);
             font-size: 1rem;
             transition: border-color 0.2s;
         }
-        input[type="password"]:focus { outline: none; border-color: #e94560; }
-        input[type="password"]::placeholder { color: #666; }
+        input[type="password"]:focus { outline: none; border-color: var(--color-accent); }
+        input[type="password"]::placeholder { color: var(--color-text-dim); }
         .gm-checkbox {
             display: flex;
             align-items: center;
@@ -123,17 +123,17 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             width: 1.2rem;
             height: 1.2rem;
             cursor: pointer;
-            accent-color: #e94560;
+            accent-color: var(--color-accent);
         }
         .gm-checkbox label {
             cursor: pointer;
             font-size: 0.9rem;
-            color: #ccc;
+            color: var(--color-text-muted);
         }
         button {
             padding: 0.875rem;
-            background: #e94560;
-            color: white;
+            background: var(--color-accent);
+            color: var(--color-text-strong);
             border: none;
             border-radius: 8px;
             font-size: 1rem;
@@ -141,7 +141,7 @@ if (!isset($_SESSION['vtt_authenticated']) || $_SESSION['vtt_authenticated'] !==
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
         }
-        button:hover { background: #ff6b6b; }
+        button:hover { background: var(--color-accent-hover); }
         button:active { transform: scale(0.98); }
         .dice { font-size: 3rem; margin-bottom: 1rem; }
     </style>
@@ -189,10 +189,11 @@ $vttConfig = [
     'basePath' => $cfg['basePath'],
     'language' => $cfg['language'],
     'enableL5r' => $cfg['enableL5r'],
+    'colorTemplate' => $cfg['colorTemplate'],
 ];
 ?>
 <!DOCTYPE html>
-<html lang="<?= htmlspecialchars($cfg['language']) ?>">
+<html lang="<?= htmlspecialchars($cfg['language']) ?>" <?= colorTemplateHtmlAttributes($cfg) ?>>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -207,8 +208,8 @@ $vttConfig = [
             right: 10px;
             z-index: 9999;
             padding: 0.5rem 1rem;
-            background: rgba(233, 69, 96, 0.8);
-            color: white;
+            background: rgba(var(--color-accent-rgb), 0.8);
+            color: var(--color-text-strong);
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -216,7 +217,7 @@ $vttConfig = [
             text-decoration: none;
             transition: background 0.2s;
         }
-        .logout-btn:hover { background: #e94560; }
+        .logout-btn:hover { background: var(--color-accent); }
     </style>
 </head>
 <body>

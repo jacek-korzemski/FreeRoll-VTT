@@ -33,6 +33,8 @@
                         </div>
                         <span class="shrink-0 rounded-full bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-gray-300">
                             {{ $table->language }}
+                            ·
+                            {{ $table->color_template }}
                         </span>
                     </div>
 
@@ -61,6 +63,15 @@
                                 </select>
                                 <x-input-error class="mt-1" :messages="$errors->get('edit_language')" />
                             </div>
+                            <div>
+                                <x-input-label for="edit_color_template_{{ $table->id }}" value="Szablon kolorystyczny" />
+                                <select wire:model="edit_color_template" id="edit_color_template_{{ $table->id }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                                    @foreach ($colorThemes as $theme)
+                                        <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error class="mt-1" :messages="$errors->get('edit_color_template')" />
+                            </div>
                             <div class="flex gap-2">
                                 <x-primary-button>Zapisz</x-primary-button>
                                 <x-secondary-button type="button" wire:click="cancelEdit">Anuluj</x-secondary-button>
@@ -79,7 +90,7 @@
                             <p><span class="text-gray-400">Hasło gracza:</span> <span class="font-mono text-gray-200">{{ $table->player_password }}</span></p>
                             <p><span class="text-gray-400">Hasło MG:</span> <span class="font-mono text-gray-200">{{ $table->gm_password }}</span></p>
                             <div class="flex flex-wrap gap-2 pt-2">
-                                <x-secondary-button type="button" wire:click="startEdit({{ $table->id }})">Zmień hasła / język</x-secondary-button>
+                                <x-secondary-button type="button" wire:click="startEdit({{ $table->id }})">Zmień ustawienia</x-secondary-button>
                                 <x-danger-button type="button" wire:click="confirmDelete({{ $table->id }})">Usuń</x-danger-button>
                             </div>
                         </div>
@@ -117,6 +128,15 @@
                         <option value="en">English</option>
                     </select>
                     <x-input-error class="mt-1" :messages="$errors->get('language')" />
+                </div>
+                <div>
+                    <x-input-label for="color_template" value="Szablon kolorystyczny" />
+                    <select wire:model="color_template" id="color_template" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 disabled:cursor-not-allowed disabled:opacity-50" @disabled(! $sourceReady)>
+                        @foreach ($colorThemes as $theme)
+                            <option value="{{ $theme['id'] }}">{{ $theme['name']['pl'] }} ({{ $theme['id'] }})</option>
+                        @endforeach
+                    </select>
+                    <x-input-error class="mt-1" :messages="$errors->get('color_template')" />
                 </div>
                 <div class="flex items-end">
                     <x-primary-button :disabled="! $sourceReady">Utwórz stół</x-primary-button>

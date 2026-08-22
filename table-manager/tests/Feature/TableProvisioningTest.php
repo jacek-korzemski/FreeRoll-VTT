@@ -35,6 +35,13 @@ class TableProvisioningTest extends TestCase
         File::put($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Ttrpg'.DIRECTORY_SEPARATOR.'Actions.php', "<?php\n");
         File::put($source.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'state.json', '{"version":1}');
         File::put($source.DIRECTORY_SEPARATOR.'.env', "VTT_ENABLE_L5R=true\nVTT_PASSWORD=old\n");
+        File::put($source.DIRECTORY_SEPARATOR.'themes.json', json_encode([
+            'default' => 'crimson',
+            'themes' => [
+                'crimson' => ['name' => ['en' => 'Crimson', 'pl' => 'Karmazyn'], 'tokens' => []],
+                'ember' => ['name' => ['en' => 'Ember', 'pl' => 'Żar'], 'tokens' => []],
+            ],
+        ], JSON_UNESCAPED_UNICODE));
 
         config([
             'vtt.source_path' => $source,
@@ -62,6 +69,7 @@ class TableProvisioningTest extends TestCase
             'player_password' => 'gracze',
             'gm_password' => 'mistrz',
             'language' => 'pl',
+            'color_template' => 'ember',
         ]);
 
         $dir = $table->absolutePath();
@@ -75,6 +83,7 @@ class TableProvisioningTest extends TestCase
         $this->assertStringContainsString('VTT_GM_PASSWORD=mistrz', $env);
         $this->assertStringContainsString('VTT_BASE_PATH=/vtt/user/janek/'.$table->slug.'/', $env);
         $this->assertStringContainsString('VTT_LANGUAGE=pl', $env);
+        $this->assertStringContainsString('VTT_COLOR_TEMPLATE=ember', $env);
         $this->assertStringContainsString('VTT_ENABLE_L5R=true', $env);
     }
 
@@ -147,6 +156,7 @@ class TableProvisioningTest extends TestCase
             ->set('player_password', 'players')
             ->set('gm_password', 'gmsecret')
             ->set('language', 'en')
+            ->set('color_template', 'ember')
             ->call('createTable')
             ->assertHasNoErrors();
 
@@ -154,6 +164,7 @@ class TableProvisioningTest extends TestCase
             'user_id' => $user->id,
             'name' => 'Kampania',
             'language' => 'en',
+            'color_template' => 'ember',
         ]);
     }
 
@@ -166,6 +177,7 @@ class TableProvisioningTest extends TestCase
             ->html();
 
         $this->assertStringContainsString('wire:model="name"', $html);
+        $this->assertStringContainsString('wire:model="color_template"', $html);
         $this->assertStringContainsString('<input', $html);
         $this->assertStringNotContainsString('<x-text-input', $html);
     }
@@ -181,5 +193,29 @@ class TableProvisioningTest extends TestCase
             ->assertSee('Podaj nazwę stołu.')
             ->assertSee('Podaj hasło gracza.')
             ->assertSee('Podaj hasło Mistrza Gry.');
+    }
+
+    public function test_update_settings_rewrites_color_template(): void
+    {
+        $user = User::factory()->create(['username' => 'theme-user']);
+        $provisioner = app(TableProvisioner::class);
+        $table = $provisioner->create($user, [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+            'color_template' => 'crimson',
+        ]);
+
+        $provisioner->updateSettings($table, [
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'en',
+            'color_template' => 'ember',
+        ]);
+
+        $env = File::get($table->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertStringContainsString('VTT_LANGUAGE=en', $env);
+        $this->assertStringContainsString('VTT_COLOR_TEMPLATE=ember', $env);
     }
 }

@@ -55,6 +55,23 @@ if /i not "%LANGUAGE%"=="en" if /i not "%LANGUAGE%"=="pl" (
     goto ask_language
 )
 
+:ask_color_template
+set "COLOR_TEMPLATE="
+if /i "%PROMPT_LOCALE%"=="pl" (
+    set /p "COLOR_TEMPLATE=Szablon kolorystyczny (crimson/ember/forest/ocean/violet) [crimson]: "
+) else (
+    set /p "COLOR_TEMPLATE=Color template (crimson/ember/forest/ocean/violet) [crimson]: "
+)
+if "%COLOR_TEMPLATE%"=="" set "COLOR_TEMPLATE=crimson"
+if /i not "%COLOR_TEMPLATE%"=="crimson" if /i not "%COLOR_TEMPLATE%"=="ember" if /i not "%COLOR_TEMPLATE%"=="forest" if /i not "%COLOR_TEMPLATE%"=="ocean" if /i not "%COLOR_TEMPLATE%"=="violet" (
+    if /i "%PROMPT_LOCALE%"=="pl" (
+        echo   Nieprawidlowa opcja. Wpisz: crimson, ember, forest, ocean lub violet.
+    ) else (
+        echo   Invalid option. Please enter: crimson, ember, forest, ocean, or violet.
+    )
+    goto ask_color_template
+)
+
 :ask_l5r
 set "ENABLE_L5R="
 if /i "%PROMPT_LOCALE%"=="pl" (
@@ -89,6 +106,7 @@ if /i "%PROMPT_LOCALE%"=="pl" (
     echo    Haslo Mistrza Gry:   %GM_PASSWORD%
     echo    Sciezka bazowa:      %BASE_PATH%
     echo    Jezyk interfejsu:    %LANGUAGE%
+    echo    Szablon kolorow:     %COLOR_TEMPLATE%
     echo    Wsparcie L5R:        %ENABLE_L5R%
     echo    Dozwolone originy:   %ALLOWED_ORIGINS%
 ) else (
@@ -97,6 +115,7 @@ if /i "%PROMPT_LOCALE%"=="pl" (
     echo    GM password:      %GM_PASSWORD%
     echo    Base path:        %BASE_PATH%
     echo    Language:         %LANGUAGE%
+    echo    Color template:   %COLOR_TEMPLATE%
     echo    Enable L5R:       %ENABLE_L5R%
     echo    Allowed origins:  %ALLOWED_ORIGINS%
 )

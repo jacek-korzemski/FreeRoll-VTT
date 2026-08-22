@@ -10,6 +10,7 @@
                     <th class="px-4 py-3 font-medium">Stół</th>
                     <th class="px-4 py-3 font-medium">Owner</th>
                     <th class="px-4 py-3 font-medium">Język</th>
+                    <th class="px-4 py-3 font-medium">Szablon</th>
                     <th class="px-4 py-3 font-medium">Utworzony</th>
                     <th class="px-4 py-3 font-medium">Ostatnia aktywność</th>
                     <th class="px-4 py-3 font-medium">Online</th>
@@ -28,6 +29,7 @@
                             <div class="text-xs text-gray-500">{{ $table->user->email }}</div>
                         </td>
                         <td class="px-4 py-3 uppercase text-gray-400">{{ $table->language }}</td>
+                        <td class="px-4 py-3 uppercase text-gray-400">{{ $table->color_template }}</td>
                         <td class="px-4 py-3 text-gray-400 whitespace-nowrap">{{ $table->created_at?->format('Y-m-d H:i') }}</td>
                         <td class="px-4 py-3 text-gray-400 whitespace-nowrap">
                             {{ $row['lastSeen'] ? date('Y-m-d H:i', $row['lastSeen']) : '—' }}

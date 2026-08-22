@@ -1,0 +1,56 @@
+/* Crimson fallback so npm run dev works before applyTheme() / PHP injection. */
+/* Token values live in themes.json — keep this block aligned with the crimson palette. */
+:root {
+  --color-bg: #1a1a2e;
+  --color-bg-rgb: 26, 26, 46;
+  --color-bg-deep: #0d0d1a;
+  --color-bg-deep-rgb: 13, 13, 26;
+  --color-bg-deeper: #0a0a14;
+  --color-bg-deeper-rgb: 10, 10, 20;
+  --color-panel: #16213e;
+  --color-panel-rgb: 22, 33, 62;
+  --color-panel-alt: #1a2a4a;
+  --color-panel-alt-rgb: 26, 42, 74;
+  --color-panel-elevated: #2a3a5c;
+  --color-panel-elevated-rgb: 42, 58, 92;
+  --color-panel-input: #1f2940;
+  --color-panel-input-rgb: 31, 41, 64;
+  --color-accent-muted: #2a1f3d;
+  --color-accent-muted-rgb: 42, 31, 61;
+  --color-border: #0f3460;
+  --color-border-rgb: 15, 52, 96;
+  --color-border-strong: #3d5a80;
+  --color-border-strong-rgb: 61, 90, 128;
+  --color-grid: #2a2a4a;
+  --color-grid-rgb: 42, 42, 74;
+  --color-bottom: #0d1829;
+  --color-bottom-rgb: 13, 24, 41;
+  --color-accent: #e94560;
+  --color-accent-rgb: 233, 69, 96;
+  --color-accent-hover: #ff6b6b;
+  --color-accent-hover-rgb: 255, 107, 107;
+  --color-text: #eeeeee;
+  --color-text-rgb: 238, 238, 238;
+  --color-text-strong: #ffffff;
+  --color-text-strong-rgb: 255, 255, 255;
+  --color-text-muted: #cccccc;
+  --color-text-muted-rgb: 204, 204, 204;
+  --color-text-dim: #888888;
+  --color-text-dim-rgb: 136, 136, 136;
+  --color-success: #4ade80;
+  --color-success-rgb: 74, 222, 128;
+  --color-success-strong: #22c55e;
+  --color-success-strong-rgb: 34, 197, 94;
+  --color-info: #64c8ff;
+  --color-info-rgb: 100, 200, 255;
+  --color-info-strong: #4aa3ff;
+  --color-info-strong-rgb: 74, 163, 255;
+  --color-warning: #ffc107;
+  --color-warning-rgb: 255, 193, 7;
+  --color-danger: #ef4444;
+  --color-danger-rgb: 239, 68, 68;
+  --color-danger-hover: #f87171;
+  --color-danger-hover-rgb: 248, 113, 113;
+  --color-scrollbar: #adddff;
+  --color-scrollbar-rgb: 173, 221, 255;
+}

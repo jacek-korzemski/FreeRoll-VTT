@@ -12,8 +12,12 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$EnableL5r,
     [Parameter(Mandatory = $true)]
-    [string]$AllowedOrigins
+    [string]$AllowedOrigins,
+    [Parameter(Mandatory = $true)]
+    [string]$ColorTemplate
 )
+
+$ColorTemplate = $ColorTemplate.Trim().ToLowerInvariant()
 
 $content = @"
 VTT_PASSWORD=$Password
@@ -21,6 +25,7 @@ VTT_GM_PASSWORD=$GmPassword
 VTT_BASE_PATH=$BasePath
 VTT_LANGUAGE=$Language
 VTT_ENABLE_L5R=$EnableL5r
+VTT_COLOR_TEMPLATE=$ColorTemplate
 ALLOWED_ORIGINS=$AllowedOrigins
 "@
 

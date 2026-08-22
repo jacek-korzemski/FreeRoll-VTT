@@ -35,20 +35,10 @@ class PdfErrorBoundary extends Component {
     if (this.state.error) {
       return (
         <div className="pdf-placeholder" style={{ flexDirection: 'column', gap: '0.5rem' }}>
-          <div style={{ color: '#e94560' }}>
+          <div className="pdf-error-message">
             PDF render error: {this.state.error?.message || 'Unknown'}
           </div>
-          <button
-            onClick={this.reset}
-            style={{
-              padding: '0.4rem 1rem',
-              background: 'rgba(74,222,128,0.15)',
-              border: '1px solid rgba(74,222,128,0.3)',
-              borderRadius: '4px',
-              color: '#4ade80',
-              cursor: 'pointer',
-            }}
-          >
+          <button type="button" onClick={this.reset} className="pdf-retry-btn">
             Retry
           </button>
         </div>

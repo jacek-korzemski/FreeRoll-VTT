@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Exceptions\VttSourceMissingException;
 use App\Models\VttTable;
 use App\Services\TableProvisioner;
+use App\Services\ThemeCatalog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -19,6 +20,8 @@ class TablesDashboard extends Component
 
     public string $language = 'pl';
 
+    public string $color_template = 'crimson';
+
     public ?int $editingId = null;
 
     public string $edit_player_password = '';
@@ -26,6 +29,8 @@ class TablesDashboard extends Component
     public string $edit_gm_password = '';
 
     public string $edit_language = 'pl';
+
+    public string $edit_color_template = 'crimson';
 
     public ?int $confirmingDeleteId = null;
 
@@ -43,6 +48,7 @@ class TablesDashboard extends Component
 
         $this->reset('name', 'player_password', 'gm_password');
         $this->language = 'pl';
+        $this->color_template = app(ThemeCatalog::class)->defaultId();
         session()->flash('status', 'Stół został utworzony.');
     }
 
@@ -53,6 +59,7 @@ class TablesDashboard extends Component
         $this->edit_player_password = $table->player_password;
         $this->edit_gm_password = $table->gm_password;
         $this->edit_language = $table->language;
+        $this->edit_color_template = $table->color_template ?: 'crimson';
         $this->confirmingDeleteId = null;
     }
 
@@ -61,6 +68,7 @@ class TablesDashboard extends Component
         $this->editingId = null;
         $this->reset('edit_player_password', 'edit_gm_password');
         $this->edit_language = 'pl';
+        $this->edit_color_template = 'crimson';
     }
 
     public function saveSettings(TableProvisioner $provisioner): void
@@ -71,12 +79,14 @@ class TablesDashboard extends Component
             'edit_player_password' => $this->passwordRules(),
             'edit_gm_password' => $this->passwordRules(),
             'edit_language' => ['required', Rule::in(['en', 'pl'])],
+            'edit_color_template' => ['required', Rule::in($this->themeIds())],
         ]);
 
         $provisioner->updateSettings($table, [
             'player_password' => $validated['edit_player_password'],
             'gm_password' => $validated['edit_gm_password'],
             'language' => $validated['edit_language'],
+            'color_template' => $validated['edit_color_template'],
         ]);
 
         $this->cancelEdit();
@@ -111,6 +121,7 @@ class TablesDashboard extends Component
             'canCreate' => $tables->count() < $max,
             'sourceReady' => $provisioner->sourceIsReady(),
             'sourcePath' => $provisioner->sourcePath(),
+            'colorThemes' => array_values(app(ThemeCatalog::class)->catalog()['themes']),
         ]);
     }
 
@@ -132,6 +143,8 @@ class TablesDashboard extends Component
             'gm_password.not_regex' => 'Hasło Mistrza Gry nie może zawierać znaków nowej linii.',
             'language.required' => 'Wybierz język interfejsu stołu.',
             'language.in' => 'Wybierz język: polski lub angielski.',
+            'color_template.required' => 'Wybierz szablon kolorystyczny.',
+            'color_template.in' => 'Wybierz szablon kolorystyczny z listy.',
             'edit_player_password.required' => 'Podaj hasło gracza.',
             'edit_player_password.min' => 'Podaj hasło gracza.',
             'edit_player_password.max' => 'Hasło gracza może mieć maksymalnie :max znaków.',
@@ -142,6 +155,8 @@ class TablesDashboard extends Component
             'edit_gm_password.not_regex' => 'Hasło Mistrza Gry nie może zawierać znaków nowej linii.',
             'edit_language.required' => 'Wybierz język interfejsu stołu.',
             'edit_language.in' => 'Wybierz język: polski lub angielski.',
+            'edit_color_template.required' => 'Wybierz szablon kolorystyczny.',
+            'edit_color_template.in' => 'Wybierz szablon kolorystyczny z listy.',
         ];
     }
 
@@ -155,7 +170,18 @@ class TablesDashboard extends Component
             'player_password' => $this->passwordRules(),
             'gm_password' => $this->passwordRules(),
             'language' => ['required', Rule::in(['en', 'pl'])],
+            'color_template' => ['required', Rule::in($this->themeIds())],
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function themeIds(): array
+    {
+        $ids = app(ThemeCatalog::class)->ids();
+
+        return $ids !== [] ? $ids : ['crimson'];
     }
 
     /**

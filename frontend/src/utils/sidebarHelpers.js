@@ -30,7 +30,16 @@ export const getImageSrc = (src, basePath) => {
  * @param {string} type - The asset type ('map' or 'token')
  * @param {Event} e - Drag event
  */
+let activeAssetDrag = null
+
+export const getActiveAssetDrag = () => activeAssetDrag
+
+export const clearActiveAssetDrag = () => {
+  activeAssetDrag = null
+}
+
 export const handleAssetDragStart = (asset, type, e) => {
+  activeAssetDrag = { asset, type }
   e.dataTransfer.setData('application/json', JSON.stringify({
     id: asset.id,
     src: asset.src,

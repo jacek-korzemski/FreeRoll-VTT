@@ -4,6 +4,7 @@ import FolderList from '../molecules/FolderList'
 import AssetGrid from '../molecules/AssetGrid'
 import PingTool from '../atoms/PingTool'
 import EraserTool from '../atoms/EraserTool'
+import MoveTool from '../atoms/MoveTool'
 
 function AssetBrowser({
   path,
@@ -26,6 +27,8 @@ function AssetBrowser({
   isEraserActive,
   hasMapElements,
   onToggleEraser,
+  isMoveToolActive,
+  onToggleMoveTool,
   isTokenEraserActive,
   hasTokens,
   onToggleTokenEraser,
@@ -52,11 +55,18 @@ function AssetBrowser({
       )}
 
       {showEraser && (
-        <EraserTool
-          isEraserActive={isEraserActive}
-          hasMapElements={hasMapElements}
-          onToggleEraser={onToggleEraser}
-        />
+        <>
+          <MoveTool
+            isActive={!!isMoveToolActive}
+            hasItems={!!hasMapElements}
+            onToggle={onToggleMoveTool}
+          />
+          <EraserTool
+            isEraserActive={isEraserActive}
+            hasMapElements={hasMapElements}
+            onToggleEraser={onToggleEraser}
+          />
+        </>
       )}
 
       {showTokenEraser && (

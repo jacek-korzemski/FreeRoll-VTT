@@ -1,21 +1,20 @@
 import React, { useCallback } from 'react'
 
-function MapElement({ element, cellSize, basePath, isEraserActive, onEraserClick }) {
+function MapElement({ element, cellSize, basePath, isEraserActive, isMoveToolActive, onElementClick }) {
   const centerX = element.x * cellSize + cellSize / 2
   const centerY = element.y * cellSize + cellSize / 2
+  const interactive = isEraserActive || isMoveToolActive
 
-  
   const handleClick = useCallback((e) => {
-    if (isEraserActive) {
-      e.preventDefault()
-      e.stopPropagation()
-      onEraserClick(element.id)
-    }
-  }, [isEraserActive, onEraserClick, element.id])
+    if (!interactive) return
+    e.preventDefault()
+    e.stopPropagation()
+    onElementClick?.(element, e)
+  }, [interactive, onElementClick, element])
 
   return (
     <div
-      className={`map-element ${isEraserActive ? 'erasable' : ''}`}
+      className={`map-element ${isEraserActive ? 'erasable' : ''} ${isMoveToolActive ? 'movable' : ''}`}
       style={{
         left: centerX,
         top: centerY

@@ -1,5 +1,5 @@
 import { t } from '../../lang'
-import { isSelected, getImageSrc, handleAssetDragStart } from '../../utils/sidebarHelpers'
+import { isSelected, getImageSrc, handleAssetDragStart, clearActiveAssetDrag } from '../../utils/sidebarHelpers'
 
 function AssetGrid({ 
   assets, 
@@ -21,6 +21,7 @@ function AssetGrid({
           className={`asset-item ${isSelected(asset, assetType, selectedAsset, selectedType) ? 'selected' : ''}`}
           draggable
           onDragStart={(e) => handleAssetDragStart(asset, assetType, e)}
+          onDragEnd={clearActiveAssetDrag}
           onClick={() => onSelectAsset(asset, assetType)}
           title={asset.name}
         >

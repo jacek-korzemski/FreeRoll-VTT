@@ -37,6 +37,8 @@ function Sidebar({
   hasMapElements,
   isTokenEraserActive,
   hasTokens,
+  isMoveToolActive,
+  onToggleMoveTool,
   fogOfWar,
   fogEditMode,
   fogRevealMode,
@@ -216,6 +218,8 @@ function Sidebar({
                 isEraserActive={isEraserActive}
                 hasMapElements={hasMapElements}
                 onToggleEraser={onToggleEraser}
+                isMoveToolActive={isMoveToolActive}
+                onToggleMoveTool={onToggleMoveTool}
               />
             </CollapsibleSection>
 

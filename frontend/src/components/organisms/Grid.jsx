@@ -1,8 +1,10 @@
-import React, { useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react'
+import React, { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react'
 import Token from '../molecules/Token'
 import MapElement from '../molecules/MapElement'
+import PlacementGhost from '../molecules/PlacementGhost'
 import FogOfWar from '../molecules/FogOfWar'
 import GridRulers from '../molecules/GridRulers'
+import { getActiveAssetDrag } from '../../utils/sidebarHelpers'
 import { GRID_SIZE, CELL_SIZE } from '../../../config'
 
 const Grid = forwardRef(function Grid(props, ref) {
@@ -14,6 +16,7 @@ const Grid = forwardRef(function Grid(props, ref) {
     selectedAsset,
     selectedType,
     isEraserActive,
+    isMoveToolActive,
     isTokenEraserActive,
     fogBitmap,
     fogEnabled,
@@ -26,6 +29,7 @@ const Grid = forwardRef(function Grid(props, ref) {
     onTokenMove,
     onTokenUpdate,
     onRemoveMapElement,
+    onPickupMapElement,
     onRemoveToken,
     onDuplicateToken,
     onDropPlace,
@@ -43,6 +47,8 @@ const Grid = forwardRef(function Grid(props, ref) {
   const [isPanning, setIsPanning] = useState(false)
   const [panStart, setPanStart] = useState({ x: 0, y: 0 })
   const [scrollStart, setScrollStart] = useState({ x: 0, y: 0 })
+  const [hoverCell, setHoverCell] = useState(null)
+  const [dragPreview, setDragPreview] = useState(null)
 
   useImperativeHandle(ref, () => gridRef.current, [])
 
@@ -88,6 +94,45 @@ const Grid = forwardRef(function Grid(props, ref) {
     }
   }, [zoomLevel])
 
+  const previewAsset = dragPreview?.asset || selectedAsset
+  const previewType = dragPreview?.type || selectedType
+  const isPlacing = Boolean(previewAsset)
+
+  const setHoverCellIfChanged = useCallback((cell) => {
+    setHoverCell(prev => {
+      if (cell == null && prev == null) return prev
+      if (cell == null) return null
+      if (prev && prev.x === cell.x && prev.y === cell.y) return prev
+      return cell
+    })
+  }, [])
+
+  const updatePlacementHover = useCallback((clientX, clientY, fromDrag = false) => {
+    if (!fromDrag && !selectedAsset) return
+    const cell = getCellFromMousePosition(clientX, clientY)
+    setHoverCellIfChanged(cell)
+    if (fromDrag) {
+      const drag = getActiveAssetDrag()
+      setDragPreview(prev => {
+        if (!drag) return prev
+        if (prev?.asset?.id === drag.asset.id && prev?.type === drag.type) return prev
+        return drag
+      })
+    }
+  }, [selectedAsset, getCellFromMousePosition, setHoverCellIfChanged])
+
+  useEffect(() => {
+    if (!selectedAsset?.src || !basePath) return
+    const img = new Image()
+    img.src = `${basePath}${selectedAsset.src}`
+  }, [selectedAsset, basePath])
+
+  useEffect(() => {
+    const onDragEnd = () => setDragPreview(null)
+    window.addEventListener('dragend', onDragEnd)
+    return () => window.removeEventListener('dragend', onDragEnd)
+  }, [])
+
   const canStartPanning = useCallback((e) => {
     if (e.target.closest('.token')) return false
     if (e.target.closest('.token-note-popover')) return false
@@ -95,19 +140,21 @@ const Grid = forwardRef(function Grid(props, ref) {
     if (e.target.closest('.token-note-editor')) return false
     if (e.target.closest('.swysiwyg-wrapper')) return false
     if (e.target.closest('.map-element.erasable')) return false
+    if (e.target.closest('.map-element.movable')) return false
     if (e.target.closest('.fog-canvas.editing')) return false
     if (selectedAsset) return false
     if (isEraserActive) return false
+    if (isMoveToolActive) return false
     if (isTokenEraserActive) return false
     if (fogEditMode) return false
     if (pingMode) return false
     return true
-  }, [selectedAsset, isEraserActive, isTokenEraserActive, fogEditMode, pingMode])
+  }, [selectedAsset, isEraserActive, isMoveToolActive, isTokenEraserActive, fogEditMode, pingMode])
 
   const handleMouseDown = useCallback((e) => {
     if (e.button !== 0) return
     
-    if (e.target.closest('.token') && !isEraserActive && !fogEditMode) {
+    if (e.target.closest('.token') && !isEraserActive && !isMoveToolActive && !fogEditMode) {
       return
     }
     
@@ -120,7 +167,7 @@ const Grid = forwardRef(function Grid(props, ref) {
         y: gridRef.current?.scrollTop || 0
       })
     }
-  }, [canStartPanning, isEraserActive, fogEditMode])
+  }, [canStartPanning, isEraserActive, isMoveToolActive, fogEditMode])
 
   const handleMouseMove = useCallback((e) => {
     if (isPanning && gridRef.current) {
@@ -131,6 +178,8 @@ const Grid = forwardRef(function Grid(props, ref) {
       gridRef.current.dispatchEvent(new Event('scroll'))
       return
     }
+
+    updatePlacementHover(e.clientX, e.clientY)
     
     if (draggedToken) {
       e.preventDefault()
@@ -139,7 +188,7 @@ const Grid = forwardRef(function Grid(props, ref) {
         setDragPosition(pos)
       }
     }
-  }, [isPanning, panStart, scrollStart, draggedToken, getPixelPosition])
+  }, [isPanning, panStart, scrollStart, draggedToken, getPixelPosition, updatePlacementHover])
 
   const handleTouchMove = useCallback((e) => {
     if (draggedToken) {
@@ -192,6 +241,7 @@ const Grid = forwardRef(function Grid(props, ref) {
     if (draggedToken) return
     if (fogEditMode) return
     if (isPanning) return
+    if (isMoveToolActive) return
     
     const cell = getCellFromMousePosition(e.clientX, e.clientY)
     if (!cell) return
@@ -204,10 +254,11 @@ const Grid = forwardRef(function Grid(props, ref) {
     if (selectedAsset) {
       onCellClick(cell.x, cell.y)
     }
-  }, [getCellFromMousePosition, selectedAsset, onCellClick, draggedToken, fogEditMode, isPanning, pingMode, onSendPing])
+  }, [getCellFromMousePosition, selectedAsset, onCellClick, draggedToken, fogEditMode, isPanning, pingMode, onSendPing, isMoveToolActive])
 
   const handleTokenDragStart = useCallback((token, e) => {
     if (isEraserActive) return
+    if (isMoveToolActive) return
     if (isTokenEraserActive) return
     if (fogEditMode) return
     if (pingMode) return
@@ -221,7 +272,7 @@ const Grid = forwardRef(function Grid(props, ref) {
       setDraggedToken(token)
       setDragPosition(pos)
     }
-  }, [getPixelPosition, getClientCoords, isEraserActive, isTokenEraserActive, fogEditMode, pingMode])
+  }, [getPixelPosition, getClientCoords, isEraserActive, isMoveToolActive, isTokenEraserActive, fogEditMode, pingMode])
 
   const handleContextMenu = useCallback((e) => {
     e.preventDefault()
@@ -231,10 +282,12 @@ const Grid = forwardRef(function Grid(props, ref) {
   const handleDragOver = useCallback((e) => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'copy'
-  }, [])
+    updatePlacementHover(e.clientX, e.clientY, true)
+  }, [updatePlacementHover])
 
   const handleDrop = useCallback((e) => {
     e.preventDefault()
+    setDragPreview(null)
     if (!onDropPlace) return
     const cell = getCellFromMousePosition(e.clientX, e.clientY)
     if (!cell) return
@@ -253,16 +306,26 @@ const Grid = forwardRef(function Grid(props, ref) {
     e.preventDefault()
   }, [])
 
-  const handleMapElementClick = useCallback((elementId) => {
+  const handleMapElementClick = useCallback((element) => {
     if (isEraserActive) {
-      onRemoveMapElement(elementId)
+      onRemoveMapElement(element.id)
+      return
     }
-  }, [isEraserActive, onRemoveMapElement])
+    if (isMoveToolActive && onPickupMapElement) {
+      setHoverCell({ x: element.x, y: element.y })
+      onPickupMapElement(element)
+    }
+  }, [isEraserActive, isMoveToolActive, onRemoveMapElement, onPickupMapElement])
 
   const handleMouseLeave = useCallback(() => {
     setDraggedToken(null)
     setIsPanning(false)
+    setHoverCell(null)
   }, [])
+
+  const handleMouseEnter = useCallback((e) => {
+    updatePlacementHover(e.clientX, e.clientY)
+  }, [updatePlacementHover])
 
   const backgroundStyle = background ? (() => {
     const offsetX = background.offsetX ?? 0
@@ -287,12 +350,20 @@ const Grid = forwardRef(function Grid(props, ref) {
   const containerClasses = [
     'grid-container',
     isEraserActive && 'eraser-mode',
+    isMoveToolActive && 'move-mode',
     isTokenEraserActive && 'token-eraser-mode',
     fogEditMode && 'fog-edit-mode',
     pingMode && 'ping-mode',
     isPanning && 'panning',
-    (!selectedAsset && !isEraserActive && !isTokenEraserActive && !fogEditMode && !pingMode) && 'can-pan'
+    isPlacing && 'placing-asset',
+    (!selectedAsset && !isEraserActive && !isMoveToolActive && !isTokenEraserActive && !fogEditMode && !pingMode) && 'can-pan'
   ].filter(Boolean).join(' ')
+
+  const placementBlocked = Boolean(hoverCell && previewAsset && (
+    previewType === 'token'
+      ? tokens.some(token => token.x === hoverCell.x && token.y === hoverCell.y)
+      : mapElements.some(element => element.x === hoverCell.x && element.y === hoverCell.y)
+  ))
 
   return (
     <div className="map-viewport">
@@ -308,6 +379,7 @@ const Grid = forwardRef(function Grid(props, ref) {
         ref={gridRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
         onTouchMove={handleTouchMove}
@@ -347,7 +419,8 @@ const Grid = forwardRef(function Grid(props, ref) {
               cellSize={CELL_SIZE}
               basePath={basePath}
               isEraserActive={isEraserActive}
-              onEraserClick={handleMapElementClick}
+              isMoveToolActive={isMoveToolActive}
+              onElementClick={handleMapElementClick}
             />
           ))}
           
@@ -394,6 +467,17 @@ const Grid = forwardRef(function Grid(props, ref) {
             onBitmapChange={isGameMaster ? onFogBitmapChange : undefined}
             zoomLevel={zoomLevel}
           />
+
+          {isPlacing && hoverCell && (
+            <PlacementGhost
+              asset={previewAsset}
+              type={previewType}
+              cell={hoverCell}
+              cellSize={CELL_SIZE}
+              basePath={basePath}
+              blocked={placementBlocked}
+            />
+          )}
         </div>
       </div>
       </div>

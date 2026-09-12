@@ -31,6 +31,8 @@ function App() {
   const [selectedAsset, setSelectedAsset] = useState(null)
   const [selectedType, setSelectedType] = useState(null)
   const [isEraserActive, setIsEraserActive] = useState(false)  
+  const [isMoveToolActive, setIsMoveToolActive] = useState(false)
+  const [isRelocatingMapElement, setIsRelocatingMapElement] = useState(false)
   const [version, setVersion] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [fogOfWar, setFogOfWar] = useState({ enabled: false, data: null })
@@ -180,6 +182,7 @@ function App() {
       setSelectedAsset(null)
       setSelectedType(null)
       setIsEraserActive(false)
+      setIsMoveToolActive(false)
       setFogEditMode(false)
     }
   }, [pingMode])
@@ -421,6 +424,7 @@ useEffect(() => {
             setSelectedAsset(null)
             setSelectedType(null)
             setIsEraserActive(false)
+            setIsMoveToolActive(false)
             setFogEditMode(false)
           } else if (!fogEditModeRef.current) {
             updateSceneState(sync.scene)
@@ -464,6 +468,7 @@ useEffect(() => {
           setSelectedAsset(null)
           setSelectedType(null)
           setIsEraserActive(false)
+          setIsMoveToolActive(false)
           setFogEditMode(false)
         }
       })
@@ -609,6 +614,8 @@ useEffect(() => {
   
   const handleSelectAsset = useCallback((asset, type) => {
     setIsEraserActive(false)
+    setIsMoveToolActive(false)
+    setIsRelocatingMapElement(false)
     setFogEditMode(false)
     setPingMode(false) 
     
@@ -629,10 +636,29 @@ useEffect(() => {
       setIsEraserActive(false)
     } else {
       setIsEraserActive(true)
+      setIsMoveToolActive(false)
+      setIsRelocatingMapElement(false)
       setSelectedAsset(null)
       setSelectedType(null)
     }
   }, [isEraserActive])
+
+  const handleToggleMoveTool = useCallback(() => {
+    setFogEditMode(false)
+    setPingMode(false)
+
+    setIsMoveToolActive(prev => {
+      const next = !prev
+      if (next) {
+        setIsEraserActive(false)
+        setIsTokenEraserActive(false)
+        setSelectedAsset(null)
+        setSelectedType(null)
+        setIsRelocatingMapElement(false)
+      }
+      return next
+    })
+  }, [])
 
   const handleToggleTokenEraser = useCallback(() => {
     setFogEditMode(false)
@@ -642,6 +668,7 @@ useEffect(() => {
       const next = !prev
       if (next) {
         setIsEraserActive(false)
+        setIsMoveToolActive(false)
         setSelectedAsset(null)
         setSelectedType(null)
       }
@@ -861,11 +888,25 @@ useEffect(() => {
   const handleDeselectAsset = useCallback(() => {
     setSelectedAsset(null)
     setSelectedType(null)
+    setIsRelocatingMapElement(prev => {
+      if (prev) setIsMoveToolActive(true)
+      return false
+    })
+  }, [])
+
+  const handleCancelPlacementAndTools = useCallback(() => {
+    setSelectedAsset(null)
+    setSelectedType(null)
+    setIsRelocatingMapElement(false)
+    setIsMoveToolActive(false)
+    setIsEraserActive(false)
+    setIsTokenEraserActive(false)
+    setPingMode(false)
   }, [])
 
   const placeAssetAt = useCallback((asset, type, x, y, deselectAfterPlace = false) => {
-    if (type === 'token' && isOccupiedByToken(x, y)) return
-    if (type === 'map' && isOccupiedByMapElement(x, y)) return
+    if (type === 'token' && isOccupiedByToken(x, y)) return Promise.resolve(false)
+    if (type === 'map' && isOccupiedByMapElement(x, y)) return Promise.resolve(false)
     const action = type === 'map' ? 'add-map-element' : 'add-token'
     return fetch(`${API_BASE}?action=${action}`, {
       method: 'POST',
@@ -886,16 +927,28 @@ useEffect(() => {
             setSelectedAsset(null)
             setSelectedType(null)
           }
+          return true
         }
+        return false
       })
-      .catch(console.error)
+      .catch(err => {
+        console.error(err)
+        return false
+      })
   }, [isOccupiedByToken, isOccupiedByMapElement])
 
   const handleCellClick = useCallback((x, y) => {
-    if (isEraserActive) return
+    if (isEraserActive || isMoveToolActive) return
     if (!selectedAsset || !selectedType) return
-    placeAssetAt(selectedAsset, selectedType, x, y, false)
-  }, [selectedAsset, selectedType, isEraserActive, placeAssetAt])
+    const resumeMoveTool = isRelocatingMapElement
+    placeAssetAt(selectedAsset, selectedType, x, y, resumeMoveTool)
+      .then(placed => {
+        if (placed && resumeMoveTool) {
+          setIsRelocatingMapElement(false)
+          setIsMoveToolActive(true)
+        }
+      })
+  }, [selectedAsset, selectedType, isEraserActive, isMoveToolActive, isRelocatingMapElement, placeAssetAt])
 
   const handleDropOnGrid = useCallback((asset, type, x, y) => {
     placeAssetAt(asset, type, x, y, true)
@@ -962,13 +1015,57 @@ useEffect(() => {
             if (filtered.length === 0 && isEraserActive) {
               setIsEraserActive(false)
             }
+            if (filtered.length === 0 && isMoveToolActive) {
+              setIsMoveToolActive(false)
+            }
             return filtered
           })
           setVersion(data.version)
         }
       })
       .catch(console.error)
-  }, [isEraserActive])
+  }, [isEraserActive, isMoveToolActive])
+
+  const handlePickupMapElement = useCallback((element) => {
+    if (!element?.id) return
+
+    setIsMoveToolActive(false)
+    setIsEraserActive(false)
+    setFogEditMode(false)
+    setPingMode(false)
+    setMapElements(prev => prev.filter(el => el.id !== element.id))
+    setSelectedAsset({
+      id: element.assetId,
+      src: element.src,
+      name: element.name || ''
+    })
+    setSelectedType('map')
+    setIsRelocatingMapElement(true)
+
+    fetch(`${API_BASE}?action=remove-map-element`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: element.id })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setVersion(data.version)
+          return
+        }
+        setMapElements(prev => prev.some(el => el.id === element.id) ? prev : [...prev, element])
+        setSelectedAsset(null)
+        setSelectedType(null)
+        setIsRelocatingMapElement(false)
+      })
+      .catch(() => {
+        setMapElements(prev => prev.some(el => el.id === element.id) ? prev : [...prev, element])
+        setSelectedAsset(null)
+        setSelectedType(null)
+        setIsRelocatingMapElement(false)
+      })
+  }, [])
 
   
   const handleRemoveToken = useCallback((tokenId) => {
@@ -1079,6 +1176,7 @@ useEffect(() => {
           setSelectedAsset(null)
           setSelectedType(null)
           setIsEraserActive(false)
+          setIsMoveToolActive(false)
           setFogEditMode(false)
           setFogBitmap(createEmptyFog())
         }
@@ -1150,6 +1248,7 @@ useEffect(() => {
       setSelectedAsset(null)
       setSelectedType(null)
       setIsEraserActive(false)
+      setIsMoveToolActive(false)
     }
   }, [fogEditMode])
 
@@ -1234,6 +1333,8 @@ useEffect(() => {
         selectedType={selectedType}
         isEraserActive={isEraserActive}
         hasMapElements={mapElements.length > 0}
+        isMoveToolActive={isMoveToolActive}
+        onToggleMoveTool={handleToggleMoveTool}
         isTokenEraserActive={isTokenEraserActive}
         hasTokens={tokens.length > 0}
         fogOfWar={fogOfWar}
@@ -1291,6 +1392,7 @@ useEffect(() => {
           selectedAsset={selectedAsset}
           selectedType={selectedType}
           isEraserActive={isEraserActive}
+          isMoveToolActive={isMoveToolActive}
           isTokenEraserActive={isTokenEraserActive}
           fogBitmap={fogBitmap}
           fogEnabled={fogOfWar.enabled}
@@ -1303,10 +1405,11 @@ useEffect(() => {
           onTokenMove={handleTokenMove}
           onTokenUpdate={handleTokenUpdate}
           onRemoveMapElement={handleRemoveMapElement}
+          onPickupMapElement={handlePickupMapElement}
           onRemoveToken={handleRemoveToken}
           onDuplicateToken={handleDuplicateToken}
           onDropPlace={handleDropOnGrid}
-          onDeselectPlacement={handleDeselectAsset}
+          onDeselectPlacement={handleCancelPlacementAndTools}
           basePath={ASSET_BASE}
           zoomLevel={zoomLevel}
           pingMode={pingMode}

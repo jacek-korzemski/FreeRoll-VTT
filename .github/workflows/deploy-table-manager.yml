@@ -1,8 +1,9 @@
 # Deploy Table Manager to FTP after building the VTT package into current-source.
 #
-# Required GitHub secrets:
+# Required GitHub secrets (environment "FTP_SERVER", or repository secrets):
 #   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_SERVER_DIR  (remote dir must end with /)
 #
+# Environment secrets are only visible when the job sets `environment:` below.
 # Optional GitHub variables:
 #   FTP_PROTOCOL       ftp | ftps  (default: ftp)
 #   BUILD_ENABLE_L5R   true | false  (default: false)
@@ -28,6 +29,7 @@ jobs:
   deploy:
     name: Build VTT and deploy Table Manager
     runs-on: windows-latest
+    environment: FTP_SERVER
     timeout-minutes: 45
 
     steps:

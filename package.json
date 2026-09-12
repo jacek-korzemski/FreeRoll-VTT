@@ -1,0 +1,11 @@
+{
+  "name": "freeroll-vtt",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "build:vtt": "cmd /c \"set BUILD_NONINTERACTIVE=1&& set CI=1&& build.bat\""
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

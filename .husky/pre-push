@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+export BUILD_NONINTERACTIVE=1
+export CI=1
+exec cmd.exe //c build.bat

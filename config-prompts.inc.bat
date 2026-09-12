@@ -11,6 +11,9 @@ goto prompts_start
 set "DEFAULT_LANGUAGE=pl"
 
 :prompts_start
+if defined CI goto noninteractive
+if defined BUILD_NONINTERACTIVE goto noninteractive
+
 echo  ----------------------------------------
 echo.
 
@@ -132,5 +135,57 @@ if /i "%PROMPT_LOCALE%"=="pl" (
     set /p "CONFIRM=Proceed with %CONFIRM_LABEL%? (Y/n): "
     if /i "!CONFIRM!"=="n" exit /b 2
 )
+
+exit /b 0
+
+:noninteractive
+if defined BUILD_PASSWORD set "PASSWORD=%BUILD_PASSWORD%"
+if "%PASSWORD%"=="" set "PASSWORD=2137"
+
+if defined BUILD_GM_PASSWORD set "GM_PASSWORD=%BUILD_GM_PASSWORD%"
+if "%GM_PASSWORD%"=="" set "GM_PASSWORD=admin"
+
+if defined BUILD_BASE_PATH set "BASE_PATH=%BUILD_BASE_PATH%"
+if "%BASE_PATH%"=="" set "BASE_PATH=/vtt/room1/"
+
+if defined BUILD_LANGUAGE set "LANGUAGE=%BUILD_LANGUAGE%"
+if "%LANGUAGE%"=="" set "LANGUAGE=%DEFAULT_LANGUAGE%"
+if /i not "%LANGUAGE%"=="en" if /i not "%LANGUAGE%"=="pl" set "LANGUAGE=%DEFAULT_LANGUAGE%"
+
+if defined BUILD_COLOR_TEMPLATE set "COLOR_TEMPLATE=%BUILD_COLOR_TEMPLATE%"
+if "%COLOR_TEMPLATE%"=="" set "COLOR_TEMPLATE=crimson"
+if /i not "%COLOR_TEMPLATE%"=="crimson" if /i not "%COLOR_TEMPLATE%"=="ember" if /i not "%COLOR_TEMPLATE%"=="forest" if /i not "%COLOR_TEMPLATE%"=="ocean" if /i not "%COLOR_TEMPLATE%"=="violet" set "COLOR_TEMPLATE=crimson"
+
+if defined BUILD_ENABLE_L5R set "ENABLE_L5R=%BUILD_ENABLE_L5R%"
+if "%ENABLE_L5R%"=="" set "ENABLE_L5R=false"
+if /i not "%ENABLE_L5R%"=="true" if /i not "%ENABLE_L5R%"=="false" set "ENABLE_L5R=false"
+
+if defined BUILD_ALLOWED_ORIGINS set "ALLOWED_ORIGINS=%BUILD_ALLOWED_ORIGINS%"
+if "%ALLOWED_ORIGINS%"=="" set "ALLOWED_ORIGINS=*"
+
+echo  ----------------------------------------
+echo.
+if /i "%PROMPT_LOCALE%"=="pl" (
+    echo  Tryb nieinteraktywny. Konfiguracja:
+    echo    Haslo gracza:        %PASSWORD%
+    echo    Haslo Mistrza Gry:   %GM_PASSWORD%
+    echo    Sciezka bazowa:      %BASE_PATH%
+    echo    Jezyk interfejsu:    %LANGUAGE%
+    echo    Szablon kolorow:     %COLOR_TEMPLATE%
+    echo    Wsparcie L5R:        %ENABLE_L5R%
+    echo    Dozwolone originy:   %ALLOWED_ORIGINS%
+) else (
+    echo  Non-interactive mode. Configuration:
+    echo    Player password:  %PASSWORD%
+    echo    GM password:      %GM_PASSWORD%
+    echo    Base path:        %BASE_PATH%
+    echo    Language:         %LANGUAGE%
+    echo    Color template:   %COLOR_TEMPLATE%
+    echo    Enable L5R:       %ENABLE_L5R%
+    echo    Allowed origins:  %ALLOWED_ORIGINS%
+)
+echo.
+echo  ----------------------------------------
+echo.
 
 exit /b 0

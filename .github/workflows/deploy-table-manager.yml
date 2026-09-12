@@ -1,0 +1,111 @@
+# Deploy Table Manager to FTP after building the VTT package into current-source.
+#
+# Required GitHub secrets:
+#   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_SERVER_DIR  (remote dir must end with /)
+#
+# Optional GitHub variables:
+#   FTP_PROTOCOL       ftp | ftps  (default: ftp)
+#   BUILD_ENABLE_L5R   true | false  (default: false)
+#   BUILD_LANGUAGE     en | pl  (default: en)
+#
+# Existing tables in public/vtt/user/, production .env, and SQLite are not uploaded.
+
+name: Deploy Table Manager
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-table-manager
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build VTT and deploy Table Manager
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            table-manager/package-lock.json
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer
+          coverage: none
+
+      - name: Build VTT package
+        shell: cmd
+        env:
+          CI: "1"
+          BUILD_NONINTERACTIVE: "1"
+          BUILD_ENABLE_L5R: ${{ vars.BUILD_ENABLE_L5R || 'false' }}
+          BUILD_LANGUAGE: ${{ vars.BUILD_LANGUAGE || 'en' }}
+        run: build.bat
+
+      - name: Build Table Manager
+        working-directory: table-manager
+        shell: cmd
+        run: |
+          copy /Y .env.example .env
+          composer install --no-dev --optimize-autoloader --no-interaction --no-ansi
+          php artisan key:generate --force --ansi
+          npm ci
+          npm run build
+
+      - name: Remove CI-only Table Manager .env
+        working-directory: table-manager
+        shell: cmd
+        run: if exist .env del /F /Q .env
+
+      - name: Upload Table Manager via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./table-manager/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            node_modules
+            node_modules/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
+            **/database/*.sqlite
+            **/database/*.sqlite*
+            public/vtt/user
+            public/vtt/user/**
+            **/public/vtt/user
+            **/public/vtt/user/**
+            **/storage/logs/**
+            **/storage/framework/sessions/**
+            **/storage/framework/cache/data/**
+            bootstrap/cache/config.php
+            bootstrap/cache/routes.php
+            bootstrap/cache/routes-v7.php
+            bootstrap/cache/events.php
+            tests
+            tests/**
+            **/tests/**
+            **/.husky/**

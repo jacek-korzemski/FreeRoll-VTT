@@ -24,6 +24,9 @@ backend/assets/backgrounds/*
 !backend/assets/tokens/.gitkeep
 !backend/assets/backgrounds/.gitkeep
 
+# Root (Husky)
+/node_modules/
+
 # Frontend
 frontend/node_modules/
 frontend/dist/

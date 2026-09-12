@@ -2,6 +2,9 @@
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>nul
 
+if defined CI set "NO_PAUSE=1"
+if defined BUILD_NONINTERACTIVE set "NO_PAUSE=1"
+
 echo.
 echo  ========================================
 echo   FreeRoll VTT - Build Script
@@ -12,7 +15,7 @@ where node >nul 2>nul
 if %errorlevel% neq 0 (
     echo [ERROR] Node.js is not installed!
     echo Download from: https://nodejs.org/
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
@@ -20,13 +23,15 @@ where composer >nul 2>nul
 if %errorlevel% neq 0 (
     echo [ERROR] Composer is not installed!
     echo Download from: https://getcomposer.org/
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
-echo  This script will guide you through the build process.
-echo  Press ENTER to use default values shown in [brackets].
-echo.
+if not defined NO_PAUSE (
+    echo  This script will guide you through the build process.
+    echo  Press ENTER to use default values shown in [brackets].
+    echo.
+)
 
 set "PROMPT_LOCALE=en"
 set "CONFIRM_LABEL=build"
@@ -34,7 +39,7 @@ call "%~dp0config-prompts.inc.bat"
 if !errorlevel! equ 2 (
     echo.
     echo  Build cancelled.
-    pause
+    call :maybe_pause
     exit /b 0
 )
 
@@ -76,7 +81,7 @@ if not exist "node_modules" (
         echo [ERROR] npm install failed!
         cd /d "!ROOT!"
         call :restore_frontend_env
-        pause
+        call :maybe_pause
         exit /b 1
     )
 )
@@ -86,7 +91,7 @@ if !errorlevel! neq 0 (
     echo [ERROR] Frontend build failed!
     cd /d "!ROOT!"
     call :restore_frontend_env
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
@@ -107,7 +112,7 @@ if exist "backend\assets\templates\*.html" (
 echo [4/6] Installing TTRPG backend (Composer)...
 call "%~dp0install-ttrpg-vendor.inc.bat"
 if !errorlevel! neq 0 (
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
@@ -140,7 +145,7 @@ echo [5/6] Writing deployment configuration...
 powershell -ExecutionPolicy Bypass -File "write-deploy-env.ps1" -OutputPath "build\.env" -Password "%PASSWORD%" -GmPassword "%GM_PASSWORD%" -BasePath "%BASE_PATH%" -Language "%LANGUAGE%" -EnableL5r "%ENABLE_L5R%" -AllowedOrigins "%ALLOWED_ORIGINS%" -ColorTemplate "%COLOR_TEMPLATE%"
 if !errorlevel! neq 0 (
     echo [ERROR] Writing build\.env failed!
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
@@ -161,7 +166,7 @@ echo [6/6] Creating .htaccess files...
 
 call "%~dp0sync-current-source.inc.bat"
 if !errorlevel! neq 0 (
-    pause
+    call :maybe_pause
     exit /b 1
 )
 
@@ -192,8 +197,13 @@ echo.
 echo  ========================================
 echo.
 
-pause
+call :maybe_pause
 exit /b 0
+
+:maybe_pause
+if defined NO_PAUSE goto :eof
+pause
+goto :eof
 
 :restore_frontend_env
 set "ROOT=%~dp0"

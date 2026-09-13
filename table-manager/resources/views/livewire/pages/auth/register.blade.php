@@ -11,6 +11,8 @@ use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component
 {
+    public bool $embedded = false;
+
     public string $name = '';
     public string $username = '';
     public string $email = '';
@@ -49,17 +51,38 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
+    @unless ($embedded)
+        <div class="mb-6 flex rounded-lg bg-white/10 p-1" role="tablist" aria-label="Logowanie lub rejestracja">
+            <a
+                href="{{ route('home') }}"
+                wire:navigate
+                role="tab"
+                aria-selected="false"
+                class="flex-1 rounded-md px-3 py-2 text-center text-sm font-semibold text-gray-400 transition hover:text-white"
+            >
+                Zaloguj się
+            </a>
+            <span
+                role="tab"
+                aria-selected="true"
+                class="flex-1 rounded-md px-3 py-2 text-center text-sm font-semibold bg-blue-600 text-white shadow-sm"
+            >
+                Załóż konto
+            </span>
+        </div>
+    @endunless
+
     <form wire:submit="register">
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" value="Imię i nazwisko" />
             <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Username (immutable URL slug) -->
         <div class="mt-4">
-            <x-input-label for="username" :value="__('Username')" />
+            <x-input-label for="username" value="Nazwa użytkownika" />
             <x-text-input wire:model="username" id="username" class="block mt-1 w-full" type="text" name="username" required autocomplete="username" />
             <p class="mt-1 text-xs text-gray-400">Małe litery, cyfry i myślnik. Trafi do adresu stołu: /vtt/user/<em>nazwa</em>/… Nie da się później zmienić.</p>
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
@@ -67,14 +90,14 @@ new #[Layout('layouts.guest')] class extends Component
 
         <!-- Email Address -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" value="Email" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" value="Hasło" />
 
             <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
                             type="password"
@@ -86,7 +109,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" value="Potwierdź hasło" />
 
             <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
                             type="password"
@@ -96,12 +119,14 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
-            </a>
+            @unless ($embedded)
+                <a class="underline text-sm text-gray-400 hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}" wire:navigate>
+                    Masz już konto?
+                </a>
+            @endunless
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
+            <x-primary-button class="{{ $embedded ? '' : 'ms-4' }}">
+                Załóż konto
             </x-primary-button>
         </div>
     </form>

@@ -142,7 +142,7 @@ Aby później zmienić hasła lub ścieżkę, edytuj `build/.env` na serwerze (a
 
 ## Table Manager (wiele stołów, konta użytkowników)
 
-[Table Manager](table-manager/) to panel Laravel + Livewire + SQLite. Użytkownicy się rejestrują, zakładają do **3 stołów** na konto i grają pod `/vtt/user/<username>/<slug>/`. Każdy stół to pełna kopia paczki VTT z `table-manager/current-source/` (ten sam pomysł co `clone.bat`).
+[Table Manager](table-manager/) to panel Laravel + Livewire + SQLite. Użytkownicy się rejestrują, zakładają do **3 stołów** na konto (domyślnie **50 MB** wgranych materiałów na stół, czyli **150 MB** na konto) i grają pod `/vtt/user/<username>/<slug>/`. Każdy stół to pełna kopia paczki VTT z `table-manager/current-source/` (ten sam pomysł co `clone.bat`).
 
 Wybierz ten wariant, gdy chcesz jeden hosting z wieloma pokojami zamiast ręcznego wgrywania `build/` na każdą sesję.
 
@@ -167,6 +167,7 @@ Table Manager **nie** odpala `npm run build` ani `composer install` przy tworzen
    - `backend/vendor/autoload.php` (Composer, integracja TTRPG)
    - `backend/src/Ttrpg/`
    - `backend/include/telemetry.php`
+   - `backend/include/storage-quota.php`
    - `deploy-env.php`
 
 Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby nowe stoły miały L5R, zbuduj paczkę z włączonym L5R.

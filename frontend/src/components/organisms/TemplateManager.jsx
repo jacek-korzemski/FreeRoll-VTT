@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
+import { quotaErrorMessage } from '../../utils/storageQuota'
 import TemplateEditor from './TemplateEditor'
 import ConfirmModal from '../atoms/ConfirmModal'
 import {
@@ -148,7 +149,7 @@ function TemplateManager() {
       })
       const data = await res.json()
       if (!data.success || !data.template?.id) {
-        alert(data.error || t('templates.saveFailed'))
+        alert(quotaErrorMessage(data, t) || data.error || t('templates.saveFailed'))
         return
       }
       const newId = data.template.id
@@ -197,7 +198,7 @@ function TemplateManager() {
           if (data.success) {
             fetchTemplates()
           } else {
-            alert(data.error || t('upload.genericError'))
+            alert(quotaErrorMessage(data, t) || data.error || t('upload.genericError'))
           }
         })
         .catch(() => alert(t('upload.genericError')))

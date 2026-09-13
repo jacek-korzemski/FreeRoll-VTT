@@ -17,7 +17,34 @@ class AuthenticationTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSeeVolt('pages.auth.login');
+            ->assertSeeVolt('pages.auth.login')
+            ->assertSee('Zaloguj się')
+            ->assertSee('Załóż konto');
+    }
+
+    public function test_home_page_shows_login_form_for_guests(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeVolt('pages.auth.login')
+            ->assertSee('Zaloguj się')
+            ->assertSee('Załóż konto')
+            ->assertSee('Hasło');
+    }
+
+    public function test_home_page_can_open_register_form_from_query(): void
+    {
+        $this->get('/?tab=register')
+            ->assertOk()
+            ->assertSee('Imię i nazwisko')
+            ->assertSee('Nazwa użytkownika');
+    }
+
+    public function test_login_component_can_switch_to_register_tab(): void
+    {
+        Volt::test('pages.auth.login')
+            ->call('showRegister')
+            ->assertSet('tab', 'register');
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

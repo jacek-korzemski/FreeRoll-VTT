@@ -413,7 +413,9 @@
       "invalidImageExtensions": "Only image files are allowed for this type.",
       "invalidTemplateExtension": "Template must be a .html or .htm file.",
       "invalidPdfExtension": "File must be in .pdf format.",
-      "tooBigPdf": "PDF is too large for server limits – such big files must be uploaded manually on the server."
+      "tooBigPdf": "PDF is too large for server limits – such big files must be uploaded manually on the server.",
+      "quotaLabel": "Table files: {used} / {limit}",
+      "quotaExceeded": "This table’s file limit is {limit}. Used: {used}. Delete unused materials or pick a smaller file."
     },
     "materialsDelete": {
       "title": "Remove materials",
@@ -918,7 +920,9 @@
       "invalidImageExtensions": "Dla tego typu dozwolone są tylko pliki graficzne.",
       "invalidTemplateExtension": "Szablon musi być plikiem .html lub .htm.",
       "invalidPdfExtension": "Plik musi być w formacie .pdf.",
-      "tooBigPdf": "Plik PDF jest zbyt duży dla ograniczeń serwera – tak duże materiały trzeba wgrać ręcznie na serwer."
+      "tooBigPdf": "Plik PDF jest zbyt duży dla ograniczeń serwera – tak duże materiały trzeba wgrać ręcznie na serwer.",
+      "quotaLabel": "Pliki stołu: {used} / {limit}",
+      "quotaExceeded": "Limit plików tego stołu to {limit}. Zajęte: {used}. Usuń nieużywane materiały albo wybierz mniejszy plik."
     },
     "materialsDelete": {
       "title": "Usuń materiały",

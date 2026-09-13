@@ -1,20 +1,20 @@
 <div class="space-y-6">
     @if (session('admin_status'))
-        <div class="rounded-lg border border-vtt-accent/40 bg-vtt-accent/15 px-4 py-3 text-sm text-white">{{ session('admin_status') }}</div>
+        <x-status-banner type="success">{{ session('admin_status') }}</x-status-banner>
     @endif
     @if (session('admin_error'))
-        <div class="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">{{ session('admin_error') }}</div>
+        <x-status-banner type="danger">{{ session('admin_error') }}</x-status-banner>
     @endif
 
-    <p class="text-sm text-gray-400">
+    <x-content-panel class="p-4 text-sm text-gray-400">
         <a href="{{ route('admin.tables') }}" class="text-vtt-accent hover:text-vtt-accent-hover">← Stoły</a>
         <span class="mx-2">·</span>
         Owner: <span class="text-gray-200">{{ $table->user->username }}</span> ({{ $table->user->email }})
         <span class="mx-2">·</span>
         <a href="{{ $table->publicUrl() }}" target="_blank" rel="noopener noreferrer" class="text-vtt-accent hover:text-vtt-accent-hover">Otwórz stół</a>
-    </p>
+    </x-content-panel>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5 grid gap-4 sm:grid-cols-2">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5 grid gap-4 sm:grid-cols-2">
         <div>
             <h2 class="text-sm font-semibold text-white">Hasła VTT</h2>
             <p class="mt-2 text-sm text-gray-400">Gracz: <span class="font-mono text-gray-200">{{ $table->player_password }}</span></p>
@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Sesje stołu</h2>
         <ul class="mt-3 space-y-1 text-sm text-gray-300">
             @if ($telemetry['openSession'])
@@ -55,7 +55,7 @@
         </ul>
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="text-sm font-semibold text-white">Stan gry</h2>
             <div class="flex flex-wrap gap-2">
@@ -72,12 +72,13 @@
                 <x-secondary-button type="button" wire:click="$set('confirmingReset', false)">Anuluj</x-secondary-button>
             </div>
         @else
-            <x-secondary-button type="button" class="mt-4" wire:click="$set('confirmingReset', true)">Resetuj stan gry</x-secondary-button>
+            <x-warning-button type="button" class="mt-4" wire:click="$set('confirmingReset', true)">Resetuj stan gry</x-warning-button>
         @endif
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Pliki stołu</h2>
+        <x-storage-meter class="mt-3" :used="$assetBytes" :limit="$tableUploadLimit" />
         <ul class="mt-3 divide-y divide-white/5">
             @forelse ($assets as $asset)
                 <li class="py-2 flex flex-wrap items-center justify-between gap-2 text-sm">
@@ -94,7 +95,7 @@
         </ul>
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Ostatnie zdarzenia</h2>
         <ul class="mt-3 space-y-1 text-xs font-mono text-gray-400 max-h-64 overflow-auto">
             @forelse ($recentEvents as $event)
@@ -111,7 +112,7 @@
         </ul>
     </section>
 
-    <section class="rounded-xl border border-red-500/30 bg-red-950/20 p-5">
+    <section class="rounded-xl border border-red-500/40 bg-red-950/90 p-5">
         <h2 class="text-sm font-semibold text-red-200">Moderacja</h2>
         @if ($confirmingDelete)
             <p class="mt-2 text-sm text-red-300">Usunąć stół wraz z plikami i stanem? Tej operacji nie da się cofnąć.</p>
@@ -120,7 +121,7 @@
                 <x-secondary-button type="button" wire:click="$set('confirmingDelete', false)">Anuluj</x-secondary-button>
             </div>
         @else
-            <x-danger-button type="button" class="mt-3" wire:click="$set('confirmingDelete', true)">Usuń stół</x-danger-button>
+            <x-warning-button type="button" class="mt-3" wire:click="$set('confirmingDelete', true)">Usuń stół</x-warning-button>
         @endif
     </section>
 </div>

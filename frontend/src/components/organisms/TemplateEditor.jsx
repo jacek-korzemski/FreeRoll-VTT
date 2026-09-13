@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
+import { quotaErrorMessage } from '../../utils/storageQuota'
 import { templateModelToHtml, htmlToModel } from '../../utils/templateEditorUtils'
 import { mountTemplate } from '../../utils/templateRuntime'
 
@@ -312,7 +313,9 @@ function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
       if (data.success) {
         onSave()
       } else {
-        setSaveError(data.error || t('templates.saveFailed'))
+        setSaveError(
+          quotaErrorMessage(data, t) || data.error || t('templates.saveFailed')
+        )
       }
     } catch {
       setSaveError(t('templates.saveFailed'))

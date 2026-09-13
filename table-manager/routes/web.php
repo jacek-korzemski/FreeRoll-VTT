@@ -8,8 +8,11 @@ use App\Livewire\Admin\FilesIndex;
 use App\Livewire\Admin\TableShow;
 use App\Livewire\Admin\TablesIndex;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
-Route::view('/', 'welcome');
+Volt::route('/', 'pages.auth.login')
+    ->middleware('guest')
+    ->name('home');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])

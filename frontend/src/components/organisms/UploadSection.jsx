@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
+import { formatBytes, quotaErrorMessage, quotaPercent } from '../../utils/storageQuota'
 
 const TYPE_TOKEN = 'token'
 const TYPE_MAP = 'map'
@@ -20,6 +21,18 @@ function UploadSection({
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
   const [details, setDetails] = useState(null)
+  const [storage, setStorage] = useState(null)
+
+  useEffect(() => {
+    fetch(`${API_BASE}?action=storage`, { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.storage) {
+          setStorage(data.storage)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleTypeChange = useCallback((event) => {
     setSelectedType(event.target.value)
@@ -108,9 +121,22 @@ function UploadSection({
       }
     }
 
+    if (storage && storage.limit > 0) {
+      const incoming = files.reduce((sum, file) => sum + (file.size || 0), 0)
+      if (incoming > storage.remaining) {
+        setError(
+          t('upload.quotaExceeded', {
+            used: formatBytes(storage.used),
+            limit: formatBytes(storage.limit),
+          })
+        )
+        return false
+      }
+    }
+
     setError(null)
     return true
-  }, [files, selectedType])
+  }, [files, selectedType, storage])
 
   const handleUpload = useCallback(async () => {
     if (!validateFiles()) return
@@ -139,22 +165,27 @@ function UploadSection({
       const data = await res.json().catch(() => ({}))
 
       if (!data.success) {
-        // Specjalne traktowanie zbyt dużych PDF
+        if (data.storage) {
+          setStorage(data.storage)
+        }
         if (data.code === 'file_too_large') {
           setError(
             t('upload.tooBigPdf') ||
               'File is too large for server limits – please upload manually on the server.'
           )
-        } else if (data.error) {
-          setError(data.error)
         } else {
           setError(
-            t('upload.genericError') ||
+            quotaErrorMessage(data, t) ||
+              t('upload.genericError') ||
               'Upload failed. Please try again.'
           )
         }
         setDetails(data.errors || null)
         return
+      }
+
+      if (data.storage) {
+        setStorage(data.storage)
       }
 
       const uploaded = data.uploaded || []
@@ -245,6 +276,28 @@ function UploadSection({
 
   return (
     <div className="upload-section">
+      {storage && storage.limit > 0 && (
+        <div className="upload-quota">
+          <div className="upload-quota-label">
+            {t('upload.quotaLabel', {
+              used: formatBytes(storage.used),
+              limit: formatBytes(storage.limit),
+            })}
+          </div>
+          <div className="upload-quota-bar" aria-hidden="true">
+            <div
+              className={`upload-quota-bar-fill${
+                quotaPercent(storage) >= 100
+                  ? ' is-full'
+                  : quotaPercent(storage) >= 80
+                    ? ' is-warn'
+                    : ''
+              }`}
+              style={{ width: `${quotaPercent(storage)}%` }}
+            />
+          </div>
+        </div>
+      )}
       <div className="upload-row">
         <label className="upload-label">
           {t('upload.typeLabel') || 'Material type'}

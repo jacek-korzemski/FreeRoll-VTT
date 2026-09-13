@@ -1,35 +1,46 @@
 <div class="space-y-8">
     @if (session('status'))
-        <div class="rounded-lg border border-vtt-accent/40 bg-vtt-accent/15 px-4 py-3 text-sm text-white">
+        <x-status-banner type="success">
             {{ session('status') }}
-        </div>
+        </x-status-banner>
     @endif
 
     @if (! $sourceReady)
-        <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <x-status-banner type="warning">
             Brak paczki źródłowej VTT. Wgraj wynik <code class="font-mono">build.bat</code> do
             <code class="font-mono break-all">{{ $sourcePath }}</code>
             (pliki <code class="font-mono">index.php</code>, <code class="font-mono">assets/index.js</code> i <code class="font-mono">backend/vendor/autoload.php</code>).
-        </div>
+        </x-status-banner>
     @endif
 
-    <div class="flex items-end justify-between gap-4">
-        <div>
-            <h3 class="text-lg font-semibold text-white">Twoje stoły</h3>
-            <p class="text-sm text-gray-400">{{ $count }} / {{ $max }} wykorzystane</p>
-        </div>
-    </div>
+    <x-content-panel class="p-5">
+        <h3 class="text-lg font-semibold text-white">Twoje stoły</h3>
+        <p class="text-sm text-gray-400">{{ $count }} / {{ $max }} wykorzystane</p>
+        <x-storage-meter
+            class="mt-3"
+            :used="$storage['userUsed']"
+            :limit="$storage['userLimit']"
+            :label="'Materiały (wszystkie stoły, '.($storage['tableLimit'] / 1048576).' MB na stół)'"
+        />
+    </x-content-panel>
 
     @if ($tables->isEmpty())
-        <p class="text-sm text-gray-400">Nie masz jeszcze żadnego stołu. Utwórz pierwszy poniżej.</p>
+        <x-content-panel class="p-5">
+            <p class="text-sm text-gray-400">Nie masz jeszcze żadnego stołu. Utwórz pierwszy poniżej.</p>
+        </x-content-panel>
     @else
         <ul class="grid gap-4 lg:grid-cols-2">
             @foreach ($tables as $table)
-                <li class="rounded-xl border border-white/10 bg-vtt-panel p-5 shadow-lg">
+                <li class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5 shadow-lg">
                     <div class="flex items-start justify-between gap-3">
                         <div>
                             <h4 class="text-lg font-semibold text-white">{{ $table->name }}</h4>
                             <p class="mt-1 font-mono text-xs text-gray-400 break-all">{{ $table->publicPath() }}</p>
+                            <x-storage-meter
+                                class="mt-3"
+                                :used="$storage['tables'][$table->id] ?? 0"
+                                :limit="$storage['tableLimit']"
+                            />
                         </div>
                         <span class="shrink-0 rounded-full bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-gray-300">
                             {{ $table->language }}
@@ -39,7 +50,7 @@
                     </div>
 
                     <a href="{{ $table->publicUrl() }}" target="_blank" rel="noopener noreferrer"
-                       class="mt-4 inline-flex items-center rounded-md bg-vtt-accent px-3 py-2 text-sm font-semibold text-white hover:bg-vtt-accent-hover">
+                       class="mt-4 inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500">
                         Otwórz stół
                     </a>
 
@@ -80,7 +91,7 @@
                                 <x-input-error class="mt-1" :messages="$errors->get('edit_color_template')" />
                             </div>
                             <div class="flex gap-2">
-                                <x-primary-button>Zapisz</x-primary-button>
+                                <x-success-button>Zapisz</x-success-button>
                                 <x-secondary-button type="button" wire:click="cancelEdit">Anuluj</x-secondary-button>
                             </div>
                         </form>
@@ -98,7 +109,7 @@
                             <p><span class="text-gray-400">Hasło MG:</span> <span class="font-mono text-gray-200">{{ $table->gm_password }}</span></p>
                             <div class="flex flex-wrap gap-2 pt-2">
                                 <x-secondary-button type="button" wire:click="startEdit({{ $table->id }})">Zmień ustawienia</x-secondary-button>
-                                <x-danger-button type="button" wire:click="confirmDelete({{ $table->id }})">Usuń</x-danger-button>
+                                <x-warning-button type="button" wire:click="confirmDelete({{ $table->id }})">Usuń</x-warning-button>
                             </div>
                         </div>
                     @endif
@@ -107,11 +118,12 @@
         </ul>
     @endif
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5 shadow-lg">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5 shadow-lg">
         <h3 class="text-lg font-semibold text-white">Nowy stół</h3>
         @if (! $canCreate)
             <p class="mt-2 text-sm text-gray-400">Osiągnięto limit {{ $max }} stołów. Usuń jeden, żeby dodać kolejny.</p>
         @else
+            <p class="mt-2 text-sm text-gray-400">Każdy stół może mieć do {{ (int) ($storage['tableLimit'] / 1048576) }} MB wgranych materiałów (tokeny, mapy, tła, szablony, PDF). Limit konta: {{ (int) ($storage['userLimit'] / 1048576) }} MB.</p>
             <form wire:submit="createTable" class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">
                     <x-input-label for="name" value="Nazwa stołu" />
@@ -153,7 +165,7 @@
                     <x-input-error class="mt-1" :messages="$errors->get('color_template')" />
                 </div>
                 <div class="flex items-end">
-                    <x-primary-button :disabled="! $sourceReady">Utwórz stół</x-primary-button>
+                    <x-success-button :disabled="! $sourceReady">Utwórz stół</x-success-button>
                 </div>
             </form>
         @endif
@@ -168,7 +180,7 @@
             aria-labelledby="theme-preview-title"
         >
             <div class="absolute inset-0 bg-black/70" wire:click="closeThemePreview"></div>
-            <div class="relative z-10 flex h-auto max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-white/10 bg-vtt-panel shadow-2xl">
+            <div class="relative z-10 flex h-auto max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-white/10 bg-vtt-panel/90 shadow-2xl">
                 <div class="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
                     <div>
                         <h3 id="theme-preview-title" class="text-lg font-semibold text-white">Szablony kolorystyczne</h3>
@@ -192,7 +204,7 @@
                                 <button
                                     type="button"
                                     wire:click="pickColorTemplate('{{ $theme['id'] }}')"
-                                    class="group w-full overflow-hidden rounded-lg border text-left transition {{ $isSelected ? 'border-vtt-accent ring-1 ring-vtt-accent' : 'border-white/10 hover:border-white/25' }}"
+                                    class="group w-full overflow-hidden rounded-lg border text-left transition {{ $isSelected ? 'border-blue-500 ring-1 ring-blue-500' : 'border-white/10 hover:border-white/25' }}"
                                 >
                                     @if (! empty($theme['preview']))
                                         <img src="{{ $theme['preview'] }}" alt="{{ $theme['name']['pl'] }}" class="aspect-video w-full object-cover object-top bg-black">

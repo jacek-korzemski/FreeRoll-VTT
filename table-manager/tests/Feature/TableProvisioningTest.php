@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\TableProvisioner;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -85,6 +86,7 @@ class TableProvisioningTest extends TestCase
         $this->assertStringContainsString('VTT_LANGUAGE=pl', $env);
         $this->assertStringContainsString('VTT_COLOR_TEMPLATE=ember', $env);
         $this->assertStringContainsString('VTT_ENABLE_L5R=true', $env);
+        $this->assertStringContainsString('VTT_TABLE_UPLOAD_QUOTA_MB=50', $env);
     }
 
     public function test_user_cannot_create_more_than_three_tables(): void
@@ -102,7 +104,7 @@ class TableProvisioningTest extends TestCase
         $provisioner->create($user, $payload);
         $provisioner->create($user, $payload);
 
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
         $provisioner->create($user, $payload);
     }
 

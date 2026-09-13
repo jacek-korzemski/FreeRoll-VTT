@@ -1,12 +1,12 @@
 <div class="space-y-4">
     @if (session('admin_status'))
-        <div class="rounded-lg border border-vtt-accent/40 bg-vtt-accent/15 px-4 py-3 text-sm text-white">{{ session('admin_status') }}</div>
+        <x-status-banner type="success">{{ session('admin_status') }}</x-status-banner>
     @endif
     @if (session('admin_error'))
-        <div class="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">{{ session('admin_error') }}</div>
+        <x-status-banner type="danger">{{ session('admin_error') }}</x-status-banner>
     @endif
 
-    <div class="overflow-x-auto rounded-xl border border-white/10 bg-vtt-panel">
+    <div class="overflow-x-auto rounded-xl border border-white/10 bg-vtt-panel/90">
         <table class="min-w-full text-sm">
             <thead class="text-left text-gray-400 border-b border-white/10">
                 <tr>

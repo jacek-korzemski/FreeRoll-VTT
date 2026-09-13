@@ -1,9 +1,9 @@
 <div class="space-y-4">
     @if (session('admin_status'))
-        <div class="rounded-lg border border-vtt-accent/40 bg-vtt-accent/15 px-4 py-3 text-sm text-white">{{ session('admin_status') }}</div>
+        <x-status-banner type="success">{{ session('admin_status') }}</x-status-banner>
     @endif
 
-    <div class="overflow-x-auto rounded-xl border border-white/10 bg-vtt-panel">
+    <div class="overflow-x-auto rounded-xl border border-white/10 bg-vtt-panel/90">
         <table class="min-w-full text-sm">
             <thead class="text-left text-gray-400 border-b border-white/10">
                 <tr>
@@ -14,6 +14,7 @@
                     <th class="px-4 py-3 font-medium">Utworzony</th>
                     <th class="px-4 py-3 font-medium">Ostatnia aktywność</th>
                     <th class="px-4 py-3 font-medium">Online</th>
+                    <th class="px-4 py-3 font-medium">Pliki</th>
                     <th class="px-4 py-3 font-medium">Hasło gracza</th>
                     <th class="px-4 py-3 font-medium">Hasło MG</th>
                     <th class="px-4 py-3 font-medium"></th>
@@ -41,6 +42,7 @@
                                 <span class="text-gray-500">0</span>
                             @endif
                         </td>
+                        <td class="px-4 py-3 text-gray-400 whitespace-nowrap">{{ \App\Services\Admin\TelemetryAggregator::formatBytes($row['assetBytes'] ?? 0) }}</td>
                         <td class="px-4 py-3 font-mono text-xs text-gray-200">{{ $table->player_password }}</td>
                         <td class="px-4 py-3 font-mono text-xs text-gray-200">{{ $table->gm_password }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">
@@ -50,7 +52,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">Brak stołów.</td>
+                        <td colspan="11" class="px-4 py-8 text-center text-gray-500">Brak stołów.</td>
                     </tr>
                 @endforelse
             </tbody>

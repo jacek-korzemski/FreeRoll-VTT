@@ -1,20 +1,20 @@
 <div class="space-y-6">
     <div class="grid gap-4 sm:grid-cols-3">
-        <div class="rounded-xl border border-white/10 bg-vtt-panel p-4">
+        <div class="rounded-xl border border-white/10 bg-vtt-panel/90 p-4">
             <p class="text-xs uppercase tracking-wide text-gray-400">Unikalni klienci</p>
             <p class="mt-1 text-2xl font-semibold text-white">{{ $data['uniqueClients'] }}</p>
         </div>
-        <div class="rounded-xl border border-white/10 bg-vtt-panel p-4">
+        <div class="rounded-xl border border-white/10 bg-vtt-panel/90 p-4">
             <p class="text-xs uppercase tracking-wide text-gray-400">Logowania gracz / MG / fail</p>
             <p class="mt-1 text-2xl font-semibold text-white">{{ $data['logins']['player'] }} / {{ $data['logins']['gm'] }} / {{ $data['logins']['fail'] }}</p>
         </div>
-        <div class="rounded-xl border border-white/10 bg-vtt-panel p-4">
+        <div class="rounded-xl border border-white/10 bg-vtt-panel/90 p-4">
             <p class="text-xs uppercase tracking-wide text-gray-400">Suma czasu sesji</p>
             <p class="mt-1 text-2xl font-semibold text-white">{{ \App\Services\Admin\TelemetryAggregator::formatDuration($data['sessionSecondsTotal']) }}</p>
         </div>
     </div>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Interakcje w ostatnich 24h (UTC)</h2>
         <div class="mt-4 flex items-end gap-1 h-28">
             @foreach ($data['hourly24'] as $hour => $count)
@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Najczęstsze akcje</h2>
         <ul class="mt-3 space-y-1 text-sm">
             @forelse ($data['topActions'] as $action => $count)
@@ -43,7 +43,7 @@
         </ul>
     </section>
 
-    <section class="rounded-xl border border-white/10 bg-vtt-panel p-5">
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Sesje (od — do)</h2>
         <div class="mt-3 overflow-x-auto">
             <table class="min-w-full text-sm">

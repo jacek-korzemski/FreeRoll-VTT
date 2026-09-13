@@ -1,6 +1,6 @@
 <nav class="-mx-3 flex flex-1 justify-end gap-1">
     @auth
-        <a href="{{ route('dashboard') }}" class="rounded-md px-3 py-2 text-white transition hover:text-vtt-accent">
+        <a href="{{ route('dashboard') }}" class="rounded-md px-3 py-2 text-white transition hover:text-blue-400">
             Stoły
         </a>
     @else

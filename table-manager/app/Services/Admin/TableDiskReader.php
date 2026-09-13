@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Models\VttTable;
+use App\Services\TableProvisioner;
 use Illuminate\Support\Facades\File;
 
 class TableDiskReader
@@ -233,7 +234,7 @@ class TableDiskReader
 
     public function destroyTable(VttTable $table): void
     {
-        app(\App\Services\TableProvisioner::class)->destroy($table);
+        app(TableProvisioner::class)->destroy($table);
     }
 
     /**
@@ -270,6 +271,16 @@ class TableDiskReader
                 'isImage' => str_starts_with($mime, 'image/'),
             ];
         }
+    }
+
+    public function assetUsageBytes(VttTable $table): int
+    {
+        $total = 0;
+        foreach ($this->listAssets($table) as $asset) {
+            $total += (int) $asset['size'];
+        }
+
+        return $total;
     }
 
     /**

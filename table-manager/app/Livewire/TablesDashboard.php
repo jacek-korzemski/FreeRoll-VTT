@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Exceptions\VttSourceMissingException;
 use App\Models\VttTable;
+use App\Services\StorageQuota;
 use App\Services\TableProvisioner;
 use App\Services\ThemeCatalog;
 use Illuminate\Support\Facades\Auth;
@@ -141,11 +142,12 @@ class TablesDashboard extends Component
         session()->flash('status', 'Stół został usunięty.');
     }
 
-    public function render(TableProvisioner $provisioner)
+    public function render(TableProvisioner $provisioner, StorageQuota $quota)
     {
         $user = Auth::user();
         $tables = $user->vttTables()->with('user')->latest()->get();
         $max = (int) config('vtt.max_tables');
+        $storage = $quota->snapshotForTables($tables);
 
         return view('livewire.tables-dashboard', [
             'tables' => $tables,
@@ -155,6 +157,7 @@ class TablesDashboard extends Component
             'sourceReady' => $provisioner->sourceIsReady(),
             'sourcePath' => $provisioner->sourcePath(),
             'colorThemes' => array_values(app(ThemeCatalog::class)->catalog()['themes']),
+            'storage' => $storage,
         ]);
     }
 

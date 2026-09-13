@@ -51,6 +51,8 @@ class TableShow extends Component
         return view('livewire.admin.table-show', [
             'telemetry' => $telemetry,
             'assets' => $reader->listAssets($this->table),
+            'assetBytes' => $reader->assetUsageBytes($this->table),
+            'tableUploadLimit' => max(0, (int) config('vtt.max_table_upload_mb', 50)) * 1048576,
             'state' => $reader->readStateFile($this->table, 'state.json'),
             'rolls' => $reader->readStateFile($this->table, 'rolls.json'),
             'recentEvents' => $recentEvents,

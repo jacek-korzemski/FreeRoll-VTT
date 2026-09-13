@@ -19,8 +19,8 @@ export default {
                 vtt: {
                     bg: '#1a1a2e',
                     panel: '#16213e',
-                    accent: '#e94560',
-                    'accent-hover': '#ff6b6b',
+                    accent: '#3b82f6',
+                    'accent-hover': '#60a5fa',
                 },
             },
         },

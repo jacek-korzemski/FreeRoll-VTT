@@ -1629,6 +1629,38 @@ body {
   padding: 0.5rem 0.25rem 0;
 }
 
+.upload-quota {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.upload-quota-label {
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+}
+
+.upload-quota-bar {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.upload-quota-bar-fill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.2s ease;
+}
+
+.upload-quota-bar-fill.is-warn {
+  background: #eab308;
+}
+
+.upload-quota-bar-fill.is-full {
+  background: #ef4444;
+}
+
 .upload-row {
   display: flex;
   flex-direction: column;

@@ -167,6 +167,12 @@ if (is_file($vttTelemetryFile)) {
     require_once $vttTelemetryFile;
 }
 
+$vttQuotaFile = __DIR__ . '/include/storage-quota.php';
+if (is_file($vttQuotaFile)) {
+    require_once $vttQuotaFile;
+    vttSetUploadQuotaBytes(vttParseQuotaFromEnv($env));
+}
+
 // ============================================
 // CORS
 // ============================================
@@ -382,6 +388,10 @@ function getSceneById(&$state, $sceneId) {
 }
 
 function getAssetBaseDirMap() {
+    if (function_exists('vttAssetDirMap')) {
+        return vttAssetDirMap();
+    }
+
     return [
         'token' => __DIR__ . '/assets/tokens',
         'map' => __DIR__ . '/assets/map',
@@ -604,10 +614,30 @@ try {
                     $authenticated = isDevMode() ? true : isAuthenticated();
                     $isGM = isGameMaster();
                     
-                    echo json_encode([
+                    $authPayload = [
                         'success' => true,
                         'authenticated' => $authenticated,
                         'isGameMaster' => $isGM
+                    ];
+                    if ($isGM && function_exists('vttStorageSnapshot')) {
+                        $authPayload['storage'] = vttStorageSnapshot();
+                    }
+                    echo json_encode($authPayload);
+                    break;
+
+                case 'storage':
+                    if (!isGameMaster()) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
+                    echo json_encode([
+                        'success' => true,
+                        'storage' => function_exists('vttStorageSnapshot') ? vttStorageSnapshot() : [
+                            'used' => 0,
+                            'limit' => 0,
+                            'remaining' => 0,
+                        ],
                     ]);
                     break;
 
@@ -1662,6 +1692,10 @@ try {
                             $i++;
                         }
                     }
+                    $replacingBytes = is_file($filePath) ? (int) filesize($filePath) : 0;
+                    if (function_exists('vttRejectIfOverQuota') && vttRejectIfOverQuota(strlen($html), $replacingBytes)) {
+                        break;
+                    }
                     if (file_put_contents($filePath, $html) === false) {
                         http_response_code(500);
                         echo json_encode(['success' => false, 'error' => 'Failed to save template']);
@@ -1705,6 +1739,9 @@ try {
                     }
                     $cloneHtml = file_get_contents($srcPath);
                     $cloneHtml = injectTemplateMeta($cloneHtml, 'custom-clone');
+                    if (function_exists('vttRejectIfOverQuota') && vttRejectIfOverQuota(strlen($cloneHtml))) {
+                        break;
+                    }
                     if (file_put_contents($newPath, $cloneHtml) === false) {
                         http_response_code(500);
                         echo json_encode(['success' => false, 'error' => 'Failed to clone template']);
@@ -1790,6 +1827,10 @@ try {
                         $names = $_FILES['files']['name'];
                         $tmpNames = $_FILES['files']['tmp_name'];
                         $errors = $_FILES['files']['error'];
+                        $sizes = $_FILES['files']['size'] ?? [];
+
+                        $remaining = function_exists('vttStorageSnapshot') ? (int) vttStorageSnapshot()['remaining'] : PHP_INT_MAX;
+                        $quotaLimit = function_exists('vttUploadQuotaBytes') ? vttUploadQuotaBytes() : 0;
 
                         $count = count($names);
                         for ($i = 0; $i < $count; $i++) {
@@ -1818,6 +1859,19 @@ try {
                                 continue;
                             }
 
+                            $fileSize = (int) ($sizes[$i] ?? 0);
+                            if ($fileSize <= 0 && is_string($tmpName) && is_file($tmpName)) {
+                                $fileSize = (int) filesize($tmpName);
+                            }
+                            if ($quotaLimit > 0 && $fileSize > $remaining) {
+                                $result['errors'][] = [
+                                    'name' => $origName,
+                                    'message' => 'Table storage quota exceeded',
+                                    'code' => 'quota_exceeded',
+                                ];
+                                continue;
+                            }
+
                             $safeName = $sanitizeFilename($origName);
                             $targetPath = $makeUniquePath($baseDir, $safeName);
 
@@ -1829,6 +1883,7 @@ try {
                                 continue;
                             }
 
+                            $remaining = max(0, $remaining - $fileSize);
                             $result['uploaded'][] = [
                                 'originalName' => $origName,
                                 'storedName' => basename($targetPath),
@@ -1837,6 +1892,18 @@ try {
                         }
 
                         $result['success'] = count($result['uploaded']) > 0;
+                        if (function_exists('vttStorageSnapshot')) {
+                            $result['storage'] = vttStorageSnapshot();
+                        }
+                        if (!$result['success']) {
+                            foreach ($result['errors'] as $item) {
+                                if (($item['code'] ?? '') === 'quota_exceeded') {
+                                    $result['code'] = 'quota_exceeded';
+                                    http_response_code(413);
+                                    break;
+                                }
+                            }
+                        }
                         echo json_encode($result);
                         break;
                     }
@@ -1865,6 +1932,10 @@ try {
 
                         if (!preg_match('/\\.html?$/i', $origName)) {
                             echo json_encode(['success' => false, 'error' => 'Invalid template extension']);
+                            break;
+                        }
+
+                        if (function_exists('vttRejectIfOverQuota') && vttRejectIfOverQuota(vttUploadFileSize($file))) {
                             break;
                         }
 
@@ -1900,6 +1971,7 @@ try {
                                 'storedName' => basename($targetPath),
                                 'type' => $type,
                             ]],
+                            'storage' => function_exists('vttStorageSnapshot') ? vttStorageSnapshot() : null,
                         ]);
                         break;
                     }
@@ -1947,6 +2019,10 @@ try {
                             break;
                         }
 
+                        if (function_exists('vttRejectIfOverQuota') && vttRejectIfOverQuota(vttUploadFileSize($file))) {
+                            break;
+                        }
+
                         $safeName = $sanitizeFilename($origName);
                         $targetPath = $makeUniquePath($baseDir, $safeName);
 
@@ -1962,6 +2038,7 @@ try {
                                 'storedName' => basename($targetPath),
                                 'type' => $type,
                             ]],
+                            'storage' => function_exists('vttStorageSnapshot') ? vttStorageSnapshot() : null,
                         ]);
                         break;
                     }

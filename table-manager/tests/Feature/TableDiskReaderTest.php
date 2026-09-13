@@ -103,6 +103,7 @@ class TableDiskReaderTest extends TestCase
         $assets = $reader->listAssets($table);
         $this->assertNotEmpty($assets);
         $this->assertSame('tokens/hero.png', $assets[0]['relative']);
+        $this->assertSame(8, $reader->assetUsageBytes($table));
 
         $telemetry = $reader->telemetry($table, $now);
         $this->assertSame(1, $telemetry['onlineCount']);

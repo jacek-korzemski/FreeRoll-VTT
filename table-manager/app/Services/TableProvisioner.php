@@ -141,6 +141,7 @@ class TableProvisioner
             'VTT_LANGUAGE='.$table->language,
             'VTT_COLOR_TEMPLATE='.($table->color_template ?: 'crimson'),
             'VTT_ENABLE_L5R='.$this->sourceEnableL5r(),
+            'VTT_TABLE_UPLOAD_QUOTA_MB='.(int) config('vtt.max_table_upload_mb', 50),
             'ALLOWED_ORIGINS='.config('vtt.allowed_origins'),
         ])."\n";
 

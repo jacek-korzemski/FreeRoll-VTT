@@ -20,6 +20,7 @@ class TelemetryAggregator
         $uniqueClients = 0;
         $sessionSeconds = 0;
         $interactions24h = 0;
+        $uploadBytes = 0;
 
         foreach ($tables as $table) {
             $t = $this->reader->telemetry($table);
@@ -31,6 +32,7 @@ class TelemetryAggregator
             $uniqueClients += $t['uniqueClients'];
             $sessionSeconds += $t['sessionSecondsTotal'];
             $interactions24h += $t['interactions24h'];
+            $uploadBytes += $this->reader->assetUsageBytes($table);
         }
 
         return [
@@ -41,6 +43,8 @@ class TelemetryAggregator
             'uniqueClients' => $uniqueClients,
             'sessionSecondsTotal' => $sessionSeconds,
             'interactions24h' => $interactions24h,
+            'uploadBytes' => $uploadBytes,
+            'tableUploadLimit' => max(0, (int) config('vtt.max_table_upload_mb', 50)) * 1048576,
         ];
     }
 
@@ -59,6 +63,7 @@ class TelemetryAggregator
                 'uniqueClients' => $t['uniqueClients'],
                 'sessionSecondsTotal' => $t['sessionSecondsTotal'],
                 'logins' => $t['logins'],
+                'assetBytes' => $this->reader->assetUsageBytes($table),
             ];
         }
 

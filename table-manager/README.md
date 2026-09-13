@@ -41,6 +41,7 @@ Katalogi `database/` oraz `storage/` i `public/vtt/` muszą być zapisywalne prz
    - `backend/vendor/autoload.php`
    - `backend/src/Ttrpg/`
    - `backend/include/telemetry.php`
+   - `backend/include/storage-quota.php`
    - `deploy-env.php`
 
 Table Manager **nie** odpala `npm run build` ani `composer install` przy tworzeniu stołu. Paczka musi być już złożona. Flaga L5R jest dziedziczona z `current-source/.env` (`VTT_ENABLE_L5R`). Żeby stoły miały L5R, zbuduj paczkę z włączonym L5R.
@@ -81,6 +82,7 @@ Zablokuj odczyt `.env` i `backend/data/*.json` (paczka VTT ma własne `.htaccess
 
 - Rejestracja: imię, **username** (slug w URL, bez zmian później), e-mail, hasło.
 - Maks. **3 stoły** na konto.
+- Limit wgranych materiałów: **50 MB na stół** (tokeny, mapy, tła, szablony HTML, PDF). Przy 3 stołach to **150 MB na konto**. Zmiana: `VTT_TABLE_UPLOAD_QUOTA_MB` w `.env` Table Managera (trafia do `.env` każdego stołu).
 - Przy tworzeniu: nazwa, hasło gracza, hasło MG, język (`pl` / `en`).
 - Hasła można potem zmienić w panelu (zapis do SQLite i do `.env` stołu).
 - Usunięcie stołu kasuje katalog i rekord.

@@ -24,6 +24,7 @@
 /storage/*.key
 /storage/pail
 /vendor
+/public/images/uncompressed.png
 _ide_helper.php
 Homestead.json
 Homestead.yaml

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Legenda Pięciu Kręgów</title>
+  <style>
+    /* Per-template scoped style (rewritten with [data-vtt-scope] at runtime). */
+
+    /* Parchment theme: dark ink on warm cream. The app's template defaults target
+       a dark panel (light text, translucent-white inputs), so every text/field
+       colour below is overridden to stay legible on the light L5R sheet. */
+    .l5r-sheet {
+      color: #3a2a18;
+    }
+
+    .l5r-sheet .tpl-table {
+      background: #f6efe0;
+      border-color: #b8956a;
+    }
+
+    .l5r-sheet .tpl-table td {
+      border-color: #d8c39a;
+    }
+
+    .l5r-sheet strong {
+      color: #3a2a18;
+    }
+
+    .l5r-sheet .section-header {
+      background: linear-gradient(180deg, #7a1f1f, #561414);
+      color: #f4e7c0;
+      letter-spacing: 0.05em;
+    }
+
+    .l5r-sheet .section-header-sm {
+      background: #3a2a18;
+      color: #f0dfb8;
+    }
+
+    /* Text fields: dark ink instead of the dark-theme near-white default. */
+    .l5r-sheet input[type="text"],
+    .l5r-sheet textarea {
+      color: #3a2a18;
+    }
+
+    .l5r-sheet input[type="text"]::placeholder,
+    .l5r-sheet textarea::placeholder {
+      color: #9a8762;
+    }
+
+    /* .plain - faint field + underline so empty inputs are discoverable on cream. */
+    .l5r-sheet input.plain,
+    .l5r-sheet textarea.plain {
+      background: rgba(255, 255, 255, 0.4);
+      border-bottom: 1px solid #cdb88f;
+    }
+
+    .l5r-sheet input.plain:hover,
+    .l5r-sheet textarea.plain:hover {
+      border-bottom-color: #b8956a;
+    }
+
+    .l5r-sheet input.plain:focus,
+    .l5r-sheet textarea.plain:focus {
+      border-bottom-color: #7a1f1f;
+    }
+
+    /* .box - bordered input on warm white so it reads clearly against the sheet. */
+    .l5r-sheet input.box {
+      background: #fffaf0;
+      border: 1px solid #b8956a;
+      color: #3a2a18;
+    }
+
+    .l5r-sheet input.box:focus {
+      border-color: #7a1f1f;
+    }
+
+    .l5r-sheet input.circle {
+      border-color: #7a1f1f;
+      background: #fffaf0;
+      color: #561414;
+    }
+
+    /* Read-only derived stats: kept after .box so it wins on equal specificity. */
+    .l5r-sheet input[readonly] {
+      background: #e9dcc0;
+      border-color: #b8956a;
+      font-weight: 700;
+      color: #561414;
+    }
+
+    .l5r-sheet .ring-name {
+      font-weight: 700;
+      color: #561414;
+    }
+
+    .l5r-sheet .l5r-hint {
+      color: #7a5a32;
+      font-size: 0.82em;
+    }
+
+    .l5r-sheet select.l5r-select {
+      font: inherit;
+      padding: 2px 4px;
+      border: 1px solid #b8956a;
+      border-radius: 3px;
+      background: #fffaf0;
+      color: #3a2a18;
+    }
+
+    .l5r-sheet .l5r-picker-btn {
+      border: 1px solid #b8956a;
+      background: #efe3c4;
+      color: #3a2a18;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 1px 5px;
+      font-size: 0.9em;
+    }
+
+    .l5r-sheet .l5r-picker-btn:hover {
+      background: #e0cfa0;
+    }
+
+    .l5r-sheet .l5r-clear-btn {
+      float: right;
+      border: 1px solid #b8956a;
+      background: #efe3c4;
+      color: #7a1f1f;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0 5px;
+      font-size: 0.85em;
+      line-height: 1.5;
+    }
+
+    .l5r-sheet .l5r-clear-btn:hover {
+      background: #e0cfa0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="l5r-sheet">
+
+    <!-- TOŻSAMOŚĆ -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="2"><strong>Imię postaci:</strong> <input data-field="character_name" type="text"
+            class="plain wide"></td>
+      </tr>
+      <tr>
+        <td><strong>Gracz:</strong> <input data-field="player_name" type="text" class="plain"></td>
+        <td><strong>Klan:</strong> <input data-field="clan" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td><strong>Ród:</strong> <input data-field="family" type="text" class="plain"></td>
+        <td><strong>Szkoła:</strong> <input data-field="school" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td><strong>Role:</strong> <input data-field="roles" type="text" class="plain"></td>
+        <td><strong>Ranga szkoły:</strong> <input data-field="school_rank" type="text" class="box sm"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>Dziedzictwo (Heritage):</strong> <input data-field="heritage" type="text"
+            class="plain wide"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>Tytuły:</strong> <input data-field="titles" type="text" class="plain wide"></td>
+      </tr>
+      <tr>
+        <td><strong>Giri (obowiązek):</strong> <input data-field="giri" type="text" class="plain wide"></td>
+        <td><strong>Ninjō (pragnienie):</strong> <input data-field="ninjo" type="text" class="plain wide"></td>
+      </tr>
+    </table>
+
+    <!-- PIERŚCIENIE -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="5" class="section-header">☯️ PIERŚCIENIE (RINGS)</td>
+      </tr>
+      <tr>
+        <td class="center"><span class="ring-name">Air</span></td>
+        <td class="center"><span class="ring-name">Earth</span></td>
+        <td class="center"><span class="ring-name">Fire</span></td>
+        <td class="center"><span class="ring-name">Water</span></td>
+        <td class="center"><span class="ring-name">Void</span></td>
+      </tr>
+      <tr>
+        <td class="center"><input data-field="ring_air" type="text" class="circle" value="1">
+          <button data-l5r-roll data-l5r-ring="@ring_air" data-l5r-label="Air" class="roll-btn">🎲</button>
+        </td>
+        <td class="center"><input data-field="ring_earth" type="text" class="circle" value="1">
+          <button data-l5r-roll data-l5r-ring="@ring_earth" data-l5r-label="Earth" class="roll-btn">🎲</button>
+        </td>
+        <td class="center"><input data-field="ring_fire" type="text" class="circle" value="1">
+          <button data-l5r-roll data-l5r-ring="@ring_fire" data-l5r-label="Fire" class="roll-btn">🎲</button>
+        </td>
+        <td class="center"><input data-field="ring_water" type="text" class="circle" value="1">
+          <button data-l5r-roll data-l5r-ring="@ring_water" data-l5r-label="Water" class="roll-btn">🎲</button>
+        </td>
+        <td class="center"><input data-field="ring_void" type="text" class="circle" value="1">
+          <button data-l5r-roll data-l5r-ring="@ring_void" data-l5r-label="Void" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- STATYSTYKI POCHODNE I PULE -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header">📊 STATYSTYKI</td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Endurance</strong><br><input data-field="endurance" type="text" class="box sm"
+            readonly></td>
+        <td class="center"><strong>Composure</strong><br><input data-field="composure" type="text" class="box sm"
+            readonly></td>
+        <td class="center"><strong>Focus</strong><br><input data-field="focus" type="text" class="box sm" readonly></td>
+        <td class="center"><strong>Vigilance</strong><br><input data-field="vigilance" type="text" class="box sm"
+            readonly></td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Fatigue</strong><br><input data-field="fatigue" type="text" class="box sm"> /
+          <input data-field="endurance_max" type="text" class="box sm" readonly></td>
+        <td class="center"><strong>Strife</strong><br><input data-field="strife" type="text" class="box sm"> /
+          <input data-field="composure_max" type="text" class="box sm" readonly></td>
+        <td class="center"><strong>Void Points</strong><br><input data-field="void_current" type="text" class="box sm">
+          / <input data-field="void_max" type="text" class="box sm" readonly></td>
+        <td class="center"><strong>Pieniądze</strong><br>
+          <span class="l5r-hint">koku</span> <input data-field="money_koku" type="text" class="box xs">
+          <span class="l5r-hint">bu</span> <input data-field="money_bu" type="text" class="box xs">
+          <span class="l5r-hint">zeni</span> <input data-field="money_zeni" type="text" class="box xs">
+        </td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Honor</strong><br><input data-field="honor" type="text" class="box sm"></td>
+        <td class="center"><strong>Glory</strong><br><input data-field="glory" type="text" class="box sm"></td>
+        <td class="center"><strong>Status</strong><br><input data-field="status" type="text" class="box sm"></td>
+        <td class="center"><strong>Aktywny Pierścień</strong><br>
+          <select data-field="active_ring" class="l5r-select" value="air">
+            <option value="air">Air</option>
+            <option value="earth">Earth</option>
+            <option value="fire">Fire</option>
+            <option value="water">Water</option>
+            <option value="void">Void</option>
+          </select>
+          <div class="l5r-hint">używany przy rzutach umiejętności</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- UMIEJĘTNOŚCI -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="3" class="section-header">🎯 UMIEJĘTNOŚCI (Pierścień + Umiejętność)</td>
+      </tr>
+      <tr>
+        <td colspan="3" class="section-header-sm">Artisan</td>
+      </tr>
+      <tr>
+        <td>Aesthetics</td>
+        <td class="right"><input data-field="skill_aesthetics" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_aesthetics" data-l5r-label="Aesthetics" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Composition</td>
+        <td class="right"><input data-field="skill_composition" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_composition" data-l5r-label="Composition" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Design</td>
+        <td class="right"><input data-field="skill_design" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_design" data-l5r-label="Design" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Smithing</td>
+        <td class="right"><input data-field="skill_smithing" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_smithing" data-l5r-label="Smithing" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="section-header-sm">Martial</td>
+      </tr>
+      <tr>
+        <td>Fitness</td>
+        <td class="right"><input data-field="skill_fitness" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_fitness" data-l5r-label="Fitness" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Martial Arts [Melee]</td>
+        <td class="right"><input data-field="skill_martial_melee" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_martial_melee" data-l5r-label="Martial Arts [Melee]" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Martial Arts [Ranged]</td>
+        <td class="right"><input data-field="skill_martial_ranged" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_martial_ranged" data-l5r-label="Martial Arts [Ranged]"
+            class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Martial Arts [Unarmed]</td>
+        <td class="right"><input data-field="skill_martial_unarmed" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_martial_unarmed" data-l5r-label="Martial Arts [Unarmed]"
+            class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Meditation</td>
+        <td class="right"><input data-field="skill_meditation" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_meditation" data-l5r-label="Meditation" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Tactics</td>
+        <td class="right"><input data-field="skill_tactics" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_tactics" data-l5r-label="Tactics" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="section-header-sm">Scholar</td>
+      </tr>
+      <tr>
+        <td>Culture</td>
+        <td class="right"><input data-field="skill_culture" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_culture" data-l5r-label="Culture" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Government</td>
+        <td class="right"><input data-field="skill_government" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_government" data-l5r-label="Government" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Medicine</td>
+        <td class="right"><input data-field="skill_medicine" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_medicine" data-l5r-label="Medicine" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Sentiment</td>
+        <td class="right"><input data-field="skill_sentiment" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_sentiment" data-l5r-label="Sentiment" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Theology</td>
+        <td class="right"><input data-field="skill_theology" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_theology" data-l5r-label="Theology" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="section-header-sm">Social</td>
+      </tr>
+      <tr>
+        <td>Command</td>
+        <td class="right"><input data-field="skill_command" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_command" data-l5r-label="Command" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Courtesy</td>
+        <td class="right"><input data-field="skill_courtesy" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_courtesy" data-l5r-label="Courtesy" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Games</td>
+        <td class="right"><input data-field="skill_games" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_games" data-l5r-label="Games" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Performance</td>
+        <td class="right"><input data-field="skill_performance" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_performance" data-l5r-label="Performance" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="section-header-sm">Trade</td>
+      </tr>
+      <tr>
+        <td>Commerce</td>
+        <td class="right"><input data-field="skill_commerce" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_commerce" data-l5r-label="Commerce" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Labor</td>
+        <td class="right"><input data-field="skill_labor" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_labor" data-l5r-label="Labor" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Seafaring</td>
+        <td class="right"><input data-field="skill_seafaring" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_seafaring" data-l5r-label="Seafaring" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Skulduggery</td>
+        <td class="right"><input data-field="skill_skulduggery" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_skulduggery" data-l5r-label="Skulduggery" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td>Survival</td>
+        <td class="right"><input data-field="skill_survival" type="text" class="box xs"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill="@skill_survival" data-l5r-label="Survival" class="roll-btn">🎲</button></td>
+      </tr>
+    </table>
+
+    <!-- ZDOLNOŚĆ SZKOŁY -->
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header">🏯 ZDOLNOŚĆ SZKOŁY</td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="school_ability_name" type="text" class="plain wide"></td>
+      </tr>
+      <tr>
+        <td><textarea data-field="school_ability_text" class="plain wide" rows="3"></textarea></td>
+      </tr>
+    </table>
+
+    <!-- PANCERZE -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header">🛡️ PANCERZE</td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa</strong></td>
+        <td><strong>Resistance</strong></td>
+        <td><strong>Cechy</strong></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><input data-field="armor1_name" type="text" class="plain wide"></td>
+        <td><input data-field="armor1_resistance" type="text" class="plain"></td>
+        <td><input data-field="armor1_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="armor" data-l5r-target="armor1">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="armor2_name" type="text" class="plain wide"></td>
+        <td><input data-field="armor2_resistance" type="text" class="plain"></td>
+        <td><input data-field="armor2_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="armor" data-l5r-target="armor2">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="armor3_name" type="text" class="plain wide"></td>
+        <td><input data-field="armor3_resistance" type="text" class="plain"></td>
+        <td><input data-field="armor3_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="armor" data-l5r-target="armor3">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="armor4_name" type="text" class="plain wide"></td>
+        <td><input data-field="armor4_resistance" type="text" class="plain"></td>
+        <td><input data-field="armor4_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="armor" data-l5r-target="armor4">📖</button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- BRONIE -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="6" class="section-header">⚔️ BRONIE</td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <span class="l5r-hint">Umiejętność ataku:</span>
+          <select data-field="weapon_skill" class="l5r-select" value="melee">
+            <option value="melee">Martial Arts [Melee]</option>
+            <option value="ranged">Martial Arts [Ranged]</option>
+            <option value="unarmed">Martial Arts [Unarmed]</option>
+          </select>
+          <span class="l5r-hint">+ aktywny Pierścień</span>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa</strong></td>
+        <td class="center"><strong>Zasięg</strong></td>
+        <td class="center"><strong>Obr./Śmier.</strong></td>
+        <td><strong>Cechy</strong></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon1_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon1_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon1_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon1_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon1_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon1">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon2_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon2_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon2_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon2_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon2_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon2">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon3_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon3_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon3_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon3_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon3_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon3">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon4_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon4_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon4_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon4_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon4_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon4">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon5_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon5_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon5_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon5_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon5_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon5">📖</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="weapon6_name" type="text" class="plain wide"></td>
+        <td class="center"><input data-field="weapon6_range" type="text" class="box xs"></td>
+        <td class="center"><input data-field="weapon6_damage" type="text" class="box xs"></td>
+        <td><input data-field="weapon6_qualities" type="text" class="plain wide"></td>
+        <td class="center"><button data-l5r-roll data-l5r-ring-select="active_ring" data-l5r-ring-prefix="ring_"
+            data-l5r-skill-select="weapon_skill" data-l5r-skill-prefix="skill_martial_"
+            data-l5r-label="Atak: @weapon6_name" class="roll-btn">🎲</button></td>
+        <td class="center"><button class="l5r-picker-btn" data-l5r-picker="weapon" data-l5r-target="weapon6">📖</button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- TECHNIKI -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="2" class="section-header">📜 TECHNIKI (Kata, Shūji, Rytuały, Inwersje)</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="center">
+          <button class="l5r-picker-btn" data-l5r-picker="technique" data-l5r-target-prefix="tech"
+            data-l5r-target-count="6">📖 Dodaj technikę z kompendium</button>
+        </td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 1<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="1" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech1_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech1_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech1_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech1_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech1_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech1_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech1_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 2<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="2" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech2_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech2_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech2_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech2_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech2_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech2_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech2_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 3<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="3" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech3_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech3_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech3_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech3_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech3_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech3_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech3_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 4<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="4" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech4_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech4_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech4_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech4_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech4_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech4_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech4_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 5<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="5" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech5_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech5_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech5_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech5_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech5_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech5_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech5_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+    <table class="tpl-table">
+      <tr>
+        <td colspan="4" class="section-header-sm">Technika 6<button class="l5r-clear-btn" data-l5r-clear-prefix="tech"
+            data-l5r-clear-index="6" data-l5r-clear-count="6" title="Wyczyść technikę">🗑️</button></td>
+      </tr>
+      <tr>
+        <td><strong>Nazwa:</strong> <input data-field="tech6_name" type="text" class="plain wide"></td>
+        <td><strong>Typ:</strong> <input data-field="tech6_type" type="text" class="plain"></td>
+        <td><strong>Ranga:</strong> <input data-field="tech6_rank" type="text" class="box xs"></td>
+        <td><strong>Pierścień:</strong> <input data-field="tech6_ring" type="text" class="plain"></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Aktywacja:</strong> <textarea data-field="tech6_activation" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Efekty:</strong> <textarea data-field="tech6_effects" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="4"><strong>Okazje:</strong> <textarea data-field="tech6_opportunities" class="plain wide"
+            rows="2"></textarea></td>
+      </tr>
+    </table>
+
+    <!-- ZALETY I WADY -->
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header">🎭 ZALETY / WADY (Distinctions, Passions, Adversities, Anxieties)</td>
+      </tr>
+      <tr>
+        <td><strong>Distinctions:</strong><br><textarea data-field="distinctions" class="plain wide"
+            rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Passions:</strong><br><textarea data-field="passions" class="plain wide" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Adversities:</strong><br><textarea data-field="adversities" class="plain wide"
+            rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Anxieties:</strong><br><textarea data-field="anxieties" class="plain wide" rows="3"></textarea></td>
+      </tr>
+    </table>
+
+    <!-- ZAAWANSOWANIE / XP -->
+    <table class="tpl-table">
+      <tr>
+        <td colspan="3" class="section-header">📈 ZAAWANSOWANIE / XP</td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Total XP</strong><br><input data-field="xp_total" type="text" class="box sm"></td>
+        <td class="center"><strong>Spent XP</strong><br><input data-field="xp_spent" type="text" class="box sm"></td>
+        <td class="center"><strong>Saved XP</strong><br><input data-field="xp_saved" type="text" class="box sm"></td>
+      </tr>
+      <tr>
+        <td colspan="3"><strong>Curriculum / postępy:</strong><br><textarea data-field="advancement" class="plain wide"
+            rows="6"></textarea></td>
+      </tr>
+    </table>
+
+    <!-- OPIS POSTACI -->
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header">📖 OPIS POSTACI</td>
+      </tr>
+      <tr>
+        <td><strong>Osobowość / nawyki:</strong><br><textarea data-field="personality" class="plain wide"
+            rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Wygląd:</strong><br><textarea data-field="look" class="plain wide" rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Ekwipunek:</strong><br><textarea data-field="equipment" class="plain wide" rows="3"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Relacje:</strong><br><textarea data-field="relationships" class="plain wide" rows="3"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Notatki:</strong><br><textarea data-field="notes" class="plain wide" rows="4"></textarea></td>
+      </tr>
+    </table>
+
+  </div>
+
+  <script>
+    // Auto-compute L5R derived attributes from ring values.
+    // Endurance/Composure also mirror into *_max fields used next to current pools.
+    function num(v) {
+      var n = parseInt(v, 10);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function recompute() {
+      var air = num(vtt.getField('ring_air'));
+      var earth = num(vtt.getField('ring_earth'));
+      var fire = num(vtt.getField('ring_fire'));
+      var water = num(vtt.getField('ring_water'));
+      var voidr = num(vtt.getField('ring_void'));
+
+      var endurance = (earth + fire) * 2;
+      var composure = (earth + water) * 2;
+
+      vtt.setField('endurance', endurance);
+      vtt.setField('endurance_max', endurance);
+      vtt.setField('composure', composure);
+      vtt.setField('composure_max', composure);
+      vtt.setField('focus', earth + fire);
+      vtt.setField('vigilance', Math.ceil((air + water) / 2));
+      vtt.setField('void_max', voidr);
+    }
+
+    vtt.onMount(recompute);
+
+    vtt.onFieldChange(function (name) {
+      if (/^ring_/.test(name)) recompute();
+    });
+  </script>
+
+</body>
+
+</html>

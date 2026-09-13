@@ -1,0 +1,17 @@
+{
+    "name": "freeroll/vtt-backend",
+    "description": "FreeRoll VTT backend — TTRPG Manager integration layer",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "FreeRoll\\Ttrpg\\": "src/Ttrpg/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

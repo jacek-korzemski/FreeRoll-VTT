@@ -1,0 +1,11 @@
+<FilesMatch "^\.env">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "state\.json$^|rolls\.json$^|ttrpg\.sqlite$^|ttrpg\.sqlite-(journal^|wal^|shm)$^|secrets\.json$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+Options -Indexes

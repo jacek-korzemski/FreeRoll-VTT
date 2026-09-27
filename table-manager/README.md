@@ -30,6 +30,8 @@ npm run build
 
 Katalogi `database/` oraz `storage/` i `public/vtt/` muszą być zapisywalne przez użytkownika serwera WWW.
 
+Domyślnie `SEO=false`: adres `/` to logowanie, tak jak dotychczas. `SEO=true` włącz tylko na witrynie, która ma być w wyszukiwarce (razem z prawdziwym `APP_URL`). Wtedy `/` jest stroną o stole, a `/jak-grac` tutorialem. Deploy FTP nie wgrywa `.env`; flagę ustawia sekret GitHub `SEO` (`true` albo `false`) w środowisku `FTP_SERVER`. Pusty sekret zostawia wartość już zapisaną na serwerze. Jeśli na serwerze leży `bootstrap/cache/config.php`, ten krok go usuwa, żeby Laravel przeczytał nową flagę.
+
 ## Paczka źródłowa (`current-source/`)
 
 1. W katalogu głównym FreeRoll odpal `build.bat` (albo `build_pl.bat`). Wymaga **Node.js** i **Composer**.

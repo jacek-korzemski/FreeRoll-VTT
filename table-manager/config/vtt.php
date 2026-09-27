@@ -14,4 +14,7 @@ return [
     'slug_length' => 10,
 
     'allowed_origins' => env('VTT_ALLOWED_ORIGINS', '*'),
+
+    // Public marketing site. false keeps "/" as the login screen.
+    'seo' => filter_var(env('SEO', false), FILTER_VALIDATE_BOOLEAN),
 ];

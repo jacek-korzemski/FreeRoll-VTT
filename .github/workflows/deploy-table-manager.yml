@@ -7,9 +7,15 @@
 # Optional GitHub variables:
 #   FTP_PROTOCOL  ftp | ftps  (default: ftp)
 #
+# Optional GitHub secret (same FTP_SERVER environment, or a repository secret):
+#   SEO   true | false
+# When set, deploy writes that value into the .env already on the server.
+# An empty/missing secret leaves the server value alone. true turns on the
+# public marketing pages; false keeps the login screen.
+#
 # vendor/ and current-source/backend/vendor/ are NOT uploaded — keep them on the
 # server (FileZilla) after Composer / build.bat. FTP also leaves public/vtt/user/,
-# production .env, and SQLite alone.
+# production .env, and SQLite alone. The SEO step below is the only edit to .env.
 
 name: Deploy Table Manager
 
@@ -103,3 +109,13 @@ jobs:
             .editorconfig
             .gitattributes
             .npmrc
+
+      - name: Set SEO flag in remote .env
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          FTP_PROTOCOL: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          SEO: ${{ secrets.SEO }}
+        run: python3 .github/scripts/set-remote-seo.py

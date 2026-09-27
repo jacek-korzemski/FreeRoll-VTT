@@ -193,6 +193,8 @@ npm run build
 
 Ustaw `APP_URL` na publiczny adres strony (np. `https://twojadomena.pl`), a na produkcji `APP_ENV=production` i `APP_DEBUG=false`.
 
+Domyślnie `SEO=false`: adres `/` to logowanie. `SEO=true` włącz tylko na witrynie, która ma być w wyszukiwarce (razem z prawdziwym `APP_URL`). Wtedy `/` opisuje stół, a `/jak-grac` jest tutorialem. Deploy FTP nie wgrywa `.env`; flagę ustawia sekret GitHub `SEO` (`true` albo `false`) w środowisku `FTP_SERVER`. Pusty sekret zostawia wartość już zapisaną na serwerze.
+
 ### 3. Skieruj serwer WWW na `table-manager/public`
 
 **DocumentRoot musi wskazywać na `table-manager/public`**, nie na korzeń repozytorium i nie na pojedynczy folder `build/` VTT.

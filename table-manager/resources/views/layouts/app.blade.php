@@ -7,6 +7,10 @@
 
         <title>{{ config('app.name', 'FreeRoll Table Manager') }}</title>
 
+        @if (config('vtt.seo'))
+            <meta name="robots" content="noindex, nofollow">
+        @endif
+
         <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">

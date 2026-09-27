@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminDownloadController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\SeoController;
+use App\Http\Middleware\ShowMarketingHome;
 use App\Livewire\Admin\Analytics;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\FilesIndex;
@@ -11,8 +13,12 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Volt::route('/', 'pages.auth.login')
-    ->middleware('guest')
+    ->middleware([ShowMarketingHome::class, 'guest'])
     ->name('home');
+
+Route::get('/jak-grac', [SeoController::class, 'tutorial'])->name('tutorial');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])

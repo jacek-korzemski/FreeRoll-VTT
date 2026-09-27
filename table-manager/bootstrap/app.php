@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApplySeoRobots;
 use App\Http\Middleware\EnsureAdminAuthenticated;
 use App\Http\Middleware\RedirectIfAdminAuthenticated;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.guest' => RedirectIfAdminAuthenticated::class,
         ]);
 
-        $middleware->redirectGuestsTo('/');
+        $middleware->web(append: [
+            ApplySeoRobots::class,
+        ]);
+
+        $middleware->redirectGuestsTo(function () {
+            return config('vtt.seo') ? route('login') : '/';
+        });
         $middleware->redirectUsersTo('/dashboard');
     })
     ->withExceptions(function (Exceptions $exceptions): void {

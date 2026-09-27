@@ -17,6 +17,7 @@ Volt::route('/', 'pages.auth.login')
     ->name('home');
 
 Route::get('/jak-grac', [SeoController::class, 'tutorial'])->name('tutorial');
+Route::get('/karty-postaci', [SeoController::class, 'sheets'])->name('sheets');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 

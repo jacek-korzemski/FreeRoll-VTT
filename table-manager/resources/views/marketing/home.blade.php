@@ -110,7 +110,7 @@
                     Zaloguj się
                 </a>
             @endauth
-            <a href="{{ \App\Support\MarketingCopy::GITHUB }}" class="inline-flex min-h-11 items-center rounded-md px-5 font-semibold text-white underline decoration-white/40 underline-offset-4" rel="noopener noreferrer">
+            <a href="{{ \App\Support\MarketingCopy::GITHUB }}" class="inline-flex min-h-11 items-center rounded-md px-5 font-semibold text-white underline decoration-white/40 underline-offset-4" target="_blank" rel="noopener noreferrer">
                 Zobacz kod na GitHubie
             </a>
         </div>

@@ -14,6 +14,13 @@ class SeoController extends Controller
         return view('marketing.tutorial');
     }
 
+    public function sheets(): View
+    {
+        abort_unless(config('vtt.seo'), 404);
+
+        return view('marketing.sheets');
+    }
+
     public function robots(): Response
     {
         if (! config('vtt.seo')) {
@@ -49,6 +56,7 @@ class SeoController extends Controller
         $urls = [
             ['loc' => route('home'), 'changefreq' => 'weekly', 'priority' => '1.0'],
             ['loc' => route('tutorial'), 'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => route('sheets'), 'changefreq' => 'monthly', 'priority' => '0.8'],
         ];
 
         $body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

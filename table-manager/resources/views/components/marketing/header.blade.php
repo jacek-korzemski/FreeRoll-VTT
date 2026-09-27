@@ -16,7 +16,10 @@
             <a href="{{ route('tutorial') }}" @class([$link, 'text-white' => $current === 'tutorial']) @if ($current === 'tutorial') aria-current="page" @endif>
                 Jak grać
             </a>
-            <a href="{{ $github }}" class="{{ $link }}" rel="noopener noreferrer">GitHub</a>
+            <a href="{{ route('sheets') }}" @class([$link, 'text-white' => $current === 'sheets']) @if ($current === 'sheets') aria-current="page" @endif>
+                Karty postaci
+            </a>
+            <a href="{{ $github }}" class="{{ $link }}" target="_blank" rel="noopener noreferrer">GitHub</a>
             @auth
                 <a href="{{ route('dashboard') }}" class="ms-2 inline-flex min-h-11 items-center rounded-md bg-blue-700 px-4 text-sm font-semibold text-white hover:bg-blue-600">
                     Twoje stoły
@@ -38,7 +41,8 @@
             </summary>
             <nav class="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-white/10 bg-vtt-panel p-2 shadow-xl" aria-label="Główne">
                 <a href="{{ route('tutorial') }}" class="{{ $link }} w-full" @if ($current === 'tutorial') aria-current="page" @endif>Jak grać</a>
-                <a href="{{ $github }}" class="{{ $link }} w-full" rel="noopener noreferrer">GitHub</a>
+                <a href="{{ route('sheets') }}" class="{{ $link }} w-full" @if ($current === 'sheets') aria-current="page" @endif>Karty postaci</a>
+                <a href="{{ $github }}" class="{{ $link }} w-full" target="_blank" rel="noopener noreferrer">GitHub</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="{{ $link }} w-full">Twoje stoły</a>
                 @else

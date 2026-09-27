@@ -207,10 +207,21 @@ function startVttSession($cfgOrRootDir) {
         return;
     }
 
+    $root = is_string($cfgOrRootDir) ? $cfgOrRootDir : null;
     $cfg = is_array($cfgOrRootDir) ? $cfgOrRootDir : getDeployConfig($cfgOrRootDir);
     $basePath = normalizeBasePath($cfg['basePath'] ?? '/vtt/room1/');
     $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+
+    if ($root !== null) {
+        $sessionDir = $root.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'sessions';
+        if (! is_dir($sessionDir)) {
+            @mkdir($sessionDir, 0755, true);
+        }
+        if (is_dir($sessionDir) && is_writable($sessionDir)) {
+            session_save_path($sessionDir);
+        }
+    }
 
     session_name('VTTSESS_' . substr(hash('sha256', $basePath), 0, 12));
     session_set_cookie_params([

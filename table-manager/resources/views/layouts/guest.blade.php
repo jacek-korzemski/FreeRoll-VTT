@@ -20,18 +20,38 @@
     </head>
     <body class="font-sans text-gray-100 antialiased">
         <x-app-background />
-        <div class="relative z-10 min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-            <x-content-panel class="w-full sm:max-w-md mt-6 px-6 py-8">
-                <div class="text-center">
-                    <a href="/" wire:navigate class="inline-block">
-                        <x-application-logo class="h-24 w-auto mx-auto" />
-                    </a>
-                    <p class="mt-3 text-sm tracking-wide text-gray-400">FreeRoll Table Manager</p>
+        @if (config('vtt.seo'))
+            <div class="relative z-10 flex min-h-screen flex-col">
+                <x-marketing.header />
+                <div class="flex flex-1 flex-col items-center justify-center px-4 py-10">
+                    <x-content-panel class="w-full sm:max-w-md px-6 py-8">
+                        <div class="text-center">
+                            <a href="{{ route('home') }}" class="inline-block">
+                                <x-application-logo class="h-24 w-auto mx-auto" />
+                            </a>
+                            <p class="mt-3 text-sm tracking-wide text-gray-400">FreeRoll Table Manager</p>
+                        </div>
+                        <div class="mt-6">
+                            {{ $slot }}
+                        </div>
+                    </x-content-panel>
                 </div>
-                <div class="mt-6">
-                    {{ $slot }}
-                </div>
-            </x-content-panel>
-        </div>
+                <x-marketing.footer />
+            </div>
+        @else
+            <div class="relative z-10 min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+                <x-content-panel class="w-full sm:max-w-md mt-6 px-6 py-8">
+                    <div class="text-center">
+                        <a href="/" wire:navigate class="inline-block">
+                            <x-application-logo class="h-24 w-auto mx-auto" />
+                        </a>
+                        <p class="mt-3 text-sm tracking-wide text-gray-400">FreeRoll Table Manager</p>
+                    </div>
+                    <div class="mt-6">
+                        {{ $slot }}
+                    </div>
+                </x-content-panel>
+            </div>
+        @endif
     </body>
 </html>

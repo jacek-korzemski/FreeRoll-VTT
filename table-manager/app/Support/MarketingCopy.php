@@ -22,6 +22,14 @@ class MarketingCopy
         ];
     }
 
+    public static function sheetsMeta(): array
+    {
+        return [
+            'title' => 'Karty postaci i szablony VTT | FreeRoll',
+            'description' => 'Karty postaci w darmowym stole VTT: pola, rzuty z karty i szablony HTML. MG składa je w edytorze albo wgrywa plik. Dane zostają w przeglądarce przy sesji RPG.',
+        ];
+    }
+
     public static function ogImage(): string
     {
         return asset('marketing/og.jpg');
@@ -352,6 +360,44 @@ class MarketingCopy
                     'image' => $step['image']['src'],
                 ];
             }, self::steps(), array_keys(self::steps())),
+        ];
+    }
+
+    public static function sheetsGuideUrl(): string
+    {
+        return self::GITHUB.'/blob/main/TWORZENIE-SZABLONÓW.md';
+    }
+
+    /**
+     * @return array{src: string, alt: string, width: int, height: int}
+     */
+    public static function sheetImages(): array
+    {
+        return [
+            'editor' => self::image(
+                'edytor-szablonu.webp',
+                'Edytor szablonów Mistrza Gry: sekcje, wiersze pól i przycisk zapisu karty postaci.',
+            ),
+            'sheet' => self::image(
+                'karta-notatnik.webp',
+                'Karta postaci w notatniku stołu, z polami do uzupełnienia i przyciskiem rzutu kością.',
+            ),
+        ];
+    }
+
+    public static function sheetsSchema(): array
+    {
+        $meta = self::sheetsMeta();
+        $url = route('sheets');
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'TechArticle',
+            'headline' => 'Karty postaci i szablony w FreeRoll VTT',
+            'description' => $meta['description'],
+            'inLanguage' => 'pl-PL',
+            'url' => $url,
+            'image' => self::sheetImages()['sheet']['src'],
         ];
     }
 }

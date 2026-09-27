@@ -20,7 +20,11 @@
     </head>
     <body class="font-sans antialiased text-gray-100">
         <x-app-background />
-        <div class="relative z-10 min-h-screen">
+        <div @class(['relative z-10 min-h-screen', 'flex flex-col' => config('vtt.seo')])>
+            @if (config('vtt.seo'))
+                <x-marketing.header />
+            @endif
+
             <livewire:layout.navigation />
 
             @if (isset($header))
@@ -31,9 +35,13 @@
                 </header>
             @endif
 
-            <main>
+            <main @class(['flex-1' => config('vtt.seo')])>
                 {{ $slot }}
             </main>
+
+            @if (config('vtt.seo'))
+                <x-marketing.footer />
+            @endif
         </div>
     </body>
 </html>

@@ -16,7 +16,7 @@ class ApplySeoRobots
             return $response;
         }
 
-        $indexable = config('vtt.seo') && $request->routeIs('home', 'tutorial');
+        $indexable = config('vtt.seo') && $request->routeIs('home', 'tutorial', 'sheets');
 
         if (! $indexable) {
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');

@@ -23,9 +23,15 @@ new class extends Component
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate class="inline-flex items-center" style="background: white; padding: 5px; border-radius: 99px;">
-                        <x-application-logo class="block h-10 w-auto" />
-                    </a>
+                    @if (config('vtt.seo'))
+                        <a href="{{ route('home') }}" class="inline-flex items-center" style="background: white; padding: 5px; border-radius: 99px;">
+                            <x-application-logo class="block h-10 w-auto" />
+                        </a>
+                    @else
+                        <a href="{{ route('dashboard') }}" wire:navigate class="inline-flex items-center" style="background: white; padding: 5px; border-radius: 99px;">
+                            <x-application-logo class="block h-10 w-auto" />
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Navigation Links -->

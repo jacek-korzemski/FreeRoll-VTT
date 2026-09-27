@@ -24,4 +24,5 @@ Options -Indexes
     RewriteRule ^vendor/ - [F]
     RewriteRule ^src/ - [F]
     RewriteRule ^include/ - [F]
+    RewriteRule ^data/sessions/ - [F]
 </IfModule>

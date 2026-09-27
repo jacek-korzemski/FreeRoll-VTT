@@ -48,6 +48,13 @@
             @foreach ($step['paragraphs'] as $paragraph)
                 <p class="mt-4 max-w-3xl text-lg leading-relaxed text-gray-200">{{ $paragraph }}</p>
             @endforeach
+            @if ($step['id'] === 'panel')
+                <p class="mt-4 max-w-3xl text-lg leading-relaxed text-gray-200">
+                    Kartę postaci składa się z szablonu.
+                    <a href="{{ route('sheets') }}" class="font-semibold text-white underline decoration-white/40 underline-offset-4">Jak zrobić kartę postaci</a>
+                    opisuje edytor MG i pliki HTML.
+                </p>
+            @endif
             <div class="mt-6">
                 <x-marketing.shot :shot="$step['image']" />
             </div>

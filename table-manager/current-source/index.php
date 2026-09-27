@@ -2,7 +2,7 @@
 require_once __DIR__ . '/deploy-env.php';
 
 $cfg = getDeployConfig(__DIR__);
-startVttSession($cfg);
+startVttSession(__DIR__);
 $login = $cfg['loginStrings'];
 $basePath = $cfg['basePath'];
 

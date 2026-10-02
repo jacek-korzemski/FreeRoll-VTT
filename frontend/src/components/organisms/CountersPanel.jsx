@@ -7,12 +7,13 @@ import {
   SYNC_DRIFT_THRESHOLD_SEC,
   timerAnchorKey,
 } from '../../utils/counterTimer'
+import { getTableItem, setTableItem } from '../../utils/tableStorage'
 
 const STORAGE_PRIVATE = 'vtt_counters_private'
 
 function loadPrivateCounters() {
   try {
-    const raw = localStorage.getItem(STORAGE_PRIVATE)
+    const raw = getTableItem(STORAGE_PRIVATE)
     if (!raw) return []
     const arr = JSON.parse(raw)
     return Array.isArray(arr) ? arr : []
@@ -23,7 +24,7 @@ function loadPrivateCounters() {
 
 function savePrivateCounters(list) {
   try {
-    localStorage.setItem(STORAGE_PRIVATE, JSON.stringify(list))
+    setTableItem(STORAGE_PRIVATE, JSON.stringify(list))
   } catch { /* ignore */ }
 }
 

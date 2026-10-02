@@ -44,9 +44,10 @@ class TableProvisioner
         return DB::transaction(function () use ($user, $data) {
             $locked = User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
 
-            if ($locked->vttTables()->count() >= (int) config('vtt.max_tables')) {
+            $maxTables = $locked->maxTables();
+            if ($locked->vttTables()->count() >= $maxTables) {
                 throw ValidationException::withMessages([
-                    'name' => 'Możesz mieć maksymalnie '.config('vtt.max_tables').' stoły.',
+                    'name' => 'Możesz mieć maksymalnie '.$maxTables.' stoły.',
                 ]);
             }
 
@@ -141,7 +142,7 @@ class TableProvisioner
             'VTT_LANGUAGE='.$table->language,
             'VTT_COLOR_TEMPLATE='.($table->color_template ?: 'crimson'),
             'VTT_ENABLE_L5R='.$this->sourceEnableL5r(),
-            'VTT_TABLE_UPLOAD_QUOTA_MB='.(int) config('vtt.max_table_upload_mb', 50),
+            'VTT_TABLE_UPLOAD_QUOTA_MB='.$table->uploadQuotaMb(),
             'ALLOWED_ORIGINS='.config('vtt.allowed_origins'),
         ])."\n";
 

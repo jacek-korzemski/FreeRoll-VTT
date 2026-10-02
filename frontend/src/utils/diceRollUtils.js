@@ -2,6 +2,7 @@
  * Shared dice roll parsing and execution for templates and macros.
  * Dispatches 'vtt:dice-roll' so App can add to history and sync.
  */
+import { getTableItem } from './tableStorage'
 
 /** Returns true if string contains dice notation ndx (e.g. 2d6, d20, 1d4 or 2d6+1) */
 function isDiceNotation(str) {
@@ -68,7 +69,7 @@ export function buildRollData(diceList, modifier, label, getFieldValue) {
   }))
 
   const total = rolls.reduce((sum, r) => sum + r.result, 0) + modifier
-  const playerName = typeof localStorage !== 'undefined' ? localStorage.getItem('vtt_player_name') || 'Anonymous' : 'Anonymous'
+  const playerName = getTableItem('vtt_player_name') || 'Anonymous'
 
   let resolvedLabel = label || ''
   if (resolvedLabel && getFieldValue) {

@@ -146,8 +146,8 @@ class TablesDashboard extends Component
     {
         $user = Auth::user();
         $tables = $user->vttTables()->with('user')->latest()->get();
-        $max = (int) config('vtt.max_tables');
-        $storage = $quota->snapshotForTables($tables);
+        $max = $user->maxTables();
+        $storage = $quota->snapshotForTables($user, $tables);
 
         return view('livewire.tables-dashboard', [
             'tables' => $tables,

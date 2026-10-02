@@ -6,6 +6,7 @@ import { extractBodyContent } from '../../utils/noteTemplateMeta'
 import { mountTemplate } from '../../utils/templateRuntime'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 import { useAnchoredMenuPosition } from '../../hooks/useAnchoredMenuPosition'
+import { getTableItem, removeTableItem, setTableItem } from '../../utils/tableStorage'
 
 // Build-time literal: when EnableL5r is off, the dynamic imports guarded by this
 // constant are unreachable and the L5R importer / compendium code is dropped from the bundle.
@@ -77,7 +78,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
   const [confirmAction, setConfirmAction] = useState(null)
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey)
+    const saved = getTableItem(storageKey)
     if (saved) {
       try {
         const data = JSON.parse(saved)
@@ -109,7 +110,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       title: newTitle ?? title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
     refreshNoteSources?.()
   }, [storageKey, title, refreshNoteSources])
 
@@ -127,7 +128,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       title: newTitle ?? title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
     refreshNoteSources?.()
   }, [storageKey, templateHtml, templateId, templateFields, title, refreshNoteSources])
 
@@ -142,7 +143,7 @@ function NoteEditor({ id, noteIndex = 1, onRemove, canRemove, registerNoteTempla
       title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
     refreshNoteSources?.()
   }, [storageKey, templateHtml, templateId, title, refreshNoteSources])
 
@@ -411,7 +412,7 @@ ${extraScripts}
               fieldsRef.current = data.fields || {}
               setTemplateFields(fieldsRef.current)
               setTitle(data.title || '')
-              localStorage.setItem(storageKey, JSON.stringify(data))
+              setTableItem(storageKey, JSON.stringify(data))
               refreshNoteSources?.()
               return
             }
@@ -437,7 +438,7 @@ ${extraScripts}
             title: detectedTitle,
             lastModified: Date.now()
           }
-          localStorage.setItem(storageKey, JSON.stringify(data))
+          setTableItem(storageKey, JSON.stringify(data))
           refreshNoteSources?.()
         } else {
           setMode('notepad')
@@ -464,7 +465,7 @@ ${extraScripts}
       title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
     refreshNoteSources?.()
     setTemplateRenderKey(k => k + 1)
   }, [storageKey, templateHtml, templateId, title, refreshNoteSources])
@@ -552,7 +553,7 @@ ${extraScripts}
             title: newTitle,
             lastModified: Date.now(),
           }
-          localStorage.setItem(storageKey, JSON.stringify(data))
+          setTableItem(storageKey, JSON.stringify(data))
           refreshNoteSources?.()
           setTemplateRenderKey(k => k + 1)
         } catch {
@@ -618,7 +619,7 @@ ${extraScripts}
         title: detectedTitle,
         lastModified: Date.now()
       }
-      localStorage.setItem(storageKey, JSON.stringify(data))
+      setTableItem(storageKey, JSON.stringify(data))
       refreshNoteSources?.()
     } catch {
       // silently fail
@@ -637,12 +638,12 @@ ${extraScripts}
     setTemplateFields({})
     setTitle('')
     setInitialContent('Notatnik')
-    localStorage.removeItem(storageKey)
+    removeTableItem(storageKey)
     refreshNoteSources?.()
   }, [storageKey, mode, refreshNoteSources])
 
   const executeRemoveNotepad = useCallback(() => {
-    localStorage.removeItem(storageKey)
+    removeTableItem(storageKey)
     onRemove(id)
   }, [storageKey, onRemove, id])
 

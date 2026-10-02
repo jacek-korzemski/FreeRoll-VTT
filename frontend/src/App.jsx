@@ -9,6 +9,7 @@ import {
 } from './utils/fogBitmap'
 import { ASSET_BASE, API_BASE, ENABLE_L5R } from '../config'
 import { t } from './lang'
+import { getTableItem, removeTableItem, setTableItem } from './utils/tableStorage'
 
 const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug')
 
@@ -1079,7 +1080,7 @@ useEffect(() => {
       .then(data => {
         if (data.success) {
           try {
-            localStorage.removeItem(TOKEN_NOTE_STORAGE_PREFIX + tokenId)
+            removeTableItem(TOKEN_NOTE_STORAGE_PREFIX + tokenId)
           } catch (_) {}
           setTokens(prev => {
             const next = prev.filter(t => t.id !== tokenId)
@@ -1124,9 +1125,9 @@ useEffect(() => {
           setTokens(prev => [...prev, data.token])
           setVersion(data.version)
           try {
-            const raw = localStorage.getItem(TOKEN_NOTE_STORAGE_PREFIX + token.id)
+            const raw = getTableItem(TOKEN_NOTE_STORAGE_PREFIX + token.id)
             if (raw) {
-              localStorage.setItem(TOKEN_NOTE_STORAGE_PREFIX + data.token.id, raw)
+              setTableItem(TOKEN_NOTE_STORAGE_PREFIX + data.token.id, raw)
             }
           } catch (_) {}
           const updates = {}
@@ -1167,7 +1168,7 @@ useEffect(() => {
       .then(data => {
         if (data.success) {
           try {
-            tokens.forEach(token => localStorage.removeItem(TOKEN_NOTE_STORAGE_PREFIX + token.id))
+            tokens.forEach(token => removeTableItem(TOKEN_NOTE_STORAGE_PREFIX + token.id))
           } catch (_) {}
           setBackground(null)
           setMapElements([])

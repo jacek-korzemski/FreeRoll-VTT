@@ -1,6 +1,8 @@
 /**
  * Collect template IDs referenced in local notepads and token character panels.
  */
+import { getTableItem, listTableKeys } from './tableStorage'
+
 export function collectClientTemplateUsage() {
   const used = new Map()
 
@@ -14,13 +16,10 @@ export function collectClientTemplateUsage() {
   }
 
   try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      if (!key) continue
-
+    for (const key of listTableKeys()) {
       if (key.startsWith('vtt_notes_')) {
         try {
-          const data = JSON.parse(localStorage.getItem(key))
+          const data = JSON.parse(getTableItem(key))
           if (data?.templateId) {
             addUsage(data.templateId, key.replace('vtt_notes_', 'notepad '))
           }
@@ -32,7 +31,7 @@ export function collectClientTemplateUsage() {
 
       if (key.startsWith('vtt_token_note_')) {
         try {
-          const data = JSON.parse(localStorage.getItem(key))
+          const data = JSON.parse(getTableItem(key))
           if (data?.templateId) {
             addUsage(data.templateId, 'token panel')
           }

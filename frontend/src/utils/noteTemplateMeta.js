@@ -1,6 +1,7 @@
 /**
  * Shared parsing for template HTML stored in vtt_notes_* (same rules as NoteEditor DOM pass).
  */
+import { getTableItem } from './tableStorage'
 
 export function extractBodyContent(html) {
   if (!html || typeof html !== 'string') return ''
@@ -71,7 +72,7 @@ export function isTemplateCheckboxField(templateHtml, fieldName) {
  * @returns {{ mode?: string, title?: string, templateHtml?: string, fields?: Record<string, unknown>, content?: string } | null}
  */
 export function readNoteStorageData(noteId) {
-  const raw = localStorage.getItem(`vtt_notes_${noteId}`)
+  const raw = getTableItem(`vtt_notes_${noteId}`)
   if (!raw) return null
   try {
     const data = JSON.parse(raw)

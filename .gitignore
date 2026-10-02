@@ -3,6 +3,7 @@
 .env.local
 .env.production
 .env.devbackup
+.restore/
 
 # Backend data (ale nie .gitkeep)
 backend/data/*

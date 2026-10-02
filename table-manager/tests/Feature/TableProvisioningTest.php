@@ -108,6 +108,51 @@ class TableProvisioningTest extends TestCase
         $provisioner->create($user, $payload);
     }
 
+    public function test_raised_max_tables_allows_a_fourth_table(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'raised-limit',
+            'max_tables' => 4,
+        ]);
+        $provisioner = app(TableProvisioner::class);
+        $payload = [
+            'name' => 'Stół',
+            'player_password' => 'p',
+            'gm_password' => 'g',
+            'language' => 'en',
+        ];
+
+        $provisioner->create($user, $payload);
+        $provisioner->create($user, $payload);
+        $provisioner->create($user, $payload);
+        $fourth = $provisioner->create($user, $payload);
+
+        $this->assertSame(4, $user->vttTables()->count());
+        $this->assertNotNull($fourth->id);
+
+        $this->expectException(ValidationException::class);
+        $provisioner->create($user, $payload);
+    }
+
+    public function test_write_env_uses_table_upload_quota(): void
+    {
+        $user = User::factory()->create(['username' => 'quota-env']);
+        $provisioner = app(TableProvisioner::class);
+        $table = $provisioner->create($user, [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+        ]);
+        $table->upload_quota_mb = 200;
+        $table->save();
+
+        $provisioner->writeEnv($table);
+
+        $env = File::get($table->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertStringContainsString('VTT_TABLE_UPLOAD_QUOTA_MB=200', $env);
+    }
+
     public function test_destroy_removes_files_and_record(): void
     {
         $user = User::factory()->create(['username' => 'deleter']);

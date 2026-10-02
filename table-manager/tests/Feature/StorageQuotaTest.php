@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\Admin\TableShow;
 use App\Livewire\TablesDashboard;
 use App\Models\User;
 use App\Services\StorageQuota;
@@ -56,9 +57,31 @@ class StorageQuotaTest extends TestCase
     public function test_user_limit_is_three_tables_times_table_limit(): void
     {
         $quota = app(StorageQuota::class);
+        $user = User::factory()->create();
 
         $this->assertSame(50 * 1048576, $quota->tableLimitBytes());
-        $this->assertSame(150 * 1048576, $quota->userLimitBytes());
+        $this->assertSame(150 * 1048576, $quota->userLimitBytes($user));
+    }
+
+    public function test_overrides_raise_table_and_account_limits(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'grant-user',
+            'max_tables' => 5,
+        ]);
+        $table = app(TableProvisioner::class)->create($user, [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+        ]);
+        $table->upload_quota_mb = 200;
+        $table->save();
+
+        $quota = app(StorageQuota::class);
+
+        $this->assertSame(200 * 1048576, $quota->tableLimitBytes($table->fresh()));
+        $this->assertSame((200 + 4 * 50) * 1048576, $quota->userLimitBytes($user->fresh()));
     }
 
     public function test_dashboard_shows_table_and_account_storage(): void
@@ -80,5 +103,64 @@ class StorageQuotaTest extends TestCase
             ->assertSee('50 MB na stół')
             ->assertSee('Limit konta: 150 MB')
             ->assertSee('2.0 KB');
+    }
+
+    public function test_dashboard_shows_granted_table_quota(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'meter-user',
+            'max_tables' => 5,
+        ]);
+        $table = app(TableProvisioner::class)->create($user, [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+        ]);
+        $table->upload_quota_mb = 200;
+        $table->save();
+
+        Livewire::actingAs($user)
+            ->test(TablesDashboard::class)
+            ->assertSee('200.0 MB')
+            ->assertSee('Limit konta: 400 MB');
+    }
+
+    public function test_admin_can_set_and_clear_limits(): void
+    {
+        $user = User::factory()->create(['username' => 'admin-grant']);
+        $table = app(TableProvisioner::class)->create($user, [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+        ]);
+        $envPath = $table->absolutePath().DIRECTORY_SEPARATOR.'.env';
+
+        session(['admin_authenticated' => true]);
+
+        Livewire::test(TableShow::class, ['table' => $table])
+            ->set('ownerMaxTables', '4')
+            ->set('uploadQuotaMb', '200')
+            ->call('saveLimits')
+            ->assertHasNoErrors()
+            ->assertSet('ownerMaxTables', '4')
+            ->assertSet('uploadQuotaMb', '200');
+
+        $this->assertSame(4, $user->fresh()->max_tables);
+        $this->assertSame(200, $table->fresh()->upload_quota_mb);
+        $this->assertStringContainsString('VTT_TABLE_UPLOAD_QUOTA_MB=200', File::get($envPath));
+
+        Livewire::test(TableShow::class, ['table' => $table->fresh()])
+            ->set('ownerMaxTables', '')
+            ->set('uploadQuotaMb', '')
+            ->call('saveLimits')
+            ->assertHasNoErrors()
+            ->assertSet('ownerMaxTables', '')
+            ->assertSet('uploadQuotaMb', '');
+
+        $this->assertNull($user->fresh()->max_tables);
+        $this->assertNull($table->fresh()->upload_quota_mb);
+        $this->assertStringContainsString('VTT_TABLE_UPLOAD_QUOTA_MB=50', File::get($envPath));
     }
 }

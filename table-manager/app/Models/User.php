@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'username', 'email', 'password'])]
+#[Fillable(['name', 'username', 'email', 'password', 'max_tables'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -26,7 +26,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'max_tables' => 'integer',
         ];
+    }
+
+    public function maxTables(): int
+    {
+        if ($this->max_tables !== null) {
+            return max(1, (int) $this->max_tables);
+        }
+
+        return max(1, (int) config('vtt.max_tables', 3));
     }
 
     public function vttTables(): HasMany

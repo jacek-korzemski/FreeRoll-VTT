@@ -5,6 +5,7 @@ import { parseRollExpression } from '../../utils/diceRollUtils'
 import { formatRoll, formatTotal } from '../../utils/diceFormat'
 import { l5rRollHasDiceFaces } from '../../utils/l5rDiceDisplay'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
+import { getTableItem, setTableItem } from '../../utils/tableStorage'
 
 // Build-time literal: when EnableL5r is off this folds to false and the L5R panel
 // (plus its dice images) is dead-code-eliminated from the bundle.
@@ -26,7 +27,7 @@ const MACRO_STORAGE_KEY = 'vtt_macros'
 
 function loadMacros() {
   try {
-    const raw = localStorage.getItem(MACRO_STORAGE_KEY)
+    const raw = getTableItem(MACRO_STORAGE_KEY)
     if (!raw) return []
     const data = JSON.parse(raw)
     return Array.isArray(data) ? data : []
@@ -51,7 +52,7 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
   }, [pendingL5RRoll])
 
   useEffect(() => {
-    const saved = localStorage.getItem('vtt_player_name')
+    const saved = getTableItem('vtt_player_name')
     if (saved) setPlayerName(saved)
   }, [])
 
@@ -87,7 +88,7 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
   const handleNameChange = useCallback((e) => {
     const name = e.target.value
     setPlayerName(name)
-    localStorage.setItem('vtt_player_name', name)
+    setTableItem('vtt_player_name', name)
   }, [])
 
   const addDie = useCallback((dieType) => {

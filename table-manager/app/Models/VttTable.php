@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language', 'color_template'])]
+#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language', 'color_template', 'upload_quota_mb'])]
 class VttTable extends Model
 {
     public function user(): BelongsTo
@@ -22,7 +22,17 @@ class VttTable extends Model
         return [
             'player_password' => 'encrypted',
             'gm_password' => 'encrypted',
+            'upload_quota_mb' => 'integer',
         ];
+    }
+
+    public function uploadQuotaMb(): int
+    {
+        if ($this->upload_quota_mb !== null) {
+            return max(0, (int) $this->upload_quota_mb);
+        }
+
+        return max(0, (int) config('vtt.max_table_upload_mb', 50));
     }
 
     public function publicPath(): string

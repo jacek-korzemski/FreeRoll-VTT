@@ -25,6 +25,20 @@ class SchemaRepair
             $notes[] = 'Dodano brakującą kolumnę vtt_tables.color_template.';
         }
 
+        if (Schema::hasTable('users') && ! Schema::hasColumn('users', 'max_tables')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->unsignedInteger('max_tables')->nullable();
+            });
+            $notes[] = 'Dodano brakującą kolumnę users.max_tables.';
+        }
+
+        if (! Schema::hasColumn('vtt_tables', 'upload_quota_mb')) {
+            Schema::table('vtt_tables', function (Blueprint $table) {
+                $table->unsignedInteger('upload_quota_mb')->nullable();
+            });
+            $notes[] = 'Dodano brakującą kolumnę vtt_tables.upload_quota_mb.';
+        }
+
         return $notes;
     }
 
@@ -36,6 +50,10 @@ class SchemaRepair
         return [
             'vtt_tables.color_template' => Schema::hasTable('vtt_tables')
                 && Schema::hasColumn('vtt_tables', 'color_template'),
+            'users.max_tables' => Schema::hasTable('users')
+                && Schema::hasColumn('users', 'max_tables'),
+            'vtt_tables.upload_quota_mb' => Schema::hasTable('vtt_tables')
+                && Schema::hasColumn('vtt_tables', 'upload_quota_mb'),
         ];
     }
 }

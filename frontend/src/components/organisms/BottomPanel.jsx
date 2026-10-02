@@ -3,6 +3,7 @@ import NotesPanel from './NotesPanel'
 import { NotesTemplateProvider } from '../../contexts/NotesTemplateContext'
 import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'
+import { getTableItem, setTableItem } from '../../utils/tableStorage'
 
 const PdfPanel = lazy(() => import('./PdfPanel'))
 const MacroEditor = lazy(() => import('./MacroEditor'))
@@ -67,14 +68,14 @@ function BottomPanel({
   }, [activeTab, configured, isGameMaster, onTabChange])
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = getTableItem(STORAGE_KEY)
     if (saved) {
       try {
         const config = JSON.parse(saved)
         if (config.heightPercent) setHeightPercent(config.heightPercent)
       } catch { /* ignore */ }
     } else {
-      const legacy = localStorage.getItem('vtt_notes_config')
+      const legacy = getTableItem('vtt_notes_config')
       if (legacy) {
         try {
           const config = JSON.parse(legacy)
@@ -85,7 +86,7 @@ function BottomPanel({
   }, [])
 
   const saveHeight = useCallback((height) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ heightPercent: height }))
+    setTableItem(STORAGE_KEY, JSON.stringify({ heightPercent: height }))
   }, [])
 
   const handleResizeStart = useCallback((e) => {

@@ -3,6 +3,7 @@ import NoteEditor from '../molecules/NoteEditor'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 import { readNoteStorageData } from '../../utils/noteTemplateMeta'
 import { t } from '../../lang'
+import { getTableItem, removeTableItem, setTableItem } from '../../utils/tableStorage'
 
 const STORAGE_KEY_CONFIG = 'vtt_notes_config'
 
@@ -65,7 +66,7 @@ function NotesPanel() {
   }, [splitView, splitAllowed])
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_CONFIG)
+    const saved = getTableItem(STORAGE_KEY_CONFIG)
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
@@ -83,7 +84,7 @@ function NotesPanel() {
           sidebarOpen: n.sidebarOpen,
         })
         if (migrated !== saved) {
-          localStorage.setItem(STORAGE_KEY_CONFIG, migrated)
+          setTableItem(STORAGE_KEY_CONFIG, migrated)
         }
       } catch {
         // ignore
@@ -96,7 +97,7 @@ function NotesPanel() {
   }, [editorIds, setNoteOrder])
 
   const persistToDisk = useCallback((next) => {
-    localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(next))
+    setTableItem(STORAGE_KEY_CONFIG, JSON.stringify(next))
   }, [])
 
   const applyConfig = useCallback(
@@ -236,7 +237,7 @@ function NotesPanel() {
         splitView: nextSplit,
         sidebarOpen,
       })
-      localStorage.removeItem(`vtt_notes_${id}`)
+      removeTableItem(`vtt_notes_${id}`)
       setExpandedNoteId((ex) => (ex === id ? null : ex))
     },
     [editorIds, primaryId, secondaryId, splitView, splitAllowed, sidebarOpen, applyConfig]

@@ -77,6 +77,26 @@
     </section>
 
     <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
+        <h2 class="text-sm font-semibold text-white">Limity</h2>
+        <p class="mt-2 text-sm text-gray-400">Puste pole przywraca domyślny limit ({{ $defaultMaxTables }} stoły na konto, {{ $defaultUploadMb }} MB na stół).</p>
+        <form wire:submit="saveLimits" class="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+                <x-input-label for="ownerMaxTables" :value="'Liczba stołów użytkownika '.$table->user->username" />
+                <x-text-input wire:model="ownerMaxTables" id="ownerMaxTables" type="number" min="1" max="100" class="mt-1 block w-full" placeholder="{{ $defaultMaxTables }}" />
+                <x-input-error class="mt-1" :messages="$errors->get('ownerMaxTables')" />
+            </div>
+            <div>
+                <x-input-label for="uploadQuotaMb" value="Limit plików tego stołu (MB)" />
+                <x-text-input wire:model="uploadQuotaMb" id="uploadQuotaMb" type="number" min="1" max="10240" class="mt-1 block w-full" placeholder="{{ $defaultUploadMb }}" />
+                <x-input-error class="mt-1" :messages="$errors->get('uploadQuotaMb')" />
+            </div>
+            <div class="sm:col-span-2">
+                <x-primary-button type="submit">Zapisz limity</x-primary-button>
+            </div>
+        </form>
+    </section>
+
+    <section class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5">
         <h2 class="text-sm font-semibold text-white">Pliki stołu</h2>
         <x-storage-meter class="mt-3" :used="$assetBytes" :limit="$tableUploadLimit" />
         <ul class="mt-3 divide-y divide-white/5">

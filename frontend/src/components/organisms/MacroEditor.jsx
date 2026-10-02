@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 import { executeDiceRoll, parseRollExpression } from '../../utils/diceRollUtils'
 import { t } from '../../lang'
+import { getTableItem, setTableItem } from '../../utils/tableStorage'
 
 const STORAGE_KEY = 'vtt_macros'
 
@@ -17,7 +18,7 @@ const MACRO_EMOJI_GROUPS = [
 
 function loadMacros() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = getTableItem(STORAGE_KEY)
     if (!raw) return []
     const data = JSON.parse(raw)
     return Array.isArray(data) ? data : []
@@ -27,7 +28,7 @@ function loadMacros() {
 }
 
 function saveMacros(macros) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(macros))
+  setTableItem(STORAGE_KEY, JSON.stringify(macros))
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('vtt:macros-changed'))
   }

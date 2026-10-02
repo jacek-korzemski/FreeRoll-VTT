@@ -20,7 +20,7 @@
             class="mt-3"
             :used="$storage['userUsed']"
             :limit="$storage['userLimit']"
-            :label="'Materiały (wszystkie stoły, '.($storage['tableLimit'] / 1048576).' MB na stół)'"
+            :label="'Materiały (wszystkie stoły, domyślnie '.($storage['tableLimit'] / 1048576).' MB na stół)'"
         />
     </x-content-panel>
 
@@ -39,7 +39,7 @@
                             <x-storage-meter
                                 class="mt-3"
                                 :used="$storage['tables'][$table->id] ?? 0"
-                                :limit="$storage['tableLimit']"
+                                :limit="$storage['tableLimits'][$table->id] ?? $storage['tableLimit']"
                             />
                         </div>
                         <span class="shrink-0 rounded-full bg-white/10 px-2 py-1 text-xs uppercase tracking-wide text-gray-300">
@@ -123,7 +123,7 @@
         @if (! $canCreate)
             <p class="mt-2 text-sm text-gray-400">Osiągnięto limit {{ $max }} stołów. Usuń jeden, żeby dodać kolejny.</p>
         @else
-            <p class="mt-2 text-sm text-gray-400">Każdy stół może mieć do {{ (int) ($storage['tableLimit'] / 1048576) }} MB wgranych materiałów (tokeny, mapy, tła, szablony, PDF). Limit konta: {{ (int) ($storage['userLimit'] / 1048576) }} MB.</p>
+            <p class="mt-2 text-sm text-gray-400">Domyślnie każdy stół może mieć do {{ (int) ($storage['tableLimit'] / 1048576) }} MB wgranych materiałów (tokeny, mapy, tła, szablony, PDF). Limit konta: {{ (int) ($storage['userLimit'] / 1048576) }} MB.</p>
             <form wire:submit="createTable" class="mt-4 grid gap-4 sm:grid-cols-2">
                 <div class="sm:col-span-2">
                     <x-input-label for="name" value="Nazwa stołu" />

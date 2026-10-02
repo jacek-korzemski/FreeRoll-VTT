@@ -5,6 +5,7 @@ import { API_BASE } from '../../../config'
 import { extractBodyContent } from '../../utils/noteTemplateMeta'
 import { mountTemplate } from '../../utils/templateRuntime'
 import { useAnchoredMenuPosition } from '../../hooks/useAnchoredMenuPosition'
+import { getTableItem, removeTableItem, setTableItem } from '../../utils/tableStorage'
 
 function extractTitle(html) {
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i)
@@ -37,7 +38,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
   const [templateRenderKey, setTemplateRenderKey] = useState(0)
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey)
+    const saved = getTableItem(storageKey)
     if (saved) {
       try {
         const data = JSON.parse(saved)
@@ -68,7 +69,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
       title: newTitle ?? title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
   }, [storageKey, title])
 
   const handleChange = useCallback((content) => {
@@ -84,7 +85,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
       title: newTitle ?? title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
   }, [storageKey, templateHtml, templateId, templateFields, title])
 
   const handleFieldChange = useCallback((fieldName, value) => {
@@ -98,7 +99,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
       title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
   }, [storageKey, templateHtml, templateId, title])
 
   handleFieldChangeRef.current = handleFieldChange
@@ -143,7 +144,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
       title,
       lastModified: Date.now()
     }
-    localStorage.setItem(storageKey, JSON.stringify(data))
+    setTableItem(storageKey, JSON.stringify(data))
     setTemplateRenderKey(k => k + 1)
   }, [storageKey, templateHtml, templateId, title])
 
@@ -180,7 +181,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
               fieldsRef.current = data.fields || {}
               setTemplateFields(fieldsRef.current)
               setTitle(data.title || '')
-              localStorage.setItem(storageKey, JSON.stringify(data))
+              setTableItem(storageKey, JSON.stringify(data))
               return
             }
           } catch { /* not valid json */ }
@@ -205,7 +206,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
             title: detectedTitle,
             lastModified: Date.now()
           }
-          localStorage.setItem(storageKey, JSON.stringify(data))
+          setTableItem(storageKey, JSON.stringify(data))
         } else {
           setMode('notepad')
           const detectedTitle = extractTitle(raw) || ''
@@ -309,7 +310,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
         title: detectedTitle,
         lastModified: Date.now()
       }
-      localStorage.setItem(storageKey, JSON.stringify(data))
+      setTableItem(storageKey, JSON.stringify(data))
     } catch {
       // silently fail
     }
@@ -328,7 +329,7 @@ function TokenNoteEditor({ tokenId, tokenLabel = '', onClose }) {
       setTemplateFields({})
       setTitle('')
       setInitialContent('')
-      localStorage.removeItem(storageKey)
+      removeTableItem(storageKey)
     }
   }, [storageKey, mode])
 

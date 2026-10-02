@@ -6,6 +6,9 @@ import './App.css'
 import { COLOR_TEMPLATE } from '../config'
 import { applyTheme } from './themes/applyTheme'
 import { getOrCreateClientId } from './utils/clientId'
+import { getTableItem, migrateLegacyStorage } from './utils/tableStorage'
+
+migrateLegacyStorage()
 
 applyTheme(COLOR_TEMPLATE)
 
@@ -27,7 +30,7 @@ window.fetch = function (url, opts) {
     const headers = { ...(finalOpts.headers || {}) }
     headers['X-VTT-Client-Id'] = getOrCreateClientId()
     try {
-      const name = localStorage.getItem('vtt_player_name')
+      const name = getTableItem('vtt_player_name')
       if (name) {
         headers['X-VTT-Player-Name'] = iso88591HeaderValue(String(name).slice(0, 80))
       }

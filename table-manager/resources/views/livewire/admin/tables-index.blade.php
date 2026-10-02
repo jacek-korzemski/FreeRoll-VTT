@@ -42,7 +42,7 @@
                                 <span class="text-gray-500">0</span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-gray-400 whitespace-nowrap">{{ \App\Services\Admin\TelemetryAggregator::formatBytes($row['assetBytes'] ?? 0) }}</td>
+                        <td class="px-4 py-3 text-gray-400 whitespace-nowrap">{{ \App\Services\Admin\TelemetryAggregator::formatBytes($row['assetBytes'] ?? 0) }} / {{ $table->uploadQuotaMb() }} MB</td>
                         <td class="px-4 py-3 font-mono text-xs text-gray-200">{{ $table->player_password }}</td>
                         <td class="px-4 py-3 font-mono text-xs text-gray-200">{{ $table->gm_password }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">

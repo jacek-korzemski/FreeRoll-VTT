@@ -1,3 +1,5 @@
+import { getTableItem, setTableItem } from './tableStorage'
+
 const DB_NAME = 'vtt_pdf_storage'
 const STORE_NAME = 'pdfs'
 const DB_VERSION = 1
@@ -19,7 +21,7 @@ function openDB() {
 
 export function getLocalPdfMeta() {
   try {
-    const raw = localStorage.getItem(META_KEY)
+    const raw = getTableItem(META_KEY)
     return raw ? JSON.parse(raw) : []
   } catch {
     return []
@@ -27,7 +29,7 @@ export function getLocalPdfMeta() {
 }
 
 function saveLocalPdfMeta(list) {
-  localStorage.setItem(META_KEY, JSON.stringify(list))
+  setTableItem(META_KEY, JSON.stringify(list))
 }
 
 export async function saveLocalPdf(file) {

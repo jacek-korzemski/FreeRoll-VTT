@@ -113,7 +113,7 @@ class MarketingCopy
             ],
             [
                 'title' => 'Kości',
-                'text' => 'd4, d6, d8, d10, d12, d20 i d100, modyfikator i wspólna historia rzutów. Opcjonalnie dochodzą kości Legend of the Five Rings.',
+                'text' => 'd4, d6, d8, d10, d12, d20 i d100, modyfikator i wspólna historia rzutów.',
                 'href' => $tutorial.'#kosci',
             ],
             [
@@ -260,7 +260,7 @@ class MarketingCopy
                 'title' => 'Kości w przeglądarce',
                 'paragraphs' => [
                     'Panel „Rzut kośćmi” ma d4, d6, d8, d10, d12, d20 i d100. Składasz pulę, dopisujesz modyfikator i rzucasz. Imię gracza zostaje zapisane w przeglądarce.',
-                    'Wynik wpada do wspólnej historii, więc widzą go pozostali przy stole. Jeśli paczka stołu ma włączone Legend of the Five Rings, dochodzą kości pierścienia i umiejętności.',
+                    'Wynik wpada do wspólnej historii, więc widzą go pozostali przy stole.',
                 ],
                 'image' => self::image(
                     'kosci.webp',

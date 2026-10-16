@@ -2697,6 +2697,10 @@ body {
 .history-time { font-size: 0.7rem; color: var(--color-text-dim); }
 .history-formula { font-size: 0.75rem; color: var(--color-text-dim); margin-bottom: 0.25rem; }
 .history-total { font-size: 1.1rem; font-weight: 700; color: var(--color-success); }
+.history-total .roll-outcome.success,
+.roll-snackbar-total .roll-outcome.success { color: var(--color-success); }
+.history-total .roll-outcome.failure,
+.roll-snackbar-total .roll-outcome.failure { color: var(--color-danger); }
 .history-badge {
   font-size: 0.6rem;
   background: #9b59b6;

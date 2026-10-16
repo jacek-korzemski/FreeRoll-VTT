@@ -11,7 +11,7 @@
  * so we treat them as TRUSTED CONTENT. Do not enable for untrusted uploads.
  */
 
-import { executeDiceRoll, getEffectiveRollExpression } from './diceRollUtils'
+import { executeDiceRoll, getEffectiveRollExpression, readRollCheckTarget } from './diceRollUtils'
 import { ENABLE_L5R } from '../../config'
 
 const INJECTED_ATTR = 'data-vtt-injected'
@@ -493,7 +493,7 @@ export function mountTemplate({
         e.preventDefault()
         const expr = getEffectiveRollExpression(btn)
         const label = btn.getAttribute('data-roll-label') || ''
-        executeDiceRoll(expr, label, getFieldValue)
+        executeDiceRoll(expr, label, getFieldValue, readRollCheckTarget(btn))
       }
       btn.addEventListener('click', handler)
       cleanups.push(() => btn.removeEventListener('click', handler))

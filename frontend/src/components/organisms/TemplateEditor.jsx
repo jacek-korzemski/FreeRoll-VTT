@@ -30,6 +30,7 @@ const defaultCell = (type = 'text') => ({
   style: 'plain',
   rollFormula: '', // empty allowed; for textWithRoll user can leave empty and use only field value
   rollLabel: '',
+  rollCheck: '',
 })
 
 const defaultRow = () => ({ cells: [defaultCell('text')] })
@@ -495,6 +496,19 @@ function TemplateEditor({ onSave, onCancel, initialTemplateId, initialHtml }) {
                                     title={t('templates.rollLabelHelp')}
                                   />
                                   <span className="template-editor-field-hint">{t('templates.rollLabelHelp')}</span>
+                                </div>
+                                <div className="template-editor-roll-label-wrap">
+                                  <select
+                                    value={cell.rollCheck || ''}
+                                    onChange={(e) => updateCell(sIdx, rIdx, cIdx, { rollCheck: e.target.value })}
+                                    title={t('templates.rollCheckHelp')}
+                                    aria-label={t('templates.rollCheck')}
+                                  >
+                                    <option value="">{t('templates.rollCheckNone')}</option>
+                                    <option value="lte">{t('templates.rollCheckLte')}</option>
+                                    <option value="gte">{t('templates.rollCheckGte')}</option>
+                                  </select>
+                                  <span className="template-editor-field-hint">{t('templates.rollCheckHelp')}</span>
                                 </div>
                               </>
                             )}

@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MÖRK DÖD</title>
+  <style>
+    .md {
+      background: #140806;
+      color: #f0d2c0;
+      padding: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .md h1 {
+      font-family: Impact, "Arial Narrow", sans-serif;
+      letter-spacing: 0.14em;
+      text-align: center;
+      margin: 0;
+      font-size: 1.7rem;
+      color: #ff4d3a;
+    }
+    .md .tag {
+      text-align: center;
+      margin: 0 0 8px;
+      color: #c9a27a;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+    .md .tpl-table {
+      background: #1c0d0a;
+      border-color: #ff4d3a;
+      margin: 0 0 8px;
+      width: 100%;
+    }
+    .md .tpl-table td {
+      border: 1px solid #4a241c;
+      color: #f0d2c0;
+      vertical-align: middle;
+      padding: 4px 6px;
+    }
+    .md .section-header {
+      background: #6e1a12;
+      color: #ffb4a8;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: Impact, "Arial Narrow", sans-serif;
+    }
+    .md .section-header-sm {
+      background: #2a1410;
+      color: #ffb4a8;
+    }
+    .md input[type="text"],
+    .md textarea,
+    .md select {
+      color: #ffd0c4;
+      background: transparent;
+    }
+    .md input.box,
+    .md input.circle,
+    .md select {
+      background: #100604;
+      border-color: #ff4d3a;
+      color: #ffd0c4;
+    }
+    .md textarea { width: 100%; }
+    .md small, .md .hint { color: #c9a27a; }
+    .md .hint { font-size: 0.75rem; margin: 0 0 6px; }
+    .md .md-btn {
+      background: #ff4d3a;
+      color: #1a0a08;
+      border: none;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: Impact, "Arial Narrow", sans-serif;
+      letter-spacing: 0.04em;
+    }
+    .md .md-btn.ghost {
+      background: transparent;
+      color: #ffb4a8;
+      border: 1px solid #ff4d3a;
+    }
+    .md .md-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .md .md-controls label { font-size: 0.78rem; }
+    .md .md-catalog {
+      border: 1px solid #ff4d3a;
+      background: #100604;
+      padding: 6px;
+      margin: 0 0 8px;
+      max-height: 380px;
+      overflow: auto;
+    }
+    .md .md-catalog[hidden] { display: none; }
+    .md .md-cat-item {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #4a241c;
+      padding: 5px 0;
+    }
+    .md .md-cat-item p { margin: 2px 0 0; color: #e6cbb8; font-size: 0.78rem; }
+    .md .md-search { min-width: 120px; flex: 1; }
+    .md .pips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .md .pip { white-space: nowrap; font-size: 0.78rem; }
+    .md .nowrap { white-space: nowrap; }
+    .md ul { margin: 4px 0 0; padding-left: 18px; }
+    .md li { margin: 0 0 3px; }
+  </style>
+</head>
+<body>
+  <div class="md">
+    <h1>MÖRK DÖD</h1>
+    <p class="tag">You are a Hellshredder. Death metal chainsaw and sorcery.</p>
+    <p class="hint">Creation rolls stay on this card. Attacks, spells, armor, and item dice go to the table.</p>
+
+    <input data-field="class_id" type="hidden" value="none">
+    <input data-field="power_die" type="hidden" value="3">
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">New Hellshredder</td></tr>
+      <tr>
+        <td colspan="2">
+          <div class="md-controls">
+            <select data-field="class_pick" value="none">
+              <option value="none">Classless</option>
+              <option value="random">Random class (d6)</option>
+              <option value="putrid">Putrid Death Sorcerer</option>
+              <option value="bonesaw">Bonesaw Surgeon</option>
+              <option value="void">Blood Fueled Voidgrinder</option>
+              <option value="kerosene">Kerosene Sorcerer</option>
+              <option value="reptile">Reptilian Cutthroat</option>
+              <option value="gore">Gore Grinder</option>
+              <option value="sack">7:7 Abominable Sack of Shit</option>
+            </select>
+            <button type="button" class="md-btn" data-action="generate">Generate</button>
+            <button type="button" class="md-btn ghost" data-action="level">Level up</button>
+            <button type="button" class="md-btn ghost" data-action="sack">Become the Sack</button>
+          </div>
+          <small>Random is a d6 across the six classes. The Sack is what the first dead character becomes.</small>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <small>Classless only. Two checked abilities use 4d6, drop the lowest:</small>
+          <label><input data-field="boost_agi" type="checkbox"> Agility</label>
+          <label><input data-field="boost_pre" type="checkbox"> Presence</label>
+          <label><input data-field="boost_str" type="checkbox"> Strength</label>
+          <label><input data-field="boost_tou" type="checkbox"> Toughness</label>
+          <label><input data-field="boost_kno" type="checkbox"> Knowledge</label>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="6">Hellshredder</td></tr>
+      <tr>
+        <td colspan="4"><strong>Name</strong> <input data-field="name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center" colspan="2"><strong>Level</strong><br><input data-field="level" type="text" class="box xs" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td colspan="6"><strong>Class</strong> <input data-field="class_name" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Silver</strong><br><input data-field="silver" type="text" class="box sm" autocomplete="off"></td>
+        <td class="center"><strong>Food</strong><br><input data-field="food" type="text" class="box xs" autocomplete="off"></td>
+        <td class="center" colspan="2"><strong>Pacts</strong><br>
+          <input data-field="pact_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="pact_max" type="text" class="box xs" autocomplete="off">
+        </td>
+        <td class="center"><strong>HP</strong><br>
+          <input data-field="hp_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="hp_max" type="text" class="box xs" autocomplete="off">
+        </td>
+        <td class="center"><strong>Used today</strong><br><input data-field="pact_used" type="text" class="box xs" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td colspan="6"><strong>Status</strong> <input data-field="status" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="3">Abilities</td></tr>
+      <tr>
+        <td class="center"><strong>Agility</strong><br><small>defense, run, jump</small><br><input data-field="agi" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Presence</strong><br><small>ranged, spells, perception</small><br><input data-field="pre" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Strength</strong><br><small>melee, smash, lift</small><br><input data-field="str" type="text" class="circle" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Toughness</strong><br><small>endure trauma</small><br><input data-field="tou" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Knowledge</strong><br><small>engineering, the abyss</small><br><input data-field="kno" type="text" class="circle" autocomplete="off"></td>
+        <td><small>3d6 to a modifier from -3 to +3. The raw sum is not used again. Enemies add no modifier.</small></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Tests — d20 + ability, success at DR or higher</td></tr>
+      <tr>
+        <td>Melee <small>Strength. Crit 20: double damage. Fumble 1: the weapon breaks or is lost.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_melee" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@str" data-roll-check="gte" data-roll-label="Melee" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Ranged <small>Presence. Spells use Presence too.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_ranged" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@pre" data-roll-check="gte" data-roll-label="Ranged" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Defense <small>Agility. Crit: a free attack. Fumble: you take double damage.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_def" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@agi" data-roll-check="gte" data-roll-label="Defense" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Agility</td>
+        <td class="center nowrap">
+          <input data-field="dr_agi" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@agi" data-roll-check="gte" data-roll-label="Agility" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Knowledge <small>Rope-starting the chainshield is DR 8.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_kno" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@kno" data-roll-check="gte" data-roll-label="Knowledge" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Armor, pacts, brutality</td></tr>
+      <tr>
+        <td>Armor <input data-field="armor_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center nowrap">
+          <input data-field="armor_die" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="armor" data-roll-label="Armor" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><input data-field="armor_note" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <label><input data-field="shield" type="checkbox"> Shield</label>
+          <input data-field="shield_note" type="text" class="plain wide" autocomplete="off">
+        </td>
+      </tr>
+      <tr>
+        <td class="nowrap">
+          Reduction
+          <input data-field="shield_die" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="shield" data-roll-label="Shield" class="roll-btn">🎲</button>
+        </td>
+        <td class="nowrap">
+          <button type="button" data-roll="d8" data-roll-label="Shield riposte" class="roll-btn">d8 riposte</button>
+          <button type="button" data-roll="d4" data-roll-label="Failed catch" class="roll-btn">d4 catch</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <small>A pact lets you deal maximum damage, reroll any die, lower damage taken by d6, negate a crit or fumble, or lower one test's DR by 4. Each use is a d6 set aside for dawn. Pacts do not refill.</small>
+          <div class="md-controls">
+            <button type="button" class="md-btn" data-action="pact-max">Max damage</button>
+            <button type="button" class="md-btn ghost" data-action="pact-reroll">Reroll</button>
+            <button type="button" class="md-btn ghost" data-action="pact-lower">Lower damage</button>
+            <button type="button" class="md-btn ghost" data-action="pact-crit">Negate crit/fumble</button>
+            <button type="button" class="md-btn ghost" data-action="pact-dr">DR -4</button>
+            <button type="button" data-roll="d6" data-roll-label="Pact lower damage" class="roll-btn">d6</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Brutality</strong>
+          <label><input data-field="brut_1" type="checkbox">1</label>
+          <label><input data-field="brut_2" type="checkbox">2</label>
+          <label><input data-field="brut_3" type="checkbox">3</label>
+          <label><input data-field="brut_4" type="checkbox">4</label>
+          <label><input data-field="brut_5" type="checkbox">5</label>
+          <button type="button" class="md-btn" data-action="brut-point">+ point</button>
+          <button type="button" class="md-btn ghost" data-action="brut-unleash">Unleash</button>
+        </td>
+        <td class="center">
+          <button type="button" data-roll="" data-roll-for="brutality" data-roll-label="Brutality" class="roll-btn">2× die</button>
+          <br><small>Autohit, ignores armor. Explode: reroll any maximum and add it.</small>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header">Oil</td></tr>
+      <tr>
+        <td>
+          <div class="md-controls">
+            <strong>Jugs</strong>
+            <input data-field="oil_n" type="text" class="box xs" autocomplete="off">
+            <button type="button" class="md-btn" data-action="oil-round">Mark round</button>
+            <button type="button" class="md-btn ghost" data-action="oil-drink">Drink (Oil Addict)</button>
+          </div>
+          <small>One jug is three rounds. Mark a box each combat round you run a motorized weapon. Three marks empty that jug. Out of oil, it still swings for d6. Reloading is one maneuver.</small>
+          <div class="pips">
+            <span class="pip">1 <input data-field="oil_1_1" type="checkbox"><input data-field="oil_1_2" type="checkbox"><input data-field="oil_1_3" type="checkbox"></span>
+            <span class="pip">2 <input data-field="oil_2_1" type="checkbox"><input data-field="oil_2_2" type="checkbox"><input data-field="oil_2_3" type="checkbox"></span>
+            <span class="pip">3 <input data-field="oil_3_1" type="checkbox"><input data-field="oil_3_2" type="checkbox"><input data-field="oil_3_3" type="checkbox"></span>
+            <span class="pip">4 <input data-field="oil_4_1" type="checkbox"><input data-field="oil_4_2" type="checkbox"><input data-field="oil_4_3" type="checkbox"></span>
+            <span class="pip">5 <input data-field="oil_5_1" type="checkbox"><input data-field="oil_5_2" type="checkbox"><input data-field="oil_5_3" type="checkbox"></span>
+            <span class="pip">6 <input data-field="oil_6_1" type="checkbox"><input data-field="oil_6_2" type="checkbox"><input data-field="oil_6_3" type="checkbox"></span>
+            <span class="pip">7 <input data-field="oil_7_1" type="checkbox"><input data-field="oil_7_2" type="checkbox"><input data-field="oil_7_3" type="checkbox"></span>
+            <span class="pip">8 <input data-field="oil_8_1" type="checkbox"><input data-field="oil_8_2" type="checkbox"><input data-field="oil_8_3" type="checkbox"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Powers and spells</td></tr>
+      <tr>
+        <td>
+          Uses
+          <input data-field="pow_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="pow_max" type="text" class="box xs" autocomplete="off">
+          <button type="button" class="md-btn" data-action="power-spend">Spend</button>
+          <button type="button" class="md-btn ghost" data-action="dawn">Dawn</button>
+          <label><input data-field="dizzy" type="checkbox"> Dizzy</label>
+        </td>
+        <td class="center nowrap">
+          <input data-field="dr_power" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@pre" data-roll-check="gte" data-roll-label="Cast spell" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td><small>Test Presence. Success spends a use if you clicked Spend. Failure: the spell does not work. Roll the d4, lose that many HP, and you are dizzy for an hour. While dizzy, spells fail in the worst way. Crit: full effect. Fumble: backfire. At dawn, roll your power die again. The Sack cannot cast.</small></td>
+        <td class="center"><button type="button" data-roll="d4" data-roll-label="Failed spell" class="roll-btn">d4 fail</button></td>
+      </tr>
+      <tr>
+        <td class="section-header-sm">Spell</td>
+        <td class="section-header-sm">Roll</td>
+      </tr>
+      <tr>
+        <td><input data-field="spell_0_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="spell_0_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="spell_0_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="spell_0" data-roll-label="Spell" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="spell_1_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="spell_1_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="spell_1_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="spell_1" data-roll-label="Spell" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="spell_2_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="spell_2_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="spell_2_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="spell_2" data-roll-label="Spell" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="spell_3_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="spell_3_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="spell_3_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="spell_3" data-roll-label="Spell" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td class="section-header-sm" colspan="2">Class powers</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div class="md-controls">
+            <button type="button" class="md-btn ghost" data-action="wake">Wake the dead</button>
+            <button type="button" class="md-btn ghost" data-action="surgery">Surgery</button>
+            <button type="button" class="md-btn ghost" data-action="devour">Devour corpse</button>
+            <span>Corpses <input data-field="corpse_n" type="text" class="box xs" autocomplete="off"></span>
+            <label><input data-field="cadaver_used" type="checkbox"> Cadaver used</label>
+            <label><input data-field="oil_addict_used" type="checkbox"> Oil drunk</label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="feat_0_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="feat_0_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="feat_0_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="feat_0" data-roll-label="Power" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="feat_1_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="feat_1_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="feat_1_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="feat_1" data-roll-label="Power" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="feat_2_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="feat_2_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="feat_2_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="feat_2" data-roll-label="Power" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="feat_3_name" type="text" class="plain wide" autocomplete="off"><br><input data-field="feat_3_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="feat_3_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="feat_3" data-roll-label="Power" class="roll-btn">🎲</button></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Weapons</td></tr>
+      <tr>
+        <td>Weapon 1 <input data-field="wpn1_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center nowrap">
+          <input data-field="wpn1_dmg" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="wpn1" data-roll-label="Weapon 1" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="wpn1_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center"><button type="button" data-roll="d6" data-roll-for="wpn1_dry" data-roll-label="Weapon 1, no oil" class="roll-btn">no oil</button></td>
+      </tr>
+      <tr>
+        <td>Weapon 2 <input data-field="wpn2_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center nowrap">
+          <input data-field="wpn2_dmg" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="wpn2" data-roll-label="Weapon 2" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td><input data-field="wpn2_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center"><button type="button" data-roll="d6" data-roll-for="wpn2_dry" data-roll-label="Weapon 2, no oil" class="roll-btn">no oil</button></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="3">Pack</td></tr>
+      <tr>
+        <td colspan="3">
+          <button type="button" class="md-btn" data-action="catalog">Catalog</button>
+          <small>Add puts a weapon in an empty hand, armor on the body, a spell in a spell slot, a power in a power slot, and oil on the jug track.</small>
+        </td>
+      </tr>
+    </table>
+
+    <div class="md-catalog" hidden>
+      <div class="md-controls">
+        <input data-filter type="text" class="box md-search" placeholder="Search" autocomplete="off">
+        <button type="button" class="md-btn ghost" data-cat-tab="all">All</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="weapon">Weapons</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="armor">Armor</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="gear">Gear</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="spell">Spells</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="power">Powers</button>
+        <button type="button" class="md-btn ghost" data-cat-tab="class">Classes</button>
+        <button type="button" class="md-btn" data-action="catalog">Close</button>
+      </div>
+      <div data-catalog-list></div>
+    </div>
+
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header-sm">Item</td>
+        <td class="section-header-sm">Note</td>
+        <td class="section-header-sm">Roll</td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_0_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_0_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_0_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_0" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_1_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_1_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_1_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_1" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_2_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_2_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_2_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_2" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_3_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_3_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_3_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_3" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_4_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_4_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_4_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_4" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_5_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_5_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_5_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_5" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_6_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_6_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_6_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_6" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_7_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_7_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_7_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_7" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_8_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_8_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_8_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_8" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_9_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_9_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_9_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_9" data-roll-label="Item" class="roll-btn">🎲</button></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header">Body and notes</td></tr>
+      <tr>
+        <td>
+          <strong>Repulsive peculiarity</strong>
+          <button type="button" class="md-btn ghost" data-action="quirk">Roll d12</button>
+          <br><textarea data-field="peculiarity" class="plain wide" rows="3"></textarea>
+        </td>
+      </tr>
+      <tr><td><strong>Class</strong><br><textarea data-field="class_feature" class="plain wide" rows="5"></textarea></td></tr>
+      <tr><td><strong>Notes</strong><br><textarea data-field="notes" class="plain wide" rows="3"></textarea></td></tr>
+      <tr><td><strong>Log</strong><br><textarea data-field="gen_log" class="plain wide" rows="8"></textarea></td></tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header">Rules on the card</td></tr>
+      <tr>
+        <td>
+          <ul>
+            <li>0 HP is broken. Negative HP is dead. Broken is a d4: unconscious, a ruined limb or eye, hemorrhage, or dead.</li>
+            <li>A breath restores d4 HP. A night's sleep restores d6. Infection blocks healing and deals d6 each day.</li>
+            <li>Initiative is a d6: 1-3 enemies, 4-6 players. Agility + d6 breaks ties inside the group.</li>
+            <li>Morale is 2d6. Equal or over the morale rating, then d6: 1-3 flee, 4-6 surrender. Check when the leader dies, half the group is gone, or one enemy is down to a third of its HP.</li>
+            <li>Reaction d6: kill, angered, disgusted, neutral, terrified, helpful.</li>
+            <li>Attacking a horde: DR is 13 minus the number of minions. Thirteen or more is an automatic hit. Defending: DR 12, plus 1 for every 5 minions. Horde damage uses the die closest to the number of minions, maximum d12.</li>
+            <li>Optional focus rage: spend the attack. Next attack deals double the rolled damage at -2 DR, and a hit fills one Brutality bar. A hit while you focus breaks it.</li>
+            <li>Dawn of Demise: roll one d6 for every pact used that day. Any double opens a Rift. Three 6s is the Final Rift. Powers replenish. Pacts do not.</li>
+          </ul>
+          <div class="md-controls">
+            <button type="button" class="md-btn ghost" data-action="heal-breath">Breath</button>
+            <button type="button" class="md-btn ghost" data-action="heal-sleep">Sleep</button>
+            <button type="button" class="md-btn ghost" data-action="infect-day">Infection day</button>
+            <button type="button" class="md-btn" data-action="broken">Broken</button>
+            <label><input data-field="infected" type="checkbox"> Infected</label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="md-controls">
+            <button type="button" data-roll="d6" data-roll-label="Initiative" class="roll-btn">Initiative d6</button>
+            <button type="button" data-roll="d6+@agi" data-roll-label="Individual initiative" class="roll-btn">d6+Agility</button>
+            <button type="button" data-roll="2d6" data-roll-label="Morale" class="roll-btn">Morale 2d6</button>
+            <button type="button" data-roll="d6" data-roll-label="Reaction" class="roll-btn">Reaction d6</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    var ITEMS = {};
+    var CATALOG = [];
+    var WEAPONS = [];
+    var ARMORS = [];
+    var SPELLS = [];
+    var SPECIALS = [];
+    var INV_N = 10;
+    var SPELL_N = 4;
+    var FEAT_N = 4;
+    var ABILS = ["agi", "pre", "str", "tou", "kno"];
+    var ABL = { agi: "Agility", pre: "Presence", str: "Strength", tou: "Toughness", kno: "Knowledge" };
+    var genLines = null;
+    var currentCat = "all";
+
+    var N1 = ["Crowley","Horus","Aamon","Abbadon","Abigor","Akuji","Akuma","Cain","Chernobog","Dahak","Damien","Golgotha","Morgoth","Ozul","Sephtis","Agash","Gorgo","Keres","Mare","Cabaal"];
+    var N2 = ["Necro","Corpse","Blood","Bone","Gut","Skin","Skull","Flesh","Carcass","Daemon","Devil","Goat","Meat","Doom","Soul","Death","Rot","Bone","Blood","Swine"];
+    var N3 = ["Butcher","Slasher","Devourer","Mutilator","Slaughterer","Basher","Flayer","Born","Gouger","Violator","Eater","Strangler","Mangler","Crusher","Destroyer","Cannibal","Ripper","Slayer","Tormenter","Defiler"];
+
+    var QUIRKS = [
+      { name: "Eyesore", text: "Your eyes are red and swollen and occasionally squirt yellow pus. They constantly itch." },
+      { name: "Lip-muncher", text: "You have an urge to gnaw your lips and tongue until bloody when excited." },
+      { name: "Thrice-cursed", text: "The Dark One spites you, your soul has abandoned you, and even death refuses to take you. Instead of dying when at negative HP, roll on the Broken table." },
+      { name: "Skin-gouger", text: "You can't stop scratching your skin, or the shredded mess that's left of it." },
+      { name: "Gut-cougher", text: "You're allergic to something and, when you cough or sneeze, your intestines tend to come out of your mouth. You just push it back in." },
+      { name: "Bleeder", text: "Whereever you go, you leave behind a glistering crimson smear hemorrhaging from your every crevice." },
+      { name: "Collector", text: "Teeth, eyeballs, fingernails, claws, horns. Wearing these things as jewelry makes you look fabulous." },
+      { name: "Reeker", text: "Noxious odors perpetually burble from your skin. It makes humans sick and daemons hungry." },
+      { name: "Maggot-ridden", text: "Your rotting skin festers with maggots, beetles, and mites. With their help, your unarmed attacks inflict +1 damage." },
+      { name: "Haunted One", text: "Your victims refuse to leave you be. Sometimes people standing close to you can hear their death cries and see their faces." },
+      { name: "Oozer", text: "You sweat thick slimy mucus. All checks to escape grapples are -2 DR. You can also squeeze into narrow spaces." },
+      { name: "Cystic", text: "Strange tumors and boils constantly shift and roil under your skin. Sometimes you swear you can hear them talking to one another." }
+    ];
+
+    var CLASSES = {
+      none: {
+        name: "Classless",
+        boosts: true,
+        bonus: {},
+        hpDie: "d6",
+        hpFlat: 6,
+        pacts: "d2",
+        powerDie: 3,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: false,
+        extras: [],
+        powers: [],
+        text: "No class. Roll 3d6 for each ability. Two of them, the ones checked above, use 4d6 and drop the lowest. HP is Toughness + d6 + 6. You begin with d2 Pacts and d3 Powers. Each dawn, roll the power die again. Pacts do not come back."
+      },
+      putrid: {
+        name: "Putrid Death Sorcerer",
+        bonus: { tou: -2, pre: 2 },
+        hpDie: "d6",
+        hpFlat: 6,
+        pacts: "d4",
+        powerDie: 6,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: true,
+        extras: [],
+        powers: ["pow_tongue", "pow_cadaver"],
+        text: "Putrefying Body: Toughness is 3d6-2. Death Spell Caster: Presence is 3d6+2. HP is Toughness + d6 + 6. Pacts d4. Powers d6. You also begin with 1 random spell. Corpse Tongue: you can speak with human corpses, though the answers are vague and cryptic."
+      },
+      bonesaw: {
+        name: "Bonesaw Surgeon",
+        bonus: { kno: 1, pre: 1, str: -2 },
+        hpDie: "d4",
+        hpFlat: 6,
+        pacts: "d3",
+        powerDie: 2,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: false,
+        extras: ["bonesaw", "scalpel"],
+        powers: ["pow_surgery"],
+        text: "Surgical Imprecision: Knowledge and Presence are 3d6+1. Scrawny: Strength is 3d6-2. HP is Toughness + d4 + 6. Pacts d3. Powers d2. You carry a bonesaw (d6) and a scalpel (d4). Bonesaw Surgery heals d6 HP. A 6 heals 6. A 1 amputates the limb and deals d6 instead, or kills outright if the wound was vital."
+      },
+      void: {
+        name: "Blood Fueled Voidgrinder",
+        bonus: { kno: 2, pre: 1, agi: -2 },
+        hpDie: "d8",
+        hpFlat: 6,
+        pacts: "d2",
+        powerDie: 4,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: true,
+        extras: ["buzzsaw"],
+        powers: ["pow_blood"],
+        text: "Engineer: Knowledge is 3d6+2. Voidgrinder: Presence is 3d6+1. Rusty Bones: Agility is 3d6-2. HP is Toughness + d8 + 6. Pacts d2. Powers d4. You have a hand-mounted buzzsaw (d6) and 1 random spell. Blood Addict: 1 liter of human blood gives +2 Strength for an hour."
+      },
+      kerosene: {
+        name: "Kerosene Sorcerer",
+        bonus: { tou: 1, pre: 1, kno: 1, agi: -2 },
+        hpDie: "d6",
+        hpFlat: 6,
+        pacts: "d4",
+        powerDie: 6,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: true,
+        extras: ["oil1"],
+        powers: ["pow_oil"],
+        text: "Built-up Immunity: Toughness is 3d6+1. Ancient Knowledge: Presence and Knowledge are 3d6+1. Intoxicated: Agility is 3d6-2. HP is Toughness + d6 + 6. Pacts d4. Powers d6. You begin with 1 random spell and 1 jug of oil. Oil Addict: once per day, drink a jug to replenish d2 Powers. For the next hour, +1 DR on Agility tests."
+      },
+      reptile: {
+        name: "Reptilian Cutthroat",
+        bonus: { tou: 1, kno: -3, agi: 2 },
+        hpDie: "d8",
+        hpFlat: 6,
+        pacts: "d2",
+        powerDie: 3,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: false,
+        extras: [],
+        powers: ["pow_creep", "pow_eater", "pow_cold"],
+        text: "Tough as Scales: Toughness is 3d6+1. Reptilian Brain: Knowledge is 3d6-3. Rigid Body: Agility is 3d6+2. HP is Toughness + d8 + 6. Pacts d2. Powers d3. Creeping Death: -4 DR to scale steep surfaces, -2 DR to crawl on ceilings. Devouring a daemon or a horde heals d2 HP, unless you fail to heat your body within the hour, in which case you lose d2 instead."
+      },
+      gore: {
+        name: "Gore Grinder",
+        bonus: { tou: 2, str: 2, agi: -2, pre: -1 },
+        hpDie: "d8",
+        hpFlat: 6,
+        pacts: "d2",
+        powerDie: 2,
+        weapon: true,
+        armor: true,
+        gear: true,
+        spell: false,
+        extras: [],
+        powers: ["pow_head", "pow_blessed"],
+        text: "Humongous: Toughness and Strength are 3d6+2. Brutally Built: Agility is 3d6-2. Raging Brain: Presence is 3d6-1. HP is Toughness + d8 + 6. Pacts d2. Powers d2. When a melee hit deals at least 2 damage, you may headbutt back for d6. When you gain a Brutality point, roll d6. On 5-6 you gain two points instead."
+      },
+      sack: {
+        name: "7:7 Abominable Sack of Shit",
+        sack: true,
+        bonus: {},
+        hpDie: "d20",
+        hpFlat: 0,
+        pacts: "",
+        powerDie: 0,
+        weapon: false,
+        armor: false,
+        gear: false,
+        spell: false,
+        extras: [],
+        powers: ["pow_absorb", "pow_fume", "pow_repulse"],
+        text: "The first character to die becomes this. HP is d20. Abilities are rolled with no modifiers. Your maws and limbs are d8. You have no equipment, no spells, and no pacts. You cannot wield weapons or cast spells. Every 5 corpses you absorb: +1 max HP, +1 Toughness, and -1 Agility, with no limit. When you die, everyone in the room tests Toughness or takes d10. Non-boss enemies check morale the moment they see you."
+      }
+    };
+
+    function add(id, obj) {
+      obj._id = id;
+      obj.cat = obj.cat || "gear";
+      ITEMS[id] = obj;
+      if (obj.cat !== "hidden") CATALOG.push(obj);
+      return obj;
+    }
+
+    function W(id, name, roll, note, extra) {
+      var obj = { name: name, kind: "weapon", roll: roll, note: note || "", cat: "weapon" };
+      if (extra) {
+        Object.keys(extra).forEach(function (k) { obj[k] = extra[k]; });
+      }
+      return add(id, obj);
+    }
+
+    WEAPONS.push(W("cleaver", "Corpse Butcher's Cleaver", "d6", "Melee."));
+    WEAPONS.push(W("bolt", "Bolt Thrower", "d6", "Ranged (Presence). Bolts: {pre+d20}."));
+    WEAPONS.push(W("hog", "Giant Hog Splitter", "d8", "Melee."));
+    WEAPONS.push(W("saw", "Circular Saw", "d10", "Motorized melee saw.", { capacity: 1 }));
+    WEAPONS.push(W("rock", "Rockgrinder", "d10", "Heavy melee. DR 14 to hit.", { capacity: 3, oil: "str+d6" }));
+    WEAPONS.push(W("flame", "Flamespitter", "d8", "Ranged (Presence). On a hit the target takes d4 burning damage for d4 rounds, or until the fire is put out.", { capacity: 2, oil: "pre+d4", oil2: "str+d4" }));
+    WEAPONS.push(W("chainsaw", "Chainsaw", "d12", "Melee. The weapon page is credited to Bloodbath; no extra rule is printed there.", { capacity: 3, oil: "str+d6" }));
+    WEAPONS.push(W("chainshield", "Hellshredding Chainshield", "d10", "Melee d10. Thrown, it is a boomerang (d8): Agility DR 10 to catch it, or take d4. The shield reduces damage by d6 and does not stack with worn armor. If the shield die rolls its maximum, deal d8 to the attacker. Rope-start it before combat: Knowledge DR 8.", { capacity: 3, oil: "str+d6", shieldDie: "d6", shieldNote: "Chainshield -d6. Does not stack with worn armor. On a maximum roll, deal d8 to the attacker.", also: "chainboom" }));
+
+    add("chainboom", { name: "Chainshield boomerang", kind: "item", roll: "d8", cat: "weapon", note: "Agility DR 10 to catch the thrown chainshield, or take d4 from the catch button." });
+    SPECIALS.push(W("bane", "The Bane of Basilisks", "d12", "Ignores armor.", { capacity: 2 }));
+    SPECIALS.push(W("blaster", "The Skullgrinddeathface Blaster", "d6", "Each daemon skull loaded into the grinder deals d6 when fired. Loading takes 1 action. It holds up to 5 skulls. The roll is one skull.", { capacity: 4 }));
+
+    W("bonesaw", "Bonesaw", "d6", "The surgeon's saw.");
+    W("scalpel", "Scalpel", "d4", "The surgeon's knife.");
+    W("buzzsaw", "Hand-mounted buzzsaw", "d6", "Bolted to the arm of a Voidgrinder. The book prints no oil capacity for it.");
+    W("maws", "Maws and limbs", "d8", "The sack has no other weapons. You cannot wield anything else, and you cannot cast spells.");
+
+    ARMORS.push(add("light", { name: "Light armor", kind: "armor", roll: "d2", cat: "armor", note: "When an attack hits you, roll d2 and subtract it from the damage." }));
+    ARMORS.push(add("medium", { name: "Medium armor", kind: "armor", roll: "d4", cat: "armor", note: "When an attack hits you, roll d4 and subtract it from the damage." }));
+    ARMORS.push(add("heavy", { name: "Heavy armor", kind: "armor", roll: "d6", cat: "armor", note: "When an attack hits you, roll d6 and subtract it from the damage." }));
+
+    add("waterskin", { name: "Waterskin", kind: "item", note: "You start with one." });
+    add("food", { name: "Food", kind: "item", note: "1 day of food." });
+    add("head", { name: "Hollowed-out severed head", kind: "item", note: "A hollowed-out severed human head." });
+    add("bones", { name: "Bag of bones", kind: "item", note: "If thrown, they might show you the right direction." });
+    add("maggot", { name: "Giant pet maggot", kind: "item", note: "A giant pet maggot." });
+    add("worms", { name: "Bag of worms", kind: "item", note: "Nutritious." });
+    add("horse", { name: "Black horse", kind: "item", note: "It has gangrene." });
+    add("seagull", { name: "Undead seagull", kind: "item", roll: "d2", note: "HP 1, beak d2." });
+    add("oil1", { name: "Jug of oil", kind: "oil", oil: "1", note: "One jug. Three rounds of a motorized weapon." });
+    add("oil4", { name: "d4 jugs of oil", kind: "oil", oil: "d4", note: "Roll d4 and add that many jugs to the track." });
+    add("randspell", { name: "Random spell", kind: "rollspell", note: "Roll d12 on the spell table and add that spell." });
+    add("loved", { name: "Corpse of a loved one", kind: "item", note: "The corpse of a former loved one. You still love them." });
+    add("twin", { name: "Conjoined twin", kind: "item", note: "A wretched impish version of yourself from the Rebirth. It is attached to your neck and talks too much." });
+    add("horn", { name: "Black daemon horn", kind: "item", roll: "d6", note: "Drinking from it replenishes d6 HP and costs one Pact." });
+    add("caged", { name: "Tiny daemon in a cage", kind: "item", note: "Its big sister is looking for it." });
+    add("saint", { name: "Severed head of a saint", kind: "item", note: "It whispers troubling tales, but only to you." });
+    add("rope", { name: "Daemon-sinew rope", kind: "item", note: "30 feet. Extremely durable." });
+    add("toenails", { name: "Witch toenail clippings", kind: "item", note: "They leave the box to clean your teeth every time you have eaten." });
+    add("hound", { name: "Vicious hellhound", kind: "item", roll: "d6", note: "HP 6, bite d6." });
+    add("bombs", { name: "Oil bombs", kind: "item", roll: "d6", doses: "d4", note: "Each explodes on impact and can hit up to d6 targets for d6 damage each. The button is the damage for one target." });
+    add("randweapon", { name: "Another starting weapon", kind: "rollweapon", note: "Roll d8 on the weapon table." });
+    add("randspecial", { name: "A special weapon", kind: "rollspecial", note: "The Bane of Basilisks or the Skullgrinddeathface Blaster." });
+
+    var EQUIP = ["head","bones","maggot","worms","horse","seagull","oil1","oil4","randspell","loved","twin","horn","caged","saint","rope","toenails","hound","bombs","randweapon","randspecial"];
+
+    function spell(id, name, roll, note) {
+      SPELLS.push(add(id, { name: name, kind: "spell", roll: roll || "", note: note, cat: "spell" }));
+    }
+    spell("sp1", "Hammer Smashed Face", "d8", "Summon a giant ethereal sledgehammer and bash the target's head d4 times for d8 damage each. The button is one bash.");
+    spell("sp2", "Feeding the Undead", "d10", "Summon d10 Cannibal Corpses (HP 2, bite d2) that aid you in combat. The button is the size of the swarm.");
+    spell("sp3", "Annihilation of the Wicked", "", "Obliterate an entire horde of enemies.");
+    spell("sp4", "Resurrection Through Carnage", "", "Bring a fallen PC or NPC back to life by casting this right after you brutally kill a foe. They burst out of that enemy's body.");
+    spell("sp5", "Blood Fog", "", "Blood sprays from every orifice and heavily obscures a normal-sized room for 10 minutes, then returns. While drained, your body dries and shrinks to half its mass.");
+    spell("sp6", "Festering Fungus Infestation", "d10", "Fungi infest the target. It takes d10 damage and is paralyzed for d4 rounds.");
+    spell("sp7", "Skinned and Devoured", "3d10", "Hooked chains skin the target, then a maw of rusty teeth eats them. Instant death to one non-boss, or 3d10 damage to a boss.");
+    spell("sp8", "Hung by Your Entrails", "d10", "The target is disemboweled and hung by its own intestines. d10 damage, and it cannot move for 2 rounds.");
+    spell("sp9", "Flay the Swine", "d12", "The target is peeled from head to toe. d12 damage.");
+    spell("sp10", "Cosmic Horror Maelstrom", "", "A portal opens overhead. Tentacles, teeth, and eyes eliminate half the minions in a horde.");
+    spell("sp11", "Aye, Come Blood", "d10", "A piercing beam of blood. d10 damage to one target or one horde, or change the roll to d6 for each creature in the line of fire.");
+    spell("sp12", "Nightmares Made Flesh", "", "Summon the worst fear of a non-boss target. That target immediately rolls morale.");
+
+    function power(id, name, roll, note) {
+      add(id, { name: name, kind: "power", roll: roll || "", note: note, cat: "power" });
+    }
+    power("pow_tongue", "Corpse Tongue", "", "You can speak with human corpses. The answers are usually vague and cryptic.");
+    power("pow_cadaver", "Waking the Cadaver", "d6", "Once per day, up to d6 recently dead corpses rise and obey for d6 hours, then sleep again. Skeletons do not count; some tissue must remain. Walking Cadaver: HP 2, scratch and bite d4. The button is the number of corpses. Roll it again for the hours, or use Wake the dead.");
+    power("pow_surgery", "Bonesaw Surgery", "d6", "Heal d6 HP to yourself or someone else. On a 6 you heal 6. On a 1 the limb is amputated and the patient takes d6 instead. If you were repairing a vital organ or a critical wound, a 1 is instant death.");
+    power("pow_blood", "Blood Addict", "", "Ingesting 1 liter of human blood gives you +2 Strength for the next hour.");
+    power("pow_oil", "Oil Addict", "d2", "Once per day, drink one jug of oil to replenish d2 Powers. For the next hour, +1 DR on every Agility test. Drink (Oil Addict) spends the jug and adds the roll, up to your dawn maximum.");
+    power("pow_creep", "Creeping Death", "", "-4 DR to scale steep surfaces. -2 DR to crawl on ceilings.");
+    power("pow_eater", "Daemon Eater", "d2", "When you devour and digest a daemon or a horde, heal d2 HP.");
+    power("pow_cold", "Cold Blooded Killer", "d2", "After devouring something, heat your body within the hour. If you do not, you lose d2 HP instead of healing.");
+    power("pow_head", "Wrong One to Fuck With", "d6", "When a melee attack deals at least 2 damage to you, you may immediately strike back with a headbutt for d6.");
+    power("pow_blessed", "Blessed by the Brutal", "d6", "When you receive a Brutality point, roll d6. On 5-6 you receive two points instead. The + point button does this while this power is on the sheet.");
+    power("pow_absorb", "Corpse Absorber", "", "Each corpse you devour adds to your mass. Every 5 corpses: +1 max HP, +1 Toughness, -1 Agility. There is no floor and no ceiling. Use Devour corpse.");
+    power("pow_fume", "Fume Inflated", "d10", "When you die, you explode. Everyone in the same room or area tests Toughness or takes d10 damage. The button is that damage.");
+    power("pow_repulse", "Repulsive", "", "All non-boss enemies instantly check morale when they see you.");
+
+    Object.keys(CLASSES).forEach(function (id) {
+      add("cls_" + id, {
+        name: CLASSES[id].name,
+        kind: "class",
+        classId: id,
+        cat: "class",
+        note: CLASSES[id].text + (id === "sack" ? " Add writes the rules and powers only. Become the Sack dissolves your gear and rerolls HP." : " Add writes the class and its powers. It does not reroll abilities or gear. Generate does.")
+      });
+    });
+
+    function d(n) { return Math.floor(Math.random() * n) + 1; }
+    function num(v) {
+      var n = parseInt(v, 10);
+      return isNaN(n) ? 0 : n;
+    }
+    function fmt(n) {
+      n = parseInt(n, 10) || 0;
+      if (n > 0) return "+" + n;
+      return String(n);
+    }
+    function modFromSum(sum) {
+      if (sum <= 4) return -3;
+      if (sum <= 6) return -2;
+      if (sum <= 8) return -1;
+      if (sum <= 12) return 0;
+      if (sum <= 14) return 1;
+      if (sum <= 16) return 2;
+      return 3;
+    }
+    function rollSpec(specText) {
+      var m = /^(\d*)d(\d+)$/.exec(specText);
+      if (!m) return { total: 0, text: String(specText) };
+      var count = parseInt(m[1], 10) || 1;
+      var sides = parseInt(m[2], 10);
+      var parts = [];
+      var sum = 0;
+      for (var i = 0; i < count; i++) {
+        var r = d(sides);
+        parts.push(r);
+        sum += r;
+      }
+      return { total: sum, text: parts.join("+") };
+    }
+    function rollSilver(specText) {
+      var m = /^(\d+)d(\d+)\*(\d+)$/.exec(specText);
+      var count = parseInt(m[1], 10);
+      var sides = parseInt(m[2], 10);
+      var mul = parseInt(m[3], 10);
+      var parts = [];
+      var sum = 0;
+      for (var i = 0; i < count; i++) {
+        var r = d(sides);
+        parts.push(r);
+        sum += r;
+      }
+      return { total: sum * mul, text: parts.join("+") + " x " + mul + " = " + (sum * mul) };
+    }
+    function rollAbility(bonus, four) {
+      var rolls = [];
+      var count = four ? 4 : 3;
+      for (var i = 0; i < count; i++) rolls.push(d(6));
+      var kept = rolls.slice();
+      var dropped = null;
+      if (four) {
+        var mi = 0;
+        for (var j = 1; j < kept.length; j++) if (kept[j] < kept[mi]) mi = j;
+        dropped = kept.splice(mi, 1)[0];
+      }
+      var shown = kept[0] + kept[1] + kept[2] + (bonus || 0);
+      var text = (four ? "4d6 drop " + dropped + " " : "3d6 ") + "[" + rolls.join(",") + "]";
+      if (bonus) text += (bonus > 0 ? "+" : "") + bonus;
+      text += " = " + shown;
+      return { mod: modFromSum(shown), text: text };
+    }
+    function logLine(s) {
+      if (genLines) { genLines.push(s); return; }
+      var prev = vtt.getField("gen_log") || "";
+      vtt.setField("gen_log", prev ? prev + "\n" + s : s);
+    }
+    function setRollLabel(key, label) {
+      var btn = vtt.root.querySelector('[data-roll-for="' + key + '"]');
+      if (btn) btn.setAttribute("data-roll-label", label || "Roll");
+    }
+    function blank(field) {
+      return !String(vtt.getField(field) || "").trim();
+    }
+    function featNamed(name) {
+      for (var i = 0; i < FEAT_N; i++) {
+        if (String(vtt.getField("feat_" + i + "_name") || "") === name) return true;
+      }
+      return false;
+    }
+    function doubleDie(expr) {
+      var m = /^(\d*)d(\d+)(.*)$/.exec(String(expr || "").trim());
+      if (!m) return "";
+      var count = (parseInt(m[1], 10) || 1) * 2;
+      return count + "d" + m[2] + m[3];
+    }
+    function syncLabels() {
+      setRollLabel("wpn1", String(vtt.getField("wpn1_name") || "").trim() || "Weapon 1");
+      setRollLabel("wpn2", String(vtt.getField("wpn2_name") || "").trim() || "Weapon 2");
+      setRollLabel("wpn1_dry", (String(vtt.getField("wpn1_name") || "").trim() || "Weapon 1") + ", no oil");
+      setRollLabel("wpn2_dry", (String(vtt.getField("wpn2_name") || "").trim() || "Weapon 2") + ", no oil");
+      setRollLabel("armor", String(vtt.getField("armor_name") || "").trim() || "Armor");
+      setRollLabel("shield", String(vtt.getField("armor_name") || "").trim() ? "Shield" : "Shield");
+      for (var i = 0; i < INV_N; i++) setRollLabel("inv_" + i, String(vtt.getField("inv_" + i + "_name") || "").trim() || "Item");
+      for (var s = 0; s < SPELL_N; s++) setRollLabel("spell_" + s, String(vtt.getField("spell_" + s + "_name") || "").trim() || "Spell");
+      for (var f = 0; f < FEAT_N; f++) setRollLabel("feat_" + f, String(vtt.getField("feat_" + f + "_name") || "").trim() || "Power");
+      syncBrutality();
+    }
+    function syncBrutality() {
+      var expr = String(vtt.getField("wpn1_dmg") || "").trim() || String(vtt.getField("wpn2_dmg") || "").trim();
+      var btn = vtt.root.querySelector('[data-roll-for="brutality"]');
+      if (!btn) return;
+      btn.setAttribute("data-roll", doubleDie(expr));
+      var name = String(vtt.getField("wpn1_name") || "").trim() || String(vtt.getField("wpn2_name") || "").trim() || "Brutality";
+      btn.setAttribute("data-roll-label", name + " brutality");
+    }
+    function resolveOil(spec) {
+      var labeled = /^(agi|pre|str|tou|kno)\+d(\d+)$/.exec(spec || "");
+      if (labeled) {
+        var mod = num(vtt.getField(labeled[1]));
+        var roll = d(parseInt(labeled[2], 10));
+        var total = mod + roll;
+        if (total < 0) total = 0;
+        return { total: total, text: labeled[1] + " " + fmt(mod) + " + d" + labeled[2] + " (" + roll + ") = " + total };
+      }
+      var die = /^d(\d+)$/.exec(spec || "");
+      if (die) {
+        var n = d(parseInt(die[1], 10));
+        return { total: n, text: "d" + die[1] + " = " + n };
+      }
+      var flat = parseInt(spec, 10);
+      if (!isNaN(flat)) return { total: Math.max(0, flat), text: String(flat) };
+      return { total: 0, text: "0" };
+    }
+    function changeOil(delta) {
+      var cur = num(vtt.getField("oil_n"));
+      var next = cur + delta;
+      var overflow = 0;
+      if (next > 8) { overflow = next - 8; next = 8; }
+      if (next < 0) next = 0;
+      vtt.setField("oil_n", String(next));
+      if (next < cur) {
+        for (var i = next + 1; i <= 8; i++) {
+          for (var r = 1; r <= 3; r++) vtt.setField("oil_" + i + "_" + r, false);
+        }
+      }
+      return { next: next, overflow: overflow };
+    }
+    function clearOil() {
+      vtt.setField("oil_n", "0");
+      for (var i = 1; i <= 8; i++) {
+        for (var r = 1; r <= 3; r++) vtt.setField("oil_" + i + "_" + r, false);
+      }
+    }
+    function takeStartingOil(e) {
+      if (!e.oil && !e.oil2) return "";
+      var parts = [];
+      var total = 0;
+      if (e.oil) {
+        var a = resolveOil(e.oil);
+        total += a.total;
+        parts.push(a.text);
+      }
+      if (e.oil2) {
+        var b = resolveOil(e.oil2);
+        total += b.total;
+        parts.push(b.text);
+      }
+      var moved = changeOil(total);
+      var msg = "Starting oil: " + parts.join(" and ") + ".";
+      if (moved.overflow) msg += " Tracker holds 8; " + moved.overflow + " did not fit.";
+      return msg;
+    }
+    function copyItem(src) {
+      return {
+        _id: src._id || "",
+        name: src.name,
+        kind: src.kind || "item",
+        roll: src.roll || "",
+        note: src.note || "",
+        oil: src.oil || "",
+        oil2: src.oil2 || "",
+        capacity: src.capacity || 0,
+        shieldDie: src.shieldDie || "",
+        shieldNote: src.shieldNote || "",
+        doses: src.doses || ""
+      };
+    }
+    function materialize(src) {
+      var e = copyItem(src);
+      e.note = String(e.note || "").replace(/\{(agi|pre|str|tou|kno)\+d(\d+)\}/g, function (_m, ab, sides) {
+        var mod = num(vtt.getField(ab));
+        var roll = d(parseInt(sides, 10));
+        var total = mod + roll;
+        if (total < 0) total = 0;
+        return String(total) + " (" + ab + " " + fmt(mod) + "+d" + sides + " " + roll + ")";
+      });
+      if (e.doses) {
+        var rolled = rollSpec(e.doses);
+        e.note += (e.note ? " " : "") + "Count: " + rolled.total + " (" + e.doses + " " + rolled.text + ").";
+      }
+      if (e.capacity) {
+        e.note += (e.note ? " " : "") + "Capacity " + e.capacity + ". Out of oil the weapon deals d6. Reload is 1 maneuver.";
+      }
+      var oilMsg = takeStartingOil(e);
+      if (oilMsg) e.note += (e.note ? " " : "") + oilMsg;
+      return e;
+    }
+    function clearSlots(prefix, count, keys) {
+      for (var i = 0; i < count; i++) {
+        for (var k = 0; k < keys.length; k++) vtt.setField(prefix + "_" + i + "_" + keys[k], "");
+      }
+    }
+    function clearGear() {
+      vtt.setField("wpn1_name", "");
+      vtt.setField("wpn1_dmg", "");
+      vtt.setField("wpn1_note", "");
+      vtt.setField("wpn2_name", "");
+      vtt.setField("wpn2_dmg", "");
+      vtt.setField("wpn2_note", "");
+      vtt.setField("armor_name", "");
+      vtt.setField("armor_die", "");
+      vtt.setField("armor_note", "");
+      vtt.setField("shield", false);
+      vtt.setField("shield_die", "");
+      vtt.setField("shield_note", "");
+      clearSlots("inv", INV_N, ["name", "note", "roll"]);
+      clearSlots("spell", SPELL_N, ["name", "note", "roll"]);
+      clearSlots("feat", FEAT_N, ["name", "note", "roll"]);
+      for (var b = 1; b <= 5; b++) vtt.setField("brut_" + b, false);
+      vtt.setField("cadaver_used", false);
+      vtt.setField("oil_addict_used", false);
+      vtt.setField("dizzy", false);
+      vtt.setField("infected", false);
+      vtt.setField("corpse_n", "0");
+      vtt.setField("pact_used", "0");
+      clearOil();
+    }
+    function putInv(e) {
+      for (var i = 0; i < INV_N; i++) {
+        if (blank("inv_" + i + "_name")) {
+          vtt.setField("inv_" + i + "_name", e.name);
+          vtt.setField("inv_" + i + "_note", e.note || "");
+          vtt.setField("inv_" + i + "_roll", e.roll || "");
+          setRollLabel("inv_" + i, e.name);
+          return "pack " + (i + 1);
+        }
+      }
+      return "";
+    }
+    function asItem(e) {
+      e.kind = "item";
+      if (e.roll && String(e.note).indexOf(e.roll) === -1) {
+        e.note = (e.note ? e.note + " " : "") + "Roll: " + e.roll + ".";
+      }
+      return e;
+    }
+    function putWeapon(e) {
+      for (var s = 1; s <= 2; s++) {
+        if (blank("wpn" + s + "_name")) {
+          vtt.setField("wpn" + s + "_name", e.name);
+          vtt.setField("wpn" + s + "_dmg", e.roll || "");
+          vtt.setField("wpn" + s + "_note", e.note || "");
+          setRollLabel("wpn" + s, e.name);
+          return "weapon " + s;
+        }
+      }
+      return putInv(asItem(e));
+    }
+    function putArmor(e) {
+      vtt.setField("armor_name", e.name);
+      vtt.setField("armor_die", e.roll || "");
+      vtt.setField("armor_note", e.note || "");
+      setRollLabel("armor", e.name);
+      return "armor";
+    }
+    function putNamed(prefix, count, e) {
+      for (var i = 0; i < count; i++) {
+        if (blank(prefix + "_" + i + "_name")) {
+          vtt.setField(prefix + "_" + i + "_name", e.name);
+          vtt.setField(prefix + "_" + i + "_note", e.note || "");
+          vtt.setField(prefix + "_" + i + "_roll", e.roll || "");
+          setRollLabel(prefix + "_" + i, e.name);
+          return prefix + " " + (i + 1);
+        }
+      }
+      return putInv(asItem(e));
+    }
+    function put(e) {
+      if (e.kind === "weapon") return putWeapon(e);
+      if (e.kind === "armor") return putArmor(e);
+      if (e.kind === "spell") return putNamed("spell", SPELL_N, e);
+      if (e.kind === "power") return putNamed("feat", FEAT_N, e);
+      return putInv(e);
+    }
+    function applyShield(e) {
+      vtt.setField("shield", true);
+      vtt.setField("shield_die", e.shieldDie);
+      vtt.setField("shield_note", e.shieldNote || "");
+      setRollLabel("shield", e.name || "Shield");
+    }
+    function place(src, nested) {
+      if (!src) return "";
+      if (src.kind === "rollweapon") {
+        if (vtt.getField("class_id") === "sack") return "The sack cannot wield a weapon.";
+        return "d8 weapon: " + place(WEAPONS[d(WEAPONS.length) - 1], true);
+      }
+      if (src.kind === "rollspell") {
+        if (vtt.getField("class_id") === "sack") return "The sack cannot cast spells.";
+        return "d12 spell: " + place(SPELLS[d(SPELLS.length) - 1], true);
+      }
+      if (src.kind === "rollspecial") {
+        if (vtt.getField("class_id") === "sack") return "The sack cannot wield a weapon.";
+        return "special: " + place(SPECIALS[d(SPECIALS.length) - 1], true);
+      }
+      if (src.kind === "oil") {
+        var got = resolveOil(src.oil || "1");
+        var moved = changeOil(got.total);
+        var oilLine = src.name + " -> oil +" + got.total + " (" + got.text + "), track " + moved.next;
+        if (moved.overflow) oilLine += ", " + moved.overflow + " past 8 jugs";
+        return oilLine;
+      }
+      if (vtt.getField("class_id") === "sack" && src._id !== "maws" && src.kind !== "power") {
+        return "The sack cannot carry " + (src.name || "that") + ".";
+      }
+      var e = materialize(src);
+      var slot = put(e);
+      if (!slot) return "NO ROOM: " + e.name + (e.note ? " — " + e.note : "");
+      if (e.shieldDie) applyShield(e);
+      var line = e.name + " -> " + slot + (e.roll ? " [" + e.roll + "]" : "");
+      var oilAt = String(e.note || "").indexOf("Starting oil");
+      if (oilAt >= 0) line += " | " + e.note.slice(oilAt);
+      if (!nested && src.also && ITEMS[src.also]) line += " + " + place(ITEMS[src.also], true);
+      return line;
+    }
+    function resetDr() {
+      ["dr_melee", "dr_ranged", "dr_def", "dr_agi", "dr_kno", "dr_power"].forEach(function (k) {
+        vtt.setField(k, "12");
+      });
+    }
+    function rollAbilities(cls) {
+      var boosts = [];
+      if (cls.boosts) {
+        ABILS.forEach(function (k) { if (vtt.getField("boost_" + k)) boosts.push(k); });
+        if (!boosts.length) {
+          var pool = ABILS.slice();
+          while (boosts.length < 2) boosts.push(pool.splice(d(pool.length) - 1, 1)[0]);
+          logLine("4d6: none checked, so " + boosts.map(function (k) { return ABL[k]; }).join(", "));
+        } else if (boosts.length > 2) {
+          var skipped = boosts.slice(2);
+          boosts = boosts.slice(0, 2);
+          logLine("4d6: only the first two count. Skipped " + skipped.map(function (k) { return ABL[k]; }).join(", "));
+        }
+      }
+      var mods = {};
+      ABILS.forEach(function (k) {
+        var four = !!(cls.boosts && boosts.indexOf(k) >= 0);
+        var bonus = cls.bonus && cls.bonus[k] ? cls.bonus[k] : 0;
+        var res = rollAbility(bonus, four);
+        mods[k] = res.mod;
+        vtt.setField(k, fmt(res.mod));
+        logLine(ABL[k] + ": " + res.text + " -> " + fmt(res.mod));
+      });
+      return mods;
+    }
+    function rollHp(cls, tou) {
+      if (cls.sack) {
+        var n = d(20);
+        logLine("HP: d20 = " + n);
+        return n;
+      }
+      var die = rollSpec(cls.hpDie);
+      var hp = tou + die.total + cls.hpFlat;
+      if (hp < 1) hp = 1;
+      logLine("HP: Toughness " + fmt(tou) + " + " + cls.hpDie + " (" + die.text + ") + " + cls.hpFlat + " = " + hp);
+      return hp;
+    }
+    function rollPowersNow() {
+      var sides = num(vtt.getField("power_die"));
+      if (sides <= 0) {
+        vtt.setField("pow_cur", "0");
+        vtt.setField("pow_max", "0");
+        return "Powers: none.";
+      }
+      var n = d(sides);
+      vtt.setField("pow_cur", String(n));
+      vtt.setField("pow_max", String(n));
+      return "Powers today: d" + sides + " = " + n + ".";
+    }
+    function rollName() {
+      var a = d(20);
+      var b = d(20);
+      var c = d(20);
+      var name = N1[a - 1] + " " + N2[b - 1] + " " + N3[c - 1];
+      return { name: name, text: "d20 " + a + " / " + b + " / " + c + " -> " + name };
+    }
+    function rollQuirk() {
+      var i = d(12);
+      var q = QUIRKS[i - 1];
+      vtt.setField("peculiarity", q.name + " — " + q.text);
+      return "Peculiarity d12=" + i + ": " + q.name;
+    }
+    function dirty() {
+      var keys = ["name", "class_name", "agi", "pre", "str", "tou", "kno", "hp_max", "silver"];
+      for (var i = 0; i < keys.length; i++) {
+        if (String(vtt.getField(keys[i]) || "").trim() !== "") return true;
+      }
+      return false;
+    }
+    function finishLog(append) {
+      syncLabels();
+      var text = genLines.join("\n");
+      genLines = null;
+      if (append) {
+        var old = vtt.getField("gen_log") || "";
+        vtt.setField("gen_log", old ? old + "\n" + text : text);
+      } else {
+        vtt.setField("gen_log", text);
+      }
+    }
+    function generate() {
+      if (dirty() && !confirm("Replace abilities, gear, spells, and powers? Notes stay.")) return;
+      genLines = [];
+      var pick = vtt.getField("class_pick") || "none";
+      var classId = pick === "random" ? ["putrid", "bonesaw", "void", "kerosene", "reptile", "gore"][d(6) - 1] : pick;
+      if (!CLASSES[classId]) classId = "none";
+      var cls = CLASSES[classId];
+      logLine("Class: " + cls.name + (pick === "random" ? " (random)" : ""));
+      vtt.setField("class_id", classId);
+      vtt.setField("class_name", cls.name);
+      vtt.setField("power_die", String(cls.powerDie));
+      vtt.setField("class_feature", cls.text);
+      vtt.setField("level", "1");
+      vtt.setField("status", "");
+      clearGear();
+      resetDr();
+      var abs = rollAbilities(cls);
+      var hp = rollHp(cls, abs.tou);
+      vtt.setField("hp_max", String(hp));
+      vtt.setField("hp_cur", String(hp));
+      var pacts = cls.pacts ? rollSpec(cls.pacts) : { total: 0, text: "0" };
+      vtt.setField("pact_cur", String(pacts.total));
+      vtt.setField("pact_max", String(pacts.total));
+      logLine("Pacts: " + (cls.pacts || "none") + " = " + pacts.total + (cls.pacts ? " (" + pacts.text + ")" : ""));
+      logLine(rollPowersNow());
+      var nm = rollName();
+      vtt.setField("name", nm.name);
+      logLine("Name: " + nm.text);
+      logLine(rollQuirk());
+      if (cls.sack) {
+        vtt.setField("silver", "0");
+        vtt.setField("food", "0");
+        logLine("Gear, silver, and food dissolved.");
+        logLine(place(ITEMS.maws));
+      } else {
+        var sil = rollSilver("2d6*10");
+        vtt.setField("silver", String(sil.total));
+        logLine("Silver: " + sil.text);
+        var days = d(4);
+        vtt.setField("food", String(days));
+        logLine("Food: d4 = " + days + " days.");
+        logLine(place(ITEMS.waterskin));
+        logLine(place({ name: "Food", kind: "item", note: days + " days of food." }));
+        (cls.extras || []).forEach(function (id) { logLine(place(ITEMS[id])); });
+        logLine("Weapon: " + place(WEAPONS[d(WEAPONS.length) - 1]));
+        logLine("Armor: " + place(ARMORS[d(ARMORS.length) - 1]));
+        logLine("Gear: " + place(ITEMS[EQUIP[d(EQUIP.length) - 1]]));
+        logLine("Gear: " + place(ITEMS[EQUIP[d(EQUIP.length) - 1]]));
+        if (cls.spell) logLine("Starting spell: " + place(SPELLS[d(SPELLS.length) - 1]));
+      }
+      cls.powers.forEach(function (pid) { logLine(place(ITEMS[pid])); });
+      finishLog(false);
+    }
+    function levelAbility(current) {
+      if (current <= 1) return { roll: null, next: current + 1, reason: "-3 to +1, always +1" };
+      var roll = d(6);
+      if (roll >= current) return { roll: roll, next: current + 1, reason: "d6 >= ability" };
+      return { roll: roll, next: current, reason: "d6 < ability, unchanged" };
+    }
+    function levelLoot() {
+      var r = d(6);
+      if (r === 1) return "Loot d6=1: nothing.";
+      if (r === 2) {
+        var g = rollSpec("3d10");
+        var sil = num(vtt.getField("silver")) + g.total;
+        vtt.setField("silver", String(sil));
+        return "Loot d6=2: 3d10 (" + g.text + ") = " + g.total + " silver. Total " + sil + ".";
+      }
+      if (r === 3) {
+        var got = resolveOil("d4");
+        var moved = changeOil(got.total);
+        return "Loot d6=3: oil " + got.text + ". Track " + moved.next + (moved.overflow ? ", overflow " + moved.overflow : "") + ".";
+      }
+      if (r === 4) return "Loot d6=4: " + place(ITEMS[EQUIP[d(EQUIP.length) - 1]]);
+      if (r === 5) return "Loot d6=5: " + place(SPELLS[d(SPELLS.length) - 1]);
+      return "Loot d6=6: " + place(WEAPONS[d(WEAPONS.length) - 1]);
+    }
+    function levelUp() {
+      if (!String(vtt.getField("hp_max") || "").trim() && !String(vtt.getField("str") || "").trim()) {
+        alert("Generate a character first.");
+        return;
+      }
+      genLines = [];
+      logLine("— level up —");
+      var lvl = num(vtt.getField("level"));
+      if (lvl < 1) lvl = 1;
+      vtt.setField("level", String(lvl + 1));
+      logLine("Level " + (lvl + 1) + ".");
+      var gain = d(4);
+      var max = num(vtt.getField("hp_max")) + gain;
+      vtt.setField("hp_max", String(max));
+      logLine("Max HP +d4 (" + gain + ") = " + max + ".");
+      ABILS.forEach(function (k) {
+        var cur = num(vtt.getField(k));
+        var imp = levelAbility(cur);
+        vtt.setField(k, fmt(imp.next));
+        logLine(ABL[k] + ": " + (imp.roll ? "d6=" + imp.roll + ", " : "") + imp.reason + ". " + fmt(cur) + " -> " + fmt(imp.next));
+      });
+      logLine(levelLoot());
+      finishLog(true);
+    }
+    function becomeSack() {
+      if (!confirm("Become the Abominable Sack of Shit? Gear dissolves. Abilities and HP are rerolled. Notes stay.")) return;
+      genLines = [];
+      logLine("— rebirth: Abominable Sack of Shit —");
+      var cls = CLASSES.sack;
+      vtt.setField("class_id", "sack");
+      vtt.setField("class_name", cls.name);
+      vtt.setField("power_die", "0");
+      vtt.setField("class_feature", cls.text);
+      clearGear();
+      var abs = rollAbilities(cls);
+      var hp = rollHp(cls, abs.tou);
+      vtt.setField("hp_max", String(hp));
+      vtt.setField("hp_cur", String(hp));
+      vtt.setField("pact_cur", "0");
+      vtt.setField("pact_max", "0");
+      vtt.setField("pow_cur", "0");
+      vtt.setField("pow_max", "0");
+      vtt.setField("silver", "0");
+      vtt.setField("food", "0");
+      logLine("Gear, silver, and food dissolved.");
+      logLine(place(ITEMS.maws));
+      cls.powers.forEach(function (pid) { logLine(place(ITEMS[pid])); });
+      finishLog(true);
+    }
+    function dawn() {
+      var used = num(vtt.getField("pact_used"));
+      var rolls = [];
+      for (var i = 0; i < used; i++) rolls.push(d(6));
+      var counts = {};
+      var sixes = 0;
+      rolls.forEach(function (r) {
+        counts[r] = (counts[r] || 0) + 1;
+        if (r === 6) sixes++;
+      });
+      var doubles = [];
+      Object.keys(counts).forEach(function (k) { if (counts[k] >= 2) doubles.push(k); });
+      var msg = "Dawn of Demise: " + (used ? rolls.join(", ") : "no pacts were used");
+      if (sixes >= 3) msg += ". FINAL RIFT.";
+      else if (doubles.length) msg += ". Double " + doubles.join(", ") + ": a new Rift opens.";
+      else if (used) msg += ". No doubles.";
+      vtt.setField("pact_used", "0");
+      vtt.setField("oil_addict_used", false);
+      vtt.setField("cadaver_used", false);
+      vtt.setField("dizzy", false);
+      msg += " " + rollPowersNow();
+      msg += " Pacts stayed at " + num(vtt.getField("pact_cur")) + ".";
+      logLine(msg);
+    }
+    function spendPact(reason) {
+      var c = num(vtt.getField("pact_cur"));
+      if (c <= 0) { logLine("No pacts left."); return; }
+      vtt.setField("pact_cur", String(c - 1));
+      vtt.setField("pact_used", String(num(vtt.getField("pact_used")) + 1));
+      logLine(reason + " Pacts left: " + (c - 1) + ". Dice set aside for dawn: " + vtt.getField("pact_used") + ".");
+    }
+    function spendPower() {
+      var c = num(vtt.getField("pow_cur"));
+      if (c <= 0) { logLine("No powers left today."); return; }
+      vtt.setField("pow_cur", String(c - 1));
+      logLine("Power spent. " + (c - 1) + " left. Test Presence. On a failure, roll the d4 and check Dizzy.");
+    }
+    function burnRound() {
+      var n = num(vtt.getField("oil_n"));
+      if (n <= 0) { logLine("No oil. Motorized weapons deal d6."); return; }
+      for (var i = 1; i <= n; i++) {
+        for (var r = 1; r <= 3; r++) {
+          var key = "oil_" + i + "_" + r;
+          if (!vtt.getField(key)) {
+            vtt.setField(key, true);
+            logLine("Oil: jug " + i + ", round " + r + " of 3 marked.");
+            if (r === 3) logLine("Jug " + i + " is empty.");
+            return;
+          }
+        }
+      }
+      logLine("Every carried jug is empty. Motorized weapons deal d6 until you refuel.");
+    }
+    function drinkOil() {
+      if (vtt.getField("class_id") !== "kerosene" && !featNamed("Oil Addict")) {
+        logLine("Oil Addict is the Kerosene Sorcerer's power.");
+        return;
+      }
+      if (vtt.getField("oil_addict_used")) { logLine("Oil Addict was already used today."); return; }
+      if (num(vtt.getField("oil_n")) <= 0) { logLine("No oil to drink."); return; }
+      changeOil(-1);
+      vtt.setField("oil_addict_used", true);
+      var n = d(2);
+      var cur = num(vtt.getField("pow_cur"));
+      var max = num(vtt.getField("pow_max"));
+      var next = cur + n;
+      if (max > 0 && next > max) next = max;
+      vtt.setField("pow_cur", String(next));
+      logLine("Oil Addict: drank 1 jug, d2=" + n + ". Powers " + next + "/" + max + ". +1 DR to Agility tests for an hour.");
+    }
+    function wakeDead() {
+      if (vtt.getField("class_id") !== "putrid" && !featNamed("Waking the Cadaver")) {
+        logLine("Waking the Cadaver is the Putrid Death Sorcerer's power.");
+        return;
+      }
+      if (vtt.getField("cadaver_used")) { logLine("Waking the Cadaver was already used today."); return; }
+      vtt.setField("cadaver_used", true);
+      var bodies = d(6);
+      var hours = d(6);
+      logLine("Waking the Cadaver: " + bodies + " corpses for " + hours + " hours. Walking Cadaver HP 2, scratch and bite d4. They need tissue.");
+    }
+    function surgery() {
+      if (vtt.getField("class_id") !== "bonesaw" && !featNamed("Bonesaw Surgery")) {
+        logLine("Bonesaw Surgery is the Bonesaw Surgeon's power.");
+        return;
+      }
+      var n = d(6);
+      var msg = "Bonesaw Surgery d6=" + n + ". ";
+      if (n === 1) msg += "The limb is amputated and the patient takes d6, unless this was a vital organ: then they die.";
+      else if (n === 6) msg += "Heal 6 HP.";
+      else msg += "Heal " + n + " HP.";
+      logLine(msg);
+    }
+    function devour() {
+      if (vtt.getField("class_id") !== "sack") {
+        logLine("Corpse Absorber belongs to the Abominable Sack of Shit.");
+        return;
+      }
+      var n = num(vtt.getField("corpse_n")) + 1;
+      vtt.setField("corpse_n", String(n));
+      var msg = "Corpse " + n + " absorbed.";
+      if (n % 5 === 0) {
+        var hp = num(vtt.getField("hp_max")) + 1;
+        var tou = num(vtt.getField("tou")) + 1;
+        var agi = num(vtt.getField("agi")) - 1;
+        vtt.setField("hp_max", String(hp));
+        vtt.setField("tou", fmt(tou));
+        vtt.setField("agi", fmt(agi));
+        msg += " Every 5: max HP " + hp + ", Toughness " + fmt(tou) + ", Agility " + fmt(agi) + ".";
+      }
+      logLine(msg);
+    }
+    function takeBrutality() {
+      var blessed = vtt.getField("class_id") === "gore" || featNamed("Blessed by the Brutal");
+      var roll = null;
+      var want = 1;
+      if (blessed) {
+        roll = d(6);
+        if (roll >= 5) want = 2;
+      }
+      var got = 0;
+      for (var n = 0; n < want; n++) {
+        for (var i = 1; i <= 5; i++) {
+          if (!vtt.getField("brut_" + i)) {
+            vtt.setField("brut_" + i, true);
+            got++;
+            break;
+          }
+        }
+      }
+      var msg = "Brutality +" + got + ".";
+      if (roll) msg += " Blessed by the Brutal d6=" + roll + ".";
+      if (got < want) msg += " The meter is full.";
+      logLine(msg);
+    }
+    function unleash() {
+      for (var i = 1; i <= 5; i++) {
+        if (!vtt.getField("brut_" + i)) { logLine("The Brutality meter is not full."); return; }
+      }
+      for (var j = 1; j <= 5; j++) vtt.setField("brut_" + j, false);
+      logLine("Brutality attack: autohit, armor is ignored, the damage die is doubled, and maximums explode. Roll 2x die.");
+    }
+    function heal(sides, label) {
+      if (vtt.getField("infected")) { logLine(label + ": infection, no healing."); return; }
+      var n = d(sides);
+      var cur = num(vtt.getField("hp_cur")) + n;
+      var max = num(vtt.getField("hp_max"));
+      if (max > 0 && cur > max) cur = max;
+      vtt.setField("hp_cur", String(cur));
+      logLine(label + ": d" + sides + " = " + n + " -> " + cur + " HP.");
+    }
+    function hurt(sides, label) {
+      var n = d(sides);
+      var cur = num(vtt.getField("hp_cur")) - n;
+      vtt.setField("hp_cur", String(cur));
+      var tail = cur < 0 ? " Negative HP: dead." : (cur === 0 ? " 0 HP: roll Broken." : "");
+      logLine(label + ": -" + n + " -> " + cur + " HP." + tail);
+    }
+    function rollBroken() {
+      var r = d(4);
+      var text;
+      if (r === 1) {
+        var rounds = d(4);
+        var hp = d(4);
+        text = "1 — unconscious for " + rounds + " rounds, then awake with " + hp + " HP.";
+        vtt.setField("hp_cur", String(hp));
+      } else if (r === 2) {
+        var limb = d(6);
+        var rounds2 = d(4);
+        var hp2 = d(4);
+        var part = limb === 6 ? "lost eye" : "broken or severed limb";
+        text = "2 — " + part + " (d6=" + limb + "). Can't act for " + rounds2 + " rounds, then " + hp2 + " HP.";
+        vtt.setField("hp_cur", String(hp2));
+      } else if (r === 3) {
+        var hours = d(2);
+        text = "3 — hemorrhage. Death in " + hours + " hour(s) unless treated. Tests are DR 16 the first hour and DR 18 the last.";
+      } else {
+        text = "4 — dead.";
+        vtt.setField("hp_cur", "0");
+      }
+      vtt.setField("status", text);
+      logLine("Broken: " + text);
+    }
+    function rerollQuirk() {
+      if (String(vtt.getField("peculiarity") || "").trim() && !confirm("Replace the peculiarity?")) return;
+      logLine(rollQuirk());
+    }
+    function fillClassCard(classId) {
+      var cls = CLASSES[classId];
+      if (!cls) return;
+      vtt.setField("class_id", classId);
+      vtt.setField("class_name", cls.name);
+      vtt.setField("power_die", String(cls.powerDie));
+      vtt.setField("class_feature", cls.text);
+      cls.powers.forEach(function (pid) {
+        if (!featNamed(ITEMS[pid].name)) logLine("Class power: " + place(ITEMS[pid]));
+      });
+      logLine("Class card: " + cls.name + ". Abilities, HP, and gear were not rerolled.");
+      syncLabels();
+    }
+    function doc() { return vtt.root.ownerDocument; }
+    function buildCatalog() {
+      var list = vtt.root.querySelector("[data-catalog-list]");
+      if (!list || !doc()) return;
+      list.textContent = "";
+      CATALOG.forEach(function (item) {
+        var row = doc().createElement("div");
+        row.className = "md-cat-item";
+        row.setAttribute("data-cat", item.cat);
+        var info = doc().createElement("div");
+        var title = doc().createElement("strong");
+        title.textContent = item.name;
+        var meta = doc().createElement("small");
+        var bits = [];
+        if (item.roll) bits.push(item.roll);
+        if (item.capacity) bits.push("capacity " + item.capacity);
+        meta.textContent = bits.length ? " " + bits.join(" · ") : "";
+        var p = doc().createElement("p");
+        p.textContent = item.note || "";
+        info.appendChild(title);
+        info.appendChild(meta);
+        info.appendChild(p);
+        var btn = doc().createElement("button");
+        btn.type = "button";
+        btn.className = "md-btn";
+        btn.textContent = "Add";
+        btn.setAttribute("data-add", item._id);
+        row.appendChild(info);
+        row.appendChild(btn);
+        list.appendChild(row);
+      });
+    }
+    function applyFilter() {
+      var input = vtt.root.querySelector("[data-filter]");
+      var q = input ? String(input.value || "").toLowerCase() : "";
+      vtt.root.querySelectorAll(".md-cat-item").forEach(function (row) {
+        var okCat = currentCat === "all" || row.getAttribute("data-cat") === currentCat;
+        var okQ = !q || String(row.textContent || "").toLowerCase().indexOf(q) !== -1;
+        row.style.display = okCat && okQ ? "" : "none";
+      });
+    }
+    function toggleCatalog() {
+      var el = vtt.root.querySelector(".md-catalog");
+      if (!el) return;
+      el.hidden = !el.hidden;
+    }
+    function onAdd(e) {
+      var btn = e.target && e.target.closest ? e.target.closest("[data-add]") : null;
+      if (!btn || !vtt.root.contains(btn)) return;
+      var src = ITEMS[btn.getAttribute("data-add")];
+      if (!src) return;
+      if (src.kind === "class") {
+        fillClassCard(src.classId);
+        return;
+      }
+      var line = place(src);
+      if (line.indexOf("NO ROOM") === 0 || line.indexOf("The sack") === 0) alert(line);
+      else logLine("Added: " + line);
+      syncLabels();
+    }
+    function onAction(e) {
+      var action = e.currentTarget.getAttribute("data-action");
+      if (action === "generate") generate();
+      else if (action === "level") levelUp();
+      else if (action === "sack") becomeSack();
+      else if (action === "dawn") dawn();
+      else if (action === "power-spend") spendPower();
+      else if (action === "pact-max") spendPact("Pact: deal maximum damage.");
+      else if (action === "pact-reroll") spendPact("Pact: reroll any die.");
+      else if (action === "pact-lower") spendPact("Pact: lower the damage you take. Roll the d6.");
+      else if (action === "pact-crit") spendPact("Pact: negate a crit or a fumble.");
+      else if (action === "pact-dr") spendPact("Pact: lower one test's DR by 4.");
+      else if (action === "oil-round") burnRound();
+      else if (action === "oil-drink") drinkOil();
+      else if (action === "wake") wakeDead();
+      else if (action === "surgery") surgery();
+      else if (action === "devour") devour();
+      else if (action === "brut-point") takeBrutality();
+      else if (action === "brut-unleash") unleash();
+      else if (action === "heal-breath") heal(4, "Breath");
+      else if (action === "heal-sleep") heal(6, "Sleep");
+      else if (action === "infect-day") hurt(6, "Infection");
+      else if (action === "broken") rollBroken();
+      else if (action === "quirk") rerollQuirk();
+      else if (action === "catalog") toggleCatalog();
+    }
+    function initBoosts() {
+      var snap = vtt.fields || {};
+      if (snap.boost_agi === undefined && snap.boost_pre === undefined && snap.boost_str === undefined && snap.boost_tou === undefined && snap.boost_kno === undefined) {
+        vtt.setField("boost_str", true);
+        vtt.setField("boost_tou", true);
+      }
+    }
+
+    vtt.onMount(function () {
+      vtt.root.querySelectorAll("[data-action]").forEach(function (el) {
+        el.addEventListener("click", onAction);
+      });
+      var cat = vtt.root.querySelector(".md-catalog");
+      if (cat) cat.addEventListener("click", onAdd);
+      var filter = vtt.root.querySelector("[data-filter]");
+      if (filter) filter.addEventListener("input", applyFilter);
+      vtt.root.querySelectorAll("[data-cat-tab]").forEach(function (el) {
+        el.addEventListener("click", function (ev) {
+          currentCat = ev.currentTarget.getAttribute("data-cat-tab") || "all";
+          applyFilter();
+        });
+      });
+      buildCatalog();
+      initBoosts();
+      syncLabels();
+    });
+
+    vtt.onFieldChange(function (name) {
+      if (/_name$/.test(name) || name === "wpn1_dmg" || name === "wpn2_dmg") syncLabels();
+    });
+  </script>
+</body>
+</html>

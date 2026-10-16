@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Mörk Borg</title>
+  <style>
+    .mb {
+      background: #12110c;
+      color: #f3e27a;
+      padding: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    .mb h1 {
+      font-family: Impact, "Arial Narrow", sans-serif;
+      letter-spacing: 0.16em;
+      text-align: center;
+      margin: 0;
+      font-size: 1.7rem;
+      color: #f6e35b;
+    }
+    .mb .tag {
+      text-align: center;
+      margin: 0 0 8px;
+      color: #e24b32;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+    }
+    .mb .tpl-table {
+      background: #1a1812;
+      border-color: #f6e35b;
+      margin: 0 0 8px;
+      width: 100%;
+    }
+    .mb .tpl-table td {
+      border: 1px solid #3d3624;
+      color: #f3e27a;
+      vertical-align: middle;
+      padding: 4px 6px;
+    }
+    .mb .section-header {
+      background: #9d2b1f;
+      color: #f6e35b;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: Impact, "Arial Narrow", sans-serif;
+    }
+    .mb .section-header-sm {
+      background: #2a2418;
+      color: #f6e35b;
+    }
+    .mb input[type="text"],
+    .mb textarea,
+    .mb select {
+      color: #f6e35b;
+      background: transparent;
+    }
+    .mb input.box,
+    .mb input.circle,
+    .mb select {
+      background: #0e0d0a;
+      border-color: #f6e35b;
+      color: #f6e35b;
+    }
+    .mb input.plain,
+    .mb textarea.plain {
+      border-bottom-color: rgba(246, 227, 91, 0.35);
+    }
+    .mb textarea { width: 100%; }
+    .mb small { color: #cbbd86; }
+    .mb .mb-btn {
+      background: #f6e35b;
+      color: #1a1208;
+      border: none;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: Impact, "Arial Narrow", sans-serif;
+      letter-spacing: 0.05em;
+    }
+    .mb .mb-btn.ghost {
+      background: transparent;
+      color: #f6e35b;
+      border: 1px solid #f6e35b;
+    }
+    .mb .mb-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .mb .mb-controls label { font-size: 0.78rem; margin-right: 4px; }
+    .mb .mb-catalog {
+      border: 1px solid #f6e35b;
+      background: #0e0d0a;
+      padding: 6px;
+      margin: 0 0 8px;
+      max-height: 380px;
+      overflow: auto;
+    }
+    .mb .mb-catalog[hidden] { display: none; }
+    .mb .mb-cat-item {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #3d3624;
+      padding: 5px 0;
+    }
+    .mb .mb-cat-item p { margin: 2px 0 0; color: #e6d7a1; font-size: 0.78rem; }
+    .mb .mb-search { min-width: 140px; flex: 1; }
+    .mb .warn { color: #ff6b4a; font-weight: 700; }
+    .mb .nowrap { white-space: nowrap; }
+    .mb .hint { font-size: 0.75rem; color: #cbbd86; margin: 0 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="mb">
+    <h1>MÖRK BORG</h1>
+    <p class="tag">Imię nic nie uratuje.</p>
+    <p class="hint">Generator liczy kości na karcie. Testy, ataki i kości przedmiotów idą na stół.</p>
+
+    <input data-field="class_id" type="hidden" value="none">
+    <input data-field="omen_die" type="hidden" value="2">
+    <input data-field="spec_ids" type="hidden" value="">
+    <input data-field="gutter_extra" type="hidden" value="">
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Nowa postać</td></tr>
+      <tr>
+        <td colspan="2">
+          <div class="mb-controls">
+            <select data-field="class_pick" value="none">
+              <option value="none">Bez klasy</option>
+              <option value="random">Losowa klasa (d6)</option>
+              <option value="fanged">Fanged Deserter</option>
+              <option value="gutter">Gutterborn Scum</option>
+              <option value="hermit">Esoteric Hermit</option>
+              <option value="royalty">Wretched Royalty</option>
+              <option value="priest">Heretical Priest</option>
+              <option value="herb">Occult Herbmaster</option>
+            </select>
+            <button type="button" class="mb-btn" data-action="generate">Nowa postać</button>
+            <button type="button" class="mb-btn ghost" data-action="session">Po sesji</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <small>Bez klasy, dwie cechy 4d6 odrzuć najniższą:</small>
+          <label><input data-field="boost_agi" type="checkbox"> Zwinność</label>
+          <label><input data-field="boost_pre" type="checkbox"> Prezencja</label>
+          <label><input data-field="boost_str" type="checkbox"> Siła</label>
+          <label><input data-field="boost_tou" type="checkbox"> Wytrzymałość</label>
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="6">Kim jesteś</td></tr>
+      <tr>
+        <td colspan="6"><strong>Imię</strong> <input data-field="name" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td colspan="6"><strong>Klasa</strong> <input data-field="class_name" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td class="center"><strong>Srebro</strong><br><input data-field="silver" type="text" class="box sm" autocomplete="off"></td>
+        <td class="center" colspan="2"><strong>Omeny</strong><br>
+          <input data-field="omen_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="omen_max" type="text" class="box xs" autocomplete="off">
+        </td>
+        <td class="center" colspan="2"><strong>PW</strong><br>
+          <input data-field="hp_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="hp_max" type="text" class="box xs" autocomplete="off">
+        </td>
+        <td class="center"><strong>Stan</strong><br><input data-field="status" type="text" class="plain" autocomplete="off"></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="4">Cechy</td></tr>
+      <tr>
+        <td class="center"><strong>Zwinność</strong><br><small>obrona, balans, pływanie, ucieczka</small><br><input data-field="agi" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Prezencja</strong><br><small>zmysły, cel, urok, moce</small><br><input data-field="pre" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Siła</strong><br><small>cios, dźwig, zwarcie</small><br><input data-field="str" type="text" class="circle" autocomplete="off"></td>
+        <td class="center"><strong>Wytrzymałość</strong><br><small>trucizna, chłód, upadek</small><br><input data-field="tou" type="text" class="circle" autocomplete="off"></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="2">Testy — d20 + cecha, sukces przy ≥ DR</td></tr>
+      <tr>
+        <td>Wręcz <small>Siła. Krytyk 20: ×2 i pancerz −1 tier. Fumble 1: broń pęka albo ginie.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_melee" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@str" data-roll-check="gte" data-roll-label="Wręcz" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Dystans <small>Prezencja</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_ranged" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@pre" data-roll-check="gte" data-roll-label="Dystans" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Obrona <small>Zwinność. Krytyk: wolny atak. Fumble: ×2 obrażeń i pancerz −1 tier.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_def" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@agi" data-roll-check="gte" data-roll-label="Obrona" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Zwinność <small>poza obroną</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_agi" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@agi" data-roll-check="gte" data-roll-label="Zwinność" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Moce <small>Prezencja DR. Porażka: −d2 PW, zawroty godzinę, moce zawodzą.</small></td>
+        <td class="center nowrap">
+          <input data-field="dr_power" type="text" class="box xs" value="12" autocomplete="off">
+          <button type="button" data-roll="d20+@pre" data-roll-check="gte" data-roll-label="Moce" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Użycia
+          <input data-field="pow_cur" type="text" class="box xs" autocomplete="off"> /
+          <input data-field="pow_max" type="text" class="box xs" autocomplete="off">
+          <button type="button" class="mb-btn" data-action="power-roll">Limit dnia</button>
+          <button type="button" class="mb-btn ghost" data-action="power-spend">Zużyj</button>
+        </td>
+        <td class="center nowrap">
+          <button type="button" data-roll="d2" data-roll-label="Porażka mocy" class="roll-btn" title="Obrażenia za porażkę mocy">d2</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <label><input data-field="illiterate" type="checkbox"> Niepiśmienny</label>
+          <br><input data-field="powers_note" type="text" class="plain wide" autocomplete="off">
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="3">Broń i pancerz</td></tr>
+      <tr>
+        <td>Broń 1 <input data-field="wpn1_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center nowrap" colspan="2">
+          <input data-field="wpn1_dmg" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="wpn1" data-roll-label="Broń 1" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Broń 2 <input data-field="wpn2_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center nowrap" colspan="2">
+          <input data-field="wpn2_dmg" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="wpn2" data-roll-label="Broń 2" class="roll-btn">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Pancerz <input data-field="armor_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="center">tier <input data-field="armor_tier" type="text" class="box xs" autocomplete="off"></td>
+        <td class="center nowrap">
+          <input data-field="armor_die" type="text" class="box sm" autocomplete="off">
+          <button type="button" data-roll="" data-roll-for="armor" data-roll-label="Pancerz" class="roll-btn" title="Redukcja obrażeń">🎲</button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3"><input data-field="armor_note" type="text" class="plain wide" autocomplete="off"></td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <label><input data-field="shield" type="checkbox"> Tarcza (−1 obrażeń, albo pęka i zeruje jeden atak)</label>
+          <input data-field="shield_note" type="text" class="plain wide" autocomplete="off">
+        </td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header" colspan="3">Plecak</td></tr>
+      <tr>
+        <td colspan="3">
+          <button type="button" class="mb-btn" data-action="catalog">🎒 Katalog</button>
+          <small>Dodaj wkłada broń w wolny slot, pancerz na siebie, resztę do plecaka — z kością gotową do rzutu.</small>
+          <br>Udźwig <span data-carry>0 / 8</span>
+          <small>Siła+8. Powyżej: DR Siły i Zwinności +2. Ponad dwa razy tyle: nie uniesiesz.</small>
+        </td>
+      </tr>
+    </table>
+
+    <div class="mb-catalog" hidden>
+      <div class="mb-controls">
+        <input data-filter type="text" class="box mb-search" placeholder="Szukaj" autocomplete="off">
+        <button type="button" class="mb-btn ghost" data-cat-tab="all">Wszystko</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="weapon">Broń</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="armor">Pancerz</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="gear">Ekwipunek</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="scroll">Zwoje</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="decoction">Dekokty</button>
+        <button type="button" class="mb-btn ghost" data-cat-tab="class">Klasy</button>
+        <button type="button" class="mb-btn" data-action="catalog">Zamknij</button>
+      </div>
+      <div data-catalog-list></div>
+    </div>
+
+    <table class="tpl-table">
+      <tr>
+        <td class="section-header-sm">Przedmiot</td>
+        <td class="section-header-sm">Opis</td>
+        <td class="section-header-sm">Rzut</td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_0_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_0_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_0_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_0" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_1_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_1_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_1_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_1" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_2_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_2_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_2_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_2" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_3_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_3_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_3_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_3" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_4_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_4_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_4_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_4" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_5_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_5_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_5_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_5" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_6_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_6_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_6_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_6" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_7_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_7_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_7_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_7" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_8_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_8_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_8_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_8" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_9_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_9_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_9_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_9" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_10_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_10_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_10_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_10" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+      <tr>
+        <td><input data-field="inv_11_name" type="text" class="plain wide" autocomplete="off"></td>
+        <td><input data-field="inv_11_note" type="text" class="plain wide" autocomplete="off"></td>
+        <td class="nowrap"><input data-field="inv_11_roll" type="text" class="box sm" autocomplete="off"> <button type="button" data-roll="" data-roll-for="inv_11" data-roll-label="Przedmiot" class="roll-btn">🎲</button></td>
+      </tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header">Pochodzenie</td></tr>
+      <tr><td><strong>Cecha</strong> <input data-field="trait1" type="text" class="plain wide" autocomplete="off"></td></tr>
+      <tr><td><strong>Cecha</strong> <input data-field="trait2" type="text" class="plain wide" autocomplete="off"></td></tr>
+      <tr><td><strong>Ciało</strong> <input data-field="body" type="text" class="plain wide" autocomplete="off"></td></tr>
+      <tr><td><strong>Nawyk</strong> <input data-field="habit" type="text" class="plain wide" autocomplete="off"></td></tr>
+      <tr><td><strong>Opowieść</strong><br><textarea data-field="tale" class="plain wide" rows="2"></textarea></td></tr>
+      <tr><td><strong>Skąd</strong><br><textarea data-field="origin" class="plain wide" rows="2"></textarea></td></tr>
+      <tr><td><strong>Dar klasy</strong><br><textarea data-field="class_feature" class="plain wide" rows="5"></textarea></td></tr>
+    </table>
+
+    <table class="tpl-table">
+      <tr><td class="section-header">Omeny, odpoczynek, śmierć</td></tr>
+      <tr>
+        <td>
+          <small>Omen: maksymalne obrażenia, przerzut (twój albo cudzy), −d6 otrzymanych obrażeń, zbicie krytyka lub fumble, DR testu −4. Po wyczerpaniu i 6 godzinach snu rzucasz kość omenów klasy.</small><br>
+          <button type="button" class="mb-btn" data-action="omen-spend">Wydaj omen</button>
+          <button type="button" class="mb-btn ghost" data-action="omen-rest">Sen 6h</button>
+          <button type="button" data-roll="d6" data-roll-label="Omen −obrażenia" class="roll-btn">−d6</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label><input data-field="infected" type="checkbox"> Infekcja (brak leczenia, −d6 PW dziennie)</label>
+          <label><input data-field="starving" type="checkbox"> Głód (brak leczenia; po dwóch dniach −d4 PW dziennie)</label><br>
+          <button type="button" class="mb-btn" data-action="heal-breath">Oddech d4</button>
+          <button type="button" class="mb-btn" data-action="heal-sleep">Sen d6</button>
+          <button type="button" class="mb-btn ghost" data-action="infect-day">Dzień infekcji</button>
+          <button type="button" class="mb-btn ghost" data-action="starve-day">Dzień głodu</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <small>0 PW — Broken (d4): 1 nieprzytomność, 2 kończyna albo oko, 3 krwotok, 4 śmierć. Ujemne PW: martwy.</small><br>
+          <button type="button" class="mb-btn" data-action="broken">Rzuć Broken</button>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Notatki</strong> <small>(generator ich nie rusza)</small><br><textarea data-field="notes" class="plain wide" rows="4"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Log rzutów karty</strong><br><textarea data-field="gen_log" class="plain wide" rows="8"></textarea></td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    var INV = 12;
+    var genLines = null;
+    var currentCat = "all";
+    var ITEMS = {};
+    var CATALOG = [];
+    var WEAPONS = [];
+    var ARMORS = [];
+    var SCROLLS_U = [];
+    var SCROLLS_S = [];
+    var DECOCTIONS = [];
+
+    function add(id, obj) {
+      obj._id = id;
+      obj.cat = obj.cat || "gear";
+      ITEMS[id] = obj;
+      if (obj.cat !== "hidden") CATALOG.push(obj);
+      return obj;
+    }
+
+    function W(id, name, roll, price, note) {
+      var obj = add(id, { name: name, kind: "weapon", roll: roll, price: price || "", note: note || "", cat: "weapon" });
+      return obj;
+    }
+
+    WEAPONS.push(W("femur", "Femur", "d4", "", "Bezwartościowa kość."));
+    WEAPONS.push(W("staff", "Staff", "d4", "5s", ""));
+    WEAPONS.push(W("shortsword", "Shortsword", "d4", "20s", ""));
+    WEAPONS.push(W("knife", "Knife", "d4", "10s", ""));
+    WEAPONS.push(W("warhammer", "Warhammer", "d6", "30s", ""));
+    WEAPONS.push(W("sword", "Sword", "d6", "30s", ""));
+    WEAPONS.push(W("bow", "Bow", "d6", "25s", "Strzały: {pre+10}."));
+    WEAPONS.push(W("flail", "Flail", "d8", "35s", ""));
+    WEAPONS.push(W("crossbow", "Crossbow", "d8", "40s", "Bełty: {pre+10}."));
+    WEAPONS.push(W("zwei", "Zweihänder", "d10", "60s", "Dwuręczna. Moce przy niej nie działają."));
+
+    W("battleaxe", "Battle axe", "d8", "35s", "");
+    W("club", "Club", "d6", "10s", "");
+    W("handaxe", "Handaxe", "d6", "15s", "");
+    W("mace", "Mace", "d6", "25s", "");
+    W("shortbow", "Shortbow", "d4", "13s", "Strzały: {pre+10}.");
+    W("sling", "Sling", "d4", "8s", "");
+    W("whip", "Whip", "d2", "5s", "");
+    W("hookHand", "Hak", "d6", "", "Zardzewiały hak zamiast dłoni.");
+    add("arrows", { name: "Strzały ×20", kind: "item", price: "10s", note: "20 strzał.", cat: "weapon" });
+    add("bolts", { name: "Bełty ×10", kind: "item", price: "10s", note: "10 bełtów.", cat: "weapon" });
+
+    ARMORS.push(add("armor0", { name: "Brak pancerza", kind: "armor", tier: "0", roll: "", price: "", note: "Tier 0. Broń improwizowana zadaje d4.", cat: "armor" }));
+    ARMORS.push(add("armor1", { name: "Lekki pancerz", kind: "armor", tier: "1", roll: "d2", price: "20s", note: "Futro, skóra, przeszywanica. Redukcja −d2. Tier 1.", cat: "armor" }));
+    ARMORS.push(add("armor2", { name: "Średni pancerz", kind: "armor", tier: "2", roll: "d4", price: "100s", note: "Łuski albo kolczuga. Redukcja −d4. Tier 2. DR +2 do testów Zwinności, także obrony. Moce nie działają (wyjątek: Heretical Priest).", cat: "armor" }));
+    ARMORS.push(add("armor3", { name: "Ciężki pancerz", kind: "armor", tier: "3", roll: "d6", price: "200s", note: "Zbroja płatowa. Redukcja −d6. Tier 3. DR +4 do Zwinności, obrona tylko +2. Moce nie działają.", cat: "armor" }));
+
+    add("shield", { name: "Tarcza", kind: "shield", price: "20s", note: "−1 obrażeń. Możesz wyzerować jeden atak, wtedy tarcza pęka.", cat: "armor" });
+
+    add("waterskin", { name: "Bukłak", kind: "item", price: "4s", note: "Woda na 4 dni." });
+    add("foodDay", { name: "Suszone jedzenie", kind: "item", price: "1s", note: "1 dzień." });
+    add("backpack", { name: "Plecak", kind: "item", price: "6s", note: "Mieści 7 zwykłych przedmiotów." });
+    add("sack", { name: "Worek", kind: "item", price: "3s", note: "Mieści 10 zwykłych przedmiotów." });
+    add("wagon", { name: "Mały wóz", kind: "item", price: "25s", note: "Możesz zamiast tego wziąć plecak, worek albo nic." });
+    add("donkey", { name: "Osioł", kind: "item", note: "Możesz zamiast tego wziąć wóz, plecak, worek albo nic." });
+    add("rope", { name: "Lina", kind: "item", price: "4s", note: "30 stóp." });
+    add("torches", { name: "Pochodnie", kind: "item", price: "2s/szt.", note: "Liczba: {pre+4}." });
+    add("lantern", { name: "Latarnia", kind: "item", price: "5s olej", note: "Olej na {pre+6} godzin." });
+    add("magnesium", { name: "Pasek magnezu", kind: "item", price: "4s", note: "" });
+    add("needle", { name: "Ostra igła", kind: "item", price: "3s", note: "" });
+    add("medicine", { name: "Medicine chest", kind: "item", price: "15s", roll: "d6", note: "Zatrzymuje krwawienie i infekcję, leczy d6. Użycia: {pre+4}." });
+    add("filepicks", { name: "Pilnik i wytrychy", kind: "item", price: "15s", note: "Pilnik 10s, wytrychy 5s." });
+    add("lockpicks", { name: "Wytrychy", kind: "item", price: "5s", note: "" });
+    add("trap", { name: "Pułapka na niedźwiedzie", kind: "item", price: "20s", roll: "d8", note: "Zauważenie: Prezencja DR 14. Obrażenia d8." });
+    add("bomb", { name: "Bomba", kind: "item", roll: "d10", note: "Zakorkowana butelka. d10 obrażeń." });
+    add("poisonRed", { name: "Poison (red)", kind: "item", price: "20s", roll: "d10", note: "Wytrzymałość DR 12 albo d10 obrażeń. 3 dawki.", cat: "gear" });
+    add("poisonRedStart", { name: "Poison (red)", kind: "item", roll: "d10", doses: "d4", note: "Wytrzymałość DR 12 albo d10 obrażeń.", cat: "hidden" });
+    add("poisonBlack", { name: "Poison (black)", kind: "item", price: "20s", roll: "d6", note: "Wytrzymałość DR 14 albo d6 obrażeń i ślepota na godzinę. 3 dawki." });
+    add("crucifix", { name: "Srebrny krucyfiks", kind: "item", price: "60s", note: "" });
+    add("crucifixWood", { name: "Drewniany krucyfiks", kind: "item", price: "8s", note: "" });
+    add("elixir", { name: "Life elixir", kind: "item", roll: "d6", doses: "d4", note: "Leczy d6 PW i zdejmuje infekcję." });
+    add("dog", { name: "Mały wściekły pies", kind: "item", roll: "d4", pack: "dog", note: "Słucha tylko ciebie. Ugryzienie d4." });
+    add("dogTrained", { name: "Pies (szkolony)", kind: "item", price: "25s", roll: "d4", note: "Ugryzienie jak broń improwizowana, d4." });
+    add("dogWild", { name: "Pies (dziki)", kind: "item", price: "10s", roll: "d4", note: "" });
+    add("monkeys", { name: "Małpy", kind: "item", roll: "d4", pack: "monkeys", note: "Ignorują cię, ale kochają. Cios albo ugryzienie d4." });
+    add("perfume", { name: "Wykwintne perfumy", kind: "item", price: "25s", note: "Warte 25s." });
+    add("toolbox", { name: "Skrzynka narzędzi", kind: "item", price: "20s", note: "10 gwoździ, obcęgi, młotek, mała piła i wiertło." });
+    add("chain", { name: "Ciężki łańcuch", kind: "item", price: "10s", note: "15 stóp." });
+    add("grapple", { name: "Hak abordażowy", kind: "item", price: "12s", roll: "d4", note: "Jako broń improwizowana: d4." });
+    add("crowbar", { name: "Łom", kind: "item", price: "8s", roll: "d4", note: "d4 obrażeń." });
+    add("lard", { name: "Smalec", kind: "item", price: "5s", note: "W potrzebie starcza za 5 posiłków." });
+    add("tent", { name: "Namiot", kind: "item", price: "12s", note: "" });
+    add("blanket", { name: "Koc", kind: "item", price: "4s", note: "" });
+    add("caltrops", { name: "Kolczatki", kind: "item", price: "7s", roll: "d4", note: "d4 obrażeń. 1 na 6: infekcja." });
+    add("chalk", { name: "Kreda", kind: "item", price: "1s", note: "" });
+    add("tobacco", { name: "Tytoń do żucia", kind: "item", price: "1s", note: "" });
+    add("firesteel", { name: "Krzesiwo", kind: "item", price: "4s", note: "" });
+    add("hammer", { name: "Młotek", kind: "item", price: "8s", roll: "d4", note: "Improwizowany, d4." });
+    add("nails", { name: "Gwoździe ×10", kind: "item", price: "10s", note: "" });
+    add("ladder", { name: "Drabina", kind: "item", price: "7s", note: "Nie liczy się jako zwykły przedmiot do udźwigu." });
+    add("oil", { name: "Olej do latarni", kind: "item", price: "5s", note: "Starcza na {pre+6} godzin." });
+    add("hookLarge", { name: "Duży żelazny hak", kind: "item", price: "9s", roll: "d4", note: "Improwizowany, d4." });
+    add("manacles", { name: "Kajdany", kind: "item", price: "10s", note: "" });
+    add("mattress", { name: "Materac", kind: "item", price: "3s", note: "" });
+    add("cleaver", { name: "Tasak", kind: "item", price: "15s", roll: "d4", note: "Księga nie daje osobnej kości. Traktuj jak broń improwizowaną, d4." });
+    add("mirror", { name: "Lustro", kind: "item", price: "15s", note: "" });
+    add("muzzle", { name: "Kaganiec", kind: "item", price: "6s", note: "" });
+    add("noose", { name: "Pętla", kind: "item", price: "5s", note: "" });
+    add("lamp", { name: "Lampa oliwna", kind: "item", price: "10s", note: "" });
+    add("corpse", { name: "Zakonserwowane zwłoki", kind: "item", pack: "corpse", note: "Cena 66+d6 s." });
+    add("salt", { name: "Sól", kind: "item", price: "4s", note: "" });
+    add("scissors", { name: "Nożyczki", kind: "item", price: "9s", roll: "d4", note: "Improwizowane, d4." });
+    add("torch", { name: "Pochodnia", kind: "item", price: "2s", note: "Jedna sztuka." });
+    add("horse", { name: "Koń", kind: "item", price: "80s", note: "" });
+    add("mule", { name: "Muł", kind: "item", price: "10s", note: "" });
+    add("rat", { name: "Szczur (oswojony)", kind: "item", price: "8s", note: "" });
+    add("lab", { name: "Przenośne laboratorium", kind: "item", cat: "class", note: "Codziennie dwa losowe dekokty i łącznie d4 dawek. Po 24 godzinach tracą moc." });
+
+    function scroll(id, name, roll, note, list) {
+      var obj = add(id, { name: name, kind: "item", roll: roll || "", note: note, scroll: true, cat: "scroll" });
+      list.push(obj);
+    }
+
+    scroll("su1", "Palms Open the Southern Gate", "d8", "Kula ognia trafia d2 istot. Każda dostaje d8 obrażeń.", SCROLLS_U);
+    scroll("su2", "Tongue of Eris", "", "Wybrana istota jest zdezorientowana przez 10 minut.", SCROLLS_U);
+    scroll("su3", "Te-le-kin-esis", "d10", "Przesuwasz przedmiot do d10×10 stóp przez d6 minut.", SCROLLS_U);
+    scroll("su4", "Lucy-Fires Levitation", "d10", "Unosisz się przez Prezencja + d10 rund.", SCROLLS_U);
+    scroll("su5", "Daemon of Capillaries", "d4", "Jedna istota dusi się d6 rund i traci d4 PW na rundę.", SCROLLS_U);
+    scroll("su6", "Nine Violet Signs Unknot the Storm", "d6", "d2 błyskawic, każda d6 obrażeń.", SCROLLS_U);
+    scroll("su7", "Metzhuotl Blind Your Eye", "d6", "Istota znika na d6 rund albo do zranienia. Atak i obrona DR 6.", SCROLLS_U);
+    scroll("su8", "Foul Psychopomp", "d6", "Wezwanie: d6. 1–3 to d4 szkieletów, 4–6 to d4 zombie.", SCROLLS_U);
+    scroll("su9", "Eyelid Blinds the Mind", "d4", "d4 istot zasypia na godzinę, chyba że zdadzą test DR 14.", SCROLLS_U);
+    scroll("su10", "Death", "4d10", "Wszystkie istoty w 30 stopach tracą łącznie 4d10 PW.", SCROLLS_U);
+
+    scroll("ss1", "Grace of a Dead Saint", "d10", "d2 istot odzyskuje po d10 PW.", SCROLLS_S);
+    scroll("ss2", "Grace for a Sinner", "d6", "Wybrana istota dostaje +d6 do jednego rzutu.", SCROLLS_S);
+    scroll("ss3", "Whispers Pass the Gate", "", "Trzy pytania do zmarłej istoty.", SCROLLS_S);
+    scroll("ss4", "Aegis of Sorrow", "2d6", "Wybrana istota dostaje 2d6 tymczasowych PW na 10 rund.", SCROLLS_S);
+    scroll("ss5", "Unmet Fate", "", "Istota martwa nie dłużej niż tydzień wstaje, z okropnymi wspomnieniami.", SCROLLS_S);
+    scroll("ss6", "Bestial Speech", "d20", "Rozmawiasz ze zwierzętami przez d20 minut.", SCROLLS_S);
+    scroll("ss7", "False Dawn / Night’s Chariot", "3d10", "Światło albo całkowita ciemność przez 3d10 minut.", SCROLLS_S);
+    scroll("ss8", "Hermetic Step", "2d10", "Widzisz wszystkie pułapki na drodze przez 2d10 minut.", SCROLLS_S);
+    scroll("ss9", "Roskoe’s Consuming Glare", "d8", "d4 istot traci po d8 PW.", SCROLLS_S);
+    scroll("ss10", "Enochian Syntax", "", "Jedna istota ślepo wykonuje jeden rozkaz.", SCROLLS_S);
+
+    function deco(id, name, roll, note) {
+      DECOCTIONS.push(add(id, { name: name, kind: "item", roll: roll || "", note: note, cat: "decoction" }));
+    }
+    deco("dec1", "Red poison", "d10", "Wytrzymałość DR 12 albo −d10 PW.");
+    deco("dec2", "Ezumiel’s Vapor", "d4", "Test DR 14 albo ciężkie halucynacje przez d4 godzin.");
+    deco("dec3", "Southern Frog Stew", "d4", "Wymioty przez d4 godzin. Test DR 14, inaczej nie zrobisz nic innego.");
+    deco("dec4", "Elixir Vitalis", "d6", "Leczy d6 PW i zatrzymuje infekcję. Może wejść w nawyk.");
+    deco("dec5", "Spider-Owl Soup", "", "Widzenie w ciemności i wspinaczka po ścianach przez 30 minut.");
+    deco("dec6", "Fernor’s Philtre", "d4", "Olejek do oka. Zdejmuje infekcję i daje +2 do testów Prezencji na d4 godzin.");
+    deco("dec7", "Hyphos’ Enervating Snuff", "", "Szał na jedną walkę: dwa ataki na rundę, obrona DR 14. Trzeba wciągnąć. Kichanie.");
+    deco("dec8", "Black poison", "d6", "Wytrzymałość DR 14 albo −d6 PW i ślepota na godzinę.");
+
+    add("scimitar", { name: "The Brown Scimitar of Galgenbeck", kind: "weapon", roll: "d6", cat: "class", note: "Atak i obrona DR 10, póki nią walczysz. 1 na 6: ranny wróg umiera z sepsy w 10 minut." });
+    add("wizardTeeth", { name: "Wizard teeth", kind: "item", roll: "d6", cat: "class", note: "Cztery zęby. Przed walką rzuć d6 za każdy. Każda 6: jeden atak zadaje maksymalne obrażenia." });
+    add("sigurd", { name: "Old Sigûrd’s sling", kind: "weapon", roll: "2d4", cat: "class", note: "Nigdy cię nie zawiodła. Potrzebuje kamieni wielkości pięści." });
+    add("gorehound", { name: "Ancient gore-hound", kind: "item", roll: "d6", cat: "class", note: "Węszy skarb w śmieciach. Atak DR 10, ugryzienie d6. Obrona DR 12, PW 10. Szał przy goblinach i berserkerach." });
+    add("deathshoe", { name: "The shoe of Death’s horse", kind: "weapon", roll: "d4", cat: "class", note: "W ręku atak DR 10. 1 na 6: rozbija czaszkę małego lub średniego stwora. Wraca do ręki." });
+    add("mask", { name: "Crumpled monster mask", kind: "item", cat: "class", note: "Gobliny, gnomy i dzieci sprawdzają morale co rundę, gdy maska jest na twarzy." });
+    add("boiling", { name: "Book of boiling blood", kind: "item", roll: "d6", cat: "class", note: "Raz dziennie. Wróg testuje DR 12, żeby przerwać czytanie. Porażka: D2 berserkerów. d6: 1–4 walczą przy tobie, 5–6 chcą zabić ciebie i zniszczyć księgę." });
+    add("harp", { name: "Harp of the undying", kind: "item", roll: "d4", cat: "class", note: "Muzyka daje +d4 do rzutów reakcji." });
+    add("hawk", { name: "Hawk", kind: "item", roll: "d4", cat: "class", note: "Atak i obrona DR 10, pazury albo ugryzienie d4, PW 8. Zwiad." });
+    add("ancestors", { name: "The blade of your ancestors", kind: "weapon", roll: "d6+1", cat: "class", note: "Mówiący miecz, który tobą gardzi. Atak i obrona DR 10. 1 na 6, że „przypadkiem” tnie ciebie albo sojusznika." });
+    add("poltroon", { name: "Poltroon the court jester", kind: "item", cat: "class", note: "Przez dwie pierwsze rundy walki ty i sojusznicy macie +2 do ataku i obrony." });
+    add("barbarister", { name: "Barbarister the incredible horse", kind: "item", cat: "class", note: "Mówiący, zarozumiały koń. Czasem +2 do testów Prezencji opartych na rozumie." });
+    add("eurekia", { name: "Eurekia", kind: "weapon", roll: "2d6", cat: "class", note: "Raz na walkę, jeśli giermek Hamfund żyje. Każde cięcie: d6, na 1 giermek ginie i miecz znika na zawsze." });
+    add("snakedagger", { name: "The snake-skin gift", kind: "weapon", roll: "d4", cat: "class", note: "Sztylet w jedwabiu. Na wyniku 1 cel umiera od trucizny." });
+    add("horn", { name: "Horn of the Schleswig lords", kind: "item", cat: "class", note: "Raz dziennie: Prezencja DR 12. Sukces: jedna istota automatycznie zdaje następny test poza walką." });
+    add("crook", { name: "Sacred shepherd’s crook", kind: "weapon", roll: "2d4", cat: "class", note: "Kostur z hakiem z kości. 2d4, ale nie przeciw ludziom bez wiary." });
+    add("mitre", { name: "Stolen mitre", kind: "item", cat: "class", note: "W walce obrona DR 10. Naciągnięta na uszy poza walką: skradanie przeciw DR 8." });
+    add("sinlist", { name: "List of sins", kind: "item", cat: "class", note: "Prezencja DR 10: złe istoty otacza światło. Obrona +2 przeciw odkrytym." });
+    add("bible", { name: "The blasphemous Nechrubel bible", kind: "item", roll: "d6", cat: "class", note: "Raz dziennie. Parzysty: do końca dnia odpoczynek 5 minut leczy d4 PW. Nieparzysty: halucynacje do świtu." });
+    add("stones", { name: "Stones from Thel-Emas", kind: "item", cat: "class", note: "Wzór mówi, czy w sąsiedniej komnacie jest niebezpieczeństwo. Mogą kłamać. Prezencja DR 10. Po porażce cisza do zachodu słońca." });
+    add("wrongjesus", { name: "(wrong Jesus) crucifix", kind: "item", cat: "class", note: "Nieumarli, mniejsi trolle i gobliny: morale ± twoja Prezencja. Mogą ukłonić się i odejść." });
+
+    var GEAR_A = ["rope", "torches", "lantern", "magnesium", "SCROLL_U", "needle", "medicine", "filepicks", "trap", "bomb", "poisonRedStart", "crucifix"];
+    var GEAR_B = ["elixir", "SCROLL_S", "dog", "monkeys", "perfume", "toolbox", "chain", "grapple", "shield", "crowbar", "lard", "tent"];
+
+    var NAMES = [
+      ["Aerg-Tval", "Agn", "Arvant", "Belsum", "Belum", "Brint", "Börda", "Daeru"],
+      ["Eldar", "Felban", "Gotven", "Graft", "Grin", "Grittr", "Haerü", "Hargha"],
+      ["Harmug", "Jotna", "Karg", "Karva", "Katla", "Keftar", "Klort", "Kratar"],
+      ["Kutz", "Kvetin", "Lygan", "Margar", "Merkari", "Nagl", "Niduk", "Nifehl"],
+      ["Prügl", "Qillnach", "Risten", "Svind", "Theras", "Therg", "Torvul", "Törn"],
+      ["Urm", "Urvarg", "Vagal", "Vatan", "Von", "Vrakh", "Vresi", "Wemut"]
+    ];
+
+    var TRAITS = [
+      "Ciągle rozdrażniony", "Kompleks niższości", "Problem z autorytetem", "Głośna gęba", "Okrutny",
+      "Egocentryczny", "Nihilista", "Skłonność do używek", "Rozdarty wewnętrznie", "Przebiegły",
+      "Mściwy", "Tchórzliwy", "Leniwy", "Podejrzliwy", "Bezwzględny",
+      "Zatroskany", "Zgorzkniały", "Kłamliwy", "Rozrzutny", "Arogancki"
+    ];
+    var BODIES = [
+      "Maniakalne spojrzenie.",
+      "Bluźniercze tatuaże.",
+      "Gnijąca twarz. Nosi maskę.",
+      "Brak trzech palców u stopy. Kuleje.",
+      "Zagłodzony: chudy i blady.",
+      "Hak zamiast dłoni (d6).",
+      "Zepsute zęby.",
+      "Upiornie piękny, niepokojąco czysty.",
+      "Dłonie w ranach.",
+      "Zaćma w obu oczach.",
+      "Splątane włosy i co najmniej jeden karaluch.",
+      "Zgniecione uszy.",
+      "Drgawki i jąkanie.",
+      "Otyły, żarłoczny, ślini się.",
+      "Dłoń bez kciuka i palca wskazującego.",
+      "Czerwony, spuchnięty nos pijaka.",
+      "Twarz wariata. Trudno o przyjaciół.",
+      "Grzybica stóp. Śmierdzi.",
+      "Świeżo rozcięte oko pod opaską.",
+      "Popękane, czarne paznokcie."
+    ];
+    var HABITS = [
+      "Zbiera małe ostre kamienie.",
+      "Nie użyje ostrza, póki nie sprawdzi go na własnym ciele.",
+      "Gdy zacznie pić, nie potrafi przestać.",
+      "Hazardzista. Musi obstawiać codziennie. Przegrana znaczy podbicie stawki.",
+      "Nie znosi krytyki. Koniec to wściekłość i płacz.",
+      "Nigdy nie dochodzi do sedna. Nie dokończył żadnej historii.",
+      "Najlepszy przyjaciel to czaszka. Noszona, słuchana, jedyna zaufana.",
+      "Dłubie w nosie aż do krwi.",
+      "Śmieje się histerycznie z własnych żartów i potem je tłumaczy.",
+      "Nihilista i musi to wszystkim wyjaśniać.",
+      "Zjada robaki.",
+      "Im gorzej, tym strojniej musi wyglądać.",
+      "Wieczna flegma. Kaszel, chrząkanie, plucie.",
+      "Piroman.",
+      "Gubi ważne rzeczy i zapomina kluczowe fakty.",
+      "Miesza, gdy tylko ktoś wyjdzie z izby.",
+      "Jąka się, kiedy kłamie.",
+      "Chichocze w najgorszym momencie.",
+      "Gwiżdże, próbując się schować. Zaprzeczy temu. Gwiżdże przy 5, 7, 9, 11 albo 13 na d20.",
+      "Robi biżuterię z zębów umarłych."
+    ];
+    var TALES = [
+      "Ścigany za zabójstwo. Jest nagroda.",
+      "Ogromny dług, sprzedawany coraz gorszym ludziom.",
+      "Masz rzadki, poszukiwany przedmiot.",
+      "Przeklęta rana, która się nie goi.",
+      "Zakazany romans z kimś z rodu królewskiego. Masz dowód.",
+      "Uciekinier z kultu. Paranoja. Kultystów pełno.",
+      "Złodziej tożsamości. Niedawno zabiłeś tę osobę i zająłeś jej miejsce.",
+      "Wygnany i wydziedziczony. Nie ma powrotu.",
+      "Dezercja po masakrze. Nagroda. Ścigają dawni towarzysze.",
+      "Całkiem niedawno zabiłeś bliskiego krewnego.",
+      "Sześcian-łamigłówka źle ustawiony. Budzi się ohyda.",
+      "Złe stwory lubią twój zapach i ciągną za tobą nieszczęście.",
+      "Odłamek metalu sunie ku sercu. Codziennie 2% szans, że dotrze.",
+      "Przemoc wygnała cię w dzicz. Drzewa szepczą. Rozmawiasz z nimi, krzyczysz, atakujesz.",
+      "Dzielisz koszmary innych. Śpisz daleko od ludzi.",
+      "Wojna z krukowatymi. Przy spotkaniu przemoc. Nosisz procę.",
+      "Po śnie o podziemnej świątyni rozumiesz pieśni owadów i robaków.",
+      "Golem cię śledzi po umowie wymazanej z pamięci.",
+      "Spal albo spłoną — taki los przyjmujesz.",
+      "Twoje ciało goi się dwa razy szybciej, towarzysze dwa razy wolniej. Widzisz wielookiego anioła stróża."
+    ];
+
+    var FANGED_ORIGIN = [
+      "Spalony dom w Sarkash. Twój?",
+      "Zbutwiały statek na szarym morzu.",
+      "Burdel w Schleswig.",
+      "Spanie z psami w karczmie i czekanie, aż ktoś wróci.",
+      "W ślad za armią we wschodnim Wästlandzie.",
+      "Ssanie wilczycy w dziczy Bergen Chrypt."
+    ];
+    var GUTTER_ORIGIN = [
+      "Wyrzucony na wóz z gnojem, jeszcze w czepku.",
+      "Matka wisiała pod Galgenbeck. Spadłeś z ciała.",
+      "Wychowany przez szczury w rynsztokach Grift.",
+      "Bity pod stołem piekarza w Schleswig.",
+      "Ucieczka z tvelandzkiego sierocińca.",
+      "Nauka u banitów na południe od Alliáns."
+    ];
+    var HERMIT_ORIGIN = [
+      "Przebudzenie, już jako dorosły, w kręgu pod północnym mostem do Grift.",
+      "Wyszedłeś bez pamięci z jaskini na klifach Terion.",
+      "Jedno dziecko, które przeżyło coś w Dolinie Nieszczęsnych Nieumarłych.",
+      "Umierając na dżumę w norze Bergen Chrypt, dotknąłeś czegoś z zewnątrz.",
+      "Zwykły człowiek, aż do polany w Sarkash.",
+      "Wyspa na jeziorze Onda. Nikt o niej nie słyszał i nie wrócisz."
+    ];
+    var ROYAL_ORIGIN = [
+      "Pałac w Wästlandzie legł w gruzach.",
+      "Karawanowe królestwo Tvelandu zbiedniało.",
+      "Zamordowano twojego ojca, Zigmunda, brata króla Fathmu IX.",
+      "Południowe imperium Südglans zatonęło.",
+      "Anthelia zażądała daru szlachetnej krwi.",
+      "Dwóch książąt zniknęło w czarnej szczelinie na wschód od Bergen Chrypt."
+    ];
+    var PRIEST_ORIGIN = [
+      "Galgenbeck, przy katedrze Dwugłowych Bazyliszków.",
+      "Wymordowany kult z Alliáns. Jedyny ocalały.",
+      "Krypty Grift.",
+      "Ruiny świątyni w Dolinie Nieszczęsnych Nieumarłych.",
+      "Jeden z tuneli złodziei Graven-Tosk.",
+      "Tajny kościół w Bergen Chrypt."
+    ];
+    var HERB_ORIGIN = [
+      "Spokojna izolacja w mroku Sarkash.",
+      "Spokojna izolacja w mroku Sarkash.",
+      "Spokojna izolacja w mroku Sarkash.",
+      "Nielegalne nocne targi Schleswig.",
+      "Heretycka wyspa Crëlut, dwie mile morskie na wschód od Grift.",
+      "Stare zamarznięte ruiny niedaleko Alliáns.",
+      "Chatka wiedźmy w Galgenbeck.",
+      "Ruiny dworu Króla Cienia, grzyby i dym."
+    ];
+
+    function spec(id, name, text, item) {
+      return { id: id, name: name, text: text, item: item || "" };
+    }
+    var FANGED_SPEC = [
+      spec("f1", "Crumpled monster mask", "Mniejsze stwory (gobliny, gnomy, dzieci) sprawdzają morale co rundę, gdy maska jest na twarzy.", "mask"),
+      spec("f2", "The Brown Scimitar of Galgenbeck", "Cuchnący miecz z wojskowego rowu. d6. Atak i obrona DR 10. 1 na 6: ranny wróg umiera z sepsy w 10 minut.", "scimitar"),
+      spec("f3", "Wizard teeth", "Cztery zęby w sczerniałej sakiewce. Przed walką d6 za każdy. Każda 6: jeden atak zadaje maksymalne obrażenia.", "wizardTeeth"),
+      spec("f4", "Old Sigûrd’s sling", "Proca z siwych włosów. 2d4. Kamienie wielkości pięści są, niestety, wszędzie.", "sigurd"),
+      spec("f5", "Ancient gore-hound", "Charczy, majaczy, a i tak wywęszy skarb. Atak DR 10, ugryzienie d6. Obrona DR 12, PW 10. Szał przy goblinach i berserkerach.", "gorehound"),
+      spec("f6", "The shoe of Death’s horse", "W ręku DR 10, d4. 1 na 6: śmierć małego lub średniego stwora. But wraca jak bumerang.", "deathshoe")
+    ];
+    var GUTTER_SPEC = [
+      spec("g1", "Coward’s jab", "Atak z zaskoczenia: Zwinność DR 10. Sukces to automatyczne trafienie lekką bronią jednoręczną, obrażenia +3."),
+      spec("g2", "Filthy fingersmith", "Kieszenie i zamki: Zwinność DR 8. Zaczyna z wytrychami.", "lockpicks"),
+      spec("g3", "Abominable gob lobber", "d2 splunięć na walkę. Prezencja DR 8. Cel jest oślepiony i wymiotuje przez d4 rund. Świadkowie testują Wytrzymałość (PC DR 10, wróg DR 12), inaczej też wymiotują."),
+      spec("g4", "Escaping fate", "Za każdym razem, gdy wydajesz omen, jest 50% szans, że się nie zużywa."),
+      spec("g5", "Excretal stealth", "Ukryty w błocie, śmieciach albo plugastwie: żeby cię zauważyć, trzeba Prezencji DR 16."),
+      spec("g6", "Dodging death", "Jeśli przy śmierci jest cień szansy, że przeżyłeś, masz 50%. Po 10 rundach wstajesz z d4 PW i kiepskim wyjaśnieniem.")
+    ];
+    var HERMIT_SPEC = [
+      spec("h1", "Master of fate", "Znasz właściwą drogę przy Prezencji DR 8."),
+      spec("h2", "Book of boiling blood", "Raz dziennie. Wróg testuje DR 12, żeby przerwać. Porażka: D2 berserkerów. d6 1–4 walczą przy tobie, 5–6 zwracają się przeciw tobie i księdze. Po walce wracają do więzienia.", "boiling"),
+      spec("h3", "Speaker of truths", "Dwa razy dziennie obniżasz DR następnego testu wybranej istoty o 4."),
+      spec("h4", "Initiate of the invisible college", "Raz dziennie przyzywasz D2 jednorazowych zwojów. d4: 1–2 święte, 3–4 nieczyste. Niewykorzystane obracają się w popiół o świcie."),
+      spec("h5", "Bard of the undying", "Harfa daje +d4 do rzutów reakcji.", "harp"),
+      spec("h6", "Hawk as weapon", "Jastrząb. Atak i obrona DR 10, d4, PW 8. Pilnuje, zwiadowca, atakuje.", "hawk")
+    ];
+    var ROYAL_SPEC = [
+      spec("r1", "The blade of your ancestors", "Mówiący miecz, d6+1. Atak i obrona DR 10. Zawiedziony ma 1 na 6, że tnie ciebie albo sojusznika.", "ancestors"),
+      spec("r2", "Poltroon the court jester", "Przez dwie pierwsze rundy ty i sojusznicy macie +2 do ataku i obrony.", "poltroon"),
+      spec("r3", "Barbarister the incredible horse", "Mówiący koń. Czasem +2 do testów Prezencji, gdy liczy się rozum.", "barbarister"),
+      spec("r4", "Hamfund the squire", "Tchórzliwy giermek strzeże Eurekii. Raz na walkę miecz zadaje 2d6. Przy każdym cięciu d6: na 1 giermek ginie, a miecz znika.", "eurekia"),
+      spec("r5", "The snake-skin gift", "Sztylet d4. Wynik 1: cel umiera od trucizny z głowni.", "snakedagger"),
+      spec("r6", "Horn of the Schleswig lords", "Raz dziennie trąba i Prezencja DR 12. Sukces: jedna istota automatycznie zdaje następny test poza walką.", "horn")
+    ];
+    var PRIEST_SPEC = [
+      spec("p1", "Sacred shepherd’s crook", "Kostur 2d4, poza ludźmi bez wiary.", "crook"),
+      spec("p2", "Stolen mitre", "W walce obrona DR 10. Na uszach poza walką skradanie przeciw DR 8.", "mitre"),
+      spec("p3", "List of sins", "Prezencja DR 10 odkrywa złe istoty światłem. Obrona +2 przeciw nim.", "sinlist"),
+      spec("p4", "The blasphemous Nechrubel bible", "Raz dziennie. Kość parzysta: reszta dnia, 5 minut odpoczynku leczy d4 PW. Nieparzysta: halucynacje do świtu.", "bible"),
+      spec("p5", "Stones from Thel-Emas", "Mówią, czy obok czai się niebezpieczeństwo. Mogą kłamać. Prezencja DR 10. Porażka blokuje rzut do zachodu słońca.", "stones"),
+      spec("p6", "(wrong Jesus) crucifix", "Nieumarli, mniejsi trolle i gobliny robią test morale zmodyfikowany twoją Prezencją. Mogą odejść.", "wrongjesus")
+    ];
+
+    var CLASSES = {
+      none: { name: "Bez klasy", silver: "2d6*10", omens: 2, hp: 8, weapon: 10, armor: 4, boosts: true, bonus: {} },
+      fanged: { name: "Fanged Deserter", silver: "2d6*10", omens: 2, hp: 10, weapon: 0, armor: 0, illiterate: true, bonus: { str: 2, agi: -1, pre: -1 }, origin: FANGED_ORIGIN, special: FANGED_SPEC },
+      gutter: { name: "Gutterborn Scum", silver: "1d6*10", omens: 2, hp: 6, weapon: 6, armor: 2, bonus: { str: -2 }, origin: GUTTER_ORIGIN, special: GUTTER_SPEC },
+      hermit: { name: "Esoteric Hermit", silver: "1d6*10", omens: 4, hp: 4, weapon: 4, armor: 2, bonus: { pre: 2, str: -2 }, origin: HERMIT_ORIGIN, special: HERMIT_SPEC },
+      royalty: { name: "Wretched Royalty", silver: "4d6*10", omens: 2, hp: 6, weapon: 8, armor: 4, rerollHeavy: true, bonus: {}, origin: ROYAL_ORIGIN, special: ROYAL_SPEC, specialCount: 2 },
+      priest: { name: "Heretical Priest", silver: "3d6*10", omens: 4, hp: 8, weapon: 8, armor: 4, bonus: { pre: 2, str: -2 }, origin: PRIEST_ORIGIN, special: PRIEST_SPEC },
+      herb: { name: "Occult Herbmaster", silver: "2d6*10", omens: 2, hp: 6, weapon: 6, armor: 2, bonus: { tou: 2, str: -2 }, origin: HERB_ORIGIN }
+    };
+    var CLASS_ORDER = ["fanged", "gutter", "hermit", "royalty", "priest", "herb"];
+    var ABIL_KEYS = ["agi", "pre", "str", "tou"];
+    var ABIL_LABEL = { agi: "Zwinność", pre: "Prezencja", str: "Siła", tou: "Wytrzymałość" };
+
+    function assertTables() {
+      if (WEAPONS.length !== 10) throw new Error("weapons");
+      if (ARMORS.length !== 4) throw new Error("armors");
+      if (GEAR_A.length !== 12 || GEAR_B.length !== 12) throw new Error("gear");
+      if (SCROLLS_U.length !== 10 || SCROLLS_S.length !== 10) throw new Error("scrolls");
+      if (DECOCTIONS.length !== 8) throw new Error("deco");
+      if (TRAITS.length !== 20 || BODIES.length !== 20 || HABITS.length !== 20 || TALES.length !== 20) throw new Error("traits");
+      if (NAMES.length !== 6) throw new Error("names");
+      for (var i = 0; i < 6; i++) if (NAMES[i].length !== 8) throw new Error("name row");
+      GEAR_A.concat(GEAR_B).forEach(function (id) {
+        if (id !== "SCROLL_U" && id !== "SCROLL_S" && !ITEMS[id]) throw new Error("missing " + id);
+      });
+    }
+    assertTables();
+
+    function d(n) { return Math.floor(Math.random() * n) + 1; }
+    function num(v) {
+      var n = parseInt(String(v == null ? "" : v).replace("+", ""), 10);
+      return isNaN(n) ? 0 : n;
+    }
+    function fmt(n) {
+      n = parseInt(n, 10) || 0;
+      return n > 0 ? "+" + n : String(n);
+    }
+    function modFromSum(sum) {
+      if (sum <= 4) return -3;
+      if (sum <= 6) return -2;
+      if (sum <= 8) return -1;
+      if (sum <= 12) return 0;
+      if (sum <= 14) return 1;
+      if (sum <= 16) return 2;
+      return 3;
+    }
+    function rollSpec(specText) {
+      var m = /^(\d*)d(\d+)$/.exec(specText);
+      if (!m) return { total: 0, text: String(specText) };
+      var count = parseInt(m[1], 10) || 1;
+      var sides = parseInt(m[2], 10);
+      var parts = [];
+      var sum = 0;
+      for (var i = 0; i < count; i++) {
+        var r = d(sides);
+        parts.push(r);
+        sum += r;
+      }
+      return { total: sum, text: parts.join("+") };
+    }
+    function rollSilver(specText) {
+      var m = /^(\d+)d(\d+)\*(\d+)$/.exec(specText);
+      var count = parseInt(m[1], 10);
+      var sides = parseInt(m[2], 10);
+      var mul = parseInt(m[3], 10);
+      var parts = [];
+      var sum = 0;
+      for (var i = 0; i < count; i++) {
+        var r = d(sides);
+        parts.push(r);
+        sum += r;
+      }
+      return { total: sum * mul, text: parts.join("+") + " × " + mul + " = " + (sum * mul) };
+    }
+    function rollAbility(bonus, four) {
+      var rolls = [];
+      var count = four ? 4 : 3;
+      for (var i = 0; i < count; i++) rolls.push(d(6));
+      var kept = rolls.slice();
+      var dropped = null;
+      if (four) {
+        var mi = 0;
+        for (var j = 1; j < kept.length; j++) if (kept[j] < kept[mi]) mi = j;
+        dropped = kept.splice(mi, 1)[0];
+      }
+      var shown = kept[0] + kept[1] + kept[2] + (bonus || 0);
+      var sum = shown;
+      if (sum < 1) sum = 1;
+      if (sum > 20) sum = 20;
+      var text = (four ? "4d6 odrzuć " + dropped + " " : "3d6 ") + "[" + rolls.join(",") + "]";
+      if (bonus) text += (bonus > 0 ? "+" : "") + bonus;
+      text += " = " + shown;
+      if (shown !== sum) text += " (ograniczono do " + sum + ")";
+      return { mod: modFromSum(sum), text: text };
+    }
+    function rollDistinct(list, count) {
+      var pool = list.slice();
+      var out = [];
+      var n = Math.min(count, pool.length);
+      for (var i = 0; i < n; i++) {
+        var idx = d(pool.length) - 1;
+        out.push(pool[idx]);
+        pool.splice(idx, 1);
+      }
+      return out;
+    }
+    function logLine(s) {
+      if (genLines) { genLines.push(s); return; }
+      var prev = vtt.getField("gen_log") || "";
+      vtt.setField("gen_log", prev ? prev + "\n" + s : s);
+    }
+    function setRollLabel(key, label) {
+      var btn = vtt.root.querySelector('[data-roll-for="' + key + '"]');
+      if (btn) btn.setAttribute("data-roll-label", label || "Rzut");
+    }
+    function blank(field) {
+      return !String(vtt.getField(field) || "").trim();
+    }
+    function armorOpen() {
+      var name = String(vtt.getField("armor_name") || "").trim();
+      var tier = String(vtt.getField("armor_tier") || "").trim();
+      return !name || tier === "0" || name === "Brak pancerza";
+    }
+    function copyItem(src) {
+      return {
+        name: src.name,
+        kind: src.kind || "item",
+        roll: src.roll || "",
+        tier: src.tier != null ? src.tier : "",
+        price: src.price || "",
+        note: src.note || "",
+        scroll: !!src.scroll,
+        doses: src.doses || "",
+        pack: src.pack || ""
+      };
+    }
+    function materialize(src) {
+      var e = copyItem(src);
+      var pre = num(vtt.getField("pre"));
+      e.note = String(e.note)
+        .split("{pre+4}").join(String(pre + 4))
+        .split("{pre+6}").join(String(pre + 6))
+        .split("{pre+10}").join(String(pre + 10));
+      if (e.doses) {
+        var rolled = rollSpec(e.doses);
+        e.note += (e.note ? " " : "") + "Dawki: " + rolled.total + " (" + rolled.text + ").";
+      }
+      if (e.pack === "dog") e.note += " PW " + (d(6) + 2) + ".";
+      if (e.pack === "monkeys") {
+        var n = d(4);
+        var hps = [];
+        for (var i = 0; i < n; i++) hps.push(d(4) + 2);
+        e.note += " Sztuk: " + n + ". PW: " + hps.join(", ") + ".";
+      }
+      if (e.pack === "corpse") e.note += " Wylosowana cena: " + (66 + d(6)) + "s.";
+      return e;
+    }
+    function setWeapon(slot, e) {
+      vtt.setField("wpn" + slot + "_name", e ? e.name : "");
+      vtt.setField("wpn" + slot + "_dmg", e ? (e.roll || "") : "");
+      setRollLabel("wpn" + slot, e && e.name ? e.name : "Broń " + slot);
+    }
+    function setArmor(e) {
+      vtt.setField("armor_name", e ? e.name : "");
+      vtt.setField("armor_tier", e ? String(e.tier != null ? e.tier : "") : "");
+      vtt.setField("armor_die", e ? (e.roll || "") : "");
+      vtt.setField("armor_note", e ? (e.note || "") : "");
+      setRollLabel("armor", e && e.name ? e.name : "Pancerz");
+    }
+    function clearGear() {
+      setWeapon(1, null);
+      setWeapon(2, null);
+      setArmor(null);
+      vtt.setField("shield", false);
+      vtt.setField("shield_note", "");
+      for (var i = 0; i < INV; i++) {
+        vtt.setField("inv_" + i + "_name", "");
+        vtt.setField("inv_" + i + "_note", "");
+        vtt.setField("inv_" + i + "_roll", "");
+        setRollLabel("inv_" + i, "Przedmiot");
+      }
+    }
+    function asItem(e) {
+      var note = e.note || "";
+      if (e.roll && note.indexOf(e.roll) === -1) note = (note ? note + " " : "") + "Rzut: " + e.roll + ".";
+      if (e.tier) note = (note ? note + " " : "") + "Tier " + e.tier + ".";
+      e.kind = "item";
+      e.note = note;
+      return e;
+    }
+    function putInv(e) {
+      for (var i = 0; i < INV; i++) {
+        if (blank("inv_" + i + "_name")) {
+          vtt.setField("inv_" + i + "_name", e.name);
+          vtt.setField("inv_" + i + "_note", e.note || "");
+          vtt.setField("inv_" + i + "_roll", e.roll || "");
+          setRollLabel("inv_" + i, e.name);
+          return "plecak " + (i + 1);
+        }
+      }
+      return "";
+    }
+    function put(e) {
+      if (e.kind === "weapon") {
+        if (blank("wpn1_name")) { setWeapon(1, e); return "broń 1"; }
+        if (blank("wpn2_name")) { setWeapon(2, e); return "broń 2"; }
+        e = asItem(e);
+      }
+      if (e.kind === "armor") {
+        if (armorOpen()) { setArmor(e); return "pancerz"; }
+        e = asItem(e);
+      }
+      if (e.kind === "shield") {
+        if (!vtt.getField("shield")) {
+          vtt.setField("shield", true);
+          vtt.setField("shield_note", e.note || "");
+          return "tarcza";
+        }
+        e = asItem(e);
+      }
+      return putInv(e);
+    }
+    function place(raw) {
+      if (!raw) return "";
+      var e = materialize(raw);
+      var slot = put(e);
+      if (!slot) return "NIE ZMIEŚCIŁO SIĘ: " + e.name + (e.note ? " — " + e.note : "");
+      return e.name + " → " + slot + (e.roll ? " [" + e.roll + "]" : "");
+    }
+    function syncLabels() {
+      setRollLabel("wpn1", String(vtt.getField("wpn1_name") || "").trim() || "Broń 1");
+      setRollLabel("wpn2", String(vtt.getField("wpn2_name") || "").trim() || "Broń 2");
+      setRollLabel("armor", String(vtt.getField("armor_name") || "").trim() || "Pancerz");
+      for (var i = 0; i < INV; i++) {
+        setRollLabel("inv_" + i, String(vtt.getField("inv_" + i + "_name") || "").trim() || "Przedmiot");
+      }
+    }
+    function refreshCarry() {
+      var el = vtt.root.querySelector("[data-carry]");
+      if (!el) return;
+      var cap = num(vtt.getField("str")) + 8;
+      var n = 0;
+      for (var i = 0; i < INV; i++) if (!blank("inv_" + i + "_name")) n++;
+      var hard = cap * 2;
+      var msg = n + " / " + cap;
+      if (n > hard) msg += " — za dużo, nie uniesiesz";
+      else if (n > cap) msg += " — przeciążenie, DR Siły i Zwinności +2";
+      el.className = n > cap ? "warn" : "";
+      el.textContent = msg;
+    }
+    function combatDr(classId, tier) {
+      var melee = 12, ranged = 12, power = 12, def = 12, agi = 12;
+      if (classId === "gutter") { ranged = 10; power = 10; def = 10; agi = 10; }
+      if (classId === "fanged") agi = 14;
+      tier = parseInt(tier, 10) || 0;
+      if (tier >= 2) { def += 2; agi += 2; }
+      if (tier >= 3) agi += 2;
+      return { melee: melee, ranged: ranged, power: power, def: def, agi: agi };
+    }
+    function applyDr(classId, tier) {
+      var dr = combatDr(classId, tier);
+      vtt.setField("dr_melee", dr.melee);
+      vtt.setField("dr_ranged", dr.ranged);
+      vtt.setField("dr_power", dr.power);
+      vtt.setField("dr_def", dr.def);
+      vtt.setField("dr_agi", dr.agi);
+      return dr;
+    }
+    function refreshPowersNote() {
+      var tier = num(vtt.getField("armor_tier"));
+      var classId = vtt.getField("class_id") || "none";
+      var names = String(vtt.getField("wpn1_name") || "") + " " + String(vtt.getField("wpn2_name") || "");
+      var bits = [];
+      if (vtt.getField("illiterate")) bits.push("Niepiśmienny: zwoje nie działają.");
+      if (/zwei/i.test(names)) bits.push("Zweihänder: moce nie działają.");
+      if (tier >= 3) bits.push("Ciężki pancerz: moce nie działają.");
+      else if (tier >= 2 && classId !== "priest") bits.push("Średni pancerz: moce nie działają.");
+      else if (tier >= 2 && classId === "priest") bits.push("Kapłan może używać mocy w średnim pancerzu.");
+      if (!bits.length) bits.push("Moce działają bez średniego i ciężkiego pancerza oraz bez broni dwuręcznej.");
+      vtt.setField("powers_note", bits.join(" "));
+    }
+    function pickScroll(list) {
+      return list[d(list.length) - 1];
+    }
+    function drawList(list, rerollScrolls) {
+      var guard = 0;
+      var idx = 1;
+      var id = list[0];
+      do {
+        idx = d(list.length);
+        id = list[idx - 1];
+        guard++;
+        if (!(rerollScrolls && (id === "SCROLL_U" || id === "SCROLL_S"))) break;
+      } while (guard < 20);
+      if (rerollScrolls && (id === "SCROLL_U" || id === "SCROLL_S")) return null;
+      if (id === "SCROLL_U") {
+        var su = pickScroll(SCROLLS_U);
+        return { item: su, label: "d12=" + idx + " zwój nieczysty: " + su.name };
+      }
+      if (id === "SCROLL_S") {
+        var ss = pickScroll(SCROLLS_S);
+        return { item: ss, label: "d12=" + idx + " zwój święty: " + ss.name };
+      }
+      return { item: ITEMS[id], label: "d12=" + idx + " " + ITEMS[id].name };
+    }
+    function rollArmorIndex(sides, rerollHeavy) {
+      var rolls = [];
+      var n = d(sides);
+      rolls.push(n);
+      var guard = 0;
+      while (rerollHeavy && n === 4 && sides >= 4 && guard < 6) {
+        n = d(sides);
+        rolls.push(n);
+        guard++;
+      }
+      if (rerollHeavy && n === 4) {
+        n = d(3);
+        rolls.push(n);
+      }
+      return { index: n, text: rolls.join("→") };
+    }
+    function dirty() {
+      var keys = ["name", "class_name", "str", "agi", "pre", "tou", "hp_max", "silver"];
+      for (var i = 0; i < keys.length; i++) {
+        if (String(vtt.getField(keys[i]) || "").trim() !== "") return true;
+      }
+      return false;
+    }
+    function rollAbilities(cls) {
+      var boosts = [];
+      if (cls.boosts) {
+        ABIL_KEYS.forEach(function (k) { if (vtt.getField("boost_" + k)) boosts.push(k); });
+        if (!boosts.length) {
+          var pool = ABIL_KEYS.slice();
+          while (boosts.length < 2) {
+            var i = d(pool.length) - 1;
+            boosts.push(pool.splice(i, 1)[0]);
+          }
+          genLines.push("4d6: nie zaznaczono, losowo " + boosts.map(function (k) { return ABIL_LABEL[k]; }).join(", "));
+        } else if (boosts.length > 2) {
+          var skipped = boosts.slice(2);
+          boosts = boosts.slice(0, 2);
+          genLines.push("4d6: dwie pierwsze, pominięto " + skipped.map(function (k) { return ABIL_LABEL[k]; }).join(", "));
+        }
+      }
+      var mods = {};
+      ABIL_KEYS.forEach(function (k) {
+        var four = !!(cls.boosts && boosts.indexOf(k) >= 0);
+        var bonus = cls.bonus && cls.bonus[k] ? cls.bonus[k] : 0;
+        var res = rollAbility(bonus, four);
+        mods[k] = res.mod;
+        vtt.setField(k, fmt(res.mod));
+        genLines.push(ABIL_LABEL[k] + ": " + res.text + " → " + fmt(res.mod));
+      });
+      return mods;
+    }
+    function generate() {
+      if (dirty() && !confirm("Nadpisać statystyki, pochodzenie i ekwipunek? Notatki zostaną.")) return;
+      genLines = [];
+      var pick = vtt.getField("class_pick") || "none";
+      var classId = pick === "random" ? CLASS_ORDER[d(6) - 1] : pick;
+      if (!CLASSES[classId]) classId = "none";
+      var cls = CLASSES[classId];
+      genLines.push("Klasa: " + cls.name + (pick === "random" ? " (losowa)" : ""));
+      vtt.setField("class_id", classId);
+      vtt.setField("class_name", cls.name);
+      vtt.setField("omen_die", String(cls.omens));
+      vtt.setField("illiterate", !!cls.illiterate);
+      vtt.setField("gutter_extra", "");
+      vtt.setField("spec_ids", "");
+      vtt.setField("infected", false);
+      vtt.setField("starving", false);
+      vtt.setField("status", "");
+      vtt.setField("class_feature", "");
+      vtt.setField("origin", "");
+
+      var abs = rollAbilities(cls);
+      var hpDie = rollSpec("1d" + cls.hp);
+      var hp = abs.tou + hpDie.total;
+      if (hp < 1) hp = 1;
+      vtt.setField("hp_max", String(hp));
+      vtt.setField("hp_cur", String(hp));
+      genLines.push("PW: " + fmt(abs.tou) + " + d" + cls.hp + " (" + hpDie.text + ") = " + hp);
+
+      var silver = rollSilver(cls.silver);
+      vtt.setField("silver", String(silver.total));
+      genLines.push("Srebro: " + silver.text + "s");
+
+      var om = d(cls.omens);
+      vtt.setField("omen_cur", String(om));
+      vtt.setField("omen_max", String(om));
+      genLines.push("Omeny: d" + cls.omens + " = " + om);
+
+      var nrow = d(6);
+      var ncol = d(8);
+      var cname = NAMES[nrow - 1][ncol - 1];
+      vtt.setField("name", cname);
+      genLines.push("Imię: d6=" + nrow + " d8=" + ncol + " → " + cname);
+
+      var queue = [];
+      queue.push(ITEMS.waterskin);
+      var days = d(4);
+      queue.push({ name: "Suszone jedzenie", kind: "item", note: days + " dni (d4). 1s za dzień." });
+      genLines.push("Jedzenie: d4 = " + days);
+
+      var cRoll = d(6);
+      var containers = [null, null, "backpack", "sack", "wagon", "donkey"];
+      var cid = containers[cRoll - 1];
+      genLines.push("Pojemnik: d6=" + cRoll + " → " + (cid ? ITEMS[cid].name : "nic"));
+      if (cid) queue.push(ITEMS[cid]);
+
+      var reroll = !!cls.illiterate;
+      var g1 = drawList(GEAR_A, reroll);
+      var g2 = drawList(GEAR_B, reroll);
+      genLines.push("Ekwipunek A: " + (g1 ? g1.label : "zwój odrzucony (niepiśmienny)"));
+      genLines.push("Ekwipunek B: " + (g2 ? g2.label : "zwój odrzucony (niepiśmienny)"));
+      if (g1) queue.push(g1.item);
+      if (g2) queue.push(g2.item);
+
+      if (classId === "hermit") {
+        var extra = Math.random() < 0.5 ? pickScroll(SCROLLS_U) : pickScroll(SCROLLS_S);
+        queue.push(extra);
+        genLines.push("Zwój pustelnika: " + extra.name);
+      }
+
+      var hasScroll = false;
+      for (var qi = 0; qi < queue.length; qi++) if (queue[qi] && queue[qi].scroll) hasScroll = true;
+      var wSides = cls.weapon;
+      var aSides = cls.armor;
+      if (classId === "none" && hasScroll) {
+        wSides = 6;
+        aSides = 2;
+        genLines.push("Zwój na starcie bez klasy: broń d6, pancerz d2.");
+      }
+      if (wSides > 0) {
+        var wi = d(wSides);
+        queue.push(WEAPONS[wi - 1]);
+        genLines.push("Broń: d" + wSides + "=" + wi + " → " + WEAPONS[wi - 1].name + " (" + WEAPONS[wi - 1].roll + ")");
+      } else {
+        genLines.push("Broń z tabeli: klasa jej nie losuje.");
+      }
+      if (aSides > 0) {
+        var rolled = rollArmorIndex(aSides, !!cls.rerollHeavy);
+        queue.push(ARMORS[rolled.index - 1]);
+        genLines.push("Pancerz: d" + aSides + " [" + rolled.text + "] → " + ARMORS[rolled.index - 1].name);
+      } else {
+        queue.push(ARMORS[0]);
+        genLines.push("Pancerz: brak (klasa nie losuje).");
+      }
+
+      var featureBits = [];
+      if (cls.origin) {
+        var oi = d(cls.origin.length);
+        vtt.setField("origin", cls.origin[oi - 1]);
+        genLines.push("Pochodzenie: d" + cls.origin.length + "=" + oi);
+      }
+      if (cls.special) {
+        var specs = rollDistinct(cls.special, cls.specialCount || 1);
+        var ids = [];
+        specs.forEach(function (sp) {
+          ids.push(sp.id);
+          featureBits.push(sp.name + ": " + sp.text);
+          if (sp.item && ITEMS[sp.item]) queue.push(ITEMS[sp.item]);
+          genLines.push("Dar: " + sp.name);
+        });
+        vtt.setField("spec_ids", ids.join(","));
+      }
+      if (classId === "herb") {
+        featureBits.push("Przenośne laboratorium. Codziennie dwa losowe dekokty i łącznie d4 dawek. Niewykorzystane psują się po 24 godzinach.");
+        queue.push(ITEMS.lab);
+        var types = rollDistinct(DECOCTIONS, 2);
+        var doseN = d(4);
+        var counts = [0, 0];
+        for (var di = 0; di < doseN; di++) counts[d(2) - 1]++;
+        genLines.push("Dekokty: d4 dawek = " + doseN);
+        types.forEach(function (dec, idx) {
+          genLines.push("— " + dec.name + " × " + counts[idx]);
+          if (counts[idx] > 0) {
+            queue.push({
+              name: dec.name,
+              kind: "item",
+              roll: dec.roll || "",
+              note: dec.note + " Dawki: " + counts[idx] + "."
+            });
+          }
+        });
+      }
+      vtt.setField("class_feature", featureBits.join("\n\n"));
+
+      var t1 = d(20), t2 = d(20), body = d(20), habit = d(20), tale = d(20);
+      vtt.setField("trait1", TRAITS[t1 - 1]);
+      vtt.setField("trait2", TRAITS[t2 - 1]);
+      vtt.setField("body", BODIES[body - 1]);
+      vtt.setField("habit", HABITS[habit - 1]);
+      vtt.setField("tale", TALES[tale - 1]);
+      genLines.push("Cechy d20: " + t1 + ", " + t2 + ". Ciało: " + body + ". Nawyk: " + habit + ". Opowieść: " + tale);
+      if (body === 6) queue.push(ITEMS.hookHand);
+      if (tale === 16) queue.push(ITEMS.sling);
+
+      clearGear();
+      genLines.push("— ekwipunek —");
+      queue.forEach(function (it) {
+        var line = place(it);
+        if (line) genLines.push(line);
+      });
+
+      var dr = applyDr(classId, vtt.getField("armor_tier"));
+      genLines.push("DR: wręcz " + dr.melee + ", dystans " + dr.ranged + ", moce " + dr.power + ", obrona " + dr.def + ", zwinność " + dr.agi);
+      refreshPowersNote();
+      refreshCarry();
+      syncLabels();
+      var text = genLines.join("\n");
+      genLines = null;
+      vtt.setField("gen_log", text);
+    }
+    function improveAbility(current) {
+      var roll = d(6);
+      var next = current;
+      var reason;
+      if (current <= 1) {
+        if (roll === 1) {
+          next = current - 1;
+          if (next < -3) next = -3;
+          reason = "d6=1, spadek";
+        } else {
+          next = current + 1;
+          if (next > 6) next = 6;
+          reason = "cecha do +1, wzrost";
+        }
+      } else if (roll >= current) {
+        next = current + 1;
+        if (next > 6) next = 6;
+        reason = "d6 ≥ cechy, wzrost";
+      } else {
+        next = current - 1;
+        reason = "d6 < cechy, spadek";
+      }
+      return { roll: roll, next: next, reason: reason };
+    }
+    function sessionUp() {
+      if (!String(vtt.getField("hp_max") || "").trim() && !String(vtt.getField("str") || "").trim()) {
+        alert("Najpierw wygeneruj postać.");
+        return;
+      }
+      genLines = [];
+      genLines.push("— po sesji —");
+      var max = num(vtt.getField("hp_max"));
+      var rolls = [];
+      var sum = 0;
+      for (var i = 0; i < 6; i++) { var r = d(10); rolls.push(r); sum += r; }
+      genLines.push("PW 6d10 [" + rolls.join(",") + "] = " + sum + " wobec maksimum " + max);
+      if (max > 0 && sum >= max) {
+        var gain = d(6);
+        vtt.setField("hp_max", String(max + gain));
+        genLines.push("Wzrost maksimum: d6 = " + gain + " → " + (max + gain));
+      } else {
+        genLines.push("Maksimum PW bez zmian.");
+      }
+      var deb = d(6);
+      if (deb <= 3) genLines.push("W gruzach: d6=" + deb + ", nic.");
+      else if (deb === 4) {
+        var g = rollSpec("3d10");
+        var sil = num(vtt.getField("silver")) + g.total;
+        vtt.setField("silver", String(sil));
+        genLines.push("W gruzach: 3d10 (" + g.text + ") = " + g.total + "s. Razem " + sil + "s.");
+      } else if (deb === 5) {
+        var su = pickScroll(SCROLLS_U);
+        genLines.push("W gruzach: " + su.name);
+        genLines.push(place(su));
+      } else {
+        var ss = pickScroll(SCROLLS_S);
+        genLines.push("W gruzach: " + ss.name);
+        genLines.push(place(ss));
+      }
+      ABIL_KEYS.forEach(function (k) {
+        var cur = num(vtt.getField(k));
+        var imp = improveAbility(cur);
+        vtt.setField(k, fmt(imp.next));
+        genLines.push(ABIL_LABEL[k] + ": d6=" + imp.roll + " (" + imp.reason + ") " + fmt(cur) + " → " + fmt(imp.next));
+      });
+      if ((vtt.getField("class_id") || "") === "gutter" && String(vtt.getField("gutter_extra") || "") !== "1") {
+        var have = String(vtt.getField("spec_ids") || "").split(",").filter(Boolean);
+        var pool = GUTTER_SPEC.filter(function (sp) { return have.indexOf(sp.id) < 0; });
+        if (!pool.length) pool = GUTTER_SPEC.slice();
+        var spn = pool[d(pool.length) - 1];
+        vtt.setField("gutter_extra", "1");
+        vtt.setField("spec_ids", have.concat(spn.id).join(","));
+        var prev = vtt.getField("class_feature") || "";
+        vtt.setField("class_feature", prev ? prev + "\n\n" + spn.name + ": " + spn.text : spn.name + ": " + spn.text);
+        if (spn.item && ITEMS[spn.item]) genLines.push(place(ITEMS[spn.item]));
+        genLines.push("Druga specjalność: " + spn.name);
+      }
+      refreshCarry();
+      syncLabels();
+      var text = genLines.join("\n");
+      genLines = null;
+      var old = vtt.getField("gen_log") || "";
+      vtt.setField("gen_log", old ? old + "\n" + text : text);
+    }
+    function rollPowers() {
+      var pre = num(vtt.getField("pre"));
+      var extra = d(4);
+      var total = pre + extra;
+      if (total < 0) total = 0;
+      vtt.setField("pow_cur", String(total));
+      vtt.setField("pow_max", String(total));
+      logLine("Moce na dziś: " + fmt(pre) + " + d4 (" + extra + ") = " + total);
+    }
+    function spendPower() {
+      var c = num(vtt.getField("pow_cur"));
+      if (c <= 0) { logLine("Brak użyć mocy."); return; }
+      vtt.setField("pow_cur", String(c - 1));
+      logLine("Użycie mocy. Zostało " + (c - 1) + ". Rzuć test mocy.");
+    }
+    function spendOmen() {
+      var c = num(vtt.getField("omen_cur"));
+      if (c <= 0) { logLine("Brak omenów."); return; }
+      vtt.setField("omen_cur", String(c - 1));
+      logLine("Omen wydany. Zostało " + (c - 1) + ".");
+    }
+    function restOmens() {
+      var sides = num(vtt.getField("omen_die")) || 2;
+      var n = d(sides);
+      vtt.setField("omen_cur", String(n));
+      if (n > num(vtt.getField("omen_max"))) vtt.setField("omen_max", String(n));
+      logLine("Sen 6h: d" + sides + " omenów = " + n + ".");
+    }
+    function heal(sides, label) {
+      if (vtt.getField("infected")) { logLine(label + ": infekcja, brak leczenia."); return; }
+      if (vtt.getField("starving")) { logLine(label + ": bez jedzenia i picia brak leczenia."); return; }
+      var n = d(sides);
+      var cur = num(vtt.getField("hp_cur"));
+      var max = num(vtt.getField("hp_max"));
+      var next = cur + n;
+      if (max > 0 && next > max) next = max;
+      vtt.setField("hp_cur", String(next));
+      logLine(label + ": d" + sides + " = " + n + " → " + next + " PW.");
+    }
+    function hurt(sides, label) {
+      var n = d(sides);
+      var cur = num(vtt.getField("hp_cur")) - n;
+      vtt.setField("hp_cur", String(cur));
+      var extra = cur < 0 ? " Ujemne PW: martwy." : (cur === 0 ? " 0 PW: rzuć Broken." : "");
+      logLine(label + ": -" + n + " → " + cur + " PW." + extra);
+    }
+    function rollBroken() {
+      var r = d(4);
+      var text;
+      if (r === 1) {
+        var rounds = d(4);
+        var hp = d(4);
+        text = "1 — nieprzytomność na " + rounds + " rund, potem " + hp + " PW.";
+        vtt.setField("hp_cur", String(hp));
+      } else if (r === 2) {
+        var limb = d(6);
+        var rounds2 = d(4);
+        var hp2 = d(4);
+        var part = limb === 6 ? "utracone oko" : "złamana albo odcięta kończyna";
+        text = "2 — " + part + " (d6=" + limb + "). Bez akcji przez " + rounds2 + " rund, potem " + hp2 + " PW.";
+        vtt.setField("hp_cur", String(hp2));
+      } else if (r === 3) {
+        var hours = d(2);
+        text = "3 — krwotok. Śmierć za " + hours + " godz. bez opatrunku. Testy DR 16 przez pierwszą godzinę, DR 18 przez ostatnią.";
+      } else {
+        text = "4 — martwy.";
+        vtt.setField("hp_cur", "0");
+      }
+      vtt.setField("status", text);
+      logLine("Broken: " + text);
+    }
+    function doc() { return vtt.root.ownerDocument; }
+    function buildCatalog() {
+      var list = vtt.root.querySelector("[data-catalog-list]");
+      if (!list || !vtt.root.ownerDocument) return;
+      list.textContent = "";
+      CATALOG.forEach(function (item) {
+        var row = doc().createElement("div");
+        row.className = "mb-cat-item";
+        row.setAttribute("data-cat", item.cat);
+        var info = doc().createElement("div");
+        var title = doc().createElement("strong");
+        title.textContent = item.name;
+        var meta = doc().createElement("small");
+        var bits = [];
+        if (item.price) bits.push(item.price);
+        if (item.roll) bits.push(item.roll);
+        if (item.tier) bits.push("tier " + item.tier);
+        meta.textContent = bits.length ? " " + bits.join(" · ") : "";
+        var p = doc().createElement("p");
+        p.textContent = item.note || "";
+        info.appendChild(title);
+        info.appendChild(meta);
+        info.appendChild(p);
+        var btn = doc().createElement("button");
+        btn.type = "button";
+        btn.className = "mb-btn";
+        btn.textContent = "Dodaj";
+        btn.setAttribute("data-add", item._id);
+        row.appendChild(info);
+        row.appendChild(btn);
+        list.appendChild(row);
+      });
+    }
+    function applyFilter() {
+      var input = vtt.root.querySelector("[data-filter]");
+      var q = input ? String(input.value || "").toLowerCase() : "";
+      vtt.root.querySelectorAll(".mb-cat-item").forEach(function (row) {
+        var okCat = currentCat === "all" || row.getAttribute("data-cat") === currentCat;
+        var okQ = !q || String(row.textContent || "").toLowerCase().indexOf(q) !== -1;
+        row.style.display = okCat && okQ ? "" : "none";
+      });
+    }
+    function toggleCatalog() {
+      var el = vtt.root.querySelector(".mb-catalog");
+      if (!el) return;
+      el.hidden = !el.hidden;
+    }
+    function onAdd(e) {
+      var btn = e.target && e.target.closest ? e.target.closest("[data-add]") : null;
+      if (!btn) return;
+      var id = btn.getAttribute("data-add");
+      var src = ITEMS[id];
+      if (!src) return;
+      var beforeArmor = vtt.getField("armor_name");
+      var line = place(src);
+      if (line.indexOf("NIE ZMIEŚCIŁO") === 0) alert(line);
+      else logLine("Dodano: " + line);
+      if (src.kind === "armor" && vtt.getField("armor_name") !== beforeArmor) {
+        applyDr(vtt.getField("class_id") || "none", vtt.getField("armor_tier"));
+      }
+      if (src.kind === "weapon" || src.kind === "armor") refreshPowersNote();
+      refreshCarry();
+      syncLabels();
+    }
+    function onAction(e) {
+      var action = e.currentTarget.getAttribute("data-action");
+      if (action === "generate") generate();
+      else if (action === "session") sessionUp();
+      else if (action === "power-roll") rollPowers();
+      else if (action === "power-spend") spendPower();
+      else if (action === "omen-spend") spendOmen();
+      else if (action === "omen-rest") restOmens();
+      else if (action === "heal-breath") heal(4, "Oddech");
+      else if (action === "heal-sleep") heal(6, "Sen");
+      else if (action === "infect-day") hurt(6, "Infekcja");
+      else if (action === "starve-day") hurt(4, "Głód");
+      else if (action === "broken") rollBroken();
+      else if (action === "catalog") toggleCatalog();
+    }
+    function initBoosts() {
+      var snap = vtt.fields || {};
+      if (snap.boost_agi === undefined && snap.boost_pre === undefined && snap.boost_str === undefined && snap.boost_tou === undefined) {
+        vtt.setField("boost_str", true);
+        vtt.setField("boost_tou", true);
+      }
+    }
+
+    vtt.onMount(function () {
+      vtt.root.querySelectorAll("[data-action]").forEach(function (el) {
+        el.addEventListener("click", onAction);
+      });
+      var cat = vtt.root.querySelector(".mb-catalog");
+      if (cat) cat.addEventListener("click", onAdd);
+      var filter = vtt.root.querySelector("[data-filter]");
+      if (filter) filter.addEventListener("input", applyFilter);
+      vtt.root.querySelectorAll("[data-cat-tab]").forEach(function (el) {
+        el.addEventListener("click", function (ev) {
+          currentCat = ev.currentTarget.getAttribute("data-cat-tab") || "all";
+          applyFilter();
+        });
+      });
+      buildCatalog();
+      initBoosts();
+      syncLabels();
+      refreshCarry();
+      refreshPowersNote();
+    });
+
+    vtt.onFieldChange(function (name) {
+      if (name === "str" || /^inv_\d+_name$/.test(name)) refreshCarry();
+      if (/_name$/.test(name)) syncLabels();
+      if (name === "wpn1_name" || name === "wpn2_name" || name === "illiterate" || name === "armor_tier") refreshPowersNote();
+      if (name === "armor_tier") applyDr(vtt.getField("class_id") || "none", vtt.getField("armor_tier"));
+    });
+  </script>
+</body>
+</html>

@@ -37,8 +37,10 @@ function renderCell(cell) {
   if (type === 'textWithRoll') {
     const formula = escapeHtml((cell.rollFormula || '').trim())
     const rollLabel = escapeHtml((cell.rollLabel || '').trim())
+    const rollCheck = cell.rollCheck === 'lte' || cell.rollCheck === 'gte' ? cell.rollCheck : ''
+    const checkAttr = rollCheck ? ` data-roll-check="${rollCheck}"` : ''
     const cls = inputClass(size, style)
-    return `<td class="center"><strong>${label}</strong><br><input data-field="${fieldId}" type="text" class="${cls}"> <button data-roll="${formula}" data-roll-label="${rollLabel}" class="roll-btn">🎲</button></td>`
+    return `<td class="center"><strong>${label}</strong><br><input data-field="${fieldId}" type="text" class="${cls}"> <button data-roll="${formula}" data-roll-label="${rollLabel}"${checkAttr} class="roll-btn">🎲</button></td>`
   }
   if (type === 'text') {
     const cls = inputClass(size, style)
@@ -203,7 +205,9 @@ function parseCell(td) {
     if (rollBtn) {
       const rollFormula = (rollBtn.getAttribute('data-roll') || '').trim()
       const rollLabel = (rollBtn.getAttribute('data-roll-label') || '').trim()
-      return { type: 'textWithRoll', label, fieldId, rollFormula, rollLabel, size, style }
+      const rollCheckRaw = (rollBtn.getAttribute('data-roll-check') || '').trim()
+      const rollCheck = rollCheckRaw === 'lte' || rollCheckRaw === 'gte' ? rollCheckRaw : ''
+      return { type: 'textWithRoll', label, fieldId, rollFormula, rollLabel, rollCheck, size, style }
     }
     return { type: 'text', label, fieldId, size, style }
   }

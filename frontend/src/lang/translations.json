@@ -116,7 +116,9 @@
       "standardMode": "Standard",
       "snackbarPause": "Pause auto-close",
       "snackbarResume": "Resume auto-close",
-      "snackbarClose": "Close"
+      "snackbarClose": "Close",
+      "checkSuccess": "Success",
+      "checkFailure": "Failure"
     },
     "l5r": {
       "ringDice": "Ring Dice",
@@ -482,6 +484,11 @@
       "rollLabel": "Roll label",
       "rollLabelPlaceholder": "e.g. Strength",
       "rollLabelHelp": "Name shown in dice roll history after the roll",
+      "rollCheck": "Success condition",
+      "rollCheckNone": "None",
+      "rollCheckLte": "Result ≤ field value",
+      "rollCheckGte": "Result ≥ field value",
+      "rollCheckHelp": "Compared with the number in this field. None leaves the roll as a total only.",
       "inputSize": "Size",
       "inputSizeNormal": "Normal",
       "inputSizeWide": "Wide",
@@ -623,7 +630,9 @@
       "standardMode": "Standardowe",
       "snackbarPause": "Wstrzymaj zamknięcie",
       "snackbarResume": "Wznów zamykanie",
-      "snackbarClose": "Zamknij"
+      "snackbarClose": "Zamknij",
+      "checkSuccess": "Sukces",
+      "checkFailure": "Porażka"
     },
     "l5r": {
       "ringDice": "Kości Pierścienia",
@@ -989,6 +998,11 @@
       "rollLabel": "Etykieta rzutu",
       "rollLabelPlaceholder": "np. Siła",
       "rollLabelHelp": "Nazwa wyświetlana w historii rzutów po wykonaniu rzutu",
+      "rollCheck": "Warunek sukcesu",
+      "rollCheckNone": "Brak",
+      "rollCheckLte": "Wynik ≤ wartość pola",
+      "rollCheckGte": "Wynik ≥ wartość pola",
+      "rollCheckHelp": "Porównanie z liczbą w tym polu. Brak oznacza sam wynik rzutu.",
       "inputSize": "Rozmiar",
       "inputSizeNormal": "Normalny",
       "inputSizeWide": "Szeroki",

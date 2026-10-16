@@ -89,31 +89,77 @@ export function buildRollData(diceList, modifier, label, getFieldValue) {
   }
 }
 
+const ROLL_CHECK_OPS = new Set(['lte', 'gte'])
+
+function sameCellFieldInput(rollButton) {
+  if (!rollButton || typeof rollButton.closest !== 'function') return null
+  const td = rollButton.closest('td')
+  return td ? td.querySelector('input[data-field]') : null
+}
+
+/** lte / gte from data-roll-check, or '' when the button has no success rule. */
+export function readRollCheckOp(rollButton) {
+  if (!rollButton || typeof rollButton.getAttribute !== 'function') return ''
+  const op = (rollButton.getAttribute('data-roll-check') || '').trim()
+  return ROLL_CHECK_OPS.has(op) ? op : ''
+}
+
 /**
  * Build effective roll expression from a roll button in a template cell.
  * - If data-roll is empty: use only the value of the input in the same cell (e.g. user typed "d4").
  * - If data-roll is set and same-cell input has value: use formula + "+" + input value (e.g. "d20" + "d4" → "d20+d4"),
  *   unless the formula already references that field via @fieldId (then parseRollExpression substitutes it).
+ * - If data-roll-check is set, the same-cell field is the success target, not a modifier.
  */
 export function getEffectiveRollExpression(rollButton) {
   if (!rollButton || typeof rollButton.closest !== 'function') return ''
   const expr = (rollButton.getAttribute('data-roll') || '').trim()
-  const td = rollButton.closest('td')
-  const input = td && td.querySelector('input[data-field]')
+  const input = sameCellFieldInput(rollButton)
   const fieldId = (input && input.getAttribute('data-field')) || ''
   const userVal = input ? String(input.value || '').trim() : ''
   if (!expr) return userVal
+  if (readRollCheckOp(rollButton)) return expr
   if (userVal && (!fieldId || !expr.includes('@' + fieldId))) return expr + '+' + userVal
   return expr
 }
 
 /**
- * Parse expression, roll dice, build rollData and dispatch 'vtt:dice-roll'.
+ * Success rule for a template roll button.
+ * Target is the integer in the same cell. Empty or non-numeric values skip the check.
+ * @returns {{ op: 'lte'|'gte', target: number } | null}
  */
-export function executeDiceRoll(expr, label, getFieldValue) {
+export function readRollCheckTarget(rollButton) {
+  const op = readRollCheckOp(rollButton)
+  if (!op) return null
+  const input = sameCellFieldInput(rollButton)
+  if (!input) return null
+  const raw = String(input.value ?? '').trim()
+  if (!/^[+-]?\d+$/.test(raw)) return null
+  return { op, target: parseInt(raw, 10) }
+}
+
+/**
+ * @param {number} total
+ * @param {{ op: 'lte'|'gte', target: number } | null} spec
+ * @returns {{ op: 'lte'|'gte', target: number, success: boolean } | null}
+ */
+export function evaluateRollCheck(total, spec) {
+  if (!spec || !ROLL_CHECK_OPS.has(spec.op) || !Number.isFinite(spec.target)) return null
+  const success = spec.op === 'lte' ? total <= spec.target : total >= spec.target
+  return { op: spec.op, target: spec.target, success }
+}
+
+/**
+ * Parse expression, roll dice, build rollData and dispatch 'vtt:dice-roll'.
+ * rollCheckSpec is only set for template buttons that declare data-roll-check.
+ */
+export function executeDiceRoll(expr, label, getFieldValue, rollCheckSpec = null) {
   const { diceList, modifier } = parseRollExpression(expr, getFieldValue)
   const rollData = buildRollData(diceList, modifier, label, getFieldValue)
   if (!rollData) return
+
+  const check = evaluateRollCheck(rollData.total, rollCheckSpec)
+  if (check) rollData.check = check
 
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('vtt:dice-roll', { detail: rollData }))

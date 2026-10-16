@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'
 import { parseRollExpression } from '../../utils/diceRollUtils'
-import { formatRoll, formatTotal } from '../../utils/diceFormat'
+import { formatRoll, formatRollOutcome, formatTotal } from '../../utils/diceFormat'
 import { l5rRollHasDiceFaces } from '../../utils/l5rDiceDisplay'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'
 import { getTableItem, setTableItem } from '../../utils/tableStorage'
@@ -348,6 +348,7 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
               rollHistory.map((roll, idx) => {
                 const formula = formatRoll(roll)
                 const total = formatTotal(roll)
+                const outcome = formatRollOutcome(roll)
                 const showL5RDice = roll.type === 'l5r' && l5rRollHasDiceFaces(roll) && L5RRollDice
                 return (
                 <div key={roll.id || idx} className={`history-item ${roll.type === 'l5r' ? 'l5r-roll' : ''}`}>
@@ -368,7 +369,16 @@ function DicePanel({ isOpen, onToggle, rollHistory, onRoll, pendingL5RRoll, onL5
                   ) : (
                     <>
                       {formula && <div className="history-formula">{formula}</div>}
-                      {total && <div className="history-total">{total}</div>}
+                      {total && (
+                        <div className="history-total">
+                          {total}
+                          {outcome && (
+                            <span className={`roll-outcome ${roll.check.success ? 'success' : 'failure'}`}>
+                              {' · '}{outcome}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </>
                   )}
                 </div>

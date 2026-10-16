@@ -38,3 +38,14 @@ export function formatTotal(roll) {
   }
   return `= ${roll.total}`
 }
+
+/** "Sukces ≤ 12" when the roll carries a template success check. Empty otherwise. */
+export function formatRollOutcome(roll) {
+  const check = roll?.check
+  if (!check || (check.op !== 'lte' && check.op !== 'gte')) return ''
+  const target = Number(check.target)
+  if (!Number.isFinite(target)) return ''
+  const cmp = check.op === 'lte' ? '≤' : '≥'
+  const label = check.success ? t('dice.checkSuccess') : t('dice.checkFailure')
+  return `${label} ${cmp} ${target}`
+}

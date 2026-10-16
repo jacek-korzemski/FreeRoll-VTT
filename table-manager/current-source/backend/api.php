@@ -1304,6 +1304,20 @@ try {
                             'total' => intval($input['total'] ?? 0),
                             'timestamp' => $input['timestamp'] ?? (time() * 1000)
                         ];
+                        if (isset($input['check']) && is_array($input['check'])) {
+                            $op = $input['check']['op'] ?? '';
+                            $target = filter_var($input['check']['target'] ?? null, FILTER_VALIDATE_INT);
+                            if (($op === 'lte' || $op === 'gte') && $target !== false) {
+                                $totalForCheck = $newRoll['total'];
+                                $newRoll['check'] = [
+                                    'op' => $op,
+                                    'target' => $target,
+                                    'success' => $op === 'lte'
+                                        ? ($totalForCheck <= $target)
+                                        : ($totalForCheck >= $target),
+                                ];
+                            }
+                        }
                     }
                     
                     array_unshift($rolls, $newRoll);

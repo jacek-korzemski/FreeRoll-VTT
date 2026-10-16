@@ -41,8 +41,15 @@
       flex-direction: column;
     }
 
+    .sd-col + .sd-col {
+      margin-left: 5px;
+    }
+
     .sd-col > .tpl-table {
       flex: 1 1 auto;
+      width: 100%;
+      max-width: 100%;
+      table-layout: fixed;
     }
 
     .tpl-table {

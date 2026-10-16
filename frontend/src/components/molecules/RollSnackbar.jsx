@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react'
 import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'
-import { formatRoll, formatTotal } from '../../utils/diceFormat'
+import { formatRoll, formatRollOutcome, formatTotal } from '../../utils/diceFormat'
 import { l5rRollHasDiceFaces } from '../../utils/l5rDiceDisplay'
 
 const L5R_BUILD = import.meta.env.VITE_ENABLE_L5R === 'true'
@@ -33,6 +33,7 @@ function RollSnackbar({ roll, onClose }) {
   const showL5RDice = ENABLE_L5R && isL5R && l5rRollHasDiceFaces(roll) && L5RRollDice
   const formula = formatRoll(roll)
   const total = formatTotal(roll)
+  const outcome = formatRollOutcome(roll)
 
   return (
     <div
@@ -53,7 +54,16 @@ function RollSnackbar({ roll, onClose }) {
             </Suspense>
           </div>
         ) : (
-          total && <div className="roll-snackbar-total">{total}</div>
+          total && (
+            <div className="roll-snackbar-total">
+              {total}
+              {outcome && (
+                <span className={`roll-outcome ${roll.check.success ? 'success' : 'failure'}`}>
+                  {' · '}{outcome}
+                </span>
+              )}
+            </div>
+          )
         )}
       </div>
       <div className="roll-snackbar-actions">

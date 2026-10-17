@@ -12,6 +12,17 @@ if ($ttrpgReady) {
     require_once $ttrpgAutoload;
 }
 
+function vttRequireTtrpgClass($class, $file) {
+    if (!class_exists($class)) {
+        require_once $file;
+    }
+}
+
+vttRequireTtrpgClass('FreeRoll\\Ttrpg\\Database', __DIR__ . '/src/Ttrpg/Database.php');
+vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventureHtml', __DIR__ . '/src/Ttrpg/AdventureHtml.php');
+vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventureStore', __DIR__ . '/src/Ttrpg/AdventureStore.php');
+vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventurePackage', __DIR__ . '/src/Ttrpg/AdventurePackage.php');
+
 /**
  * Public TTRPG Manager integration snapshot (never includes API key).
  *
@@ -572,6 +583,161 @@ function injectTemplateMeta($html, $source = null) {
     return $metaTag . "\n" . $html;
 }
 
+function adventureHandle($method, $action, $input = null) {
+    if (!isGameMaster()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+        return;
+    }
+
+    $store = \FreeRoll\Ttrpg\AdventureStore::make();
+
+    if ($method === 'GET' && $action === 'adventure-list') {
+        echo json_encode([
+            'success' => true,
+            'entries' => $store->listEntries(),
+        ]);
+        return;
+    }
+
+    if ($method === 'GET' && $action === 'adventure-entry') {
+        $id = (int) ($_GET['id'] ?? 0);
+        $entry = $store->get($id);
+        if ($entry === null) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Not found']);
+            return;
+        }
+        echo json_encode(['success' => true, 'entry' => $entry]);
+        return;
+    }
+
+    $input = is_array($input) ? $input : [];
+
+    if ($method === 'POST' && $action === 'adventure-create') {
+        $entry = $store->create((string) ($input['title'] ?? ''));
+        echo json_encode(['success' => true, 'entry' => $entry]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'adventure-save') {
+        $id = (int) ($input['id'] ?? 0);
+        $title = array_key_exists('title', $input) ? (string) $input['title'] : null;
+        $body = array_key_exists('bodyHtml', $input) ? (string) $input['bodyHtml'] : null;
+        $entry = $store->save($id, $title, $body);
+        if ($entry === null) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Not found']);
+            return;
+        }
+        echo json_encode(['success' => true, 'entry' => $entry]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'adventure-delete') {
+        $id = (int) ($input['id'] ?? 0);
+        if (!$store->delete($id)) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Not found']);
+            return;
+        }
+        echo json_encode(['success' => true]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'adventure-reorder') {
+        $ids = isset($input['ids']) && is_array($input['ids']) ? $input['ids'] : [];
+        echo json_encode([
+            'success' => true,
+            'entries' => $store->reorder($ids),
+        ]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'adventure-export') {
+        $tabs = isset($input['tabs']) && is_array($input['tabs']) ? $input['tabs'] : [];
+        $zipPath = null;
+        try {
+            $zipPath = \FreeRoll\Ttrpg\AdventurePackage::exportFile($store, $tabs);
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="adventure.zip"');
+            header('Content-Length: ' . (string) filesize($zipPath));
+            header('Cache-Control: no-store');
+            readfile($zipPath);
+        } catch (\FreeRoll\Ttrpg\AdventurePackageError $e) {
+            http_response_code($e->status());
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'code' => $e->errorCode(),
+            ]);
+        } finally {
+            if (is_string($zipPath) && is_file($zipPath)) {
+                @unlink($zipPath);
+            }
+        }
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'adventure-import') {
+        $file = $_FILES['file'] ?? null;
+        if (!is_array($file)) {
+            $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => $contentLength > 0 ? 'File too large for server limits' : 'No file uploaded',
+                'code' => $contentLength > 0 ? 'file_too_large' : 'bad_package',
+            ]);
+            return;
+        }
+        $err = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+            http_response_code(413);
+            echo json_encode([
+                'success' => false,
+                'error' => 'File too large for server limits',
+                'code' => 'file_too_large',
+            ]);
+            return;
+        }
+        if ($err !== UPLOAD_ERR_OK) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Upload error', 'code' => 'bad_package']);
+            return;
+        }
+        $tmp = (string) ($file['tmp_name'] ?? '');
+        if ($tmp === '' || !is_uploaded_file($tmp)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'No file uploaded', 'code' => 'bad_package']);
+            return;
+        }
+        try {
+            $result = \FreeRoll\Ttrpg\AdventurePackage::importFile($store, $tmp);
+            $payload = [
+                'success' => true,
+                'entries' => $result['entries'],
+                'tabs' => $result['tabs'],
+            ];
+            if (function_exists('vttStorageSnapshot')) {
+                $payload['storage'] = vttStorageSnapshot();
+            }
+            echo json_encode($payload);
+        } catch (\FreeRoll\Ttrpg\AdventurePackageError $e) {
+            http_response_code($e->status());
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'code' => $e->errorCode(),
+            ]);
+        }
+        return;
+    }
+
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Unknown action']);
+}
+
 // ============================================
 // API
 // ============================================
@@ -866,6 +1032,11 @@ try {
                         http_response_code(404);
                         echo json_encode(['success' => false, 'error' => 'Template not found']);
                     }
+                    break;
+
+                case 'adventure-list':
+                case 'adventure-entry':
+                    adventureHandle('GET', $action);
                     break;
 
                 case 'rolls':
@@ -2134,6 +2305,15 @@ try {
                         break;
                     }
                     echo json_encode(\FreeRoll\Ttrpg\Actions::uploadAsset($campaignId, $file));
+                    break;
+
+                case 'adventure-create':
+                case 'adventure-save':
+                case 'adventure-delete':
+                case 'adventure-reorder':
+                case 'adventure-export':
+                case 'adventure-import':
+                    adventureHandle('POST', $action, is_array($input) ? $input : []);
                     break;
 
                 case 'ttrpg-upload-handbook':

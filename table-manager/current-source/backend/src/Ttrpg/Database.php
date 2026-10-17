@@ -57,5 +57,20 @@ final class Database
                 UNIQUE(campaign_id, entity_type, remote_id)
             )'
         );
+        $pdo->exec(
+            'CREATE TABLE IF NOT EXISTS adventure_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                body_html TEXT NOT NULL DEFAULT \'\',
+                sort_order INTEGER NOT NULL DEFAULT 0,
+                updated_at INTEGER NOT NULL
+            )'
+        );
+        $pdo->exec(
+            'CREATE TABLE IF NOT EXISTS adventure_meta (
+                id INTEGER PRIMARY KEY CHECK (id = 1),
+                seeded INTEGER NOT NULL DEFAULT 0
+            )'
+        );
     }
 }

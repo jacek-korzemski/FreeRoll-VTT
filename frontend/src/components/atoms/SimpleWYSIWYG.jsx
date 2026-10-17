@@ -14,7 +14,18 @@ const EMOJI_GROUPS = [
 ]
 
 const SimpleWYSIWYG = forwardRef(function SimpleWYSIWYG(props, ref) {
-  const { height = '100%', placeholder = 'Start typing...', initialContent = '', onChange, className = '' } = props
+  const {
+    height = '100%',
+    placeholder = 'Start typing...',
+    initialContent = '',
+    onChange,
+    className = '',
+    toolbarExtra = null,
+    onEditorClick,
+    onEditorDragOver,
+    onEditorDrop,
+    onEditorBlur,
+  } = props
   const editorRef = useRef(null)
   const savedSelectionRef = useRef(null)
   const emojiContainerRef = useRef(null)
@@ -186,7 +197,8 @@ const SimpleWYSIWYG = forwardRef(function SimpleWYSIWYG(props, ref) {
     setContent: (html) => { if (editorRef.current) { editorRef.current.innerHTML = html; handleChange() } },
     getPlainText: () => editorRef.current?.innerText || '',
     clear: () => { if (editorRef.current) { editorRef.current.innerHTML = ''; handleChange() } },
-    focus: () => editorRef.current?.focus()
+    focus: () => editorRef.current?.focus(),
+    getElement: () => editorRef.current,
   }), [handleChange])
 
   return (
@@ -219,6 +231,7 @@ const SimpleWYSIWYG = forwardRef(function SimpleWYSIWYG(props, ref) {
         <div ref={emojiContainerRef} className="swysiwyg-toolbar-group swysiwyg-emoji-container">
           <button ref={emojiButtonRef} type="button" className={showEmojiPanel ? 'active' : ''} onClick={() => { saveSelection(); emojiOpenedWithCursorInEditorRef.current = savedSelectionRef.current != null; editorRef.current?.focus(); setShowEmojiPanel(prev => !prev) }} title="Insert emoji">😀</button>
         </div>
+        {toolbarExtra}
       </div>
       {showEmojiPanel && emojiPanelPosition && createPortal(
         <div ref={emojiPanelRef} className="swysiwyg-emoji-panel swysiwyg-emoji-panel-portal" style={{ position: 'fixed', ...(emojiPanelPosition.top !== undefined && { top: emojiPanelPosition.top }), ...(emojiPanelPosition.bottom !== undefined && { bottom: emojiPanelPosition.bottom }), left: emojiPanelPosition.left, maxHeight: emojiPanelPosition.maxHeight ?? 260, zIndex: 999999 }}>
@@ -236,7 +249,21 @@ const SimpleWYSIWYG = forwardRef(function SimpleWYSIWYG(props, ref) {
         document.body
       )}
       <div className="swysiwyg-editor-container" style={{ height }}>
-        <div ref={editorRef} className="swysiwyg-editor" contentEditable suppressContentEditableWarning={true} data-placeholder={placeholder} onInput={handleChange} onBlur={handleChange} onKeyDown={handleKeyDown} onMouseUp={updateToolbarState} onKeyUp={updateToolbarState} />
+        <div
+          ref={editorRef}
+          className="swysiwyg-editor"
+          contentEditable
+          suppressContentEditableWarning={true}
+          data-placeholder={placeholder}
+          onInput={handleChange}
+          onBlur={() => { handleChange(); onEditorBlur?.() }}
+          onKeyDown={handleKeyDown}
+          onMouseUp={updateToolbarState}
+          onKeyUp={updateToolbarState}
+          onClick={onEditorClick}
+          onDragOver={onEditorDragOver}
+          onDrop={onEditorDrop}
+        />
       </div>
       {showTableModal && (
         <div className="swysiwyg-modal active">

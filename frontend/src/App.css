@@ -7,6 +7,30 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) var(--color-bg);
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-strong);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--color-bg);
 }
 
 body {
@@ -40,6 +64,8 @@ body {
   overflow: hidden;
   margin-left: 280px; /* Szerokość sidebara */
   transition: margin-left 0.3s ease;
+  position: relative;
+  min-width: 0;
 }
 
 /* Obsługa zwijania sidebara - marginesy */
@@ -5565,6 +5591,14 @@ body {
   font-size: 0.9rem;
 }
 
+.swysiwyg-editor ul,
+.swysiwyg-editor ol,
+.adventure-box-body ul,
+.adventure-box-body ol {
+  margin: 0.35em 0;
+  padding-left: 1.75em;
+}
+
 .swysiwyg-editor:empty:before {
   content: attr(data-placeholder);
   color: var(--color-text-dim);
@@ -7230,4 +7264,456 @@ label.ttrpg-btn-accent {
   color: var(--color-text-strong);
   border-radius: 2px;
   padding: 0 0.15em;
+}
+
+.grid-host {
+  height: 100%;
+  min-height: 0;
+}
+
+.grid-host--hidden {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.app--adventure-window {
+  display: flex;
+  background: var(--color-bg);
+}
+
+.app--adventure-window .adventure-panel {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.adventure-host {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-bg);
+}
+
+.adventure-host--hidden {
+  display: none;
+}
+
+.adventure-launch.sidebar-section.collapsible h2 {
+  padding: 0;
+  gap: 0;
+}
+
+.adventure-launch-open,
+.adventure-launch-window {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.adventure-launch-open {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.7rem 0.35rem 0.7rem 1rem;
+  text-align: left;
+}
+
+.adventure-launch-open .section-title {
+  color: var(--color-text-dim);
+}
+
+.adventure-launch.open .adventure-launch-open .section-title {
+  color: var(--color-accent);
+}
+
+.adventure-launch-window {
+  flex-shrink: 0;
+  padding: 0.7rem 1rem 0.7rem 0.35rem;
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.adventure-launch-window:hover {
+  color: var(--color-text-strong);
+}
+
+.adventure-panel {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.adventure-list {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-panel);
+  min-height: 0;
+}
+
+.adventure-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.adventure-list-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-accent);
+}
+
+.adventure-list-header button,
+.adventure-list li > button {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.adventure-list-header > button {
+  width: 28px;
+  height: 28px;
+}
+
+.adventure-list-actions {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.adventure-list-actions button {
+  width: auto;
+  flex: 1;
+  height: 28px;
+  padding: 0 6px;
+  font-size: 0.72rem;
+}
+
+.adventure-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  overflow: auto;
+  flex: 1;
+}
+
+.adventure-list li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.adventure-list li.active .adventure-list-name {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.adventure-list-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 6px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: grab;
+}
+
+.adventure-list-name:active {
+  cursor: grabbing;
+}
+
+.adventure-list li.dragging .adventure-list-name {
+  opacity: 0.4;
+}
+
+.adventure-list li.drop-before {
+  box-shadow: inset 0 2px 0 var(--color-accent);
+}
+
+.adventure-list li.drop-after {
+  box-shadow: inset 0 -2px 0 var(--color-accent);
+}
+
+.adventure-list li > button:not(.adventure-list-name) {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 26px;
+  padding: 0;
+  line-height: 1;
+}
+
+.adventure-list li > button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.adventure-rename {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-accent);
+  background: var(--color-bg);
+  color: var(--color-text-strong);
+}
+
+.adventure-stage {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.adventure-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-panel);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.adventure-tab {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-bg);
+}
+
+.adventure-tab.active {
+  border-color: var(--color-accent);
+}
+
+.adventure-tab button {
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.adventure-tab.active button {
+  color: var(--color-accent);
+}
+
+.adventure-save {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+  white-space: nowrap;
+}
+
+.adventure-save--error {
+  color: var(--color-accent);
+}
+
+.adventure-status,
+.adventure-error {
+  margin: 8px 12px;
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+}
+
+.adventure-error {
+  color: var(--color-accent);
+}
+
+.adventure-editor-wrap {
+  flex: 1;
+  min-height: 0;
+}
+
+.adventure-wysiwyg .swysiwyg-toolbar button.adventure-link-toggle,
+.adventure-wysiwyg .swysiwyg-toolbar button.adventure-insert-asset {
+  width: auto;
+  padding: 0 8px;
+  font-size: 0.75rem;
+}
+
+.adventure-link-wrap {
+  position: relative;
+}
+
+.adventure-link-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 5;
+  min-width: 180px;
+  max-height: 240px;
+  overflow: auto;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  padding: 4px;
+}
+
+.adventure-link-menu button {
+  display: block;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.adventure-link-menu button:hover {
+  background: var(--color-panel-alt);
+}
+
+.adventure-link-menu p {
+  margin: 6px 8px;
+  color: var(--color-text-dim);
+  font-size: 0.8rem;
+}
+
+.adv-entry-link {
+  color: var(--color-accent);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.adv-roll {
+  display: inline-block;
+  padding: 0 0.35em;
+  border-radius: 4px;
+  background: var(--color-panel-alt);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  user-select: none;
+}
+
+.adv-ref {
+  max-width: 220px;
+  max-height: 160px;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 4px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.adventure-zoom {
+  position: fixed;
+  z-index: 80;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  cursor: pointer;
+}
+
+.adventure-zoom:hover {
+  background: rgba(0, 0, 0, 0.92);
+  color: var(--color-accent);
+}
+
+.adventure-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.9);
+  cursor: zoom-out;
+}
+
+.adventure-lightbox img {
+  width: calc(100vw - 32px);
+  height: calc(100vh - 32px);
+  object-fit: contain;
+  cursor: zoom-out;
+}
+
+.adventure-box {
+  position: absolute;
+  width: min(420px, calc(100% - 16px));
+  max-height: min(360px, calc(100% - 16px));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.adventure-box-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  cursor: grab;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-strong);
+  font-weight: 600;
+}
+
+.adventure-box-title-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adventure-box-title button {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.adventure-box-title button:last-child {
+  margin-left: auto;
+}
+
+.adventure-box-body {
+  overflow: auto;
+  padding: 10px 12px;
+  line-height: 1.5;
+  color: var(--color-text);
 }

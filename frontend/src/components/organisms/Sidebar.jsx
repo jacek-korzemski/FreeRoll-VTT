@@ -82,6 +82,9 @@ function Sidebar({
   onRefreshTokenAssets,
   onRefreshBackgroundAssets,
   onRefreshPapers,
+  adventureOpen = false,
+  onToggleAdventure,
+  onOpenAdventureWindow,
 }) {
   const mapSectionRef = useScrollToSection(mapListLoading, mapNavigationForwardRef)
   const tokenSectionRef = useScrollToSection(tokenListLoading, tokenNavigationForwardRef)
@@ -94,6 +97,29 @@ function Sidebar({
       <div className="sidebar-sections">
         <div className="sidebar-sections-inner">
           <div className="sidebar-sections-content">
+          {isGameMaster && (
+            <section className={`sidebar-section collapsible adventure-launch${adventureOpen ? ' open' : ''}`}>
+              <h2>
+                <button
+                  type="button"
+                  className="adventure-launch-open"
+                  onClick={onToggleAdventure}
+                >
+                  <span className="section-icon" aria-hidden>📜</span>
+                  <span className="section-title">{t('adventure.open')}</span>
+                </button>
+                <button
+                  type="button"
+                  className="adventure-launch-window"
+                  onClick={onOpenAdventureWindow}
+                  title={t('adventure.openWindow')}
+                  aria-label={t('adventure.openWindow')}
+                >
+                  ↗
+                </button>
+              </h2>
+            </section>
+          )}
           {isGameMaster && (
               <CollapsibleSection 
                 title={t('upload.title')} 

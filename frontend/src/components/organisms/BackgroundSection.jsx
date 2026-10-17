@@ -1,6 +1,7 @@
+import { useRef } from 'react'
 import { t } from '../../lang'
 import CollapsibleSection from '../atoms/CollapsibleSection'
-import { isCurrentBackground } from '../../utils/sidebarHelpers'
+import { clearActiveAssetDrag, handleAssetDragStart, isCurrentBackground } from '../../utils/sidebarHelpers'
 import BackgroundAdjust from '../molecules/BackgroundAdjust'
 
 function BackgroundSection({
@@ -18,6 +19,8 @@ function BackgroundSection({
   onToggleGridHidden,
   onDeselectAsset,
 }) {
+  const draggedRef = useRef(false)
+
   return (
     <CollapsibleSection 
       title={t('sidebar.backgrounds')} 
@@ -57,7 +60,19 @@ function BackgroundSection({
           <div
             key={bg.id}
             className={`background-item ${isCurrentBackground(bg, currentBackground) ? 'active' : ''}`}
-            onClick={() => !isCurrentBackground(bg, currentBackground) && onSetBackground(bg)}
+            draggable
+            onDragStart={(event) => {
+              draggedRef.current = true
+              handleAssetDragStart(bg, 'background', event)
+            }}
+            onDragEnd={() => clearActiveAssetDrag()}
+            onClick={() => {
+              if (draggedRef.current) {
+                draggedRef.current = false
+                return
+              }
+              if (!isCurrentBackground(bg, currentBackground)) onSetBackground(bg)
+            }}
             title={`${bg.filename} (${bg.gridWidth}×${bg.gridHeight})`}
           >
             <span className="bg-icon">🗺️</span>

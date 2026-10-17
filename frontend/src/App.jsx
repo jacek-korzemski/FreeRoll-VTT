@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, startTransition } from 'react'
-import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer } from './components'
+import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer, AdventurePanel } from './components'
 import DebugOverlay from './components/atoms/DebugOverlay'
 import { 
   createEmptyFog, 
@@ -64,6 +64,11 @@ function App() {
   const mapNavigationForwardRef = useRef(false)
   const tokenNavigationForwardRef = useRef(false)
   const [isGameMaster, setIsGameMaster] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
+  const adventureWindow = typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).get('view') === 'adventure'
+  const [adventureOpen, setAdventureOpen] = useState(false)
+  const [adventureMounted, setAdventureMounted] = useState(false)
   const [apiStatus, setApiStatus] = useState('ok')
   const [apiFlashTrigger, setApiFlashTrigger] = useState(0)
   const [isTokenEraserActive, setIsTokenEraserActive] = useState(false)
@@ -97,6 +102,30 @@ function App() {
         }
       })
       .catch(console.error)
+      .finally(() => setAuthReady(true))
+  }, [])
+
+  useEffect(() => {
+    if (!isGameMaster) setAdventureOpen(false)
+  }, [isGameMaster])
+
+  const handleToggleAdventure = useCallback(() => {
+    setAdventureOpen((prev) => {
+      const next = !prev
+      if (next) setAdventureMounted(true)
+      return next
+    })
+  }, [])
+
+  const handleOpenAdventureWindow = useCallback(() => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('view', 'adventure')
+    const popup = window.open(
+      url.toString(),
+      'freeroll-adventure',
+      'popup=yes,width=1200,height=800'
+    )
+    if (popup) popup.opener = null
   }, [])
 
   useEffect(() => {
@@ -1286,8 +1315,22 @@ useEffect(() => {
     }
   }, [])
 
-  if (isLoading) {
+  if (isLoading || (adventureWindow && !authReady)) {
     return <div className="loading">{t('app.loading')}</div>
+  }
+
+  if (adventureWindow && isGameMaster) {
+    return (
+      <div className="app app--adventure-window">
+        <AdventurePanel
+          apiBase={API_BASE}
+          assetBase={ASSET_BASE}
+          selectedAsset={null}
+          selectedType={null}
+          onAssetsChanged={refreshMapAssets}
+        />
+      </div>
+    )
   }
 
   return (
@@ -1381,9 +1424,13 @@ useEffect(() => {
         onRefreshTokenAssets={refreshTokenAssets}
         onRefreshBackgroundAssets={refreshBackgroundAssets}
         onRefreshPapers={refreshPapers}
+        adventureOpen={adventureOpen}
+        onToggleAdventure={handleToggleAdventure}
+        onOpenAdventureWindow={handleOpenAdventureWindow}
       />
       
       <main className="main-content">
+        <div className={`grid-host${adventureOpen ? ' grid-host--hidden' : ''}`} aria-hidden={adventureOpen || undefined}>
         <Grid
           ref={gridContainerRef}
           isGameMaster={isGameMaster}
@@ -1417,6 +1464,18 @@ useEffect(() => {
           pingAnimation={pingAnimation}
           onSendPing={handleSendPing}
         />
+        </div>
+        {adventureMounted && isGameMaster && (
+          <div className={`adventure-host${adventureOpen ? '' : ' adventure-host--hidden'}`}>
+            <AdventurePanel
+              apiBase={API_BASE}
+              assetBase={ASSET_BASE}
+              selectedAsset={selectedAsset}
+              selectedType={selectedType}
+              onAssetsChanged={refreshMapAssets}
+            />
+          </div>
+        )}
       </main>
 
       <DicePanel

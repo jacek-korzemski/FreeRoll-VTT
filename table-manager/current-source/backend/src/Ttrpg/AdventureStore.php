@@ -105,6 +105,21 @@ final class AdventureStore
         return $stmt->rowCount() > 0;
     }
 
+    public function clearAll(): void
+    {
+        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->exec('DELETE FROM adventure_entries');
+            $this->pdo->exec('INSERT OR REPLACE INTO adventure_meta (id, seeded) VALUES (1, 1)');
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            throw $e;
+        }
+    }
+
     /**
      * @return array<int, array{id: int, title: string, sortOrder: int, updatedAt: int, bodyHtml: string}>
      */

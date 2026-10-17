@@ -634,6 +634,12 @@ function adventureHandle($method, $action, $input = null) {
         return;
     }
 
+    if ($method === 'POST' && $action === 'adventure-clear') {
+        $store->clearAll();
+        echo json_encode(['success' => true, 'entries' => []]);
+        return;
+    }
+
     if ($method === 'POST' && $action === 'adventure-delete') {
         $id = (int) ($input['id'] ?? 0);
         if (!$store->delete($id)) {
@@ -2309,6 +2315,7 @@ try {
 
                 case 'adventure-create':
                 case 'adventure-save':
+                case 'adventure-clear':
                 case 'adventure-delete':
                 case 'adventure-reorder':
                 case 'adventure-export':

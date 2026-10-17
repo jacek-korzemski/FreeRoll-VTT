@@ -7409,12 +7409,52 @@ label.ttrpg-btn-accent {
   font-size: 0.72rem;
 }
 
+.adventure-list-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .adventure-list ul {
   list-style: none;
   margin: 0;
   padding: 6px;
-  overflow: auto;
-  flex: 1;
+  flex: 0 0 auto;
+}
+
+.adventure-list-clear {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding: 4px 10px 12px;
+}
+
+.adventure-list-clear hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 8px 0 10px;
+}
+
+.adventure-list-clear button {
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  background: rgba(var(--color-accent-rgb), 0.18);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.45);
+  border-radius: 6px;
+  color: var(--color-accent-hover);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.adventure-list-clear button:hover:not(:disabled) {
+  background: rgba(var(--color-accent-rgb), 0.3);
+  color: var(--color-text-strong);
+}
+
+.adventure-list-clear button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .adventure-list li {

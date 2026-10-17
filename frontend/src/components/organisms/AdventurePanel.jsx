@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import ConfirmModal from '../atoms/ConfirmModal'
 import AdventureEditor from '../molecules/AdventureEditor'
 import AdventurePreviewBox from '../molecules/AdventurePreviewBox'
 import { t } from '../../lang'
@@ -81,6 +82,7 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
   const htmlRef = useRef({})
   const importRef = useRef(null)
   const [ioBusy, setIoBusy] = useState(false)
+  const [clearOpen, setClearOpen] = useState(false)
 
   const knownIds = useMemo(() => new Set(entries.map((entry) => String(entry.id))), [entries])
 
@@ -374,6 +376,26 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
     }
   }
 
+  const clearAdventure = async () => {
+    setClearOpen(false)
+    setError('')
+    clearTimeout(saveTimer.current)
+    pendingSave.current = null
+    try {
+      await adventureFetch(apiBase, 'adventure-clear', { method: 'POST', body: {} })
+      htmlRef.current = {}
+      setHtmlById({})
+      setBoxesByTab({})
+      setEntries([])
+      setTabs([])
+      setActiveId(null)
+      setRenamingId(null)
+      setStatus('saved')
+    } catch (err) {
+      setError(err.status === 403 ? t('adventure.forbidden') : t('adventure.saveError'))
+    }
+  }
+
   const clearDropMarks = () => {
     dropHintRef.current?.li.classList.remove('drop-before', 'drop-after')
     dropHintRef.current = null
@@ -509,7 +531,8 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
         </div>
         {loading && <p className="adventure-status">{t('adventure.loading')}</p>}
         {!loading && entries.length === 0 && <p className="adventure-status">{t('adventure.empty')}</p>}
-        <ul
+        <div
+          className="adventure-list-scroll"
           ref={listRef}
           onDragOver={(event) => {
             if (dragIdRef.current == null) return
@@ -517,6 +540,7 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
             scrollListWhileDragging(event.clientY)
           }}
         >
+        <ul>
           {entries.map((entry) => (
             <li
               key={entry.id}
@@ -587,6 +611,17 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
             </li>
           ))}
         </ul>
+        <div className="adventure-list-clear">
+          <hr />
+          <button
+            type="button"
+            onClick={() => setClearOpen(true)}
+            disabled={loading || entries.length === 0}
+          >
+            {t('adventure.clear')}
+          </button>
+        </div>
+        </div>
       </aside>
       <div className="adventure-stage" ref={stageRef}>
         <div className="adventure-tabs">
@@ -662,6 +697,17 @@ function AdventurePanel({ apiBase, assetBase, selectedAsset, selectedType, onAss
           )
         })}
       </div>
+      {clearOpen && (
+        <ConfirmModal
+          title={t('adventure.clearTitle')}
+          message={t('adventure.clearConfirm')}
+          confirmLabel={t('adventure.clearAction')}
+          cancelLabel={t('notes.templateCancel')}
+          danger
+          onConfirm={clearAdventure}
+          onCancel={() => setClearOpen(false)}
+        />
+      )}
     </div>
   )
 }

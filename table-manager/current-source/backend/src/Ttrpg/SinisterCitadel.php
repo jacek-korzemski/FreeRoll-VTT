@@ -357,7 +357,7 @@ final class SinisterCitadel
 
     private static function area3(): string
     {
-        return self::img('area-3-northeast-cellar.png', 'Plan piwnicy północno-wschodniej')
+        return self::img('area-3-northeast-cellar.jpg', 'Plan piwnicy północno-wschodniej')
             . '<p>Schody z galerii, krata i kłódka jak przy skarbcu. Ten sam klucz Jispera, albo Zręczność ST 12, albo KP 12 i 10 PW. Drewniane drzwi w środku są stare, ale trzymają: KP 15, 18 PW, żadne nie są zamknięte na klucz.</p>'
             . '<p>Dawne kwatery straży. Ciemno, sufit 15 stóp, kurz, świeże ślady stóp. Układ od strony schodów, czyli od zachodu: korytarz <a href="#" class="adv-entry-link" data-entry-id="area-3-1">3-1</a>. Na północy <a href="#" class="adv-entry-link" data-entry-id="area-3-2">kwatera kapitana 3-2</a> i <a href="#" class="adv-entry-link" data-entry-id="area-3-3">kwatera straży 3-3</a>. Na południu <a href="#" class="adv-entry-link" data-entry-id="area-3-4">spiżarnia 3-4</a> i <a href="#" class="adv-entry-link" data-entry-id="area-3-5">zawalone kwatery 3-5</a>, te zasypane gruzem. Kwadrat to 5 stóp.</p>'
             . '<p>Shirf prosi, żeby tu nie schodzić. Rimin w liście radzi zasypać schody. Kilka dni temu robotnicy słyszeli tu zawodzenie i uciekli.</p>';

@@ -60,7 +60,9 @@ final class AdventurePackage
         $entries = [];
         $htmlForAssets = '';
         foreach ($rows as $index => $row) {
-            $html = AdventureHtml::remapEntryIds((string) $row['bodyHtml'], $idToKey);
+            $html = self::rewriteExtensionMismatches(
+                AdventureHtml::remapEntryIds((string) $row['bodyHtml'], $idToKey)
+            );
             $entries[] = [
                 'key' => $idToKey[(string) $row['id']],
                 'title' => (string) $row['title'],
@@ -402,6 +404,16 @@ final class AdventurePackage
             $writes[] = ['dest' => $dest, 'bytes' => $bytes];
         }
 
+        foreach (self::srcsInHtml($html) as $src) {
+            if (isset($wanted[$src])) {
+                continue;
+            }
+            $resolved = self::resolveOnDisk($src);
+            if ($resolved !== null && $resolved !== $src && !isset($renames[$src])) {
+                $renames[$src] = $resolved;
+            }
+        }
+
         return ['incoming' => $incoming, 'writes' => $writes, 'renames' => $renames];
     }
 
@@ -439,6 +451,47 @@ final class AdventurePackage
     /**
      * @return string[]
      */
+    private static function rewriteExtensionMismatches(string $html): string
+    {
+        $renames = [];
+        foreach (self::srcsInHtml($html) as $src) {
+            $resolved = self::resolveOnDisk($src);
+            if ($resolved !== null && $resolved !== $src) {
+                $renames[$src] = $resolved;
+            }
+        }
+        return self::replaceSrcs($html, $renames);
+    }
+
+    /**
+     * The stored name sometimes disagrees with the file extension.
+     * Use the file that is actually on disk.
+     */
+    private static function resolveOnDisk(string $src): ?string
+    {
+        $full = self::fullPath($src);
+        if ($full === null) {
+            return null;
+        }
+        if (is_file($full)) {
+            return $src;
+        }
+        $info = pathinfo($full);
+        $dir = $info['dirname'] ?? '';
+        $name = $info['filename'] ?? '';
+        if ($dir === '' || $name === '') {
+            return null;
+        }
+        foreach (['png', 'jpg', 'jpeg', 'gif', 'webp'] as $ext) {
+            $candidate = $dir . '/' . $name . '.' . $ext;
+            if (!is_file($candidate)) {
+                continue;
+            }
+            return self::srcFromFull($candidate);
+        }
+        return null;
+    }
+
     private static function srcsInHtml(string $html): array
     {
         if (!preg_match_all('/\b(?:src|data-src)=(["\'])([^"\']+)\1/i', $html, $matches)) {

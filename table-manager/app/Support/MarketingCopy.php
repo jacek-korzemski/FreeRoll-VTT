@@ -10,7 +10,7 @@ class MarketingCopy
     {
         return [
             'title' => 'Darmowy stół VTT do gier RPG online | FreeRoll',
-            'description' => 'Darmowy stół VTT do gier RPG online: mapa, tokeny, mgła wojny, kości, notatki i PDF. Graj w przeglądarce, bez instalacji u graczy. Załóż stół w minutę.',
+            'description' => 'Darmowy stół VTT do gier RPG online: mapa, tokeny, mgła wojny, kości, notatki, przygoda MG i PDF. Graj w przeglądarce, bez instalacji u graczy. Załóż stół w minutę.',
         ];
     }
 
@@ -18,7 +18,7 @@ class MarketingCopy
     {
         return [
             'title' => 'Jak zagrać na darmowym stole VTT | FreeRoll',
-            'description' => 'Tutorial FreeRoll: jak założyć darmowy stół VTT, wejść hasłem gracza lub MG i użyć mapy, tokenów, mgły wojny, kości oraz pinga. Wystarczy przeglądarka.',
+            'description' => 'Tutorial FreeRoll: jak założyć darmowy stół VTT, wejść hasłem gracza lub MG i użyć mapy, tokenów, mgły wojny, kości, przygody oraz pinga. Wystarczy przeglądarka.',
         ];
     }
 
@@ -122,6 +122,11 @@ class MarketingCopy
                 'href' => $tutorial.'#panel',
             ],
             [
+                'title' => 'Przygoda',
+                'text' => 'Wpisy Mistrza Gry łączysz linkami. Klik w formułę rzuca kośćmi na stół, a całość da się otworzyć w osobnym oknie. Gracze tego nie widzą.',
+                'href' => $tutorial.'#przygoda',
+            ],
+            [
                 'title' => 'Makra',
                 'text' => 'Rzut zapisujesz raz, na przykład 2d6+@str. Makro czyta pola z karty w notatniku i wrzuca wynik do historii kości.',
                 'href' => $tutorial.'#panel',
@@ -160,7 +165,7 @@ class MarketingCopy
             ],
             [
                 'q' => 'Czym różni się hasło gracza od hasła Mistrza Gry?',
-                'a' => 'Hasło gracza otwiera stół w trybie uczestnika: mapa, kości, notatki, PDF. Hasło MG dodaje mgłę wojny, sceny, wgrywanie plików i ping. Oba hasła ustawiasz przy tworzeniu stołu i możesz je później zmienić w panelu.',
+                'a' => 'Hasło gracza otwiera stół w trybie uczestnika: mapa, kości, notatki, PDF. Hasło MG dodaje mgłę wojny, sceny, wgrywanie plików, ping i przygodę. Oba hasła ustawiasz przy tworzeniu stołu i możesz je później zmienić w panelu.',
             ],
             [
                 'q' => 'Ile stołów mogę założyć?',
@@ -277,6 +282,18 @@ class MarketingCopy
                 'image' => self::image(
                     'panel-dolny.webp',
                     'Dolny panel stołu z otwartymi notatkami i zakładkami czytnika PDF, makr oraz liczników.',
+                ),
+            ],
+            [
+                'id' => 'przygoda',
+                'title' => 'Przygoda',
+                'paragraphs' => [
+                    'Przycisk „Przygoda” jest na górze bocznego panelu i widzi go tylko Mistrz Gry. Otwiera wpisy zamiast mapy; sidebar, kości i dolny panel zostają. Strzałka obok nazwy, z etykietą „Otwórz w nowym oknie”, otwiera ten sam panel w osobnym oknie, na adresie stołu z ?view=adventure.',
+                    'Plus dodaje wpis. Zaznaczasz tekst i wybierasz „Link do wpisu”, żeby połączyć go z innym. Klik otwiera małe okno tylko do czytania; edycja zostaje w zakładce wpisu. Formuła w tekście, na przykład 2d6+2, staje się rzutem: klik idzie do tej samej historii kości co panel „Rzut kośćmi”. Obraz wstawiasz z elementu mapy, tokenu albo tła zaznaczonego w sidebarze. W osobnym oknie sidebara nie ma.',
+                ],
+                'image' => self::image(
+                    'przygoda.webp',
+                    'Panel Przygoda u Mistrza Gry: lista wpisów, tekst z linkiem i formułą kości oraz okienko podglądu.',
                 ),
             ],
             [

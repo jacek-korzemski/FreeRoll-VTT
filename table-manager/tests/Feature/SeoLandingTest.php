@@ -62,6 +62,7 @@ class SeoLandingTest extends TestCase
             ->assertSee('https://github.com/jacek-korzemski/FreeRoll-VTT', false)
             ->assertSee('target="_blank"', false)
             ->assertSee('Jak grać', false)
+            ->assertSee('Przygoda', false)
             ->assertDontSee('Zapamiętaj mnie', false)
             ->assertHeaderMissing('X-Robots-Tag');
 
@@ -72,6 +73,8 @@ class SeoLandingTest extends TestCase
         $tutorial->assertOk()
             ->assertSee('<h1', false)
             ->assertSee('Jak zagrać na darmowym stole VTT', false)
+            ->assertSee('Przygoda', false)
+            ->assertSee('przygoda.webp', false)
             ->assertDontSee('Legend of the Five Rings', false)
             ->assertDontSee('L5R', false)
             ->assertSee('HowTo', false)

@@ -192,6 +192,12 @@ if (is_file($vttQuotaFile)) {
     vttSetUploadQuotaBytes(vttParseQuotaFromEnv($env));
 }
 
+$vttGlobalFile = __DIR__ . '/include/global-assets.php';
+if (is_file($vttGlobalFile)) {
+    require_once $vttGlobalFile;
+    vttConfigureGlobalAssets($env, dirname(__DIR__));
+}
+
 // ============================================
 // CORS
 // ============================================
@@ -660,8 +666,19 @@ function getAssetBaseDirMap() {
     ];
 }
 
+function isGlobalAssetSrc($src) {
+    if (!is_string($src) || $src === '') {
+        return false;
+    }
+    $src = str_replace('\\', '/', $src);
+    return strpos($src, '/vtt/global/') !== false && strpos($src, 'backend/assets/') === false;
+}
+
 function tokenMapAssetRef($item) {
     if (!is_array($item)) {
+        return '';
+    }
+    if (!empty($item['src']) && isGlobalAssetSrc($item['src'])) {
         return '';
     }
     if (!empty($item['assetId']) && is_string($item['assetId'])) {
@@ -686,7 +703,7 @@ function collectAssetUsageFromState($state) {
     foreach ($state['scenes'] ?? [] as $scene) {
         $sceneName = is_string($scene['name'] ?? null) ? $scene['name'] : 'Scene';
 
-        if (!empty($scene['background']['src']) && is_string($scene['background']['src'])) {
+        if (!empty($scene['background']['src']) && is_string($scene['background']['src']) && !isGlobalAssetSrc($scene['background']['src'])) {
             $filename = basename(str_replace('\\', '/', $scene['background']['src']));
             if ($filename !== '') {
                 if (!isset($usage['background'][$filename])) {
@@ -1005,9 +1022,24 @@ try {
         isset($_SERVER['HTTP_X_DEV_GM']) && $_SERVER['HTTP_X_DEV_GM'] === '1'
         && preg_match('#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#i', $_SERVER['HTTP_ORIGIN'] ?? '')
     );
-    if ($action !== 'auth' && !isAuthenticated() && !$isDevBypass) {
+    if ($action !== 'auth' && $action !== 'global-file' && !isAuthenticated() && !$isDevBypass) {
         http_response_code(401);
         echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+        exit;
+    }
+
+    if ($action === 'global-file') {
+        if ($method !== 'GET') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+            exit;
+        }
+        if (function_exists('vttGlobalEmitRequestedFile')) {
+            vttGlobalEmitRequestedFile(isset($_GET['path']) ? (string) $_GET['path'] : '');
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'Not found']);
+        }
         exit;
     }
 
@@ -1037,7 +1069,8 @@ try {
                     $authPayload = [
                         'success' => true,
                         'authenticated' => $authenticated,
-                        'isGameMaster' => $isGM
+                        'isGameMaster' => $isGM,
+                        'globalAssets' => function_exists('vttGlobalAssetsFlag') && vttGlobalAssetsFlag(),
                     ];
                     if ($isGM && function_exists('vttStorageSnapshot')) {
                         $authPayload['storage'] = vttStorageSnapshot();
@@ -1101,6 +1134,12 @@ try {
                     break;
 
                 case 'list-map':
+                    if (isset($_GET['source']) && $_GET['source'] === 'global') {
+                        echo json_encode(function_exists('vttGlobalListFolder')
+                            ? vttGlobalListFolder('map', isset($_GET['path']) ? $_GET['path'] : '')
+                            : ['success' => true, 'currentPath' => '', 'folders' => [], 'files' => []]);
+                        break;
+                    }
                     // Lista elementów mapy z nawigacją po folderach (assets/map + podfoldery)
                     $mapBaseDir = __DIR__ . '/assets/map';
                     $path = isset($_GET['path']) ? trim($_GET['path']) : '';
@@ -1148,6 +1187,12 @@ try {
                     break;
 
                 case 'list-tokens':
+                    if (isset($_GET['source']) && $_GET['source'] === 'global') {
+                        echo json_encode(function_exists('vttGlobalListFolder')
+                            ? vttGlobalListFolder('tokens', isset($_GET['path']) ? $_GET['path'] : '')
+                            : ['success' => true, 'currentPath' => '', 'folders' => [], 'files' => []]);
+                        break;
+                    }
                     // Lista tokenów z nawigacją po folderach (assets/tokens + podfoldery)
                     $tokenBaseDir = __DIR__ . '/assets/tokens';
                     $path = isset($_GET['path']) ? trim($_GET['path']) : '';
@@ -1195,6 +1240,15 @@ try {
                     break;
 
                 case 'assets':
+                    if (isset($_GET['source']) && $_GET['source'] === 'global') {
+                        echo json_encode([
+                            'success' => true,
+                            'backgroundAssets' => function_exists('vttGlobalBackgroundAssets')
+                                ? vttGlobalBackgroundAssets()
+                                : [],
+                        ]);
+                        break;
+                    }
                     $backgroundAssets = [];
                     $bgDir = __DIR__ . '/assets/backgrounds';
                     // Elementy mapy i tokeny są ładowane przez list-map / list-tokens z nawigacją po folderach

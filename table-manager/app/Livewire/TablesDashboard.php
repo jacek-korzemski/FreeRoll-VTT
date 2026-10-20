@@ -23,6 +23,8 @@ class TablesDashboard extends Component
 
     public string $color_template = 'crimson';
 
+    public bool $global_assets = false;
+
     public ?int $editingId = null;
 
     public string $edit_player_password = '';
@@ -32,6 +34,8 @@ class TablesDashboard extends Component
     public string $edit_language = 'pl';
 
     public string $edit_color_template = 'crimson';
+
+    public bool $edit_global_assets = false;
 
     public ?int $confirmingDeleteId = null;
 
@@ -78,7 +82,7 @@ class TablesDashboard extends Component
             return;
         }
 
-        $this->reset('name', 'player_password', 'gm_password');
+        $this->reset('name', 'player_password', 'gm_password', 'global_assets');
         $this->language = 'pl';
         $this->color_template = app(ThemeCatalog::class)->defaultId();
         session()->flash('status', 'Stół został utworzony.');
@@ -92,6 +96,7 @@ class TablesDashboard extends Component
         $this->edit_gm_password = $table->gm_password;
         $this->edit_language = $table->language;
         $this->edit_color_template = $table->color_template ?: 'crimson';
+        $this->edit_global_assets = (bool) $table->global_assets;
         $this->confirmingDeleteId = null;
         $this->showThemePreview = false;
     }
@@ -99,7 +104,7 @@ class TablesDashboard extends Component
     public function cancelEdit(): void
     {
         $this->editingId = null;
-        $this->reset('edit_player_password', 'edit_gm_password');
+        $this->reset('edit_player_password', 'edit_gm_password', 'edit_global_assets');
         $this->edit_language = 'pl';
         $this->edit_color_template = 'crimson';
     }
@@ -113,6 +118,7 @@ class TablesDashboard extends Component
             'edit_gm_password' => $this->passwordRules(),
             'edit_language' => ['required', Rule::in(['en', 'pl'])],
             'edit_color_template' => ['required', Rule::in($this->themeIds())],
+            'edit_global_assets' => ['boolean'],
         ]);
 
         $provisioner->updateSettings($table, [
@@ -120,6 +126,7 @@ class TablesDashboard extends Component
             'gm_password' => $validated['edit_gm_password'],
             'language' => $validated['edit_language'],
             'color_template' => $validated['edit_color_template'],
+            'global_assets' => (bool) $validated['edit_global_assets'],
         ]);
 
         $this->cancelEdit();
@@ -207,6 +214,7 @@ class TablesDashboard extends Component
             'gm_password' => $this->passwordRules(),
             'language' => ['required', Rule::in(['en', 'pl'])],
             'color_template' => ['required', Rule::in($this->themeIds())],
+            'global_assets' => ['boolean'],
         ];
     }
 

@@ -87,6 +87,67 @@ class TableProvisioningTest extends TestCase
         $this->assertStringContainsString('VTT_COLOR_TEMPLATE=ember', $env);
         $this->assertStringContainsString('VTT_ENABLE_L5R=true', $env);
         $this->assertStringContainsString('VTT_TABLE_UPLOAD_QUOTA_MB=50', $env);
+        $this->assertStringNotContainsString('VTT_GLOBAL_ASSETS', $env);
+    }
+
+    public function test_global_assets_env_is_written_only_when_enabled(): void
+    {
+        config(['vtt.global_assets_path' => 'C:/lib/global assets']);
+        $user = User::factory()->create(['username' => 'global-user']);
+        $provisioner = app(TableProvisioner::class);
+        $payload = [
+            'name' => 'Sesja',
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+        ];
+
+        $off = $provisioner->create($user, $payload);
+        $offEnv = File::get($off->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertFalse($off->global_assets);
+        $this->assertStringNotContainsString('VTT_GLOBAL_ASSETS', $offEnv);
+
+        $on = $provisioner->create($user, $payload + ['global_assets' => true]);
+        $this->assertTrue($on->global_assets);
+        $onEnv = File::get($on->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertStringContainsString('VTT_GLOBAL_ASSETS=1', $onEnv);
+        $this->assertStringContainsString('VTT_GLOBAL_ASSETS_PATH="C:/lib/global assets"', $onEnv);
+
+        $provisioner->updateSettings($on, [
+            'player_password' => 'gracze',
+            'gm_password' => 'mistrz',
+            'language' => 'pl',
+            'color_template' => 'crimson',
+            'global_assets' => false,
+        ]);
+        $on->refresh();
+        $rewritten = File::get($on->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertFalse($on->global_assets);
+        $this->assertStringNotContainsString('VTT_GLOBAL_ASSETS', $rewritten);
+    }
+
+    public function test_livewire_create_can_attach_global_assets(): void
+    {
+        $user = User::factory()->create(['username' => 'global-live']);
+
+        Livewire::actingAs($user)
+            ->test(TablesDashboard::class)
+            ->assertSee('Załącz globalne assety')
+            ->set('name', 'Kampania')
+            ->set('player_password', 'players')
+            ->set('gm_password', 'gmsecret')
+            ->set('language', 'en')
+            ->set('color_template', 'ember')
+            ->set('global_assets', true)
+            ->call('createTable')
+            ->assertHasNoErrors();
+
+        $table = $user->vttTables()->first();
+        $this->assertNotNull($table);
+        $this->assertTrue($table->global_assets);
+        $env = File::get($table->absolutePath().DIRECTORY_SEPARATOR.'.env');
+        $this->assertStringContainsString('VTT_GLOBAL_ASSETS=1', $env);
+        $this->assertStringContainsString('VTT_GLOBAL_ASSETS_PATH=', $env);
     }
 
     public function test_user_cannot_create_more_than_three_tables(): void

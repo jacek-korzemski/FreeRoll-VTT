@@ -1,0 +1,6 @@
+# Shared graphics. Images only — no directory listing and no PHP.
+Options -Indexes
+
+<FilesMatch "(?i)\.(php|phtml|phar)$">
+    Require all denied
+</FilesMatch>

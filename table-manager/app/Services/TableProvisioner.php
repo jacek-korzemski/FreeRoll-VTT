@@ -35,7 +35,7 @@ class TableProvisioner
     }
 
     /**
-     * @param  array{name: string, player_password: string, gm_password: string, language: string, color_template?: string}  $data
+     * @param  array{name: string, player_password: string, gm_password: string, language: string, color_template?: string, global_assets?: bool}  $data
      */
     public function create(User $user, array $data): VttTable
     {
@@ -58,6 +58,7 @@ class TableProvisioner
                 'gm_password' => $data['gm_password'],
                 'language' => $data['language'],
                 'color_template' => $data['color_template'] ?? app(ThemeCatalog::class)->defaultId(),
+                'global_assets' => ! empty($data['global_assets']),
             ]);
 
             $table->setRelation('user', $locked);
@@ -135,7 +136,7 @@ class TableProvisioner
         $dest = $table->absolutePath();
         File::ensureDirectoryExists($dest);
 
-        $content = implode("\n", [
+        $lines = [
             'VTT_PASSWORD='.$table->player_password,
             'VTT_GM_PASSWORD='.$table->gm_password,
             'VTT_BASE_PATH='.$table->publicPath(),
@@ -144,9 +145,24 @@ class TableProvisioner
             'VTT_ENABLE_L5R='.$this->sourceEnableL5r(),
             'VTT_TABLE_UPLOAD_QUOTA_MB='.$table->uploadQuotaMb(),
             'ALLOWED_ORIGINS='.config('vtt.allowed_origins'),
-        ])."\n";
+        ];
+        if ($table->global_assets) {
+            $lines[] = 'VTT_GLOBAL_ASSETS=1';
+            $path = rtrim((string) config('vtt.global_assets_path'), "/\\");
+            $lines[] = $this->envAssign('VTT_GLOBAL_ASSETS_PATH', $path);
+        }
+        $content = implode("\n", $lines)."\n";
 
         File::put($dest.DIRECTORY_SEPARATOR.'.env', $content);
+    }
+
+    private function envAssign(string $key, string $value): string
+    {
+        if ($value === '' || preg_match('/[\s#"]/', $value) === 1) {
+            return $key.'="'.str_replace('"', '', $value).'"';
+        }
+
+        return $key.'='.$value;
     }
 
     private function uniqueSlug(): string

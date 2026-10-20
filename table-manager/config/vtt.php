@@ -11,6 +11,8 @@ return [
 
     'tables_path' => env('VTT_TABLES_PATH', public_path('vtt/user')),
 
+    'global_assets_path' => env('VTT_GLOBAL_ASSETS_PATH', public_path('vtt/global')),
+
     'slug_length' => 10,
 
     'allowed_origins' => env('VTT_ALLOWED_ORIGINS', '*'),

@@ -18,6 +18,12 @@
 /public/hot
 /public/storage
 /public/vtt/user
+/public/vtt/global/**/*.png
+/public/vtt/global/**/*.jpg
+/public/vtt/global/**/*.jpeg
+/public/vtt/global/**/*.gif
+/public/vtt/global/**/*.webp
+/public/vtt/global/**/*.bmp
 /current-source/backend/vendor/
 /database/database.sqlite
 /database/database.sqlite-*

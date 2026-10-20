@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language', 'color_template', 'upload_quota_mb'])]
+#[Fillable(['user_id', 'name', 'slug', 'player_password', 'gm_password', 'language', 'color_template', 'upload_quota_mb', 'global_assets'])]
 class VttTable extends Model
 {
     public function user(): BelongsTo
@@ -23,6 +23,7 @@ class VttTable extends Model
             'player_password' => 'encrypted',
             'gm_password' => 'encrypted',
             'upload_quota_mb' => 'integer',
+            'global_assets' => 'boolean',
         ];
     }
 

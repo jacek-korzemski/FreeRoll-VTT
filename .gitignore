@@ -36,6 +36,9 @@ frontend/dist/
 build/
 build-copy/
 
+# Dev junction onto table-manager/public/vtt/global (scripts/link-global-assets.ps1)
+/vtt/
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -51,3 +54,5 @@ desktop.ini
 # Logs
 *.log
 npm-debug.log*
+
+prompts/*

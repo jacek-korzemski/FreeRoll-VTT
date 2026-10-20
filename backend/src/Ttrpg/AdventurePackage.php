@@ -369,6 +369,9 @@ final class AdventurePackage
             $html .= $entry['bodyHtml'];
         }
         foreach (self::srcsInHtml($html) as $src) {
+            if (strpos($src, '/vtt/global/') === 0) {
+                continue;
+            }
             $zipPath = substr($src, strlen('backend/'));
             if (!isset($wanted[$src]) && $zip->locateName($zipPath) !== false) {
                 $wanted[$src] = $zipPath;
@@ -516,10 +519,15 @@ final class AdventurePackage
         if (preg_match('#^[a-z][a-z0-9+.-]*:#i', $src)) {
             return null;
         }
-        if ($src[0] === '/' || $src[0] === '?') {
+        if ($src[0] === '?') {
             return null;
         }
-        if (!preg_match('#^backend/assets/(map|tokens|backgrounds)/#', $src)) {
+        $global = preg_match('#^/vtt/global/(map|tokens|backgrounds)/#', $src) === 1;
+        $table = preg_match('#^backend/assets/(map|tokens|backgrounds)/#', $src) === 1;
+        if (!$global && !$table) {
+            return null;
+        }
+        if (!$global && $src[0] === '/') {
             return null;
         }
         if (!preg_match('#\.(png|jpe?g|gif|webp)$#i', $src)) {
@@ -554,6 +562,9 @@ final class AdventurePackage
     {
         $src = self::canonicalSrc($src);
         if ($src === null) {
+            return null;
+        }
+        if (strpos($src, '/vtt/global/') === 0) {
             return null;
         }
         $root = str_replace('\\', '/', self::assetRoot());

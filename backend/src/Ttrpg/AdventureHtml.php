@@ -264,16 +264,21 @@ final class AdventureHtml
     private static function safeAssetSrc(string $src): ?string
     {
         $src = str_replace('\\', '/', trim($src));
-        if ($src === '' || strpos($src, '..') !== false) {
+        if ($src === '' || strpos($src, '..') !== false || strpos($src, '//') !== false) {
             return null;
         }
         if (preg_match('#^[a-z][a-z0-9+.-]*:#i', $src)) {
             return null;
         }
-        if ($src[0] === '/' || $src[0] === '\\' || $src[0] === '?') {
+        if ($src[0] === '?') {
             return null;
         }
-        if (!preg_match('#^backend/assets/(map|tokens|backgrounds)/#', $src)) {
+        $global = preg_match('#^/vtt/global/(map|tokens|backgrounds)/#', $src) === 1;
+        $table = preg_match('#^backend/assets/(map|tokens|backgrounds)/#', $src) === 1;
+        if (!$global && !$table) {
+            return null;
+        }
+        if (!$global && ($src[0] === '/' || $src[0] === '\\')) {
             return null;
         }
         if (!preg_match('#\.(png|jpe?g|gif|webp)$#i', $src)) {
@@ -288,6 +293,10 @@ final class AdventureHtml
     private static function extractRelative(string $src): ?string
     {
         $src = str_replace('\\', '/', $src);
+        $global = strpos($src, '/vtt/global/');
+        if ($global !== false) {
+            return self::safeAssetSrc(substr($src, $global));
+        }
         $pos = strpos($src, 'backend/assets/');
         if ($pos === false) {
             return null;

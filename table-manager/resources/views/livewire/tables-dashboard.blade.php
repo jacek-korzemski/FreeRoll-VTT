@@ -90,6 +90,10 @@
                                 </div>
                                 <x-input-error class="mt-1" :messages="$errors->get('edit_color_template')" />
                             </div>
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-200" for="edit_global_assets_{{ $table->id }}">
+                                <input wire:model="edit_global_assets" id="edit_global_assets_{{ $table->id }}" type="checkbox" class="rounded border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800">
+                                <span>Załącz globalne assety</span>
+                            </label>
                             <div class="flex gap-2">
                                 <x-success-button>Zapisz</x-success-button>
                                 <x-secondary-button type="button" wire:click="cancelEdit">Anuluj</x-secondary-button>
@@ -107,6 +111,7 @@
                         <div class="mt-5 space-y-2 border-t border-white/10 pt-4 text-sm">
                             <p><span class="text-gray-400">Hasło gracza:</span> <span class="font-mono text-gray-200">{{ $table->player_password }}</span></p>
                             <p><span class="text-gray-400">Hasło MG:</span> <span class="font-mono text-gray-200">{{ $table->gm_password }}</span></p>
+                            <p><span class="text-gray-400">Globalne assety:</span> <span class="text-gray-200">{{ $table->global_assets ? 'załączone' : 'wyłączone' }}</span></p>
                             <div class="flex flex-wrap gap-2 pt-2">
                                 <x-secondary-button type="button" wire:click="startEdit({{ $table->id }})">Zmień ustawienia</x-secondary-button>
                                 <x-warning-button type="button" wire:click="confirmDelete({{ $table->id }})">Usuń</x-warning-button>
@@ -163,6 +168,13 @@
                         </button>
                     </div>
                     <x-input-error class="mt-1" :messages="$errors->get('color_template')" />
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-200" for="global_assets">
+                        <input wire:model="global_assets" id="global_assets" type="checkbox" class="rounded border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-blue-600 shadow-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800 disabled:cursor-not-allowed disabled:opacity-50" @disabled(! $sourceReady)>
+                        <span>Załącz globalne assety</span>
+                    </label>
+                    <p class="mt-1 text-xs text-gray-400">Wspólna biblioteka map, tokenów i teł. Pliki nie są kopiowane do stołu i nie wliczają się do limitu.</p>
                 </div>
                 <div class="flex items-end">
                     <x-success-button :disabled="! $sourceReady">Utwórz stół</x-success-button>

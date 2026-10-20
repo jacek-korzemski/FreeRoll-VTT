@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { t } from '../../lang'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 
 function NarrativeCard({
   card,
@@ -156,7 +157,7 @@ function NarrativeBoard({
     && (selectedType === 'token' || selectedType === 'map')
   )
   const backgroundStyle = background?.src
-    ? { backgroundImage: `url(${basePath}${background.src})` }
+    ? { backgroundImage: `url("${getImageSrc(background.src, basePath)}")` }
     : undefined
 
   useLayoutEffect(() => {
@@ -227,7 +228,7 @@ function NarrativeBoard({
                 <NarrativeCard
                   key={card.id}
                   card={card}
-                  imageSrc={card.src ? `${basePath}${card.src}` : ''}
+                  imageSrc={card.src ? getImageSrc(card.src, basePath) : ''}
                   isGameMaster={isGameMaster}
                   canMoveUp={index > 0}
                   canMoveDown={index < cards.length - 1}

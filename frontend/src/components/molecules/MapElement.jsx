@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 
 function MapElement({ element, cellSize, basePath, isEraserActive, isMoveToolActive, onElementClick }) {
   const centerX = element.x * cellSize + cellSize / 2
@@ -22,7 +23,7 @@ function MapElement({ element, cellSize, basePath, isEraserActive, isMoveToolAct
       onClick={handleClick}
     >
       <img
-        src={`${basePath}${element.src}`}
+        src={getImageSrc(element.src, basePath)}
         alt=""
         draggable={false}
       />

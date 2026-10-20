@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 
 function PlacementGhost({ asset, type, cell, cellSize, basePath, blocked = false }) {
   const [sizeBySrc, setSizeBySrc] = useState({})
@@ -61,7 +62,7 @@ function PlacementGhost({ asset, type, cell, cellSize, basePath, blocked = false
       >
         <img
           ref={handleImageRef}
-          src={`${basePath}${asset.src}`}
+          src={getImageSrc(asset.src, basePath)}
           alt=""
           draggable={false}
           onLoad={isToken ? undefined : handleImageLoad}

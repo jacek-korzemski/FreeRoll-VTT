@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 
 const PIECE_SIZE = 64
 
@@ -248,7 +249,7 @@ function TravelBoard({
         {background?.src ? (
           <img
             className="travel-map-image"
-            src={`${basePath}${background.src}`}
+            src={getImageSrc(background.src, basePath)}
             alt=""
             draggable={false}
             style={{
@@ -270,7 +271,7 @@ function TravelBoard({
             className="travel-piece travel-map-element"
             data-id={element.id}
             data-kind="map"
-            src={`${basePath}${element.src}`}
+            src={getImageSrc(element.src, basePath)}
             alt=""
             draggable={false}
             style={pieceStyle(element, 'map')}
@@ -282,7 +283,7 @@ function TravelBoard({
             className="travel-piece travel-token"
             data-id={token.id}
             data-kind="token"
-            src={`${basePath}${token.src}`}
+            src={getImageSrc(token.src, basePath)}
             alt=""
             draggable={false}
             style={pieceStyle(token, 'token')}

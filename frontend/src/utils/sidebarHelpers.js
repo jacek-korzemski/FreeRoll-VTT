@@ -20,8 +20,27 @@ export const isSelected = (asset, type, selectedAsset, selectedType) => {
  * @param {string} basePath - Base path for assets
  * @returns {string}
  */
+const GLOBAL_ASSET_PREFIX = '/vtt/global/'
+
+/**
+ * Table files stay under ASSET_BASE. Shared library paths are root-absolute
+ * on the table-manager host. In Vite dev, ASSET_BASE is the PHP origin, which
+ * cannot serve that folder on volumes without junctions, so those images are
+ * streamed by the API instead.
+ */
 export const getImageSrc = (src, basePath) => {
-  return `${basePath}${src}`
+  if (!src) return ''
+  if (/^https?:\/\//i.test(src)) return src
+  if (src.startsWith(GLOBAL_ASSET_PREFIX)) {
+    const base = basePath || ''
+    if (/^https?:\/\//i.test(base)) {
+      const origin = new URL(base).origin
+      const relative = src.slice(GLOBAL_ASSET_PREFIX.length)
+      return `${origin}/backend/api.php?action=global-file&path=${encodeURIComponent(relative)}`
+    }
+    return src
+  }
+  return `${basePath || ''}${src}`
 }
 
 /**

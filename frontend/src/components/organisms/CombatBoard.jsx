@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { t } from '../../lang'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 
 function clampPercent(value) {
   const number = Number(value)
@@ -283,12 +284,12 @@ function CombatBoard({
   const toggleUnit = (id) => setOpenId((prev) => (prev === id ? null : id))
   const withSrc = combatants.map((combatant) => ({
     ...combatant,
-    src: combatant.src ? `${basePath}${combatant.src}` : '',
+    src: combatant.src ? getImageSrc(combatant.src, basePath) : '',
   }))
   const sideIndex = { enemy: 0, player: 0 }
   const canAdd = !!(selectedAsset && selectedType === 'token')
   const backgroundStyle = background?.src
-    ? { backgroundImage: `url(${basePath}${background.src})` }
+    ? { backgroundImage: `url("${getImageSrc(background.src, basePath)}")` }
     : undefined
 
   return (

@@ -20,6 +20,9 @@ function AssetBrowser({
   assetType,
   rootIcon,
   rootTitle,
+  globalEnabled = false,
+  source = 'table',
+  onSourceChange,
   pingMode,
   activePing,
   onTogglePing,
@@ -76,6 +79,29 @@ function AssetBrowser({
           onToggle={onToggleTokenEraser}
           labelKey="sidebar.tokenEraser"
         />
+      )}
+
+      {globalEnabled && (
+        <div className="asset-source-switch" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={source !== 'global'}
+            className={source !== 'global' ? 'active' : ''}
+            onClick={() => onSourceChange?.('table')}
+          >
+            {t('sidebar.assetSourceTable')}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={source === 'global'}
+            className={source === 'global' ? 'active' : ''}
+            onClick={() => onSourceChange?.('global')}
+          >
+            {t('sidebar.assetSourceGlobal')}
+          </button>
+        </div>
       )}
 
       {(path || folders.length > 0) && (

@@ -33,13 +33,19 @@ function Sidebar({
   mapListLoading,
   mapNavigationForwardRef,
   onMapPathChange,
+  mapSource = 'table',
+  onMapSourceChange,
   tokenPath,
   tokenFolders,
   tokenFiles,
   tokenListLoading,
   tokenNavigationForwardRef,
   onTokenPathChange,
+  tokenSource = 'table',
+  onTokenSourceChange,
   backgroundAssets,
+  globalBackgroundAssets = [],
+  globalAssets = false,
   currentBackground,
   selectedAsset, 
   selectedType,
@@ -228,6 +234,8 @@ function Sidebar({
                   onDuplicateScene={onDuplicateScene}
                   onUpdateScene={onUpdateScene}
                   backgroundAssets={backgroundAssets}
+                  globalBackgroundAssets={globalBackgroundAssets}
+                  showGlobalBackgrounds={globalAssets}
                   currentBackground={currentBackground}
                   bgZoomStep={bgZoomStep}
                   onBgZoomStepChange={setBgZoomStep}
@@ -284,7 +292,10 @@ function Sidebar({
                 onSelectAsset={onSelectAsset}
                 assetType="map"
                 rootIcon="🏠"
-                rootTitle={t('sidebar.mapElementsRoot')}
+                rootTitle={mapSource === 'global' ? t('sidebar.assetSourceGlobal') : t('sidebar.mapElementsRoot')}
+                globalEnabled={globalAssets}
+                source={mapSource}
+                onSourceChange={onMapSourceChange}
                 pingMode={pingMode}
                 activePing={activePing}
                 onTogglePing={onTogglePing}
@@ -320,7 +331,10 @@ function Sidebar({
                 onSelectAsset={onSelectAsset}
                 assetType="token"
                 rootIcon="🎭"
-                rootTitle={t('sidebar.tokensRoot')}
+                rootTitle={tokenSource === 'global' ? t('sidebar.assetSourceGlobal') : t('sidebar.tokensRoot')}
+                globalEnabled={globalAssets}
+                source={tokenSource}
+                onSourceChange={onTokenSourceChange}
                 isTokenEraserActive={isTokenEraserActive}
                 hasTokens={hasTokens}
                 onToggleTokenEraser={onToggleTokenEraser}

@@ -4,7 +4,7 @@ import MapElement from '../molecules/MapElement'
 import PlacementGhost from '../molecules/PlacementGhost'
 import FogOfWar from '../molecules/FogOfWar'
 import GridRulers from '../molecules/GridRulers'
-import { getActiveAssetDrag } from '../../utils/sidebarHelpers'
+import { getActiveAssetDrag, getImageSrc } from '../../utils/sidebarHelpers'
 import { GRID_SIZE, CELL_SIZE } from '../../../config'
 
 const Grid = forwardRef(function Grid(props, ref) {
@@ -124,7 +124,7 @@ const Grid = forwardRef(function Grid(props, ref) {
   useEffect(() => {
     if (!selectedAsset?.src || !basePath) return
     const img = new Image()
-    img.src = `${basePath}${selectedAsset.src}`
+    img.src = getImageSrc(selectedAsset.src, basePath)
   }, [selectedAsset, basePath])
 
   useEffect(() => {
@@ -340,7 +340,7 @@ const Grid = forwardRef(function Grid(props, ref) {
     }
 
     return {
-      backgroundImage: `url(${basePath}${background.src})`,
+      backgroundImage: `url("${getImageSrc(background.src, basePath)}")`,
       backgroundPosition: `${offsetX}px ${offsetY}px`,
       backgroundRepeat: 'no-repeat',
       backgroundSize

@@ -6,6 +6,8 @@ import BackgroundAdjust from '../molecules/BackgroundAdjust'
 
 function BackgroundSection({
   backgroundAssets,
+  globalBackgroundAssets = [],
+  showGlobalBackgrounds = false,
   currentBackground,
   bgZoomStep,
   onBgZoomStepChange,
@@ -52,7 +54,7 @@ function BackgroundSection({
       )}
       
       <div className="background-list">
-        {backgroundAssets.length === 0 && (
+        {backgroundAssets.length === 0 && globalBackgroundAssets.length === 0 && !showGlobalBackgrounds && (
           <p className="no-assets">
             {t('sidebar.backgroundsEmpty')}<br/>
             <code>backend/assets/backgrounds/</code>
@@ -60,7 +62,7 @@ function BackgroundSection({
         )}
         {backgroundAssets.map(bg => (
           <div
-            key={bg.id}
+            key={bg.src || bg.id}
             className={`background-item ${isCurrentBackground(bg, currentBackground) ? 'active' : ''}`}
             draggable
             onDragStart={(event) => {
@@ -83,6 +85,39 @@ function BackgroundSection({
             {isCurrentBackground(bg, currentBackground) && <span className="bg-active">✓</span>}
           </div>
         ))}
+        {showGlobalBackgrounds && (
+          <>
+            <p className="background-source-label">{t('sidebar.assetSourceGlobal')}</p>
+            {globalBackgroundAssets.length === 0 && (
+              <p className="no-assets">{t('sidebar.globalEmpty')}</p>
+            )}
+            {globalBackgroundAssets.map(bg => (
+              <div
+                key={bg.src || bg.id}
+                className={`background-item ${isCurrentBackground(bg, currentBackground) ? 'active' : ''}`}
+                draggable
+                onDragStart={(event) => {
+                  draggedRef.current = true
+                  handleAssetDragStart(bg, 'background', event)
+                }}
+                onDragEnd={() => clearActiveAssetDrag()}
+                onClick={() => {
+                  if (draggedRef.current) {
+                    draggedRef.current = false
+                    return
+                  }
+                  if (!isCurrentBackground(bg, currentBackground)) pickBackground(bg)
+                }}
+                title={`${bg.filename} (${bg.gridWidth}×${bg.gridHeight})`}
+              >
+                <span className="bg-icon">🗺️</span>
+                <span className="bg-name">{bg.name}</span>
+                <span className="bg-size">{bg.gridWidth}×{bg.gridHeight}</span>
+                {isCurrentBackground(bg, currentBackground) && <span className="bg-active">✓</span>}
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       {showAdjust && currentBackground && (

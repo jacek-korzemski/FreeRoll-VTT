@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { t } from '../../lang'
+import { getImageSrc } from '../../utils/sidebarHelpers'
 import TokenNoteEditor from './TokenNoteEditor'
 
 function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePath, onTokenUpdate, onRemoveToken, onDuplicateToken, isGameMaster = false, isTokenEraserActive = false, onTokenErase }) {
@@ -424,7 +425,7 @@ function Token({ token, cellSize, isDragging, dragPosition, onDragStart, basePat
         )}
 
         <img
-          src={`${basePath}${token.src}`}
+          src={getImageSrc(token.src, basePath)}
           alt=""
           draggable={false}
           style={{

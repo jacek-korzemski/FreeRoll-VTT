@@ -30,6 +30,8 @@ function SceneManager({
   onDuplicateScene,
   onUpdateScene,
   backgroundAssets,
+  globalBackgroundAssets = [],
+  showGlobalBackgrounds = false,
   currentBackground,
   bgZoomStep,
   onBgZoomStepChange,
@@ -199,6 +201,8 @@ function SceneManager({
                         embedded
                         showAdjust={type === 'tactical' && isView}
                         backgroundAssets={backgroundAssets}
+                        globalBackgroundAssets={globalBackgroundAssets}
+                        showGlobalBackgrounds={showGlobalBackgrounds}
                         currentBackground={isView ? currentBackground : null}
                         bgZoomStep={bgZoomStep}
                         onBgZoomStepChange={onBgZoomStepChange}

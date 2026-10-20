@@ -14,6 +14,12 @@ import { ASSET_BASE, API_BASE, ENABLE_L5R } from '../config'
 import { t } from './lang'
 import { getTableItem, removeTableItem, setTableItem } from './utils/tableStorage'
 
+function assetListQuery(source, path) {
+  const sourceQuery = source === 'global' ? '&source=global' : ''
+  const pathQuery = path ? `&path=${encodeURIComponent(path)}` : ''
+  return `${sourceQuery}${pathQuery}`
+}
+
 const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug')
 
 function App() {
@@ -37,6 +43,10 @@ function App() {
   const [mapListLoading, setMapListLoading] = useState(false)
   const [tokenListLoading, setTokenListLoading] = useState(false)
   const [backgroundAssets, setBackgroundAssets] = useState([])
+  const [globalBackgroundAssets, setGlobalBackgroundAssets] = useState([])
+  const [globalAssets, setGlobalAssets] = useState(false)
+  const [mapSource, setMapSource] = useState('table')
+  const [tokenSource, setTokenSource] = useState('table')
   const [selectedAsset, setSelectedAsset] = useState(null)
   const [selectedType, setSelectedType] = useState(null)
   const [isEraserActive, setIsEraserActive] = useState(false)  
@@ -109,6 +119,7 @@ function App() {
       .then(data => {
         if (data.success) {
           setIsGameMaster(data.isGameMaster || false)
+          setGlobalAssets(!!data.globalAssets)
         }
       })
       .catch(console.error)
@@ -299,6 +310,27 @@ function App() {
       .catch(console.error)
   }, [])
 
+  useEffect(() => {
+    if (!globalAssets) {
+      setMapSource('table')
+      setTokenSource('table')
+      setGlobalBackgroundAssets([])
+      return undefined
+    }
+    let cancelled = false
+    fetch(API_BASE + '?action=assets&source=global', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled && data.success) {
+          setGlobalBackgroundAssets(data.backgroundAssets || [])
+        }
+      })
+      .catch(console.error)
+    return () => {
+      cancelled = true
+    }
+  }, [globalAssets])
+
   const refreshBackgroundAssets = useCallback(() => {
     fetch(API_BASE + '?action=assets', { credentials: 'include' })
       .then(res => res.json())
@@ -314,7 +346,7 @@ function App() {
     const isForward = mapNavigationForwardRef.current
     if (!isInitialMapFetch.current && isForward) setMapListLoading(true)
     isInitialMapFetch.current = false
-    const q = mapPath ? `&path=${encodeURIComponent(mapPath)}` : ''
+    const q = assetListQuery(mapSource, mapPath)
     fetch(`${API_BASE}?action=list-map${q}`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
@@ -327,10 +359,10 @@ function App() {
         setMapListLoading(false)
       })
       .catch(() => setMapListLoading(false))
-  }, [mapPath])
+  }, [mapPath, mapSource])
 
   const refreshMapAssets = useCallback(() => {
-    const q = mapPath ? `&path=${encodeURIComponent(mapPath)}` : ''
+    const q = assetListQuery(mapSource, mapPath)
     fetch(`${API_BASE}?action=list-map${q}`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
@@ -342,13 +374,13 @@ function App() {
         }
       })
       .catch(console.error)
-  }, [mapPath])
+  }, [mapPath, mapSource])
 
   useEffect(() => {
     const isForward = tokenNavigationForwardRef.current
     if (!isInitialTokenFetch.current && isForward) setTokenListLoading(true)
     isInitialTokenFetch.current = false
-    const q = tokenPath ? `&path=${encodeURIComponent(tokenPath)}` : ''
+    const q = assetListQuery(tokenSource, tokenPath)
     fetch(`${API_BASE}?action=list-tokens${q}`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
@@ -361,10 +393,10 @@ function App() {
         setTokenListLoading(false)
       })
       .catch(() => setTokenListLoading(false))
-  }, [tokenPath])
+  }, [tokenPath, tokenSource])
 
   const refreshTokenAssets = useCallback(() => {
-    const q = tokenPath ? `&path=${encodeURIComponent(tokenPath)}` : ''
+    const q = assetListQuery(tokenSource, tokenPath)
     fetch(`${API_BASE}?action=list-tokens${q}`, { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
@@ -376,7 +408,7 @@ function App() {
         }
       })
       .catch(console.error)
-  }, [tokenPath])
+  }, [tokenPath, tokenSource])
 
   
 useEffect(() => {
@@ -1560,6 +1592,12 @@ useEffect(() => {
           mapNavigationForwardRef.current = newSegs > prevSegs
           setMapPath(newPath)
         }}
+        mapSource={mapSource}
+        onMapSourceChange={(next) => {
+          mapNavigationForwardRef.current = false
+          setMapPath('')
+          setMapSource(next === 'global' ? 'global' : 'table')
+        }}
         tokenPath={tokenPath}
         tokenFolders={tokenFolders}
         tokenFiles={tokenFiles}
@@ -1571,7 +1609,15 @@ useEffect(() => {
           tokenNavigationForwardRef.current = newSegs > prevSegs
           setTokenPath(newPath)
         }}
+        tokenSource={tokenSource}
+        onTokenSourceChange={(next) => {
+          tokenNavigationForwardRef.current = false
+          setTokenPath('')
+          setTokenSource(next === 'global' ? 'global' : 'table')
+        }}
         backgroundAssets={backgroundAssets}
+        globalBackgroundAssets={globalBackgroundAssets}
+        globalAssets={globalAssets}
         currentBackground={background}
         selectedAsset={selectedAsset}
         selectedType={selectedType}

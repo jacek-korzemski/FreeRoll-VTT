@@ -132,6 +132,14 @@ export function serializeAdventureHtml(root) {
   return clone.innerHTML
 }
 
+function adventureAssetRef(_rel, src) {
+  const raw = src || ''
+  const globalAt = raw.indexOf('/vtt/global/')
+  if (globalAt !== -1) return raw.slice(globalAt)
+  const at = raw.indexOf('backend/assets/')
+  return at === -1 ? '' : raw.slice(at)
+}
+
 export function hydrateAdventureHtml(html, assetBase, knownIds, missingLabel) {
   const holder = document.createElement('div')
   holder.innerHTML = html || ''
@@ -141,7 +149,7 @@ export function hydrateAdventureHtml(html, assetBase, knownIds, missingLabel) {
     const src = img.getAttribute('src') || ''
     const relative = rel && !/^[a-z][a-z0-9+.-]*:/i.test(rel)
       ? rel
-      : (src.includes('backend/assets/') ? src.slice(src.indexOf('backend/assets/')) : '')
+      : adventureAssetRef('', src)
     if (!relative) return
     img.setAttribute('data-src', relative)
     img.src = getImageSrc(relative, assetBase)

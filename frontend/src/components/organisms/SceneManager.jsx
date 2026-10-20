@@ -1,41 +1,78 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { t } from '../../lang'
+import BackgroundSection from './BackgroundSection'
 
-function SceneManager({ 
-  scenes, 
-  activeSceneId, 
-  onSwitchScene, 
-  onCreateScene, 
-  onDeleteScene, 
+const SCENE_TYPES = ['tactical', 'combat', 'travel', 'narrative']
+
+function EyeIcon({ open }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path
+        d="M1.5 8S3.8 4.2 8 4.2 14.5 8 14.5 8 12.2 11.8 8 11.8 1.5 8 1.5 8z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
+      <circle cx="8" cy="8" r={open ? '2.1' : '1.1'} fill="currentColor" />
+    </svg>
+  )
+}
+
+function SceneManager({
+  scenes,
+  activeSceneId,
+  hideHp,
+  onFocusScene,
+  onShowToPlayers,
+  onCreateScene,
+  onDeleteScene,
   onRenameScene,
-  onDuplicateScene
+  onDuplicateScene,
+  onUpdateScene,
+  backgroundAssets,
+  currentBackground,
+  bgZoomStep,
+  onBgZoomStepChange,
+  onRemoveBackground,
+  onNudgeBackground,
+  onScaleBackground,
+  onResetBackgroundPosition,
+  onResetBackgroundScale,
+  onResetBackgroundAll,
+  onToggleGridHidden,
 }) {
   const [editingId, setEditingId] = useState(null)
   const [editingName, setEditingName] = useState('')
   const [isCreating, setIsCreating] = useState(false)
   const [newSceneName, setNewSceneName] = useState('')
 
-  const handleStartRename = useCallback((scene) => {
-    setEditingId(scene.id)
-    setEditingName(scene.name)
-  }, [])
-
-  const handleFinishRename = useCallback(() => {
-    if (editingId && editingName.trim()) {
-      onRenameScene(editingId, editingName.trim())
-    }
-    setEditingId(null)
-    setEditingName('')
-  }, [editingId, editingName, onRenameScene])
-
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      handleFinishRename()
-    } else if (e.key === 'Escape') {
+  const handleToggleEdit = useCallback((scene) => {
+    if (editingId === scene.id) {
       setEditingId(null)
       setEditingName('')
+      return
     }
-  }, [handleFinishRename])
+    onFocusScene(scene.id)
+    setEditingId(scene.id)
+    setEditingName(scene.name)
+  }, [editingId, onFocusScene])
+
+  const commitName = useCallback(() => {
+    const name = editingName.trim()
+    if (editingId && name) {
+      onRenameScene(editingId, name)
+    }
+  }, [editingId, editingName, onRenameScene])
+
+  const handleNameKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.currentTarget.blur()
+    } else if (e.key === 'Escape') {
+      const scene = scenes.find((item) => item.id === editingId)
+      setEditingName(scene?.name || '')
+    }
+  }, [editingId, scenes])
 
   const handleCreateScene = useCallback(() => {
     if (newSceneName.trim()) {
@@ -57,41 +94,46 @@ function SceneManager({
   return (
     <div className="scene-manager">
       <div className="scene-list">
-        {scenes.map((scene, index) => (
-          <div 
-            key={scene.id} 
-            className={`scene-item ${scene.id === activeSceneId ? 'active' : ''}`}
-          >
-            {editingId === scene.id ? (
-              <input
-                type="text"
-                className="scene-name-input"
-                value={editingName}
-                onChange={(e) => setEditingName(e.target.value)}
-                onBlur={handleFinishRename}
-                onKeyDown={handleKeyDown}
-                autoFocus
-                maxLength={50}
-              />
-            ) : (
-              <>
-                <span 
+        {scenes.map((scene, index) => {
+          const type = SCENE_TYPES.includes(scene.type) ? scene.type : 'tactical'
+          const isView = scene.id === activeSceneId
+          const isEditing = editingId === scene.id
+          const showBackground = type === 'tactical' || type === 'travel' || type === 'narrative' || type === 'combat'
+          return (
+            <div key={scene.id} className="scene-block">
+              <div className={`scene-item ${isView ? 'active' : ''} ${scene.playerVisible ? 'player-visible' : ''}`}>
+                <button
+                  type="button"
+                  className={`scene-visibility ${scene.playerVisible ? 'on' : ''}`}
+                  aria-pressed={!!scene.playerVisible}
+                  title={scene.playerVisible ? t('scenes.visibleToPlayers') : t('scenes.showToPlayers')}
+                  onClick={() => {
+                    if (!scene.playerVisible) onShowToPlayers(scene.id)
+                  }}
+                >
+                  <EyeIcon open={!!scene.playerVisible} />
+                </button>
+                <span
                   className="scene-name"
-                  onClick={() => scene.id !== activeSceneId && onSwitchScene(scene.id)}
-                  title={scene.id === activeSceneId ? t('scenes.current') : t('scenes.switchTo')}
+                  onClick={() => {
+                    if (!isView) onFocusScene(scene.id)
+                  }}
+                  title={isView ? t('scenes.current') : t('scenes.switchTo')}
                 >
                   <span className="scene-number">{index + 1}.</span>
                   {scene.name}
                 </span>
                 <div className="scene-actions">
                   <button
+                    type="button"
                     className="scene-action-btn"
-                    onClick={() => handleStartRename(scene)}
-                    title={t('scenes.rename')}
+                    onClick={() => handleToggleEdit(scene)}
+                    title={t('scenes.edit')}
                   >
                     ✏️
                   </button>
                   <button
+                    type="button"
                     className="scene-action-btn"
                     onClick={() => onDuplicateScene(scene.id)}
                     title={t('scenes.duplicate')}
@@ -100,6 +142,7 @@ function SceneManager({
                   </button>
                   {scenes.length > 1 && (
                     <button
+                      type="button"
                       className="scene-action-btn delete"
                       onClick={() => {
                         if (confirm(t('scenes.deleteConfirm', { name: scene.name }))) {
@@ -112,10 +155,80 @@ function SceneManager({
                     </button>
                   )}
                 </div>
-              </>
-            )}
-          </div>
-        ))}
+              </div>
+
+              {isEditing && (
+                <div className="scene-edit">
+                  <label className="scene-edit-field">
+                    <span>{t('scenes.namePlaceholder')}</span>
+                    <input
+                      type="text"
+                      className="scene-name-input scene-edit-name"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      onBlur={commitName}
+                      onKeyDown={handleNameKeyDown}
+                      maxLength={50}
+                    />
+                  </label>
+                  <label className="scene-edit-field">
+                    <span>{t('scenes.type')}</span>
+                    <select
+                      value={type}
+                      onChange={(e) => onUpdateScene(scene.id, { type: e.target.value })}
+                    >
+                      {SCENE_TYPES.map((value) => (
+                        <option key={value} value={value}>{t(`scenes.type_${value}`)}</option>
+                      ))}
+                    </select>
+                  </label>
+                  {type === 'combat' && isView && (
+                    <label className="scene-edit-check">
+                      <input
+                        type="checkbox"
+                        checked={!!hideHp}
+                        onChange={(e) => onUpdateScene(scene.id, { hideHp: e.target.checked })}
+                      />
+                      <span>{t('scenes.hideHp')}</span>
+                    </label>
+                  )}
+                  {showBackground && (
+                    <div className="scene-edit-field">
+                      <span>{t('scenes.background')}</span>
+                      <BackgroundSection
+                        embedded
+                        showAdjust={type === 'tactical' && isView}
+                        backgroundAssets={backgroundAssets}
+                        currentBackground={isView ? currentBackground : null}
+                        bgZoomStep={bgZoomStep}
+                        onBgZoomStepChange={onBgZoomStepChange}
+                        onPickBackground={(bg) => onUpdateScene(scene.id, {
+                          background: {
+                            src: bg.src,
+                            name: bg.name,
+                            width: bg.width,
+                            height: bg.height,
+                            offsetX: 0,
+                            offsetY: 0,
+                            scale: 1,
+                            gridHidden: false,
+                          },
+                        })}
+                        onRemoveBackground={isView ? onRemoveBackground : undefined}
+                        onNudgeBackground={onNudgeBackground}
+                        onScaleBackground={onScaleBackground}
+                        onResetBackgroundPosition={onResetBackgroundPosition}
+                        onResetBackgroundScale={onResetBackgroundScale}
+                        onResetBackgroundAll={onResetBackgroundAll}
+                        onToggleGridHidden={onToggleGridHidden}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {isCreating ? (
@@ -130,18 +243,20 @@ function SceneManager({
             autoFocus
             maxLength={50}
           />
-          <button className="scene-create-confirm" onClick={handleCreateScene}>
+          <button type="button" className="scene-create-confirm" onClick={handleCreateScene}>
             ✓
           </button>
-          <button 
-            className="scene-create-cancel" 
+          <button
+            type="button"
+            className="scene-create-cancel"
             onClick={() => { setIsCreating(false); setNewSceneName('') }}
           >
             ✕
           </button>
         </div>
       ) : (
-        <button 
+        <button
+          type="button"
           className="scene-add-btn"
           onClick={() => setIsCreating(true)}
         >

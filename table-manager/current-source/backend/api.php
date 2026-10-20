@@ -112,6 +112,14 @@ function isGameMaster() {
     return isAuthenticated() && isset($_SESSION['vtt_is_gm']) && $_SESSION['vtt_is_gm'] === true;
 }
 
+function requireGameMaster() {
+    if (!isGameMaster()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+        exit;
+    }
+}
+
 define('ROLLS_HISTORY_MAX', 20);
 define('ROLL_SNACKBAR_MAX_AGE_SEC', 600);
 
@@ -242,15 +250,182 @@ function generateId() {
     return uniqid('', true);
 }
 
+function isSceneType($type) {
+    return $type === 'tactical' || $type === 'combat' || $type === 'travel' || $type === 'narrative';
+}
+
+function sceneUsesGrid($scene) {
+    if (!is_array($scene)) {
+        return true;
+    }
+    return ($scene['type'] ?? 'tactical') === 'tactical';
+}
+
+function clipPlainText($value, $max) {
+    $text = is_string($value) ? $value : '';
+    $text = strip_tags($text);
+    $text = str_replace("\0", '', $text);
+    return mb_substr($text, 0, $max);
+}
+
+function clipSrc($value) {
+    $src = is_string($value) ? $value : '';
+    $src = str_replace(["\0", "\r", "\n"], '', $src);
+    if (preg_match('/^\s*javascript:/i', $src)) {
+        return '';
+    }
+    return mb_substr($src, 0, 500);
+}
+
+function clipHp($value) {
+    if ($value === null || $value === '') {
+        return null;
+    }
+    $n = intval($value);
+    if ($n < 0) {
+        $n = 0;
+    }
+    if ($n > 99999) {
+        $n = 99999;
+    }
+    return $n;
+}
+
+function clipPercent($value) {
+    if ($value === null || $value === '' || !is_numeric($value)) {
+        return null;
+    }
+    $n = floatval($value);
+    if ($n < 0) {
+        $n = 0;
+    }
+    if ($n > 100) {
+        $n = 100;
+    }
+    return round($n, 2);
+}
+
+function clipTurn($value, $fallback) {
+    if (!is_numeric($value)) {
+        return $fallback;
+    }
+    $n = intval($value);
+    if ($n < 1) {
+        $n = 1;
+    }
+    if ($n > 999) {
+        $n = 999;
+    }
+    return $n;
+}
+
 function createEmptyScene($name = 'New Scene') {
     return [
         'id' => 'scene_' . generateId(),
         'name' => $name,
+        'type' => 'tactical',
+        'hideHp' => false,
+        'turn' => 1,
+        'turnMax' => 10,
         'background' => null,
         'fogOfWar' => ['enabled' => false, 'data' => null],
         'mapElements' => [],
-        'tokens' => []
+        'tokens' => [],
+        'combatants' => [],
+        'cards' => []
     ];
+}
+
+function sceneListForClient(array $state) {
+    if (!isGameMaster()) {
+        return [];
+    }
+    $playerId = $state['activeSceneId'] ?? '';
+    $list = [];
+    foreach ($state['scenes'] as $scene) {
+        if (!is_array($scene)) {
+            continue;
+        }
+        $type = $scene['type'] ?? 'tactical';
+        if (!isSceneType($type)) {
+            $type = 'tactical';
+        }
+        $list[] = [
+            'id' => $scene['id'],
+            'name' => $scene['name'] ?? '',
+            'type' => $type,
+            'playerVisible' => ($scene['id'] === $playerId),
+        ];
+    }
+    return $list;
+}
+
+function viewSceneIdForClient(array $state) {
+    if (isGameMaster()) {
+        $editing = $state['editingSceneId'] ?? '';
+        if ($editing !== '') {
+            return $editing;
+        }
+    }
+    return $state['activeSceneId'] ?? '';
+}
+
+function copySceneById(array $state, $sceneId) {
+    foreach ($state['scenes'] as $scene) {
+        if (is_array($scene) && ($scene['id'] ?? '') === $sceneId) {
+            return $scene;
+        }
+    }
+    return null;
+}
+
+function filterSceneForPlayer(array $scene) {
+    $type = $scene['type'] ?? 'tactical';
+    $scene['type'] = isSceneType($type) ? $type : 'tactical';
+    $scene['hideHp'] = !empty($scene['hideHp']);
+    if ($scene['hideHp'] && isset($scene['combatants']) && is_array($scene['combatants'])) {
+        foreach ($scene['combatants'] as $idx => $combatant) {
+            if (!is_array($combatant)) {
+                continue;
+            }
+            unset($scene['combatants'][$idx]['hp'], $scene['combatants'][$idx]['maxHp']);
+        }
+        $scene['combatants'] = array_values($scene['combatants']);
+    }
+    $cards = [];
+    foreach ($scene['cards'] ?? [] as $card) {
+        if (!is_array($card) || empty($card['visible'])) {
+            continue;
+        }
+        $cards[] = $card;
+    }
+    $scene['cards'] = $cards;
+    return $scene;
+}
+
+function mutationSceneId(array $state) {
+    if (isGameMaster()) {
+        $id = $state['editingSceneId'] ?? '';
+        if ($id !== '') {
+            return $id;
+        }
+    }
+    return $state['activeSceneId'] ?? '';
+}
+
+function positionOccupied(array $items, $x, $y, $ignoreId = null) {
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        if ($ignoreId !== null && ($item['id'] ?? null) === $ignoreId) {
+            continue;
+        }
+        if (intval($item['x'] ?? 0) === $x && intval($item['y'] ?? 0) === $y) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function getState() {
@@ -260,6 +435,7 @@ function getState() {
         $defaultScene = createEmptyScene('Scene 1');
         $initialState = [
             'activeSceneId' => $defaultScene['id'],
+            'editingSceneId' => $defaultScene['id'],
             'scenes' => [$defaultScene],
             'counters' => [],
             'lastUpdate' => time(),
@@ -283,6 +459,7 @@ function getState() {
         
         $state = [
             'activeSceneId' => $scene['id'],
+            'editingSceneId' => $scene['id'],
             'scenes' => [$scene],
             'lastUpdate' => $state['lastUpdate'] ?? time(),
             'version' => $state['version'] ?? 0
@@ -291,6 +468,61 @@ function getState() {
     
     if (!isset($state['counters']) || !is_array($state['counters'])) {
         $state['counters'] = [];
+    }
+
+    $dirty = false;
+    if (!isset($state['scenes']) || !is_array($state['scenes'])) {
+        $state['scenes'] = [];
+    }
+    foreach ($state['scenes'] as $idx => $scene) {
+        if (!is_array($scene)) {
+            $state['scenes'][$idx] = createEmptyScene('Scene');
+            $dirty = true;
+            continue;
+        }
+        $next = $scene;
+        $type = $next['type'] ?? null;
+        if (!isSceneType($type)) {
+            $next['type'] = 'tactical';
+        }
+        if (!array_key_exists('hideHp', $next)) {
+            $next['hideHp'] = false;
+        }
+        if (!array_key_exists('turn', $next)) {
+            $next['turn'] = 1;
+        }
+        if (!array_key_exists('turnMax', $next)) {
+            $next['turnMax'] = 10;
+        }
+        if (!isset($next['combatants']) || !is_array($next['combatants'])) {
+            $next['combatants'] = [];
+        }
+        if (!isset($next['cards']) || !is_array($next['cards'])) {
+            $next['cards'] = [];
+        }
+        if ($next != $scene) {
+            $state['scenes'][$idx] = $next;
+            $dirty = true;
+        }
+    }
+
+    $ids = [];
+    foreach ($state['scenes'] as $scene) {
+        if (is_array($scene) && isset($scene['id'])) {
+            $ids[] = $scene['id'];
+        }
+    }
+    if (!isset($state['activeSceneId']) || !in_array($state['activeSceneId'], $ids, true)) {
+        $state['activeSceneId'] = $ids[0] ?? '';
+        $dirty = true;
+    }
+    if (!isset($state['editingSceneId']) || !in_array($state['editingSceneId'], $ids, true)) {
+        $state['editingSceneId'] = $state['activeSceneId'];
+        $dirty = true;
+    }
+
+    if ($dirty) {
+        $state = saveState($state);
     }
     
     return $state;
@@ -350,13 +582,26 @@ function saveState($state) {
 
 function tableSyncPayload(array $state): array {
     $rollsFile = __DIR__ . '/data/rolls.json';
-    $activeScene = getActiveScene($state);
+    $playerSceneId = $state['activeSceneId'] ?? '';
+    $editingSceneId = $state['editingSceneId'] ?? $playerSceneId;
+    $viewId = viewSceneIdForClient($state);
+    $scene = copySceneById($state, $viewId);
+    if (!$scene && !empty($state['scenes']) && is_array($state['scenes'][0])) {
+        $scene = $state['scenes'][0];
+        $viewId = $scene['id'];
+    }
+    if (!$scene) {
+        $scene = createEmptyScene('Scene 1');
+    }
+    if (!isGameMaster()) {
+        $scene = filterSceneForPlayer($scene);
+    }
     return [
-        'activeSceneId' => $state['activeSceneId'],
-        'scenes' => array_map(static function ($s) {
-            return ['id' => $s['id'], 'name' => $s['name']];
-        }, $state['scenes'] ?? []),
-        'scene' => $activeScene,
+        'activeSceneId' => $viewId,
+        'playerSceneId' => $playerSceneId,
+        'editingSceneId' => $editingSceneId,
+        'scenes' => sceneListForClient($state),
+        'scene' => $scene,
         'counters' => $state['counters'] ?? [],
         'ping' => $state['ping'] ?? null,
         'rolls' => annotateRollsForSnackbar(loadRolls($rollsFile)),
@@ -367,22 +612,25 @@ function tableSyncPayload(array $state): array {
 }
 
 function getActiveScene(&$state) {
-    foreach ($state['scenes'] as &$scene) {
-        if ($scene['id'] === $state['activeSceneId']) {
+    $targetId = mutationSceneId($state);
+    foreach ($state['scenes'] as $scene) {
+        if (is_array($scene) && ($scene['id'] ?? '') === $targetId) {
             return $scene;
         }
     }
-    // Fallback - pierwsza scena
-    if (!empty($state['scenes'])) {
-        $state['activeSceneId'] = $state['scenes'][0]['id'];
+    if (!empty($state['scenes']) && is_array($state['scenes'][0])) {
         return $state['scenes'][0];
     }
     return null;
 }
 
 function updateActiveScene(&$state, $updatedScene) {
+    if (!is_array($updatedScene)) {
+        return;
+    }
+    $id = $updatedScene['id'] ?? '';
     foreach ($state['scenes'] as $idx => $scene) {
-        if ($scene['id'] === $state['activeSceneId']) {
+        if (is_array($scene) && ($scene['id'] ?? '') === $id) {
             $state['scenes'][$idx] = $updatedScene;
             return;
         }
@@ -1072,6 +1320,7 @@ try {
                 // ============================================
                 
                 case 'create-scene':
+                    requireGameMaster();
                     $state = getState();
                     $name = htmlspecialchars(mb_substr($input['name'] ?? 'New Scene', 0, 50));
                     $newScene = createEmptyScene($name);
@@ -1079,16 +1328,21 @@ try {
                     $state = saveState($state);
                     echo json_encode([
                         'success' => true,
-                        'scene' => ['id' => $newScene['id'], 'name' => $newScene['name']],
+                        'scene' => [
+                            'id' => $newScene['id'],
+                            'name' => $newScene['name'],
+                            'type' => 'tactical',
+                            'playerVisible' => false,
+                        ],
                         'version' => $state['version']
                     ]);
                     break;
 
                 case 'delete-scene':
+                    requireGameMaster();
                     $state = getState();
                     $sceneId = $input['id'] ?? '';
                     
-                    // Nie można usunąć jedynej sceny
                     if (count($state['scenes']) <= 1) {
                         echo json_encode(['success' => false, 'error' => 'Cannot delete last scene']);
                         break;
@@ -1099,23 +1353,34 @@ try {
                         fn($s) => $s['id'] !== $sceneId
                     ));
                     
-                    // Jeśli usunięto aktywną scenę, przełącz na pierwszą
                     if ($state['activeSceneId'] === $sceneId) {
                         $state['activeSceneId'] = $state['scenes'][0]['id'];
                     }
+                    if (($state['editingSceneId'] ?? '') === $sceneId) {
+                        $state['editingSceneId'] = $state['scenes'][0]['id'];
+                    }
                     
                     $state = saveState($state);
-                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    $viewId = viewSceneIdForClient($state);
+                    echo json_encode([
+                        'success' => true,
+                        'version' => $state['version'],
+                        'activeSceneId' => $viewId,
+                        'playerSceneId' => $state['activeSceneId'],
+                        'scene' => copySceneById($state, $viewId),
+                        'scenes' => sceneListForClient($state),
+                    ]);
                     break;
 
                 case 'rename-scene':
+                    requireGameMaster();
                     $state = getState();
                     $sceneId = $input['id'] ?? '';
                     $name = htmlspecialchars(mb_substr($input['name'] ?? 'Scene', 0, 50));
                     
-                    foreach ($state['scenes'] as &$scene) {
+                    foreach ($state['scenes'] as $idx => $scene) {
                         if ($scene['id'] === $sceneId) {
-                            $scene['name'] = $name;
+                            $state['scenes'][$idx]['name'] = $name;
                             break;
                         }
                     }
@@ -1125,39 +1390,120 @@ try {
                     break;
 
                 case 'switch-scene':
+                case 'focus-scene':
+                    requireGameMaster();
                     $state = getState();
                     $sceneId = $input['id'] ?? '';
-                    
-                    // Sprawdź czy scena istnieje
-                    $found = false;
-                    foreach ($state['scenes'] as $scene) {
-                        if ($scene['id'] === $sceneId) {
-                            $found = true;
-                            break;
-                        }
-                    }
-                    
+                    $found = copySceneById($state, $sceneId);
                     if (!$found) {
                         echo json_encode(['success' => false, 'error' => 'Scene not found']);
                         break;
                     }
                     
-                    $state['activeSceneId'] = $sceneId;
+                    $state['editingSceneId'] = $sceneId;
                     $state = saveState($state);
-                    
-                    $activeScene = getActiveScene($state);
                     echo json_encode([
                         'success' => true,
-                        'scene' => $activeScene,
+                        'activeSceneId' => $sceneId,
+                        'playerSceneId' => $state['activeSceneId'],
+                        'scene' => copySceneById($state, $sceneId),
                         'version' => $state['version']
                     ]);
                     break;
 
+                case 'show-to-players':
+                    requireGameMaster();
+                    $state = getState();
+                    $sceneId = $input['id'] ?? '';
+                    if (!copySceneById($state, $sceneId)) {
+                        echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                        break;
+                    }
+                    if (($state['activeSceneId'] ?? '') !== $sceneId) {
+                        $state['activeSceneId'] = $sceneId;
+                        $state = saveState($state);
+                    }
+                    echo json_encode([
+                        'success' => true,
+                        'playerSceneId' => $state['activeSceneId'],
+                        'scenes' => sceneListForClient($state),
+                        'version' => $state['version'] ?? 0,
+                    ]);
+                    break;
+
+                case 'update-scene':
+                    requireGameMaster();
+                    $state = getState();
+                    $sceneId = $input['id'] ?? '';
+                    $updated = null;
+                    foreach ($state['scenes'] as $idx => $scene) {
+                        if (!is_array($scene) || ($scene['id'] ?? '') !== $sceneId) {
+                            continue;
+                        }
+                        if (isset($input['name'])) {
+                            $scene['name'] = htmlspecialchars(mb_substr($input['name'], 0, 50));
+                        }
+                        if (isset($input['type'])) {
+                            $scene['type'] = isSceneType($input['type']) ? $input['type'] : 'tactical';
+                        }
+                        if (array_key_exists('hideHp', $input)) {
+                            $scene['hideHp'] = (bool)$input['hideHp'];
+                        }
+                        if (array_key_exists('turn', $input)) {
+                            $scene['turn'] = clipTurn($input['turn'], 1);
+                        }
+                        if (array_key_exists('turnMax', $input)) {
+                            $scene['turnMax'] = clipTurn($input['turnMax'], 10);
+                        }
+                        if (array_key_exists('background', $input)) {
+                            if ($input['background'] === null) {
+                                $scene['background'] = null;
+                            } elseif (is_array($input['background'])) {
+                                $bg = $input['background'];
+                                $existing = is_array($scene['background'] ?? null) ? $scene['background'] : [];
+                                $scene['background'] = [
+                                    'src' => clipSrc($bg['src'] ?? ($existing['src'] ?? '')),
+                                    'name' => clipPlainText($bg['name'] ?? ($existing['name'] ?? ''), 120),
+                                    'width' => intval($bg['width'] ?? ($existing['width'] ?? 0)),
+                                    'height' => intval($bg['height'] ?? ($existing['height'] ?? 0)),
+                                    'offsetX' => isset($bg['offsetX']) ? intval($bg['offsetX']) : intval($existing['offsetX'] ?? 0),
+                                    'offsetY' => isset($bg['offsetY']) ? intval($bg['offsetY']) : intval($existing['offsetY'] ?? 0),
+                                    'scale' => isset($bg['scale']) ? floatval($bg['scale']) : floatval($existing['scale'] ?? 1),
+                                    'gridHidden' => isset($bg['gridHidden']) ? (bool)$bg['gridHidden'] : (bool)($existing['gridHidden'] ?? false),
+                                ];
+                            }
+                        }
+                        $state['scenes'][$idx] = $scene;
+                        $updated = $scene;
+                        break;
+                    }
+                    if (!$updated) {
+                        echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                        break;
+                    }
+                    $state = saveState($state);
+                    echo json_encode([
+                        'success' => true,
+                        'scene' => [
+                            'id' => $updated['id'],
+                            'name' => $updated['name'],
+                            'type' => $updated['type'] ?? 'tactical',
+                            'playerVisible' => ($updated['id'] === ($state['activeSceneId'] ?? '')),
+                        ],
+                        'hideHp' => !empty($updated['hideHp']),
+                        'turn' => clipTurn($updated['turn'] ?? 1, 1),
+                        'turnMax' => clipTurn($updated['turnMax'] ?? 10, 10),
+                        'background' => $updated['background'] ?? null,
+                        'version' => $state['version'],
+                    ]);
+                    break;
+
                 case 'duplicate-scene':
+                    requireGameMaster();
                     $state = getState();
                     $sceneId = $input['id'] ?? '';
                     
-                    $sourceScene = getSceneById($state, $sceneId);
+                    $sourceScene = copySceneById($state, $sceneId);
                     if (!$sourceScene) {
                         echo json_encode(['success' => false, 'error' => 'Scene not found']);
                         break;
@@ -1165,16 +1511,246 @@ try {
                     
                     $newScene = $sourceScene;
                     $newScene['id'] = 'scene_' . generateId();
-                    $newScene['name'] = $sourceScene['name'] . ' (copy)';
+                    $newScene['name'] = mb_substr($sourceScene['name'] . ' (copy)', 0, 50);
                     
                     $state['scenes'][] = $newScene;
                     $state = saveState($state);
                     
                     echo json_encode([
                         'success' => true,
-                        'scene' => ['id' => $newScene['id'], 'name' => $newScene['name']],
+                        'scene' => [
+                            'id' => $newScene['id'],
+                            'name' => $newScene['name'],
+                            'type' => $newScene['type'] ?? 'tactical',
+                            'playerVisible' => false,
+                        ],
                         'version' => $state['version']
                     ]);
+                    break;
+
+                case 'add-combatant':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    if (!$activeScene) {
+                        echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                        break;
+                    }
+                    $side = ($input['side'] ?? '') === 'player' ? 'player' : 'enemy';
+                    $sameSide = 0;
+                    $roster = is_array($activeScene['combatants'] ?? null) ? $activeScene['combatants'] : [];
+                    foreach ($roster as $existing) {
+                        if (!is_array($existing)) {
+                            continue;
+                        }
+                        $existingSide = (($existing['side'] ?? '') === 'player') ? 'player' : 'enemy';
+                        if ($existingSide === $side) {
+                            $sameSide++;
+                        }
+                    }
+                    $combatant = [
+                        'id' => generateId(),
+                        'assetId' => clipSrc($input['assetId'] ?? ''),
+                        'src' => clipSrc($input['src'] ?? ''),
+                        'name' => '',
+                        'side' => $side,
+                        'x' => $side === 'player' ? 62 : 8,
+                        'y' => min(68, 12 + ($sameSide * 28)),
+                        'notes' => '',
+                        'hp' => null,
+                        'maxHp' => null,
+                    ];
+                    if (!isset($activeScene['combatants']) || !is_array($activeScene['combatants'])) {
+                        $activeScene['combatants'] = [];
+                    }
+                    $activeScene['combatants'][] = $combatant;
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'combatant' => $combatant, 'version' => $state['version']]);
+                    break;
+
+                case 'update-combatant':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $combatantId = $input['id'] ?? '';
+                    $found = false;
+                    $saved = null;
+                    if (!isset($activeScene['combatants']) || !is_array($activeScene['combatants'])) {
+                        $activeScene['combatants'] = [];
+                    }
+                    foreach ($activeScene['combatants'] as $idx => $combatant) {
+                        if (!is_array($combatant) || ($combatant['id'] ?? '') !== $combatantId) {
+                            continue;
+                        }
+                        if (array_key_exists('notes', $input)) {
+                            $combatant['notes'] = clipPlainText($input['notes'], 2000);
+                        }
+                        if (array_key_exists('hp', $input)) {
+                            $combatant['hp'] = clipHp($input['hp']);
+                        }
+                        if (array_key_exists('maxHp', $input)) {
+                            $combatant['maxHp'] = clipHp($input['maxHp']);
+                        }
+                        if (isset($input['side'])) {
+                            $combatant['side'] = $input['side'] === 'player' ? 'player' : 'enemy';
+                        }
+                        if (isset($input['name'])) {
+                            $combatant['name'] = clipPlainText($input['name'], 80);
+                        }
+                        if (array_key_exists('x', $input)) {
+                            $x = clipPercent($input['x']);
+                            if ($x !== null) {
+                                $combatant['x'] = $x;
+                            }
+                        }
+                        if (array_key_exists('y', $input)) {
+                            $y = clipPercent($input['y']);
+                            if ($y !== null) {
+                                $combatant['y'] = $y;
+                            }
+                        }
+                        $activeScene['combatants'][$idx] = $combatant;
+                        $saved = $combatant;
+                        $found = true;
+                        break;
+                    }
+                    if (!$found) {
+                        echo json_encode(['success' => false, 'error' => 'Combatant not found']);
+                        break;
+                    }
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'combatant' => $saved, 'version' => $state['version']]);
+                    break;
+
+                case 'remove-combatant':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $combatantId = $input['id'] ?? '';
+                    $activeScene['combatants'] = array_values(array_filter(
+                        $activeScene['combatants'] ?? [],
+                        fn($c) => is_array($c) && ($c['id'] ?? '') !== $combatantId
+                    ));
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    break;
+
+                case 'add-card':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    if (!$activeScene) {
+                        echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                        break;
+                    }
+                    $card = [
+                        'id' => generateId(),
+                        'src' => clipSrc($input['src'] ?? ''),
+                        'title' => clipPlainText($input['title'] ?? '', 120),
+                        'body' => clipPlainText($input['body'] ?? '', 4000),
+                        'visible' => array_key_exists('visible', $input) ? (bool)$input['visible'] : true,
+                    ];
+                    if (!isset($activeScene['cards']) || !is_array($activeScene['cards'])) {
+                        $activeScene['cards'] = [];
+                    }
+                    $activeScene['cards'][] = $card;
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'card' => $card, 'version' => $state['version']]);
+                    break;
+
+                case 'update-card':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $cardId = $input['id'] ?? '';
+                    $found = false;
+                    $saved = null;
+                    if (!isset($activeScene['cards']) || !is_array($activeScene['cards'])) {
+                        $activeScene['cards'] = [];
+                    }
+                    foreach ($activeScene['cards'] as $idx => $card) {
+                        if (!is_array($card) || ($card['id'] ?? '') !== $cardId) {
+                            continue;
+                        }
+                        if (array_key_exists('title', $input)) {
+                            $card['title'] = clipPlainText($input['title'], 120);
+                        }
+                        if (array_key_exists('body', $input)) {
+                            $card['body'] = clipPlainText($input['body'], 4000);
+                        }
+                        if (array_key_exists('visible', $input)) {
+                            $card['visible'] = (bool)$input['visible'];
+                        }
+                        if (array_key_exists('src', $input)) {
+                            $card['src'] = clipSrc($input['src']);
+                        }
+                        $activeScene['cards'][$idx] = $card;
+                        $saved = $card;
+                        $found = true;
+                        break;
+                    }
+                    if (!$found) {
+                        echo json_encode(['success' => false, 'error' => 'Card not found']);
+                        break;
+                    }
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'card' => $saved, 'version' => $state['version']]);
+                    break;
+
+                case 'remove-card':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $cardId = $input['id'] ?? '';
+                    $activeScene['cards'] = array_values(array_filter(
+                        $activeScene['cards'] ?? [],
+                        fn($c) => is_array($c) && ($c['id'] ?? '') !== $cardId
+                    ));
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    break;
+
+                case 'reorder-cards':
+                    requireGameMaster();
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $ids = $input['ids'] ?? [];
+                    if (!is_array($ids)) {
+                        echo json_encode(['success' => false, 'error' => 'Invalid card order']);
+                        break;
+                    }
+                    if (!isset($activeScene['cards']) || !is_array($activeScene['cards'])) {
+                        $activeScene['cards'] = [];
+                    }
+                    $byId = [];
+                    foreach ($activeScene['cards'] as $card) {
+                        if (!is_array($card) || empty($card['id'])) {
+                            continue;
+                        }
+                        $byId[$card['id']] = $card;
+                    }
+                    $ordered = [];
+                    foreach ($ids as $id) {
+                        $id = (string)$id;
+                        if (!isset($byId[$id])) {
+                            continue;
+                        }
+                        $ordered[] = $byId[$id];
+                        unset($byId[$id]);
+                    }
+                    foreach ($byId as $card) {
+                        $ordered[] = $card;
+                    }
+                    $activeScene['cards'] = $ordered;
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'cards' => $ordered, 'version' => $state['version']]);
                     break;
 
                 // ============================================
@@ -1243,6 +1819,10 @@ try {
                 case 'set-fog':
                     $state = getState();
                     $activeScene = getActiveScene($state);
+                    if (!sceneUsesGrid($activeScene)) {
+                        echo json_encode(['success' => false, 'error' => 'Fog is only available on tactical maps']);
+                        break;
+                    }
                     $activeScene['fogOfWar'] = [
                         'enabled' => (bool)($input['enabled'] ?? false),
                         'data' => $input['data'] ?? null
@@ -1255,6 +1835,10 @@ try {
                 case 'update-fog':
                     $state = getState();
                     $activeScene = getActiveScene($state);
+                    if (!sceneUsesGrid($activeScene)) {
+                        echo json_encode(['success' => false, 'error' => 'Fog is only available on tactical maps']);
+                        break;
+                    }
                     if (!isset($activeScene['fogOfWar'])) {
                         $activeScene['fogOfWar'] = ['enabled' => true, 'data' => null];
                     }
@@ -1267,6 +1851,10 @@ try {
                 case 'toggle-fog':
                     $state = getState();
                     $activeScene = getActiveScene($state);
+                    if (!sceneUsesGrid($activeScene)) {
+                        echo json_encode(['success' => false, 'error' => 'Fog is only available on tactical maps']);
+                        break;
+                    }
                     if (!isset($activeScene['fogOfWar'])) {
                         $activeScene['fogOfWar'] = ['enabled' => false, 'data' => null];
                     }
@@ -1282,11 +1870,9 @@ try {
                     
                     $x = intval($input['x']);
                     $y = intval($input['y']);
-                    foreach ($activeScene['mapElements'] as $el) {
-                        if ($el['x'] === $x && $el['y'] === $y) {
-                            echo json_encode(['success' => false, 'error' => 'Position occupied']);
-                            exit;
-                        }
+                    if (sceneUsesGrid($activeScene) && positionOccupied($activeScene['mapElements'] ?? [], $x, $y)) {
+                        echo json_encode(['success' => false, 'error' => 'Position occupied']);
+                        exit;
                     }
                     
                     $element = [
@@ -1308,11 +1894,9 @@ try {
                     
                     $x = intval($input['x']);
                     $y = intval($input['y']);
-                    foreach ($activeScene['tokens'] as $t) {
-                        if ($t['x'] === $x && $t['y'] === $y) {
-                            echo json_encode(['success' => false, 'error' => 'Position occupied by token']);
-                            exit;
-                        }
+                    if (sceneUsesGrid($activeScene) && positionOccupied($activeScene['tokens'] ?? [], $x, $y)) {
+                        echo json_encode(['success' => false, 'error' => 'Position occupied by token']);
+                        exit;
                     }
                     
                     $token = [
@@ -1335,17 +1919,15 @@ try {
                     $newX = intval($input['x']);
                     $newY = intval($input['y']);
                     
-                    foreach ($activeScene['tokens'] as $t) {
-                        if ($t['id'] !== $tokenId && $t['x'] === $newX && $t['y'] === $newY) {
-                            echo json_encode(['success' => false, 'error' => 'Position occupied']);
-                            exit;
-                        }
+                    if (sceneUsesGrid($activeScene) && positionOccupied($activeScene['tokens'] ?? [], $newX, $newY, $tokenId)) {
+                        echo json_encode(['success' => false, 'error' => 'Position occupied']);
+                        exit;
                     }
                     
-                    foreach ($activeScene['tokens'] as &$token) {
+                    foreach ($activeScene['tokens'] as $idx => $token) {
                         if ($token['id'] === $tokenId) {
-                            $token['x'] = $newX;
-                            $token['y'] = $newY;
+                            $activeScene['tokens'][$idx]['x'] = $newX;
+                            $activeScene['tokens'][$idx]['y'] = $newY;
                             break;
                         }
                     }
@@ -1388,6 +1970,34 @@ try {
                     echo json_encode(['success' => true, 'version' => $state['version']]);
                     break;
 
+                case 'move-map-element':
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $elementId = $input['id'] ?? '';
+                    $newX = intval($input['x']);
+                    $newY = intval($input['y']);
+                    if (sceneUsesGrid($activeScene) && positionOccupied($activeScene['mapElements'] ?? [], $newX, $newY, $elementId)) {
+                        echo json_encode(['success' => false, 'error' => 'Position occupied']);
+                        exit;
+                    }
+                    $moved = false;
+                    foreach ($activeScene['mapElements'] as $idx => $element) {
+                        if (($element['id'] ?? '') === $elementId) {
+                            $activeScene['mapElements'][$idx]['x'] = $newX;
+                            $activeScene['mapElements'][$idx]['y'] = $newY;
+                            $moved = true;
+                            break;
+                        }
+                    }
+                    if (!$moved) {
+                        echo json_encode(['success' => false, 'error' => 'Element not found']);
+                        break;
+                    }
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    break;
+
                 case 'remove-map-element':
                     $state = getState();
                     $activeScene = getActiveScene($state);
@@ -1415,13 +2025,15 @@ try {
                     break;
 
                 case 'clear':
-                    // Czyści tylko aktywną scenę
+                    requireGameMaster();
                     $state = getState();
                     $activeScene = getActiveScene($state);
                     $activeScene['background'] = null;
                     $activeScene['fogOfWar'] = ['enabled' => false, 'data' => null];
                     $activeScene['mapElements'] = [];
                     $activeScene['tokens'] = [];
+                    $activeScene['combatants'] = [];
+                    $activeScene['cards'] = [];
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);
                     echo json_encode(['success' => true, 'version' => $state['version']]);

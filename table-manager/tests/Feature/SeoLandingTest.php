@@ -75,6 +75,8 @@ class SeoLandingTest extends TestCase
             ->assertSee('Jak zagrać na darmowym stole VTT', false)
             ->assertSee('Przygoda', false)
             ->assertSee('przygoda.webp', false)
+            ->assertSee('Scena narracyjna', false)
+            ->assertSee('walka.webp', false)
             ->assertDontSee('Legend of the Five Rings', false)
             ->assertDontSee('L5R', false)
             ->assertSee('HowTo', false)

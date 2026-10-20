@@ -10,6 +10,7 @@ function BackgroundSection({
   bgZoomStep,
   onBgZoomStepChange,
   onSetBackground,
+  onPickBackground,
   onRemoveBackground,
   onNudgeBackground,
   onScaleBackground,
@@ -18,27 +19,28 @@ function BackgroundSection({
   onResetBackgroundAll,
   onToggleGridHidden,
   onDeselectAsset,
+  embedded = false,
+  showAdjust = true,
 }) {
   const draggedRef = useRef(false)
 
-  return (
-    <CollapsibleSection 
-      title={t('sidebar.backgrounds')} 
-      icon="🖼️" 
-      defaultOpen={false} 
-      onToggle={onDeselectAsset}
-    >
+  const pickBackground = onPickBackground || onSetBackground
+
+  const body = (
+    <>
       {currentBackground && (
         <div className="current-background">
           <span className="current-bg-label">{t('sidebar.backgroundActive')}</span>
           <span className="current-bg-name">{currentBackground.name}</span>
-          <button 
-            className="remove-bg-btn" 
-            onClick={onResetBackgroundAll}
-            title={t('sidebar.backgroundResetAll') || 'Reset background position and zoom'}
-          >
-            ⟲
-          </button>
+          {showAdjust && (
+            <button 
+              className="remove-bg-btn" 
+              onClick={onResetBackgroundAll}
+              title={t('sidebar.backgroundResetAll') || 'Reset background position and zoom'}
+            >
+              ⟲
+            </button>
+          )}
           <button 
             className="remove-bg-btn" 
             onClick={onRemoveBackground}
@@ -71,7 +73,7 @@ function BackgroundSection({
                 draggedRef.current = false
                 return
               }
-              if (!isCurrentBackground(bg, currentBackground)) onSetBackground(bg)
+              if (!isCurrentBackground(bg, currentBackground)) pickBackground(bg)
             }}
             title={`${bg.filename} (${bg.gridWidth}×${bg.gridHeight})`}
           >
@@ -83,7 +85,7 @@ function BackgroundSection({
         ))}
       </div>
 
-      {currentBackground && (
+      {showAdjust && currentBackground && (
         <BackgroundAdjust
           currentBackground={currentBackground}
           bgZoomStep={bgZoomStep}
@@ -95,6 +97,21 @@ function BackgroundSection({
           onToggleGridHidden={onToggleGridHidden}
         />
       )}
+    </>
+  )
+
+  if (embedded) {
+    return <div className="scene-background-editor">{body}</div>
+  }
+
+  return (
+    <CollapsibleSection 
+      title={t('sidebar.backgrounds')} 
+      icon="🖼️" 
+      defaultOpen={false} 
+      onToggle={onDeselectAsset}
+    >
+      {body}
     </CollapsibleSection>
   )
 }

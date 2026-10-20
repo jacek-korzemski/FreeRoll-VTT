@@ -18,7 +18,7 @@ class MarketingCopy
     {
         return [
             'title' => 'Jak zagrać na darmowym stole VTT | FreeRoll',
-            'description' => 'Tutorial FreeRoll: jak założyć darmowy stół VTT, wejść hasłem gracza lub MG i użyć mapy, tokenów, mgły wojny, kości, przygody oraz pinga. Wystarczy przeglądarka.',
+            'description' => 'Tutorial FreeRoll: jak założyć darmowy stół VTT, wejść hasłem gracza lub MG i użyć mapy, tokenów, mgły wojny, podróży, narracji, walki, kości, przygody oraz pinga. Wystarczy przeglądarka.',
         ];
     }
 
@@ -93,8 +93,23 @@ class MarketingCopy
         return [
             [
                 'title' => 'Sceny',
-                'text' => 'Karczma, loch i pole bitwy to osobne sceny. Przełączenie widzą wszyscy, a każda scena trzyma własne tło, mgłę i tokeny.',
+                'text' => 'Mapa taktyczna, podróż, narracja i walka to osobne sceny. MG podgląda jedną u siebie, a oko pokazuje drużynie tę, na której gracie.',
                 'href' => $tutorial.'#sceny',
+            ],
+            [
+                'title' => 'Mapa podróży',
+                'text' => 'Rysunek jest mapą, nie siatką. Token stawiasz na grafice, a widok przewija się tylko wtedy, gdy coś wychodzi poza ekran.',
+                'href' => $tutorial.'#podroz',
+            ],
+            [
+                'title' => 'Scena narracyjna',
+                'text' => 'Karty z portretem, tytułem i opisem leżą na tle sceny. MG układa je i ukrywa. Gracz czyta, a długi tekst przewija w karcie.',
+                'href' => $tutorial.'#narracja',
+            ],
+            [
+                'title' => 'Walka',
+                'text' => 'Portrety na tle sceny. Klik otwiera imię, punkty życia i notatkę. MG prowadzi licznik tury, drużyna widzi numer.',
+                'href' => $tutorial.'#walka',
             ],
             [
                 'title' => 'Tło i siatka',
@@ -252,12 +267,48 @@ class MarketingCopy
                 'id' => 'sceny',
                 'title' => 'Sceny',
                 'paragraphs' => [
-                    'Jedna sesja to często kilka miejsc. Scena ma własne tło, mgłę, tokeny i elementy mapy. MG dodaje scenę, zmienia jej nazwę, duplikuje albo usuwa.',
-                    'Przełączenie sceny dzieje się u wszystkich od razu. Gracze nie wybierają mapy sami: widzą tę, którą właśnie otworzył MG.',
+                    'Jedna sesja to często kilka miejsc. MG dodaje scenę, zmienia jej nazwę, duplikuje albo usuwa. Ołówek otwiera typ: mapa taktyczna, walka, mapa podróży albo scena narracyjna. Zmiana typu nie kasuje tego, co już na scenie leży.',
+                    'Klik w nazwę to podgląd tylko u Ciebie. Oko „Pokaż tę scenę graczom” przełącza widok drużyny. Gracze nie wybierają sceny sami. Mgła i siatka są przy mapie taktycznej. Tło da się ustawić przy każdym typie.',
                 ],
                 'image' => self::image(
                     'sceny.webp',
-                    'Lista scen w panelu Mistrza Gry, z możliwością dodania, zmiany nazwy i przełączenia mapy.',
+                    'Edycja sceny w panelu MG: lista typów, mapa taktyczna, walka, mapa podróży i scena narracyjna, oraz oko, które pokazuje scenę graczom.',
+                ),
+            ],
+            [
+                'id' => 'podroz',
+                'title' => 'Mapa podróży',
+                'paragraphs' => [
+                    'Tło jest samą mapą i stoi na środku widoku. Paski przewijania pojawiają się dopiero, gdy rysunek albo token wychodzi poza ekran.',
+                    'Tokeny i elementy mapy stawiasz na grafice, nie na polach siatki. Lupa w bocznym panelu przybliża tylko Twój widok.',
+                ],
+                'image' => self::image(
+                    'podroz.webp',
+                    'Mapa podróży FreeRoll: rysunek lochu na środku, token postaci i element mapy na grafice, pasek przewijania z boku.',
+                ),
+            ],
+            [
+                'id' => 'narracja',
+                'title' => 'Scena narracyjna',
+                'paragraphs' => [
+                    'Tło wypełnia całą scenę. Kartę dodajesz z tokenu albo elementu mapy zaznaczonego w bocznym panelu. Obrazek siedzi obok tytułu i opisu. Większą grafikę otwiera klik.',
+                    'MG układa karty przyciskami „Przesuń w górę” i „Przesuń w dół” oraz ukrywa pojedynczą kartę. „Ukryj wszystko” chowa karty tylko na Twoim ekranie. Gracz widzi tytuł i opis. Długi tekst przewija się w karcie.',
+                ],
+                'image' => self::image(
+                    'narracja.webp',
+                    'Scena narracyjna: tło na cały obszar i karta ze strażnikiem, tytułem, opisem oraz przyciskami układu.',
+                ),
+            ],
+            [
+                'id' => 'walka',
+                'title' => 'Walka',
+                'paragraphs' => [
+                    'Tło wypełnia scenę. Zaznaczony token dodajesz jako wroga albo gracza. Na stole widać portret. Klik otwiera imię, punkty życia i notatkę. Imię wpisujesz sam, nie bierze się z nazwy tokenu. Otwarta jest jedna postać naraz.',
+                    'Licznik tury jest na górze. MG zmienia numer, gracze widzą „Tura: n”. W edycji sceny opcja „Ukryj HP” chowa liczby życia.',
+                ],
+                'image' => self::image(
+                    'walka.webp',
+                    'Scena walki: tło trawy do krawędzi, licznik tury i otwarta karta postaci z imieniem, punktami życia i notatką.',
                 ),
             ],
             [
@@ -366,7 +417,7 @@ class MarketingCopy
             'name' => 'Jak zagrać na darmowym stole VTT FreeRoll',
             'description' => $meta['description'],
             'inLanguage' => 'pl-PL',
-            'totalTime' => 'PT10M',
+            'totalTime' => 'PT15M',
             'step' => array_map(function (array $step, int $index): array {
                 return [
                     '@type' => 'HowToStep',

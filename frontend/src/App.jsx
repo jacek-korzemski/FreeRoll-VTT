@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, useRef, startTransition } from 'react'
 import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer, AdventurePanel } from './components'
+import TravelBoard from './components/organisms/TravelBoard'
+import CombatBoard from './components/organisms/CombatBoard'
+import NarrativeBoard from './components/organisms/NarrativeBoard'
 import DebugOverlay from './components/atoms/DebugOverlay'
 import { 
   createEmptyFog, 
@@ -17,6 +20,11 @@ function App() {
   const [scenes, setScenes] = useState([])
   const [bottomPanelTab, setBottomPanelTab] = useState(null)
   const [activeSceneId, setActiveSceneId] = useState(null)
+  const [sceneType, setSceneType] = useState('tactical')
+  const [hideHp, setHideHp] = useState(false)
+  const [turn, setTurn] = useState(1)
+  const [combatants, setCombatants] = useState([])
+  const [cards, setCards] = useState([])
   const [background, setBackground] = useState(null)
   const [mapElements, setMapElements] = useState([])
   const [tokens, setTokens] = useState([])
@@ -56,6 +64,7 @@ function App() {
   const lastPingTimestampRef = useRef(0)
   const versionRef = useRef(0)
   const activeSceneIdRef = useRef(null)
+  const sceneTypeRef = useRef('tactical')
   const fogEditModeRef = useRef(false)
   const pollInFlightRef = useRef(false)
   const gridContainerRef = useRef(null)
@@ -86,6 +95,7 @@ function App() {
 
   versionRef.current = version
   activeSceneIdRef.current = activeSceneId
+  sceneTypeRef.current = sceneType
   fogEditModeRef.current = fogEditMode
 
   // Sprawdź rolę użytkownika na początku
@@ -147,11 +157,18 @@ function App() {
 
   const updateSceneState = useCallback((sceneData) => {
     if (!sceneData) return
+    const nextType = sceneData.type || 'tactical'
+    setSceneType(nextType)
+    setHideHp(!!sceneData.hideHp)
+    setTurn(Number(sceneData.turn) > 0 ? Number(sceneData.turn) : 1)
+    setCombatants(Array.isArray(sceneData.combatants) ? sceneData.combatants : [])
+    setCards(Array.isArray(sceneData.cards) ? sceneData.cards : [])
     setBackground(sceneData.background || null)
     setMapElements(sceneData.mapElements || [])
     setTokens(sceneData.tokens || [])
     setFogOfWar(sceneData.fogOfWar || { enabled: false, data: null })
     setFogBitmap(decodeFromBase64(sceneData.fogOfWar?.data))
+    if (nextType !== 'tactical') setFogEditMode(false)
   }, [])
 
   const handleCountersMutation = useCallback((action, body, data) => {
@@ -481,8 +498,9 @@ useEffect(() => {
     return () => clearInterval(interval)
   }, [updateSceneState, applyPingFromSync])
 
-  const handleSwitchScene = useCallback((sceneId) => {
-    fetch(`${API_BASE}?action=switch-scene`, {
+  const handleFocusScene = useCallback((sceneId) => {
+    if (sceneId === activeSceneIdRef.current) return
+    fetch(`${API_BASE}?action=focus-scene`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -490,20 +508,77 @@ useEffect(() => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.success) {
-          setActiveSceneId(sceneId)
-          updateSceneState(data.scene)
-          setVersion(data.version)
-          // Reset narzędzi
-          setSelectedAsset(null)
-          setSelectedType(null)
-          setIsEraserActive(false)
-          setIsMoveToolActive(false)
-          setFogEditMode(false)
-        }
+        if (!data.success) return
+        if (typeof data.version === 'number' && data.version < versionRef.current) return
+        setActiveSceneId(sceneId)
+        updateSceneState(data.scene)
+        setVersion(data.version)
+        setSelectedAsset(null)
+        setSelectedType(null)
+        setIsEraserActive(false)
+        setIsMoveToolActive(false)
+        setFogEditMode(false)
       })
       .catch(console.error)
   }, [updateSceneState])
+
+  const handleShowToPlayers = useCallback((sceneId) => {
+    fetch(`${API_BASE}?action=show-to-players`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: sceneId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) return
+        if (Array.isArray(data.scenes)) setScenes(data.scenes)
+        if (typeof data.version === 'number') setVersion(data.version)
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleUpdateScene = useCallback((sceneId, patch) => {
+    if (Object.prototype.hasOwnProperty.call(patch, 'background')) {
+      backgroundRemovedRef.current = patch.background == null
+      if (backgroundUpdateTimeoutRef.current) {
+        clearTimeout(backgroundUpdateTimeoutRef.current)
+        backgroundUpdateTimeoutRef.current = null
+      }
+    }
+    fetch(`${API_BASE}?action=update-scene`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: sceneId, ...patch })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) return
+        if (data.scene) {
+          setScenes(prev => prev.map(s => s.id === sceneId ? { ...s, ...data.scene } : s))
+        }
+        if (sceneId === activeSceneIdRef.current) {
+          if (data.scene?.type) setSceneType(data.scene.type)
+          if (typeof data.hideHp === 'boolean') setHideHp(data.hideHp)
+          if (typeof data.turn === 'number') setTurn(data.turn)
+          if (Object.prototype.hasOwnProperty.call(patch, 'background')) {
+            backgroundRemovedRef.current = data.background == null
+            setBackground(data.background || null)
+          }
+          if (data.scene?.type && data.scene.type !== 'tactical') setFogEditMode(false)
+        }
+        if (typeof data.version === 'number') setVersion(data.version)
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleSetTurn = useCallback((nextTurn) => {
+    const sceneId = activeSceneIdRef.current
+    if (!sceneId) return
+    setTurn(nextTurn)
+    handleUpdateScene(sceneId, { turn: nextTurn })
+  }, [handleUpdateScene])
 
   const handleCreateScene = useCallback((name) => {
     fetch(`${API_BASE}?action=create-scene`, {
@@ -544,12 +619,17 @@ useEffect(() => {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          setScenes(prev => prev.filter(s => s.id !== sceneId))
+          if (Array.isArray(data.scenes)) setScenes(data.scenes)
+          else setScenes(prev => prev.filter(s => s.id !== sceneId))
+          if (sceneId === activeSceneIdRef.current && data.scene) {
+            setActiveSceneId(data.activeSceneId)
+            updateSceneState(data.scene)
+          }
           setVersion(data.version)
         }
       })
       .catch(console.error)
-  }, [])
+  }, [updateSceneState])
 
   const handleRenameScene = useCallback((sceneId, name) => {
     fetch(`${API_BASE}?action=rename-scene`, {
@@ -744,41 +824,6 @@ useEffect(() => {
     }, 5000)
   }, [])
 
-  const handleSetBackground = useCallback((bg) => {
-    // Wyczyść flagę usunięcia i anuluj pending updates
-    backgroundRemovedRef.current = false
-    if (backgroundUpdateTimeoutRef.current) {
-      clearTimeout(backgroundUpdateTimeoutRef.current)
-      backgroundUpdateTimeoutRef.current = null
-    }
-
-    // Ustawienie nowego tła – brak debounce, żeby gracze od razu je zobaczyli
-    const initialConfig = {
-      src: bg.src,
-      name: bg.name,
-      width: bg.width,
-      height: bg.height,
-      offsetX: 0,
-      offsetY: 0,
-      scale: 1
-    }
-
-    fetch(`${API_BASE}?action=set-background`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(initialConfig)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setBackground(data.background)
-          setVersion(data.version)
-        }
-      })
-      .catch(console.error)
-  }, [])
-
   const handleNudgeBackground = useCallback((dx, dy) => {
     setBackground(prev => {
       if (!prev) return prev
@@ -935,8 +980,9 @@ useEffect(() => {
   }, [])
 
   const placeAssetAt = useCallback((asset, type, x, y, deselectAfterPlace = false) => {
-    if (type === 'token' && isOccupiedByToken(x, y)) return Promise.resolve(false)
-    if (type === 'map' && isOccupiedByMapElement(x, y)) return Promise.resolve(false)
+    const gridLocked = sceneTypeRef.current === 'tactical'
+    if (gridLocked && type === 'token' && isOccupiedByToken(x, y)) return Promise.resolve(false)
+    if (gridLocked && type === 'map' && isOccupiedByMapElement(x, y)) return Promise.resolve(false)
     const action = type === 'map' ? 'add-map-element' : 'add-token'
     return fetch(`${API_BASE}?action=${action}`, {
       method: 'POST',
@@ -984,9 +1030,14 @@ useEffect(() => {
     placeAssetAt(asset, type, x, y, true)
   }, [placeAssetAt])
 
+  const handleTravelPlace = useCallback((asset, type, x, y) => {
+    placeAssetAt(asset, type, x, y, false)
+  }, [placeAssetAt])
+
   
   const handleTokenMove = useCallback((tokenId, newX, newY) => {
-    const isOccupied = tokens.some(t => t.id !== tokenId && t.x === newX && t.y === newY)
+    const isOccupied = sceneTypeRef.current === 'tactical'
+      && tokens.some(t => t.id !== tokenId && t.x === newX && t.y === newY)
     if (isOccupied) return
 
     setTokens(prev => prev.map(t => 
@@ -1126,12 +1177,159 @@ useEffect(() => {
 
   const TOKEN_NOTE_STORAGE_PREFIX = 'vtt_token_note_'
 
+  const handleMapElementMove = useCallback((elementId, newX, newY) => {
+    setMapElements(prev => prev.map(el =>
+      el.id === elementId ? { ...el, x: newX, y: newY } : el
+    ))
+    fetch(`${API_BASE}?action=move-map-element`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: elementId, x: newX, y: newY })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setVersion(data.version)
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleAddCombatant = useCallback((side) => {
+    if (!selectedAsset || selectedType !== 'token') return
+    fetch(`${API_BASE}?action=add-combatant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        assetId: selectedAsset.id,
+        src: selectedAsset.src,
+        side,
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.combatant) {
+          setCombatants(prev => [...prev, data.combatant])
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [selectedAsset, selectedType])
+
+  const handleUpdateCombatant = useCallback((combatantId, updates) => {
+    setCombatants(prev => prev.map(c => c.id === combatantId ? { ...c, ...updates } : c))
+    fetch(`${API_BASE}?action=update-combatant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: combatantId, ...updates })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.combatant) {
+          setCombatants(prev => prev.map(c => c.id === combatantId ? data.combatant : c))
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleRemoveCombatant = useCallback((combatantId) => {
+    fetch(`${API_BASE}?action=remove-combatant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: combatantId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCombatants(prev => prev.filter(c => c.id !== combatantId))
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleAddCard = useCallback((card) => {
+    fetch(`${API_BASE}?action=add-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        src: card.src,
+        title: card.title || '',
+        body: card.body || '',
+        visible: true,
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.card) {
+          setCards(prev => [...prev, data.card])
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleUpdateCard = useCallback((cardId, updates) => {
+    setCards(prev => prev.map(card => card.id === cardId ? { ...card, ...updates } : card))
+    fetch(`${API_BASE}?action=update-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: cardId, ...updates })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.card) {
+          setCards(prev => prev.map(card => card.id === cardId ? data.card : card))
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleReorderCards = useCallback((nextCards) => {
+    setCards(nextCards)
+    fetch(`${API_BASE}?action=reorder-cards`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ ids: nextCards.map(card => card.id) })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setVersion(data.version)
+      })
+      .catch(console.error)
+  }, [])
+
+  const handleRemoveCard = useCallback((cardId) => {
+    fetch(`${API_BASE}?action=remove-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id: cardId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCards(prev => prev.filter(card => card.id !== cardId))
+          setVersion(data.version)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   const handleDuplicateToken = useCallback((token) => {
+    const step = sceneTypeRef.current === 'tactical' ? 1 : 48
     const candidates = [
-      { x: token.x + 1, y: token.y },
-      { x: token.x - 1, y: token.y },
-      { x: token.x, y: token.y + 1 },
-      { x: token.x, y: token.y - 1 }
+      { x: token.x + step, y: token.y },
+      { x: token.x - step, y: token.y },
+      { x: token.x, y: token.y + step },
+      { x: token.x, y: token.y - step }
     ]
     const free = candidates.find(({ x, y }) => !isOccupiedByToken(x, y))
     if (!free) {
@@ -1202,6 +1400,8 @@ useEffect(() => {
           setBackground(null)
           setMapElements([])
           setTokens([])
+          setCombatants([])
+          setCards([])
           setVersion(data.version)
           setSelectedAsset(null)
           setSelectedType(null)
@@ -1334,7 +1534,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="app">
+    <div className={`app app--scene-${sceneType || 'tactical'}${adventureOpen ? ' app--adventure' : ''}`}>
       {/* Toggle sidebar button */}
       <button 
         className={`sidebar-toggle ${sidebarOpen ? 'open' : ''}`}
@@ -1396,7 +1596,6 @@ useEffect(() => {
         onSelectAsset={handleSelectAsset}
         onToggleEraser={handleToggleEraser}
         onToggleTokenEraser={handleToggleTokenEraser}
-        onSetBackground={handleSetBackground}
         onRemoveBackground={handleRemoveBackground}
         onNudgeBackground={handleNudgeBackground}
         onScaleBackground={handleScaleBackground}
@@ -1410,11 +1609,15 @@ useEffect(() => {
         onZoomChange={handleZoomChange}
         scenes={scenes}
         activeSceneId={activeSceneId}
-        onSwitchScene={handleSwitchScene}
+        sceneType={sceneType}
+        hideHp={hideHp}
+        onFocusScene={handleFocusScene}
+        onShowToPlayers={handleShowToPlayers}
         onCreateScene={handleCreateScene}
         onDeleteScene={handleDeleteScene}
         onRenameScene={handleRenameScene}
         onDuplicateScene={handleDuplicateScene}
+        onUpdateScene={handleUpdateScene}
         pingMode={pingMode}
         onTogglePing={handleTogglePing}
         activePing={activePing}
@@ -1431,6 +1634,53 @@ useEffect(() => {
       
       <main className="main-content">
         <div className={`grid-host${adventureOpen ? ' grid-host--hidden' : ''}`} aria-hidden={adventureOpen || undefined}>
+        {sceneType === 'travel' ? (
+          <TravelBoard
+            background={background}
+            mapElements={mapElements}
+            tokens={tokens}
+            selectedAsset={selectedAsset}
+            selectedType={selectedType}
+            isEraserActive={isEraserActive}
+            isTokenEraserActive={isTokenEraserActive}
+            onPlace={handleTravelPlace}
+            onTokenMove={handleTokenMove}
+            onMapElementMove={handleMapElementMove}
+            onRemoveMapElement={handleRemoveMapElement}
+            onRemoveToken={handleRemoveToken}
+            onDeselectPlacement={handleCancelPlacementAndTools}
+            basePath={ASSET_BASE}
+            zoomLevel={zoomLevel}
+          />
+        ) : sceneType === 'combat' ? (
+          <CombatBoard
+            combatants={combatants}
+            hideHp={hideHp}
+            background={background}
+            turn={turn}
+            isGameMaster={isGameMaster}
+            selectedAsset={selectedAsset}
+            selectedType={selectedType}
+            basePath={ASSET_BASE}
+            onAdd={handleAddCombatant}
+            onUpdate={handleUpdateCombatant}
+            onRemove={handleRemoveCombatant}
+            onSetTurn={handleSetTurn}
+          />
+        ) : sceneType === 'narrative' ? (
+          <NarrativeBoard
+            cards={cards}
+            background={background}
+            isGameMaster={isGameMaster}
+            selectedAsset={selectedAsset}
+            selectedType={selectedType}
+            basePath={ASSET_BASE}
+            onAdd={handleAddCard}
+            onUpdate={handleUpdateCard}
+            onRemove={handleRemoveCard}
+            onReorder={handleReorderCards}
+          />
+        ) : (
         <Grid
           ref={gridContainerRef}
           isGameMaster={isGameMaster}
@@ -1464,6 +1714,7 @@ useEffect(() => {
           pingAnimation={pingAnimation}
           onSendPing={handleSendPing}
         />
+        )}
         </div>
         {adventureMounted && isGameMaster && (
           <div className={`adventure-host${adventureOpen ? '' : ' adventure-host--hidden'}`}>

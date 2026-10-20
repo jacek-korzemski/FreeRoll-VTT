@@ -343,7 +343,9 @@ function Sidebar({
             )}
           </div>
 
-          <ZoomControls zoomLevel={zoomLevel} onZoomChange={onZoomChange} />
+          {sceneType !== 'combat' && sceneType !== 'narrative' && (
+            <ZoomControls zoomLevel={zoomLevel} onZoomChange={onZoomChange} />
+          )}
         </div>
       </div>
     </aside>

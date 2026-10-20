@@ -1624,18 +1624,27 @@ try {
                     break;
 
                 case 'update-combatant':
-                    requireGameMaster();
                     $state = getState();
                     $activeScene = getActiveScene($state);
                     $combatantId = $input['id'] ?? '';
                     $found = false;
+                    $denied = false;
                     $saved = null;
+                    $isGm = isGameMaster();
                     if (!isset($activeScene['combatants']) || !is_array($activeScene['combatants'])) {
                         $activeScene['combatants'] = [];
                     }
                     foreach ($activeScene['combatants'] as $idx => $combatant) {
                         if (!is_array($combatant) || ($combatant['id'] ?? '') !== $combatantId) {
                             continue;
+                        }
+                        $side = (($combatant['side'] ?? '') === 'player') ? 'player' : 'enemy';
+                        if (!$isGm) {
+                            $wantsHp = array_key_exists('hp', $input) || array_key_exists('maxHp', $input);
+                            if ($side !== 'player' || isset($input['name']) || isset($input['side']) || (!empty($activeScene['hideHp']) && $wantsHp)) {
+                                $denied = true;
+                                break;
+                            }
                         }
                         if (array_key_exists('notes', $input)) {
                             $combatant['notes'] = clipPlainText($input['notes'], 2000);
@@ -1646,10 +1655,10 @@ try {
                         if (array_key_exists('maxHp', $input)) {
                             $combatant['maxHp'] = clipHp($input['maxHp']);
                         }
-                        if (isset($input['side'])) {
+                        if ($isGm && isset($input['side'])) {
                             $combatant['side'] = $input['side'] === 'player' ? 'player' : 'enemy';
                         }
-                        if (isset($input['name'])) {
+                        if ($isGm && isset($input['name'])) {
                             $combatant['name'] = clipPlainText($input['name'], 80);
                         }
                         if (array_key_exists('x', $input)) {
@@ -1669,12 +1678,20 @@ try {
                         $found = true;
                         break;
                     }
+                    if ($denied) {
+                        http_response_code(403);
+                        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+                        break;
+                    }
                     if (!$found) {
                         echo json_encode(['success' => false, 'error' => 'Combatant not found']);
                         break;
                     }
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);
+                    if (!$isGm && !empty($activeScene['hideHp'])) {
+                        unset($saved['hp'], $saved['maxHp']);
+                    }
                     echo json_encode(['success' => true, 'combatant' => $saved, 'version' => $state['version']]);
                     break;
 

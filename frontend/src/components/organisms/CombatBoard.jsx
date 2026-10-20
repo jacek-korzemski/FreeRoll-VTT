@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'
 
@@ -84,10 +84,17 @@ function CombatantUnit({
   const [notesFocused, setNotesFocused] = useState(false)
   const [hpFocused, setHpFocused] = useState(false)
   const [live, setLive] = useState(null)
+  const [flip, setFlip] = useState({ x: false, y: false })
   const dragRef = useRef(null)
+  const tokenRef = useRef(null)
+  const plateRef = useRef(null)
   const fallback = defaultPosition(combatant, indexOnSide)
   const x = live ? live.x : fallback.x
   const y = live ? live.y : fallback.y
+  const ownToken = combatant.side === 'player'
+  const canDrag = isGameMaster || ownToken
+  const canEditNotes = isGameMaster || ownToken
+  const canEditHp = isGameMaster || ownToken
 
   useEffect(() => {
     if (!nameFocused) setName(combatant.name || '')
@@ -142,6 +149,37 @@ function CombatantUnit({
     }
   }, [combatant.id, onToggle, onUpdate, stageRef])
 
+  useLayoutEffect(() => {
+    if (!open) {
+      setFlip((prev) => (prev.x || prev.y ? { x: false, y: false } : prev))
+      return undefined
+    }
+    const measure = () => {
+      const stage = stageRef.current
+      const token = tokenRef.current
+      const plate = plateRef.current
+      if (!stage || !token || !plate) return
+      const stageRect = stage.getBoundingClientRect()
+      const tokenRect = token.getBoundingClientRect()
+      const gap = 8
+      let limitRight = stageRect.right - 4
+      let limitBottom = stageRect.bottom - 4
+      const toolbar = document.querySelector('.bottom-panel-toolbar')
+      if (toolbar) {
+        const toolbarRect = toolbar.getBoundingClientRect()
+        if (toolbarRect.top < limitBottom) limitBottom = toolbarRect.top - 4
+      }
+      const next = {
+        x: tokenRect.right + gap + plate.offsetWidth > limitRight,
+        y: tokenRect.top + plate.offsetHeight > limitBottom,
+      }
+      setFlip((prev) => (prev.x === next.x && prev.y === next.y ? prev : next))
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [open, x, y, hideHp, name, notes, hp, maxHp, stageRef])
+
   const commitName = () => {
     setNameFocused(false)
     if ((combatant.name || '') !== name) onUpdate(combatant.id, { name })
@@ -163,8 +201,8 @@ function CombatantUnit({
 
   const startDrag = (event) => {
     if (event.button !== 0) return
-    if (event.target.closest('input, textarea, button')) return
-    if (!isGameMaster) {
+    if (event.target.closest('input, textarea, button, .combat-plate')) return
+    if (!canDrag) {
       onToggle(combatant.id)
       return
     }
@@ -178,21 +216,29 @@ function CombatantUnit({
   const ratio = maxValue > 0 && Number.isFinite(hpValue)
     ? Math.max(0, Math.min(1, hpValue / maxValue))
     : 0
+  const shownName = (name || '').trim()
 
   return (
     <article
-      className={`combat-unit combat-unit-${combatant.side === 'player' ? 'player' : 'enemy'}${open ? ' is-open' : ''}${isGameMaster ? '' : ' is-locked'}`}
+      ref={tokenRef}
+      className={`combat-unit combat-unit-${combatant.side === 'player' ? 'player' : 'enemy'}${open ? ' is-open' : ''}${canDrag ? '' : ' is-locked'}${flip.x ? ' flip-x' : ''}${flip.y ? ' flip-y' : ''}`}
       aria-expanded={open}
       style={{ left: `${x}%`, top: `${y}%` }}
       onPointerDown={startDrag}
     >
+      {shownName ? <div className="combat-name-label">{shownName}</div> : null}
       {combatant.src ? (
         <img className="combat-portrait" src={combatant.src} alt="" draggable={false} />
       ) : (
         <div className="combat-portrait combat-portrait-empty" />
       )}
+      {!hideHp && (
+        <div className="combat-hp-under" aria-hidden="true">
+          <span style={{ width: `${ratio * 100}%` }} />
+        </div>
+      )}
       {open && (
-      <div className="combat-plate">
+      <div className="combat-plate" ref={plateRef}>
         {isGameMaster ? (
           <input
             className="combat-name-input"
@@ -209,18 +255,15 @@ function CombatantUnit({
         )}
         {!hideHp && (
           <div className="combat-hp">
-            <div className="combat-hp-bar" aria-hidden="true">
-              <span style={{ width: `${ratio * 100}%` }} />
-            </div>
             <div className="combat-hp-nums">
               <input
                 type="number"
                 min="0"
                 max="99999"
                 value={hp}
-                readOnly={!isGameMaster}
+                readOnly={!canEditHp}
                 aria-label={t('scenes.hpCurrent')}
-                onFocus={() => setHpFocused(true)}
+                onFocus={() => { if (canEditHp) setHpFocused(true) }}
                 onChange={(event) => setHp(event.target.value)}
                 onBlur={commitHp}
               />
@@ -230,16 +273,16 @@ function CombatantUnit({
                 min="0"
                 max="99999"
                 value={maxHp}
-                readOnly={!isGameMaster}
+                readOnly={!canEditHp}
                 aria-label={t('scenes.hpMax')}
-                onFocus={() => setHpFocused(true)}
+                onFocus={() => { if (canEditHp) setHpFocused(true) }}
                 onChange={(event) => setMaxHp(event.target.value)}
                 onBlur={commitHp}
               />
             </div>
           </div>
         )}
-        {isGameMaster && (
+        {canEditNotes ? (
           <textarea
             className="combat-notes"
             rows={2}
@@ -250,8 +293,7 @@ function CombatantUnit({
             onChange={(event) => setNotes(event.target.value)}
             onBlur={commitNotes}
           />
-        )}
-        {!isGameMaster && combatant.notes ? (
+        ) : (combatant.notes || '').trim() ? (
           <p className="combat-notes-read">{combatant.notes}</p>
         ) : null}
         {isGameMaster && (

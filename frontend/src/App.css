@@ -7540,10 +7540,8 @@ label.ttrpg-btn-accent {
 .combat-unit {
   position: absolute;
   z-index: 2;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
-  width: auto;
+  width: 96px;
+  height: 96px;
   cursor: grab;
   user-select: none;
 }
@@ -7556,8 +7554,48 @@ label.ttrpg-btn-accent {
   z-index: 4;
 }
 
+.combat-name-label {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--color-text-strong);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+.combat-hp-under {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.combat-hp-under span {
+  display: block;
+  height: 100%;
+  background: #c4473a;
+}
+
 .combat-plate {
-  width: 168px;
+  position: absolute;
+  left: calc(100% + 0.4rem);
+  top: 0;
+  width: 220px;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -7567,8 +7605,14 @@ label.ttrpg-btn-accent {
   background: rgba(12, 10, 18, 0.92);
 }
 
-.combat-unit.is-open .combat-plate {
-  width: 220px;
+.combat-unit.flip-x .combat-plate {
+  left: auto;
+  right: calc(100% + 0.4rem);
+}
+
+.combat-unit.flip-y .combat-plate {
+  top: auto;
+  bottom: 0;
 }
 
 .combat-name-input,

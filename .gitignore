@@ -56,3 +56,4 @@ desktop.ini
 npm-debug.log*
 
 prompts/*
+.update/

@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Exceptions\TableUpdateException;
 use App\Exceptions\VttSourceMissingException;
 use App\Models\VttTable;
 use App\Services\StorageQuota;
 use App\Services\TableProvisioner;
+use App\Services\TableUpdater;
 use App\Services\ThemeCatalog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -39,6 +41,8 @@ class TablesDashboard extends Component
 
     public ?int $confirmingDeleteId = null;
 
+    public ?int $confirmingUpdateId = null;
+
     public bool $showThemePreview = false;
 
     public string $themePreviewTarget = 'create';
@@ -48,6 +52,7 @@ class TablesDashboard extends Component
         $this->themePreviewTarget = $target === 'edit' ? 'edit' : 'create';
         $this->showThemePreview = true;
         $this->confirmingDeleteId = null;
+        $this->confirmingUpdateId = null;
     }
 
     public function closeThemePreview(): void
@@ -98,6 +103,7 @@ class TablesDashboard extends Component
         $this->edit_color_template = $table->color_template ?: 'crimson';
         $this->edit_global_assets = (bool) $table->global_assets;
         $this->confirmingDeleteId = null;
+        $this->confirmingUpdateId = null;
         $this->showThemePreview = false;
     }
 
@@ -137,8 +143,34 @@ class TablesDashboard extends Component
     {
         $this->ownedTable($tableId);
         $this->confirmingDeleteId = $tableId;
+        $this->confirmingUpdateId = null;
         $this->editingId = null;
         $this->showThemePreview = false;
+    }
+
+    public function confirmUpdate(int $tableId): void
+    {
+        $this->ownedTable($tableId);
+        $this->confirmingUpdateId = $tableId;
+        $this->confirmingDeleteId = null;
+        $this->editingId = null;
+        $this->showThemePreview = false;
+    }
+
+    public function updateTable(TableUpdater $updater): void
+    {
+        $table = $this->ownedTable((int) $this->confirmingUpdateId);
+
+        try {
+            $updater->update($table);
+        } catch (TableUpdateException|VttSourceMissingException $e) {
+            $this->addError('update', $e->getMessage());
+
+            return;
+        }
+
+        $this->confirmingUpdateId = null;
+        session()->flash('status', 'Stół został zaktualizowany. Odśwież jego stronę.');
     }
 
     public function deleteTable(TableProvisioner $provisioner): void
@@ -149,22 +181,34 @@ class TablesDashboard extends Component
         session()->flash('status', 'Stół został usunięty.');
     }
 
-    public function render(TableProvisioner $provisioner, StorageQuota $quota)
+    public function render(TableProvisioner $provisioner, StorageQuota $quota, TableUpdater $updater)
     {
         $user = Auth::user();
         $tables = $user->vttTables()->with('user')->latest()->get();
         $max = $user->maxTables();
         $storage = $quota->snapshotForTables($user, $tables);
+        $available = $updater->sourceVersion();
+        $sourceReady = $provisioner->sourceIsReady();
+        $versions = [];
+        foreach ($tables as $table) {
+            $installed = $updater->installedVersion($table);
+            $versions[$table->id] = [
+                'installed' => $installed,
+                'available' => $available,
+                'updateAvailable' => $sourceReady && $available > $installed,
+            ];
+        }
 
         return view('livewire.tables-dashboard', [
             'tables' => $tables,
             'count' => $tables->count(),
             'max' => $max,
             'canCreate' => $tables->count() < $max,
-            'sourceReady' => $provisioner->sourceIsReady(),
+            'sourceReady' => $sourceReady,
             'sourcePath' => $provisioner->sourcePath(),
             'colorThemes' => array_values(app(ThemeCatalog::class)->catalog()['themes']),
             'storage' => $storage,
+            'versions' => $versions,
         ]);
     }
 

@@ -164,6 +164,12 @@ echo [6/6] Creating .htaccess files...
     echo ^</IfModule^>
 ) > "build\.htaccess"
 
+call "%~dp0copy-package-version.inc.bat"
+if !errorlevel! neq 0 (
+    call :maybe_pause
+    exit /b 1
+)
+
 call "%~dp0sync-current-source.inc.bat"
 if !errorlevel! neq 0 (
     call :maybe_pause

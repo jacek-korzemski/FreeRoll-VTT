@@ -31,6 +31,9 @@
     @else
         <ul class="grid gap-4 lg:grid-cols-2">
             @foreach ($tables as $table)
+                @php
+                    $version = $versions[$table->id] ?? ['installed' => 0, 'available' => 0, 'updateAvailable' => false];
+                @endphp
                 <li class="rounded-xl border border-white/10 bg-vtt-panel/90 p-5 shadow-lg">
                     <div class="flex items-start justify-between gap-3">
                         <div>
@@ -107,13 +110,26 @@
                                 <x-secondary-button type="button" wire:click="$set('confirmingDeleteId', null)">Anuluj</x-secondary-button>
                             </div>
                         </div>
+                    @elseif ($confirmingUpdateId === $table->id)
+                        <div class="mt-5 space-y-3 border-t border-white/10 pt-4">
+                            <p class="text-sm text-gray-200">Aktualizacja podmieni tylko program stołu (wersja {{ $version['installed'] }} → {{ $version['available'] }}). Adres stołu, hasła, stan gry, notatki w przeglądarce i wgrane pliki zostaną. Na czas aktualizacji nikt nie powinien rzucać kośćmi ani przesuwać tokenów. Po zakończeniu odśwież stronę stołu.</p>
+                            <x-input-error :messages="$errors->get('update')" />
+                            <div class="flex gap-2">
+                                <x-success-button type="button" wire:click="updateTable">Aktualizuj stół</x-success-button>
+                                <x-secondary-button type="button" wire:click="$set('confirmingUpdateId', null)">Anuluj</x-secondary-button>
+                            </div>
+                        </div>
                     @else
                         <div class="mt-5 space-y-2 border-t border-white/10 pt-4 text-sm">
                             <p><span class="text-gray-400">Hasło gracza:</span> <span class="font-mono text-gray-200">{{ $table->player_password }}</span></p>
                             <p><span class="text-gray-400">Hasło MG:</span> <span class="font-mono text-gray-200">{{ $table->gm_password }}</span></p>
                             <p><span class="text-gray-400">Globalne assety:</span> <span class="text-gray-200">{{ $table->global_assets ? 'załączone' : 'wyłączone' }}</span></p>
+                            <p class="text-gray-400">Wersja {{ $version['installed'] }}@if ($version['available'] > 0) · dostępna {{ $version['available'] }}@endif</p>
                             <div class="flex flex-wrap gap-2 pt-2">
                                 <x-secondary-button type="button" wire:click="startEdit({{ $table->id }})">Zmień ustawienia</x-secondary-button>
+                                @if ($version['updateAvailable'])
+                                    <x-secondary-button type="button" wire:click="confirmUpdate({{ $table->id }})">Aktualizuj stół</x-secondary-button>
+                                @endif
                                 <x-warning-button type="button" wire:click="confirmDelete({{ $table->id }})">Usuń</x-warning-button>
                             </div>
                         </div>

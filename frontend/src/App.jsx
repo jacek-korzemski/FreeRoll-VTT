@@ -1098,8 +1098,42 @@ useEffect(() => {
   }, [placeAssetAt])
 
   const handleTravelPlace = useCallback((asset, type, x, y) => {
+    if (relocatingMapElement) {
+      const elementId = relocatingMapElement.id
+      const originX = relocatingMapElement.x
+      const originY = relocatingMapElement.y
+      setMapElements(prev => prev.map(el =>
+        el.id === elementId ? { ...el, x, y } : el
+      ))
+      fetch(`${API_BASE}?action=move-map-element`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id: elementId, x, y })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setVersion(data.version)
+            return
+          }
+          setMapElements(prev => prev.map(el =>
+            el.id === elementId ? { ...el, x: originX, y: originY } : el
+          ))
+        })
+        .catch(() => {
+          setMapElements(prev => prev.map(el =>
+            el.id === elementId ? { ...el, x: originX, y: originY } : el
+          ))
+        })
+      setRelocatingMapElement(null)
+      setSelectedAsset(null)
+      setSelectedType(null)
+      setIsMoveToolActive(true)
+      return
+    }
     placeAssetAt(asset, type, x, y, false)
-  }, [placeAssetAt])
+  }, [placeAssetAt, relocatingMapElement])
 
   
   const handleTokenMove = useCallback((tokenId, newX, newY) => {
@@ -1242,33 +1276,20 @@ useEffect(() => {
 
   const TOKEN_NOTE_STORAGE_PREFIX = 'vtt_token_note_'
 
-  const handleMapElementMove = useCallback((elementId, newX, newY) => {
-    setMapElements(prev => prev.map(el =>
-      el.id === elementId ? { ...el, x: newX, y: newY } : el
-    ))
-    fetch(`${API_BASE}?action=move-map-element`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ id: elementId, x: newX, y: newY })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setVersion(data.version)
-      })
-      .catch(console.error)
-  }, [])
-
-  const handleAddCombatant = useCallback((side) => {
-    if (!selectedAsset || selectedType !== 'token') return
+  const handleAddCombatant = useCallback((payload) => {
+    if (!payload?.src) return
     fetch(`${API_BASE}?action=add-combatant`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({
-        assetId: selectedAsset.id,
-        src: selectedAsset.src,
-        side,
+        assetId: payload.assetId || '',
+        src: payload.src,
+        side: payload.side,
+        name: payload.name || '',
+        notes: payload.notes || '',
+        hp: payload.hp,
+        maxHp: payload.maxHp,
       })
     })
       .then(res => res.json())
@@ -1279,7 +1300,7 @@ useEffect(() => {
         }
       })
       .catch(console.error)
-  }, [selectedAsset, selectedType])
+  }, [])
 
   const handleUpdateCombatant = useCallback((combatantId, updates) => {
     setCombatants(prev => prev.map(c => c.id === combatantId ? { ...c, ...updates } : c))
@@ -1724,9 +1745,12 @@ useEffect(() => {
             selectedType={selectedType}
             isEraserActive={isEraserActive}
             isTokenEraserActive={isTokenEraserActive}
+            isMoveToolActive={isMoveToolActive}
+            relocatingMapElement={relocatingMapElement}
             onPlace={handleTravelPlace}
             onTokenMove={handleTokenMove}
-            onMapElementMove={handleMapElementMove}
+            onUpdateMapElement={handleUpdateMapElement}
+            onBeginMapElementMove={handleBeginMapElementMove}
             onRemoveMapElement={handleRemoveMapElement}
             onRemoveToken={handleRemoveToken}
             onDeselectPlacement={handleCancelPlacementAndTools}
@@ -1740,9 +1764,9 @@ useEffect(() => {
             background={background}
             turn={turn}
             isGameMaster={isGameMaster}
-            selectedAsset={selectedAsset}
-            selectedType={selectedType}
             basePath={ASSET_BASE}
+            apiBase={API_BASE}
+            globalAssets={globalAssets}
             onAdd={handleAddCombatant}
             onUpdate={handleUpdateCombatant}
             onRemove={handleRemoveCombatant}

@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'
+import CombatantCreateModal from './CombatantCreateModal'
 
 function clampPercent(value) {
   const number = Number(value)
@@ -313,9 +314,9 @@ function CombatBoard({
   background,
   turn,
   isGameMaster,
-  selectedAsset,
-  selectedType,
   basePath,
+  apiBase,
+  globalAssets = false,
   onAdd,
   onUpdate,
   onRemove,
@@ -323,13 +324,13 @@ function CombatBoard({
 }) {
   const stageRef = useRef(null)
   const [openId, setOpenId] = useState(null)
+  const [createSide, setCreateSide] = useState(null)
   const toggleUnit = (id) => setOpenId((prev) => (prev === id ? null : id))
   const withSrc = combatants.map((combatant) => ({
     ...combatant,
     src: combatant.src ? getImageSrc(combatant.src, basePath) : '',
   }))
   const sideIndex = { enemy: 0, player: 0 }
-  const canAdd = !!(selectedAsset && selectedType === 'token')
   const backgroundStyle = background?.src
     ? { backgroundImage: `url("${getImageSrc(background.src, basePath)}")` }
     : undefined
@@ -340,16 +341,15 @@ function CombatBoard({
       <div className="combat-toolbar">
         {isGameMaster ? (
           <div className="combat-add combat-add-enemy">
-            <button type="button" disabled={!canAdd} onClick={() => onAdd('enemy')}>
+            <button type="button" onClick={() => setCreateSide('enemy')}>
               {t('scenes.addEnemy')}
             </button>
-            {!canAdd && <p className="board-hint">{t('scenes.selectToken')}</p>}
           </div>
         ) : <span />}
         <TurnBanner turn={turn} isGameMaster={isGameMaster} onSetTurn={onSetTurn} />
         {isGameMaster ? (
           <div className="combat-add combat-add-player">
-            <button type="button" disabled={!canAdd} onClick={() => onAdd('player')}>
+            <button type="button" onClick={() => setCreateSide('player')}>
               {t('scenes.addPlayer')}
             </button>
           </div>
@@ -375,6 +375,16 @@ function CombatBoard({
           />
         )
       })}
+      {createSide && (
+        <CombatantCreateModal
+          side={createSide}
+          basePath={basePath}
+          apiBase={apiBase}
+          globalAssets={globalAssets}
+          onClose={() => setCreateSide(null)}
+          onConfirm={onAdd}
+        />
+      )}
     </div>
   )
 }

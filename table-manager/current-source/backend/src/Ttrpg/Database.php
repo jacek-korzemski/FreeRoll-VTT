@@ -72,5 +72,14 @@ final class Database
                 seeded INTEGER NOT NULL DEFAULT 0
             )'
         );
+        $pdo->exec(
+            'CREATE TABLE IF NOT EXISTS narrative_card_library (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                src TEXT NOT NULL DEFAULT \'\',
+                title TEXT NOT NULL DEFAULT \'\',
+                body TEXT NOT NULL DEFAULT \'\',
+                created_at INTEGER NOT NULL
+            )'
+        );
     }
 }

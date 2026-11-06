@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'
+import NarrativeCardLibraryModal from './NarrativeCardLibraryModal'
 
 function NarrativeCard({
   card,
@@ -12,6 +14,7 @@ function NarrativeCard({
   onUpdate,
   onRemove,
   onMove,
+  onSave,
 }) {
   const [title, setTitle] = useState(card.title || '')
   const [body, setBody] = useState(card.body || '')
@@ -19,6 +22,8 @@ function NarrativeCard({
   const imageRef = useRef(null)
   const [natural, setNatural] = useState({ w: 0, h: 0, src: '' })
   const [lightbox, setLightbox] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const savedTimer = useRef(null)
   const zoomable = natural.src === imageSrc && (natural.w > 320 || natural.h > 320)
 
   const rememberSize = (node) => {
@@ -58,6 +63,25 @@ function NarrativeCard({
       onUpdate(card.id, { title, body })
     }
   }
+
+  const saveToLibrary = () => {
+    setFocused(false)
+    setSaved(false)
+    if (title !== (card.title || '') || body !== (card.body || '')) {
+      onUpdate(card.id, { title, body })
+    }
+    Promise.resolve(onSave?.({ src: card.src || '', title, body }))
+      .then(() => {
+        setSaved(true)
+        if (savedTimer.current) window.clearTimeout(savedTimer.current)
+        savedTimer.current = window.setTimeout(() => setSaved(false), 1600)
+      })
+      .catch(() => {})
+  }
+
+  useEffect(() => () => {
+    if (savedTimer.current) window.clearTimeout(savedTimer.current)
+  }, [])
 
   return (
     <article
@@ -121,6 +145,9 @@ function NarrativeCard({
               >
                 {card.visible ? t('scenes.hideCard') : t('scenes.showCard')}
               </button>
+              <button type="button" onClick={saveToLibrary}>
+                {saved ? t('scenes.savedToLibrary') : t('scenes.saveToLibrary')}
+              </button>
               <button type="button" className="narrative-remove" onClick={() => onRemove(card.id)}>
                 {t('scenes.remove')}
               </button>
@@ -150,6 +177,7 @@ function NarrativeBoard({
   onReorder,
 }) {
   const [hideAll, setHideAll] = useState(false)
+  const [libraryOpen, setLibraryOpen] = useState(false)
   const listRef = useRef(null)
   const positionsRef = useRef(null)
   const canAddSelection = !!(
@@ -178,6 +206,23 @@ function NarrativeBoard({
     })
     return undefined
   }, [cards])
+
+  const saveToLibrary = (snapshot) => {
+    return fetch(`${API_BASE}?action=card-library-save`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        src: snapshot.src || '',
+        title: snapshot.title || '',
+        body: snapshot.body || '',
+      }),
+    })
+      .then((res) => res.json().then((data) => {
+        if (!res.ok || !data.success) throw new Error(data.error || 'save failed')
+        return data
+      }))
+  }
 
   const moveCard = (cardId, direction) => {
     const index = cards.findIndex((card) => card.id === cardId)
@@ -216,6 +261,11 @@ function NarrativeBoard({
               {t('scenes.addCard')}
             </button>
           )}
+          {isGameMaster && (
+            <button type="button" onClick={() => setLibraryOpen(true)}>
+              {t('scenes.addFromLibrary')}
+            </button>
+          )}
           {isGameMaster && !canAddSelection && (
             <span className="board-hint">{t('scenes.addCardHint')}</span>
           )}
@@ -235,12 +285,20 @@ function NarrativeBoard({
                   onUpdate={onUpdate}
                   onRemove={onRemove}
                   onMove={moveCard}
+                  onSave={saveToLibrary}
                 />
               ))}
             </div>
           </>
         )}
       </div>
+      {libraryOpen && (
+        <NarrativeCardLibraryModal
+          basePath={basePath}
+          onClose={() => setLibraryOpen(false)}
+          onAdd={onAdd}
+        />
+      )}
     </div>
   )
 }

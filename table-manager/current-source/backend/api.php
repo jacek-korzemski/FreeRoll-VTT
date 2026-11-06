@@ -21,6 +21,7 @@ function vttRequireTtrpgClass($class, $file) {
 vttRequireTtrpgClass('FreeRoll\\Ttrpg\\Database', __DIR__ . '/src/Ttrpg/Database.php');
 vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventureHtml', __DIR__ . '/src/Ttrpg/AdventureHtml.php');
 vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventureStore', __DIR__ . '/src/Ttrpg/AdventureStore.php');
+vttRequireTtrpgClass('FreeRoll\\Ttrpg\\NarrativeCardLibrary', __DIR__ . '/src/Ttrpg/NarrativeCardLibrary.php');
 vttRequireTtrpgClass('FreeRoll\\Ttrpg\\AdventurePackage', __DIR__ . '/src/Ttrpg/AdventurePackage.php');
 
 /**
@@ -1009,6 +1010,44 @@ function adventureHandle($method, $action, $input = null) {
     echo json_encode(['success' => false, 'error' => 'Unknown action']);
 }
 
+function cardLibraryHandle($method, $action, $input = null) {
+    if (!isGameMaster()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Forbidden']);
+        return;
+    }
+
+    $store = \FreeRoll\Ttrpg\NarrativeCardLibrary::make();
+    $input = is_array($input) ? $input : [];
+
+    if ($method === 'GET' && $action === 'card-library-list') {
+        echo json_encode([
+            'success' => true,
+            'cards' => $store->listCards(),
+        ]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'card-library-save') {
+        $card = $store->create(
+            is_string($input['src'] ?? null) ? $input['src'] : '',
+            is_string($input['title'] ?? null) ? $input['title'] : '',
+            is_string($input['body'] ?? null) ? $input['body'] : ''
+        );
+        echo json_encode(['success' => true, 'card' => $card]);
+        return;
+    }
+
+    if ($method === 'POST' && $action === 'card-library-delete') {
+        $store->delete((int) ($input['id'] ?? 0));
+        echo json_encode(['success' => true]);
+        return;
+    }
+
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Unknown action']);
+}
+
 // ============================================
 // API
 // ============================================
@@ -1347,6 +1386,10 @@ try {
                     adventureHandle('GET', $action);
                     break;
 
+                case 'card-library-list':
+                    cardLibraryHandle('GET', $action);
+                    break;
+
                 case 'rolls':
                     $rollsFile = __DIR__ . '/data/rolls.json';
                     $rolls = annotateRollsForSnackbar(loadRolls($rollsFile));
@@ -1606,13 +1649,13 @@ try {
                         'id' => generateId(),
                         'assetId' => clipSrc($input['assetId'] ?? ''),
                         'src' => clipSrc($input['src'] ?? ''),
-                        'name' => '',
+                        'name' => clipPlainText($input['name'] ?? '', 80),
                         'side' => $side,
                         'x' => $side === 'player' ? 62 : 8,
                         'y' => min(68, 12 + ($sameSide * 28)),
-                        'notes' => '',
-                        'hp' => null,
-                        'maxHp' => null,
+                        'notes' => clipPlainText($input['notes'] ?? '', 2000),
+                        'hp' => clipHp(array_key_exists('hp', $input) ? $input['hp'] : null),
+                        'maxHp' => clipHp(array_key_exists('maxHp', $input) ? $input['maxHp'] : null),
                     ];
                     if (!isset($activeScene['combatants']) || !is_array($activeScene['combatants'])) {
                         $activeScene['combatants'] = [];
@@ -3045,6 +3088,11 @@ try {
                 case 'adventure-export':
                 case 'adventure-import':
                     adventureHandle('POST', $action, is_array($input) ? $input : []);
+                    break;
+
+                case 'card-library-save':
+                case 'card-library-delete':
+                    cardLibraryHandle('POST', $action, is_array($input) ? $input : []);
                     break;
 
                 case 'ttrpg-upload-handbook':

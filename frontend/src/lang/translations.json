@@ -284,7 +284,19 @@
       "showCards": "Show cards",
       "moveUp": "Move up",
       "moveDown": "Move down",
-      "noCards": "No cards yet"
+      "noCards": "No cards yet",
+      "saveToLibrary": "Save to library",
+      "savedToLibrary": "Saved",
+      "addFromLibrary": "Add from library",
+      "libraryTitle": "Card library",
+      "libraryEmpty": "No saved cards yet",
+      "libraryAdd": "Add selected",
+      "libraryDelete": "Remove from library",
+      "libraryError": "Could not load the library",
+      "cancel": "Cancel",
+      "pickToken": "Choose a token",
+      "addEnemyTitle": "New enemy",
+      "addPlayerTitle": "New player"
     },
     "pdf": {
       "title": "PDF Reader",
@@ -887,7 +899,19 @@
       "showCards": "Pokaż karty",
       "moveUp": "Przesuń w górę",
       "moveDown": "Przesuń w dół",
-      "noCards": "Brak kart"
+      "noCards": "Brak kart",
+      "saveToLibrary": "Zapisz w bibliotece",
+      "savedToLibrary": "Zapisano",
+      "addFromLibrary": "Dodaj z biblioteki",
+      "libraryTitle": "Biblioteka kart",
+      "libraryEmpty": "Brak zapisanych kart",
+      "libraryAdd": "Dodaj wybraną",
+      "libraryDelete": "Usuń z biblioteki",
+      "libraryError": "Nie udało się wczytać biblioteki",
+      "cancel": "Anuluj",
+      "pickToken": "Wybierz token",
+      "addEnemyTitle": "Nowy wróg",
+      "addPlayerTitle": "Nowy gracz"
     },
     "pdf": {
       "title": "Czytnik PDF",

@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'
 import NarrativeCardLibraryModal from './NarrativeCardLibraryModal'
@@ -9,12 +8,14 @@ function NarrativeCard({
   card,
   imageSrc,
   isGameMaster,
+  handed,
   canMoveUp,
   canMoveDown,
   onUpdate,
   onRemove,
   onMove,
   onSave,
+  onToggleHand,
 }) {
   const [title, setTitle] = useState(card.title || '')
   const [body, setBody] = useState(card.body || '')
@@ -70,7 +71,7 @@ function NarrativeCard({
     if (title !== (card.title || '') || body !== (card.body || '')) {
       onUpdate(card.id, { title, body })
     }
-    Promise.resolve(onSave?.({ src: card.src || '', title, body }))
+    Promise.resolve(onSave?.({ id: card.id, src: card.src || '', title, body }))
       .then(() => {
         setSaved(true)
         if (savedTimer.current) window.clearTimeout(savedTimer.current)
@@ -133,24 +134,34 @@ function NarrativeCard({
               onBlur={commit}
             />
             <div className="narrative-card-actions">
-              <button type="button" disabled={!canMoveUp} onClick={() => onMove(card.id, -1)}>
-                {t('scenes.moveUp')}
-              </button>
-              <button type="button" disabled={!canMoveDown} onClick={() => onMove(card.id, 1)}>
-                {t('scenes.moveDown')}
-              </button>
-              <button
-                type="button"
-                onClick={() => onUpdate(card.id, { visible: !card.visible })}
-              >
-                {card.visible ? t('scenes.hideCard') : t('scenes.showCard')}
-              </button>
-              <button type="button" onClick={saveToLibrary}>
-                {saved ? t('scenes.savedToLibrary') : t('scenes.saveToLibrary')}
-              </button>
-              <button type="button" className="narrative-remove" onClick={() => onRemove(card.id)}>
-                {t('scenes.remove')}
-              </button>
+              <div className="narrative-card-buttons">
+                <button type="button" disabled={!canMoveUp} onClick={() => onMove(card.id, -1)}>
+                  {t('scenes.moveUp')}
+                </button>
+                <button type="button" disabled={!canMoveDown} onClick={() => onMove(card.id, 1)}>
+                  {t('scenes.moveDown')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onUpdate(card.id, { visible: !card.visible })}
+                >
+                  {card.visible ? t('scenes.hideCard') : t('scenes.showCard')}
+                </button>
+                <button type="button" onClick={saveToLibrary}>
+                  {saved ? t('scenes.savedToLibrary') : t('scenes.saveToLibrary')}
+                </button>
+                <button type="button" className="narrative-remove" onClick={() => onRemove(card.id)}>
+                  {t('scenes.remove')}
+                </button>
+              </div>
+              <label className="narrative-hand">
+                <input
+                  type="checkbox"
+                  checked={!!handed}
+                  onChange={() => onToggleHand?.()}
+                />
+                {t('handedCards.give')}
+              </label>
             </div>
           </>
         ) : (
@@ -164,6 +175,13 @@ function NarrativeCard({
   )
 }
 
+function cardIsHanded(card, handedCards, sceneId) {
+  if (card.libraryId) {
+    return handedCards.some((item) => item.libraryId === card.libraryId)
+  }
+  return handedCards.some((item) => item.cardId === card.id && item.sceneId === sceneId)
+}
+
 function NarrativeBoard({
   cards,
   background,
@@ -171,10 +189,16 @@ function NarrativeBoard({
   selectedAsset,
   selectedType,
   basePath,
+  globalAssets = false,
+  sceneId,
+  handedCards = [],
   onAdd,
   onUpdate,
   onRemove,
   onReorder,
+  onSave,
+  onToggleHand,
+  onLibraryChanged,
 }) {
   const [hideAll, setHideAll] = useState(false)
   const [libraryOpen, setLibraryOpen] = useState(false)
@@ -206,23 +230,6 @@ function NarrativeBoard({
     })
     return undefined
   }, [cards])
-
-  const saveToLibrary = (snapshot) => {
-    return fetch(`${API_BASE}?action=card-library-save`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        src: snapshot.src || '',
-        title: snapshot.title || '',
-        body: snapshot.body || '',
-      }),
-    })
-      .then((res) => res.json().then((data) => {
-        if (!res.ok || !data.success) throw new Error(data.error || 'save failed')
-        return data
-      }))
-  }
 
   const moveCard = (cardId, direction) => {
     const index = cards.findIndex((card) => card.id === cardId)
@@ -263,7 +270,7 @@ function NarrativeBoard({
           )}
           {isGameMaster && (
             <button type="button" onClick={() => setLibraryOpen(true)}>
-              {t('scenes.addFromLibrary')}
+              {t('scenes.library')}
             </button>
           )}
           {isGameMaster && !canAddSelection && (
@@ -280,12 +287,17 @@ function NarrativeBoard({
                   card={card}
                   imageSrc={card.src ? getImageSrc(card.src, basePath) : ''}
                   isGameMaster={isGameMaster}
+                  handed={cardIsHanded(card, handedCards, sceneId)}
                   canMoveUp={index > 0}
                   canMoveDown={index < cards.length - 1}
                   onUpdate={onUpdate}
                   onRemove={onRemove}
                   onMove={moveCard}
-                  onSave={saveToLibrary}
+                  onSave={onSave}
+                  onToggleHand={() => onToggleHand?.({
+                    handed: !cardIsHanded(card, handedCards, sceneId),
+                    cardId: card.id,
+                  })}
                 />
               ))}
             </div>
@@ -295,8 +307,12 @@ function NarrativeBoard({
       {libraryOpen && (
         <NarrativeCardLibraryModal
           basePath={basePath}
+          globalAssets={globalAssets}
+          handedCards={handedCards}
           onClose={() => setLibraryOpen(false)}
           onAdd={onAdd}
+          onToggleHand={onToggleHand}
+          onChanged={onLibraryChanged}
         />
       )}
     </div>

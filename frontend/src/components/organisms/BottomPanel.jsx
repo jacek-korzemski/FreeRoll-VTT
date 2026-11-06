@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, Suspense, lazy, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, useRef, Suspense, lazy, useMemo } from 'react'
 import NotesPanel from './NotesPanel'
 import { NotesTemplateProvider } from '../../contexts/NotesTemplateContext'
 import { t } from '../../lang'
@@ -8,6 +8,7 @@ import { getTableItem, setTableItem } from '../../utils/tableStorage'
 const PdfPanel = lazy(() => import('./PdfPanel'))
 const MacroEditor = lazy(() => import('./MacroEditor'))
 const CountersPanel = lazy(() => import('./CountersPanel'))
+const HandedCardsPanel = lazy(() => import('./HandedCardsPanel'))
 const TtrpgManagerPanel = lazy(() => import('./TtrpgManagerPanel'))
 
 // Build-time literal: the compendium tab (and the JSON data chunks it pulls in)
@@ -25,6 +26,7 @@ const BASE_PANELS = [
   { id: 'pdf', icon: '📄', titleKey: 'pdf.title' },
   { id: 'macros', icon: '⚡', titleKey: 'macros.title' },
   { id: 'counters', icon: '🔢', titleKey: 'counters.title' },
+  { id: 'handed', icon: '🃏', titleKey: 'handedCards.title' },
   ...(ENABLE_L5R ? [{ id: 'compendium', icon: '📚', titleKey: 'l5r.compendium' }] : []),
 ]
 
@@ -32,6 +34,8 @@ function BottomPanel({
   activeTab,
   onTabChange,
   sharedCounters = [],
+  handedCards = [],
+  assetBase = '',
   serverNow = null,
   isGameMaster = false,
   apiBase = '',
@@ -42,7 +46,11 @@ function BottomPanel({
   const [heightPercent, setHeightPercent] = useState(DEFAULT_HEIGHT_PERCENT)
   const [isResizing, setIsResizing] = useState(false)
   const [mountedTabs, setMountedTabs] = useState(new Set())
+  const [handedUnread, setHandedUnread] = useState(false)
+  const seenHandedMax = useRef(null)
   const isOpen = activeTab !== null
+  const handedCount = handedCards.length
+  const handedMaxId = handedCards.reduce((max, card) => Math.max(max, Number(card.id) || 0), 0)
   const configured = !!ttrpgManager?.configured
 
   const visiblePanels = useMemo(() => {
@@ -60,6 +68,21 @@ function BottomPanel({
       setMountedTabs(prev => new Set([...prev, activeTab]))
     }
   }, [activeTab, mountedTabs])
+
+  useEffect(() => {
+    if (seenHandedMax.current === null) {
+      seenHandedMax.current = handedMaxId
+      return
+    }
+    if (activeTab === 'handed') {
+      seenHandedMax.current = handedMaxId
+      setHandedUnread(false)
+      return
+    }
+    if (handedMaxId > seenHandedMax.current) {
+      setHandedUnread(true)
+    }
+  }, [handedMaxId, activeTab])
 
   useEffect(() => {
     if (activeTab === 'ttrpg' && !configured && !isGameMaster) {
@@ -158,11 +181,19 @@ function BottomPanel({
             {visiblePanels.map(panel => (
               <button
                 key={panel.id}
-                className={`bottom-panel-tab ${activeTab === panel.id ? 'active' : ''}`}
+                className={`bottom-panel-tab ${activeTab === panel.id ? 'active' : ''} ${panel.id === 'handed' && handedUnread ? 'has-unread' : ''}`}
                 onClick={() => handleTabClick(panel.id)}
-                title={t(panel.titleKey)}
+                title={panel.id === 'handed' && handedCount > 0
+                  ? `${t(panel.titleKey)} (${handedCount})`
+                  : t(panel.titleKey)}
               >
                 {panel.icon}
+                {panel.id === 'handed' && handedCount > 0 ? (
+                  <span className="bottom-panel-tab-badge">{handedCount}</span>
+                ) : null}
+                {panel.id === 'handed' && handedUnread ? (
+                  <span className="bottom-panel-tab-dot" />
+                ) : null}
               </button>
             ))}
           </div>
@@ -207,6 +238,13 @@ function BottomPanel({
               </div>
             )}
           </NotesTemplateProvider>
+          {mountedTabs.has('handed') && (
+            <div className={`bottom-panel-tab-pane ${activeTab !== 'handed' ? 'hidden' : ''}`}>
+              <Suspense fallback={<div className="handed-placeholder">{t('app.loading')}</div>}>
+                <HandedCardsPanel cards={handedCards} basePath={assetBase} />
+              </Suspense>
+            </div>
+          )}
           {mountedTabs.has('counters') && (
             <div className={`bottom-panel-tab-pane ${activeTab !== 'counters' ? 'hidden' : ''}`}>
               <Suspense fallback={<div className="counters-placeholder">{t('app.loading')}</div>}>

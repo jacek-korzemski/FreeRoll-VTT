@@ -62,6 +62,25 @@ final class NarrativeCardLibrary
         ];
     }
 
+    /**
+     * @return array{id: int, src: string, title: string, body: string, createdAt: int}|null
+     */
+    public function find(int $id): ?array
+    {
+        if ($id < 1) {
+            return null;
+        }
+        $stmt = $this->pdo->prepare(
+            'SELECT id, src, title, body, created_at FROM narrative_card_library WHERE id = :id'
+        );
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+        if (!is_array($row)) {
+            return null;
+        }
+        return $this->map($row);
+    }
+
     public function delete(int $id): bool
     {
         if ($id < 1) {

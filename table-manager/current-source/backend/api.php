@@ -425,6 +425,7 @@ function filterSceneForPlayer(array $scene) {
         if (!is_array($card) || empty($card['visible'])) {
             continue;
         }
+        unset($card['libraryId']);
         $cards[] = $card;
     }
     $scene['cards'] = $cards;
@@ -466,6 +467,8 @@ function getState() {
             'editingSceneId' => $defaultScene['id'],
             'scenes' => [$defaultScene],
             'counters' => [],
+            'handedCards' => [],
+            'handedCardSeq' => 0,
             'lastUpdate' => time(),
             'version' => 0
         ];
@@ -497,6 +500,7 @@ function getState() {
     if (!isset($state['counters']) || !is_array($state['counters'])) {
         $state['counters'] = [];
     }
+    normalizeHandedCards($state);
 
     $dirty = false;
     if (!isset($state['scenes']) || !is_array($state['scenes'])) {
@@ -613,6 +617,286 @@ function saveState($state) {
     return $state;
 }
 
+function normalizeHandedCards(array &$state): void
+{
+    if (!isset($state['handedCards']) || !is_array($state['handedCards'])) {
+        $state['handedCards'] = [];
+    }
+    $clean = [];
+    $maxId = 0;
+    foreach ($state['handedCards'] as $card) {
+        if (!is_array($card)) {
+            continue;
+        }
+        $id = intval($card['id'] ?? 0);
+        if ($id < 1) {
+            continue;
+        }
+        if ($id > $maxId) {
+            $maxId = $id;
+        }
+        $item = [
+            'id' => $id,
+            'src' => clipSrc($card['src'] ?? ''),
+            'title' => clipPlainText($card['title'] ?? '', 120),
+            'body' => clipPlainText($card['body'] ?? '', 4000),
+        ];
+        $libraryId = intval($card['libraryId'] ?? 0);
+        $sceneId = isset($card['sceneId']) && is_string($card['sceneId']) ? $card['sceneId'] : '';
+        $cardId = isset($card['cardId']) && is_string($card['cardId']) ? $card['cardId'] : '';
+        if ($libraryId > 0) {
+            $item['libraryId'] = $libraryId;
+        } elseif ($sceneId !== '' && $cardId !== '') {
+            $item['sceneId'] = $sceneId;
+            $item['cardId'] = $cardId;
+        } else {
+            continue;
+        }
+        $clean[] = $item;
+    }
+    $state['handedCards'] = $clean;
+    $seq = intval($state['handedCardSeq'] ?? 0);
+    if ($seq < $maxId) {
+        $seq = $maxId;
+    }
+    $state['handedCardSeq'] = $seq;
+}
+
+function handedCardsForClient(array $state): array
+{
+    $out = [];
+    $gm = isGameMaster();
+    foreach ($state['handedCards'] ?? [] as $card) {
+        if (!is_array($card)) {
+            continue;
+        }
+        $public = [
+            'id' => intval($card['id'] ?? 0),
+            'src' => (string) ($card['src'] ?? ''),
+            'title' => (string) ($card['title'] ?? ''),
+            'body' => (string) ($card['body'] ?? ''),
+        ];
+        if ($public['id'] < 1) {
+            continue;
+        }
+        if ($gm) {
+            $libraryId = intval($card['libraryId'] ?? 0);
+            if ($libraryId > 0) {
+                $public['libraryId'] = $libraryId;
+            }
+            if (!empty($card['sceneId']) && !empty($card['cardId'])) {
+                $public['sceneId'] = (string) $card['sceneId'];
+                $public['cardId'] = (string) $card['cardId'];
+            }
+        }
+        $out[] = $public;
+    }
+    return $out;
+}
+
+function handoutContent(array $source): array
+{
+    return [
+        'src' => clipSrc($source['src'] ?? ''),
+        'title' => clipPlainText($source['title'] ?? '', 120),
+        'body' => clipPlainText($source['body'] ?? '', 4000),
+    ];
+}
+
+function findHandoutIndex(array $state, callable $predicate): ?int
+{
+    foreach ($state['handedCards'] as $idx => $hand) {
+        if (!is_array($hand)) {
+            continue;
+        }
+        if ($predicate($hand)) {
+            return $idx;
+        }
+    }
+    return null;
+}
+
+function giveHandout(array &$state, array $content, array $link): void
+{
+    $seq = intval($state['handedCardSeq'] ?? 0) + 1;
+    $state['handedCardSeq'] = $seq;
+    $fresh = handoutContent($content);
+    $state['handedCards'][] = array_merge([
+        'id' => $seq,
+        'src' => $fresh['src'],
+        'title' => $fresh['title'],
+        'body' => $fresh['body'],
+    ], $link);
+}
+
+function setLibraryHandout(array &$state, int $libraryId, bool $handed, array $content): bool
+{
+    if ($libraryId < 1) {
+        return false;
+    }
+    $idx = findHandoutIndex($state, function ($hand) use ($libraryId) {
+        return intval($hand['libraryId'] ?? 0) === $libraryId;
+    });
+    if ($handed) {
+        if ($idx !== null) {
+            return false;
+        }
+        giveHandout($state, $content, ['libraryId' => $libraryId]);
+        return true;
+    }
+    if ($idx === null) {
+        return false;
+    }
+    array_splice($state['handedCards'], $idx, 1);
+    return true;
+}
+
+function setSceneHandout(array &$state, string $sceneId, array $card, bool $handed): bool
+{
+    $cardId = (string) ($card['id'] ?? '');
+    if ($sceneId === '' || $cardId === '') {
+        return false;
+    }
+    $idx = findHandoutIndex($state, function ($hand) use ($sceneId, $cardId) {
+        return empty($hand['libraryId'])
+            && ($hand['sceneId'] ?? '') === $sceneId
+            && ($hand['cardId'] ?? '') === $cardId;
+    });
+    if ($handed) {
+        if ($idx !== null) {
+            return false;
+        }
+        giveHandout($state, $card, [
+            'sceneId' => $sceneId,
+            'cardId' => $cardId,
+        ]);
+        return true;
+    }
+    if ($idx === null) {
+        return false;
+    }
+    array_splice($state['handedCards'], $idx, 1);
+    return true;
+}
+
+function dropSceneHandout(array &$state, string $sceneId, string $cardId): void
+{
+    if ($sceneId === '' || $cardId === '') {
+        return;
+    }
+    $next = [];
+    foreach ($state['handedCards'] as $hand) {
+        if (!is_array($hand)) {
+            continue;
+        }
+        $sceneOwned = empty($hand['libraryId'])
+            && ($hand['sceneId'] ?? '') === $sceneId
+            && ($hand['cardId'] ?? '') === $cardId;
+        if ($sceneOwned) {
+            continue;
+        }
+        $next[] = $hand;
+    }
+    $state['handedCards'] = $next;
+}
+
+function syncHandedCardContent(array &$state, string $sceneId, array $card): void
+{
+    $libraryId = intval($card['libraryId'] ?? 0);
+    $cardId = (string) ($card['id'] ?? '');
+    $fresh = handoutContent($card);
+    foreach ($state['handedCards'] as $idx => $hand) {
+        if (!is_array($hand)) {
+            continue;
+        }
+        $match = ($libraryId > 0 && intval($hand['libraryId'] ?? 0) === $libraryId)
+            || (
+                $libraryId < 1
+                && empty($hand['libraryId'])
+                && ($hand['sceneId'] ?? '') === $sceneId
+                && ($hand['cardId'] ?? '') === $cardId
+            );
+        if (!$match) {
+            continue;
+        }
+        $state['handedCards'][$idx]['src'] = $fresh['src'];
+        $state['handedCards'][$idx]['title'] = $fresh['title'];
+        $state['handedCards'][$idx]['body'] = $fresh['body'];
+    }
+}
+
+function retargetHandoutToLibrary(array &$state, string $sceneId, string $cardId, int $previousLibraryId, int $newLibraryId, array $content): void
+{
+    if ($newLibraryId < 1) {
+        return;
+    }
+    $target = null;
+    foreach ($state['handedCards'] as $idx => $hand) {
+        if (!is_array($hand)) {
+            continue;
+        }
+        $byScene = empty($hand['libraryId'])
+            && ($hand['sceneId'] ?? '') === $sceneId
+            && ($hand['cardId'] ?? '') === $cardId;
+        if ($byScene) {
+            $target = $idx;
+            break;
+        }
+        $byLib = $previousLibraryId > 0 && intval($hand['libraryId'] ?? 0) === $previousLibraryId;
+        if ($byLib && $target === null) {
+            $target = $idx;
+        }
+    }
+    if ($target === null) {
+        return;
+    }
+    $fresh = handoutContent($content);
+    $state['handedCards'][$target] = [
+        'id' => intval($state['handedCards'][$target]['id'] ?? 0),
+        'src' => $fresh['src'],
+        'title' => $fresh['title'],
+        'body' => $fresh['body'],
+        'libraryId' => $newLibraryId,
+    ];
+}
+
+function forgetLibraryCard(array &$state, int $libraryId): bool
+{
+    if ($libraryId < 1) {
+        return false;
+    }
+    $changed = false;
+    $next = [];
+    foreach ($state['handedCards'] as $hand) {
+        if (!is_array($hand)) {
+            continue;
+        }
+        if (intval($hand['libraryId'] ?? 0) === $libraryId) {
+            $changed = true;
+            continue;
+        }
+        $next[] = $hand;
+    }
+    $state['handedCards'] = $next;
+    if (!isset($state['scenes']) || !is_array($state['scenes'])) {
+        return $changed;
+    }
+    foreach ($state['scenes'] as $sIdx => $scene) {
+        if (!is_array($scene) || !isset($scene['cards']) || !is_array($scene['cards'])) {
+            continue;
+        }
+        foreach ($scene['cards'] as $cIdx => $card) {
+            if (!is_array($card) || intval($card['libraryId'] ?? 0) !== $libraryId) {
+                continue;
+            }
+            unset($card['libraryId']);
+            $state['scenes'][$sIdx]['cards'][$cIdx] = $card;
+            $changed = true;
+        }
+    }
+    return $changed;
+}
+
 function tableSyncPayload(array $state): array {
     $rollsFile = __DIR__ . '/data/rolls.json';
     $playerSceneId = $state['activeSceneId'] ?? '';
@@ -636,6 +920,7 @@ function tableSyncPayload(array $state): array {
         'scenes' => sceneListForClient($state),
         'scene' => $scene,
         'counters' => $state['counters'] ?? [],
+        'handedCards' => handedCardsForClient($state),
         'ping' => $state['ping'] ?? null,
         'rolls' => annotateRollsForSnackbar(loadRolls($rollsFile)),
         'version' => $state['version'] ?? 0,
@@ -1060,13 +1345,60 @@ function cardLibraryHandle($method, $action, $input = null) {
             is_string($input['title'] ?? null) ? $input['title'] : '',
             is_string($input['body'] ?? null) ? $input['body'] : ''
         );
-        echo json_encode(['success' => true, 'card' => $card]);
+        $payload = ['success' => true, 'card' => $card];
+        $cardId = isset($input['cardId']) ? (string) $input['cardId'] : '';
+        if ($cardId !== '') {
+            $state = getState();
+            $scene = getActiveScene($state);
+            $sceneCard = null;
+            if (is_array($scene) && isset($scene['cards']) && is_array($scene['cards'])) {
+                foreach ($scene['cards'] as $idx => $existing) {
+                    if (!is_array($existing) || (string) ($existing['id'] ?? '') !== $cardId) {
+                        continue;
+                    }
+                    $previousLibraryId = intval($existing['libraryId'] ?? 0);
+                    $existing['libraryId'] = (int) $card['id'];
+                    $scene['cards'][$idx] = $existing;
+                    $sceneCard = $existing;
+                    retargetHandoutToLibrary(
+                        $state,
+                        (string) ($scene['id'] ?? ''),
+                        $cardId,
+                        $previousLibraryId,
+                        (int) $card['id'],
+                        $card
+                    );
+                    break;
+                }
+            }
+            if ($sceneCard) {
+                updateActiveScene($state, $scene);
+                $state = saveState($state);
+                $payload['sceneCard'] = $sceneCard;
+                $payload['handedCards'] = handedCardsForClient($state);
+                $payload['version'] = $state['version'];
+            }
+        }
+        echo json_encode($payload);
         return;
     }
 
     if ($method === 'POST' && $action === 'card-library-delete') {
-        $store->delete((int) ($input['id'] ?? 0));
-        echo json_encode(['success' => true]);
+        $id = (int) ($input['id'] ?? 0);
+        if ($id > 0) {
+            $store->delete($id);
+        }
+        $state = getState();
+        $changed = forgetLibraryCard($state, $id);
+        if ($changed) {
+            $state = saveState($state);
+        }
+        echo json_encode([
+            'success' => true,
+            'removedLibraryId' => $id,
+            'handedCards' => handedCardsForClient($state),
+            'version' => $state['version'] ?? 0,
+        ]);
         return;
     }
 
@@ -1793,6 +2125,15 @@ try {
                         'body' => clipPlainText($input['body'] ?? '', 4000),
                         'visible' => array_key_exists('visible', $input) ? (bool)$input['visible'] : true,
                     ];
+                    $libraryId = intval($input['libraryId'] ?? 0);
+                    if ($libraryId > 0) {
+                        $libraryCard = \FreeRoll\Ttrpg\NarrativeCardLibrary::make()->find($libraryId);
+                        if (!$libraryCard) {
+                            echo json_encode(['success' => false, 'error' => 'Library card not found']);
+                            break;
+                        }
+                        $card['libraryId'] = $libraryId;
+                    }
                     if (!isset($activeScene['cards']) || !is_array($activeScene['cards'])) {
                         $activeScene['cards'] = [];
                     }
@@ -1833,27 +2174,44 @@ try {
                         $found = true;
                         break;
                     }
-                    if (!$found) {
+                    if (!$found || !is_array($saved)) {
                         echo json_encode(['success' => false, 'error' => 'Card not found']);
                         break;
                     }
+                    if (is_array($activeScene)) {
+                        syncHandedCardContent($state, (string) ($activeScene['id'] ?? ''), $saved);
+                    }
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);
-                    echo json_encode(['success' => true, 'card' => $saved, 'version' => $state['version']]);
+                    echo json_encode([
+                        'success' => true,
+                        'card' => $saved,
+                        'handedCards' => handedCardsForClient($state),
+                        'version' => $state['version'],
+                    ]);
                     break;
 
                 case 'remove-card':
                     requireGameMaster();
                     $state = getState();
                     $activeScene = getActiveScene($state);
-                    $cardId = $input['id'] ?? '';
+                    $cardId = isset($input['id']) ? (string) $input['id'] : '';
+                    if (!is_array($activeScene)) {
+                        echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                        break;
+                    }
+                    dropSceneHandout($state, (string) ($activeScene['id'] ?? ''), $cardId);
                     $activeScene['cards'] = array_values(array_filter(
                         $activeScene['cards'] ?? [],
-                        fn($c) => is_array($c) && ($c['id'] ?? '') !== $cardId
+                        fn($c) => is_array($c) && (string) ($c['id'] ?? '') !== $cardId
                     ));
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);
-                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    echo json_encode([
+                        'success' => true,
+                        'handedCards' => handedCardsForClient($state),
+                        'version' => $state['version'],
+                    ]);
                     break;
 
                 case 'reorder-cards':
@@ -1891,6 +2249,65 @@ try {
                     updateActiveScene($state, $activeScene);
                     $state = saveState($state);
                     echo json_encode(['success' => true, 'cards' => $ordered, 'version' => $state['version']]);
+                    break;
+
+                case 'hand-card':
+                    requireGameMaster();
+                    $state = getState();
+                    $handed = !empty($input['handed']);
+                    $libraryId = intval($input['libraryId'] ?? 0);
+                    $cardId = isset($input['cardId']) ? (string) $input['cardId'] : '';
+                    $changed = false;
+                    if ($cardId !== '') {
+                        $activeScene = getActiveScene($state);
+                        if (!is_array($activeScene)) {
+                            echo json_encode(['success' => false, 'error' => 'Scene not found']);
+                            break;
+                        }
+                        $sceneCard = null;
+                        foreach ($activeScene['cards'] ?? [] as $card) {
+                            if (is_array($card) && (string) ($card['id'] ?? '') === $cardId) {
+                                $sceneCard = $card;
+                                break;
+                            }
+                        }
+                        if (!is_array($sceneCard)) {
+                            echo json_encode(['success' => false, 'error' => 'Card not found']);
+                            break;
+                        }
+                        $linked = intval($sceneCard['libraryId'] ?? 0);
+                        $libraryCard = $linked > 0
+                            ? \FreeRoll\Ttrpg\NarrativeCardLibrary::make()->find($linked)
+                            : null;
+                        if ($libraryCard) {
+                            $changed = setLibraryHandout($state, $linked, $handed, $sceneCard);
+                        } else {
+                            $changed = setSceneHandout(
+                                $state,
+                                (string) ($activeScene['id'] ?? ''),
+                                $sceneCard,
+                                $handed
+                            );
+                        }
+                    } elseif ($libraryId > 0) {
+                        $libraryCard = \FreeRoll\Ttrpg\NarrativeCardLibrary::make()->find($libraryId);
+                        if (!$libraryCard) {
+                            echo json_encode(['success' => false, 'error' => 'Library card not found']);
+                            break;
+                        }
+                        $changed = setLibraryHandout($state, $libraryId, $handed, $libraryCard);
+                    } else {
+                        echo json_encode(['success' => false, 'error' => 'Card not found']);
+                        break;
+                    }
+                    if ($changed) {
+                        $state = saveState($state);
+                    }
+                    echo json_encode([
+                        'success' => true,
+                        'handedCards' => handedCardsForClient($state),
+                        'version' => $state['version'] ?? 0,
+                    ]);
                     break;
 
                 // ============================================

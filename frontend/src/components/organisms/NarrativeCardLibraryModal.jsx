@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'
+import NarrativeCardEditor from './NarrativeCardEditor'
 
 function excerpt(body) {
   const text = (body || '').replace(/\s+/g, ' ').trim()
@@ -10,11 +11,20 @@ function excerpt(body) {
   return `${text.slice(0, 137)}…`
 }
 
-function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
+function NarrativeCardLibraryModal({
+  basePath,
+  globalAssets = false,
+  handedCards = [],
+  onClose,
+  onAdd,
+  onToggleHand,
+  onChanged,
+}) {
   const [cards, setCards] = useState([])
   const [selectedId, setSelectedId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [editorOpen, setEditorOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -41,11 +51,16 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
 
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === 'Escape') onClose()
+      if (event.key !== 'Escape') return
+      if (editorOpen) {
+        setEditorOpen(false)
+        return
+      }
+      onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [onClose, editorOpen])
 
   const selected = cards.find((card) => card.id === selectedId) || null
 
@@ -57,7 +72,12 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
-    }).catch(() => {})
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) onChanged?.(data)
+      })
+      .catch(() => {})
   }
 
   return createPortal(
@@ -69,17 +89,51 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
         aria-labelledby="card-library-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <h3 id="card-library-title">{t('scenes.libraryTitle')}</h3>
-        {loading ? <p className="note-template-loading">{t('app.loading')}</p> : null}
-        {!loading && error ? <p className="note-template-error">{t('scenes.libraryError')}</p> : null}
-        {!loading && !error && cards.length === 0 ? (
+        <div className="card-library-heading">
+          <h3 id="card-library-title">
+            {editorOpen ? t('scenes.libraryNew') : t('scenes.libraryTitle')}
+          </h3>
+          {editorOpen ? (
+            <button type="button" className="note-template-cancel" onClick={() => setEditorOpen(false)}>
+              {t('scenes.libraryBack')}
+            </button>
+          ) : (
+            <button type="button" className="board-modal-primary" onClick={() => setEditorOpen(true)}>
+              {t('scenes.addCard')}
+            </button>
+          )}
+        </div>
+        {editorOpen ? (
+          <NarrativeCardEditor
+            basePath={basePath}
+            globalAssets={globalAssets}
+            onCancel={() => setEditorOpen(false)}
+            onSaved={(card, addToScene) => {
+              setCards((prev) => [card, ...prev.filter((item) => item.id !== card.id)])
+              setSelectedId(card.id)
+              setEditorOpen(false)
+              if (addToScene) {
+                onAdd({
+                  src: card.src || '',
+                  title: card.title || '',
+                  body: card.body || '',
+                  libraryId: card.id,
+                })
+              }
+            }}
+          />
+        ) : null}
+        {!editorOpen && loading ? <p className="note-template-loading">{t('app.loading')}</p> : null}
+        {!editorOpen && !loading && error ? <p className="note-template-error">{t('scenes.libraryError')}</p> : null}
+        {!editorOpen && !loading && !error && cards.length === 0 ? (
           <p className="note-template-empty">{t('scenes.libraryEmpty')}</p>
         ) : null}
-        {!loading && !error && cards.length > 0 ? (
+        {!editorOpen && !loading && !error && cards.length > 0 ? (
           <div className="card-library-grid">
             {cards.map((card) => {
               const title = (card.title || '').trim() || t('scenes.unnamed')
               const selectedTile = card.id === selectedId
+              const handed = handedCards.some((item) => item.libraryId === card.id)
               return (
                 <div
                   key={card.id}
@@ -99,6 +153,17 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
                     <strong>{title}</strong>
                     <p>{excerpt(card.body)}</p>
                   </button>
+                  <label className="card-library-hand">
+                    <input
+                      type="checkbox"
+                      checked={handed}
+                      onChange={() => onToggleHand?.({
+                        handed: !handed,
+                        libraryId: card.id,
+                      })}
+                    />
+                    <span>{t('handedCards.give')}</span>
+                  </label>
                   <button
                     type="button"
                     className="card-library-delete"
@@ -111,7 +176,7 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
             })}
           </div>
         ) : null}
-        <div className="note-template-modal-footer board-modal-footer">
+        {!editorOpen ? <div className="note-template-modal-footer board-modal-footer">
           <button type="button" className="note-template-cancel" onClick={onClose}>
             {t('scenes.cancel')}
           </button>
@@ -125,13 +190,14 @@ function NarrativeCardLibraryModal({ basePath, onClose, onAdd }) {
                 src: selected.src || '',
                 title: selected.title || '',
                 body: selected.body || '',
+                libraryId: selected.id,
               })
               onClose()
             }}
           >
             {t('scenes.libraryAdd')}
           </button>
-        </div>
+        </div> : null}
       </div>
     </div>,
     document.body,

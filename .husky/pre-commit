@@ -1,7 +1,15 @@
 #!/usr/bin/env sh
-if git diff --cached --name-only | grep -E -q '^(frontend/|backend/|build\.bat|build_pl\.bat|config-prompts\.inc\.bat|install-ttrpg-vendor\.inc\.bat|sync-current-source\.inc\.bat|write-deploy-env\.ps1|index\.php|deploy-env\.php)'; then
+# Table sources are built on the commit, not in GitHub Actions.
+# The hook raises VERSION first, then build.bat copies that package into
+# table-manager/current-source. Push only uploads the result.
+if git diff --cached --name-only | grep -E -q '^(frontend/|backend/|build\.bat|build_pl\.bat|config-prompts\.inc\.bat|install-ttrpg-vendor\.inc\.bat|sync-current-source\.inc\.bat|write-deploy-env\.ps1|index\.php|deploy-env\.php|scripts/bump-package-version\.sh)'; then
+  root=$(git rev-parse --show-toplevel)
+  sh "$root/scripts/bump-package-version.sh" || exit 1
   export BUILD_NONINTERACTIVE=1
   export CI=1
-  cmd.exe //c build.bat || exit 1
+  if ! cmd.exe //c build.bat; then
+    sh "$root/scripts/bump-package-version.sh" --restore || true
+    exit 1
+  fi
   git add table-manager/current-source
 fi

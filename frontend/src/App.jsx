@@ -96,6 +96,7 @@ function App() {
   const [apiFlashTrigger, setApiFlashTrigger] = useState(0)
   const [isTokenEraserActive, setIsTokenEraserActive] = useState(false)
   const [sharedCounters, setSharedCounters] = useState([])
+  const [handedCards, setHandedCards] = useState([])
   const [serverNow, setServerNow] = useState(null)
   const [ttrpgManager, setTtrpgManager] = useState({
     configured: false,
@@ -427,6 +428,7 @@ useEffect(() => {
         updateSceneState(sync.scene)
         setVersion(sync.version || 0)
         setSharedCounters(sync.counters || [])
+        setHandedCards(Array.isArray(sync.handedCards) ? sync.handedCards : [])
         if (typeof sync.serverNow === 'number') {
           setServerNow(sync.serverNow)
         }
@@ -501,6 +503,9 @@ useEffect(() => {
           setScenes(sync.scenes || [])
           if (Array.isArray(sync.counters)) {
             setSharedCounters(sync.counters)
+          }
+          if (Array.isArray(sync.handedCards)) {
+            setHandedCards(sync.handedCards)
           }
           if (sync.activeSceneId !== activeSceneIdRef.current) {
             setActiveSceneId(sync.activeSceneId)
@@ -1302,6 +1307,24 @@ useEffect(() => {
       .catch(console.error)
   }, [])
 
+  const applyHandoutResult = useCallback((data) => {
+    if (!data?.success) return
+    if (Array.isArray(data.handedCards)) setHandedCards(data.handedCards)
+    if (typeof data.version === 'number') setVersion(data.version)
+    if (data.sceneCard?.id) {
+      setCards((prev) => prev.map((card) => (card.id === data.sceneCard.id ? data.sceneCard : card)))
+    }
+    if (data.removedLibraryId) {
+      const removedId = data.removedLibraryId
+      setCards((prev) => prev.map((card) => {
+        if (card.libraryId !== removedId) return card
+        const next = { ...card }
+        delete next.libraryId
+        return next
+      }))
+    }
+  }, [])
+
   const handleAddCard = useCallback((card) => {
     fetch(`${API_BASE}?action=add-card`, {
       method: 'POST',
@@ -1312,6 +1335,7 @@ useEffect(() => {
         title: card.title || '',
         body: card.body || '',
         visible: true,
+        ...(card.libraryId ? { libraryId: card.libraryId } : {}),
       })
     })
       .then(res => res.json())
@@ -1337,6 +1361,9 @@ useEffect(() => {
         if (data.success && data.card) {
           setCards(prev => prev.map(card => card.id === cardId ? data.card : card))
           setVersion(data.version)
+        }
+        if (data.success && Array.isArray(data.handedCards)) {
+          setHandedCards(data.handedCards)
         }
       })
       .catch(console.error)
@@ -1369,10 +1396,42 @@ useEffect(() => {
         if (data.success) {
           setCards(prev => prev.filter(card => card.id !== cardId))
           setVersion(data.version)
+          if (Array.isArray(data.handedCards)) setHandedCards(data.handedCards)
         }
       })
       .catch(console.error)
   }, [])
+
+  const handleToggleHandedCard = useCallback((payload) => {
+    fetch(`${API_BASE}?action=hand-card`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json())
+      .then((data) => applyHandoutResult(data))
+      .catch(console.error)
+  }, [applyHandoutResult])
+
+  const handleSaveCardToLibrary = useCallback((snapshot) => {
+    return fetch(`${API_BASE}?action=card-library-save`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cardId: snapshot.id,
+        src: snapshot.src || '',
+        title: snapshot.title || '',
+        body: snapshot.body || '',
+      }),
+    })
+      .then((res) => res.json().then((data) => {
+        if (!res.ok || !data.success) throw new Error(data.error || 'save failed')
+        applyHandoutResult(data)
+        return data
+      }))
+  }, [applyHandoutResult])
 
   const handleDuplicateToken = useCallback((token) => {
     const step = 1
@@ -1724,10 +1783,16 @@ useEffect(() => {
             selectedAsset={selectedAsset}
             selectedType={selectedType}
             basePath={ASSET_BASE}
+            globalAssets={globalAssets}
+            sceneId={activeSceneId}
+            handedCards={handedCards}
             onAdd={handleAddCard}
             onUpdate={handleUpdateCard}
             onRemove={handleRemoveCard}
             onReorder={handleReorderCards}
+            onSave={handleSaveCardToLibrary}
+            onToggleHand={handleToggleHandedCard}
+            onLibraryChanged={applyHandoutResult}
           />
         ) : (
         <Grid
@@ -1801,6 +1866,8 @@ useEffect(() => {
         activeTab={bottomPanelTab}
         onTabChange={setBottomPanelTab}
         sharedCounters={sharedCounters}
+        handedCards={handedCards}
+        assetBase={ASSET_BASE}
         serverNow={serverNow}
         isGameMaster={isGameMaster}
         apiBase={API_BASE}

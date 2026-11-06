@@ -1,5 +1,6 @@
-# Deploy Table Manager to FTP. VTT package comes from git (table-manager/current-source,
-# produced locally by Husky pre-commit / build.bat). CI only builds TM CSS/JS.
+# Deploy Table Manager to FTP. The VTT package is already in git
+# (table-manager/current-source). Husky pre-commit bumps VERSION, then build.bat
+# refreshes that package. CI only builds Table Manager CSS/JS and uploads.
 #
 # Required GitHub secrets (environment "FTP_SERVER", or repository secrets):
 #   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD, FTP_SERVER_DIR  (remote dir must end with /)

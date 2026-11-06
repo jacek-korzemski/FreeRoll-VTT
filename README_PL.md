@@ -1,6 +1,6 @@
 # Darmowy wirtualny stół do gier RPG o otwartym kodzie źródłowym
 
-Możesz stworzyć swój stół i grać tutaj: http://vtt.angrymaya.pl/
+Możesz stworzyć swój stół i grać tutaj: https://vtt.labiryntkostek.pl/
 
 Pamiętam tylko, proszę - nie używaj swojego głównego adresu e-mail, nie używaj hasła którego używasz gdzie indziej. Jestem tylko hobbystą w trakcie nauki i nie mogę zagwarantować, że moja znajomość security wystarczy na potrzeby produkcyjne. Traktujcie to bardziej jako darmową zabawkę. 
 

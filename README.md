@@ -1,6 +1,6 @@
 # Freeware, opne source Virtual Table Top for RPGs
 
-You can create your table and play here: http://vtt.angrymaya.pl/
+You can create your table and play here: https://vtt.labiryntkostek.pl/
 
 Just please remember - this is just a fun project, don't use your main e-mail account, password that you use in other services etc. I'm just learning and I cannot guarantee my security methods are good enough for production. Treat this more like a free toy.
 

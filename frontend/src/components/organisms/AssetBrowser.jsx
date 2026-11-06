@@ -32,6 +32,7 @@ function AssetBrowser({
   onToggleEraser,
   isMoveToolActive,
   onToggleMoveTool,
+  showMoveTool = false,
   isTokenEraserActive,
   hasTokens,
   onToggleTokenEraser,
@@ -57,19 +58,19 @@ function AssetBrowser({
         />
       )}
 
+      {showEraser && showMoveTool && (
+        <MoveTool
+          isActive={!!isMoveToolActive}
+          hasItems={!!hasMapElements}
+          onToggle={onToggleMoveTool}
+        />
+      )}
       {showEraser && (
-        <>
-          <MoveTool
-            isActive={!!isMoveToolActive}
-            hasItems={!!hasMapElements}
-            onToggle={onToggleMoveTool}
-          />
-          <EraserTool
-            isEraserActive={isEraserActive}
-            hasMapElements={hasMapElements}
-            onToggleEraser={onToggleEraser}
-          />
-        </>
+        <EraserTool
+          isEraserActive={isEraserActive}
+          hasMapElements={hasMapElements}
+          onToggleEraser={onToggleEraser}
+        />
       )}
 
       {showTokenEraser && (

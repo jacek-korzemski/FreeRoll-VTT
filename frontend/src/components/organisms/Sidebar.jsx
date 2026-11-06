@@ -305,6 +305,7 @@ function Sidebar({
                 onToggleEraser={onToggleEraser}
                 isMoveToolActive={isMoveToolActive}
                 onToggleMoveTool={onToggleMoveTool}
+                showMoveTool={type === 'tactical'}
               />
             </CollapsibleSection>
             )}

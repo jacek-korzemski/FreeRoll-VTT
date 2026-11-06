@@ -2041,6 +2041,47 @@ try {
                     echo json_encode(['success' => true, 'version' => $state['version']]);
                     break;
 
+                case 'update-map-element':
+                    $state = getState();
+                    $activeScene = getActiveScene($state);
+                    $elementId = $input['id'] ?? '';
+                    $hasScale = is_array($input) && array_key_exists('scale', $input);
+                    $hasRotation = is_array($input) && array_key_exists('rotation', $input);
+                    if ($elementId === '' || (!$hasScale && !$hasRotation)) {
+                        echo json_encode(['success' => false, 'error' => $elementId === '' ? 'Element not found' : 'Nothing to update']);
+                        break;
+                    }
+                    $updated = false;
+                    if (!is_array($activeScene['mapElements'] ?? null)) {
+                        echo json_encode(['success' => false, 'error' => 'Element not found']);
+                        break;
+                    }
+                    foreach ($activeScene['mapElements'] as $idx => $element) {
+                        if (($element['id'] ?? '') === $elementId) {
+                            if ($hasScale) {
+                                $scale = round(max(0.2, min(3.0, floatval($input['scale']))), 4);
+                                $activeScene['mapElements'][$idx]['scale'] = $scale;
+                            }
+                            if ($hasRotation) {
+                                $rotation = fmod(floatval($input['rotation']), 360.0);
+                                if ($rotation < 0) {
+                                    $rotation += 360.0;
+                                }
+                                $activeScene['mapElements'][$idx]['rotation'] = round($rotation, 4);
+                            }
+                            $updated = true;
+                            break;
+                        }
+                    }
+                    if (!$updated) {
+                        echo json_encode(['success' => false, 'error' => 'Element not found']);
+                        break;
+                    }
+                    updateActiveScene($state, $activeScene);
+                    $state = saveState($state);
+                    echo json_encode(['success' => true, 'version' => $state['version']]);
+                    break;
+
                 case 'move-map-element':
                     $state = getState();
                     $activeScene = getActiveScene($state);

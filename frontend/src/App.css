@@ -2182,9 +2182,18 @@ body {
   cursor: crosshair;
 }
 
-.map-element.erasable {
+.map-element.erasable,
+.map-element.movable {
   pointer-events: auto !important;
+}
+
+.map-element.erasable {
   cursor: crosshair;
+}
+
+.map-element.erasable img,
+.map-element.movable img {
+  pointer-events: auto;
 }
 
 .map-element.erasable:hover {
@@ -2215,6 +2224,116 @@ body {
 
 .map-element.movable:hover img {
   box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.6);
+}
+
+.map-element.menu-open {
+  z-index: 1100;
+  filter: brightness(1.12);
+}
+
+.map-element.menu-open img {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.map-element.relocating {
+  visibility: hidden;
+}
+
+.map-radial {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.map-radial-backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 168px;
+  height: 168px;
+  margin-left: -84px;
+  margin-top: -84px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.22) 62%, transparent 72%);
+  pointer-events: none;
+  animation: map-radial-fade 0.22s ease-out both;
+}
+
+.map-radial-btn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent);
+  background: var(--color-panel);
+  color: var(--color-text-strong);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transform: translate(calc(-50% + var(--radial-x)), calc(-50% + var(--radial-y))) scale(1);
+  animation: map-radial-pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.map-radial-btn--center {
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+}
+
+.map-radial-btn:hover {
+  background: rgba(var(--color-accent-rgb), 0.85);
+  color: var(--color-text-strong);
+  transform: translate(calc(-50% + var(--radial-x)), calc(-50% + var(--radial-y))) scale(1.08);
+  z-index: 1;
+}
+
+.map-radial-btn:active {
+  transform: translate(calc(-50% + var(--radial-x)), calc(-50% + var(--radial-y))) scale(0.94);
+}
+
+.map-radial-btn--danger {
+  border-color: var(--color-danger);
+}
+
+.map-radial-btn--danger:hover {
+  background: rgba(var(--color-danger-rgb), 0.85);
+}
+
+@keyframes map-radial-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes map-radial-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  to {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--radial-x)), calc(-50% + var(--radial-y))) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-radial-backdrop,
+  .map-radial-btn {
+    animation: none;
+  }
 }
 
 .grid-container.eraser-mode .token {

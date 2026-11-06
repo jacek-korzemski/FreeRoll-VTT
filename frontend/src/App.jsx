@@ -51,7 +51,7 @@ function App() {
   const [selectedType, setSelectedType] = useState(null)
   const [isEraserActive, setIsEraserActive] = useState(false)  
   const [isMoveToolActive, setIsMoveToolActive] = useState(false)
-  const [isRelocatingMapElement, setIsRelocatingMapElement] = useState(false)
+  const [relocatingMapElement, setRelocatingMapElement] = useState(null)
   const [version, setVersion] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [fogOfWar, setFogOfWar] = useState({ enabled: false, data: null })
@@ -241,6 +241,7 @@ function App() {
       setSelectedType(null)
       setIsEraserActive(false)
       setIsMoveToolActive(false)
+      setRelocatingMapElement(null)
       setFogEditMode(false)
     }
   }, [pingMode])
@@ -504,6 +505,7 @@ useEffect(() => {
             setSelectedType(null)
             setIsEraserActive(false)
             setIsMoveToolActive(false)
+            setRelocatingMapElement(null)
             setFogEditMode(false)
           } else if (!fogEditModeRef.current) {
             updateSceneState(sync.scene)
@@ -549,6 +551,7 @@ useEffect(() => {
         setSelectedType(null)
         setIsEraserActive(false)
         setIsMoveToolActive(false)
+        setRelocatingMapElement(null)
         setFogEditMode(false)
       })
       .catch(console.error)
@@ -757,7 +760,7 @@ useEffect(() => {
   const handleSelectAsset = useCallback((asset, type) => {
     setIsEraserActive(false)
     setIsMoveToolActive(false)
-    setIsRelocatingMapElement(false)
+    setRelocatingMapElement(null)
     setFogEditMode(false)
     setPingMode(false) 
     
@@ -779,7 +782,7 @@ useEffect(() => {
     } else {
       setIsEraserActive(true)
       setIsMoveToolActive(false)
-      setIsRelocatingMapElement(false)
+      setRelocatingMapElement(null)
       setSelectedAsset(null)
       setSelectedType(null)
     }
@@ -796,7 +799,7 @@ useEffect(() => {
         setIsTokenEraserActive(false)
         setSelectedAsset(null)
         setSelectedType(null)
-        setIsRelocatingMapElement(false)
+        setRelocatingMapElement(null)
       }
       return next
     })
@@ -811,6 +814,7 @@ useEffect(() => {
       if (next) {
         setIsEraserActive(false)
         setIsMoveToolActive(false)
+        setRelocatingMapElement(null)
         setSelectedAsset(null)
         setSelectedType(null)
       }
@@ -995,16 +999,16 @@ useEffect(() => {
   const handleDeselectAsset = useCallback(() => {
     setSelectedAsset(null)
     setSelectedType(null)
-    setIsRelocatingMapElement(prev => {
+    setRelocatingMapElement(prev => {
       if (prev) setIsMoveToolActive(true)
-      return false
+      return null
     })
   }, [])
 
   const handleCancelPlacementAndTools = useCallback(() => {
     setSelectedAsset(null)
     setSelectedType(null)
-    setIsRelocatingMapElement(false)
+    setRelocatingMapElement(null)
     setIsMoveToolActive(false)
     setIsEraserActive(false)
     setIsTokenEraserActive(false)
@@ -1046,17 +1050,48 @@ useEffect(() => {
   }, [isOccupiedByToken, isOccupiedByMapElement])
 
   const handleCellClick = useCallback((x, y) => {
+    if (relocatingMapElement) {
+      const blocked = mapElements.some(
+        (el) => el.id !== relocatingMapElement.id && el.x === x && el.y === y
+      )
+      if (blocked) return
+      const elementId = relocatingMapElement.id
+      const originX = relocatingMapElement.x
+      const originY = relocatingMapElement.y
+      setMapElements(prev => prev.map(el =>
+        el.id === elementId ? { ...el, x, y } : el
+      ))
+      fetch(`${API_BASE}?action=move-map-element`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id: elementId, x, y })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setVersion(data.version)
+            return
+          }
+          setMapElements(prev => prev.map(el =>
+            el.id === elementId ? { ...el, x: originX, y: originY } : el
+          ))
+        })
+        .catch(() => {
+          setMapElements(prev => prev.map(el =>
+            el.id === elementId ? { ...el, x: originX, y: originY } : el
+          ))
+        })
+      setRelocatingMapElement(null)
+      setSelectedAsset(null)
+      setSelectedType(null)
+      setIsMoveToolActive(true)
+      return
+    }
     if (isEraserActive || isMoveToolActive) return
     if (!selectedAsset || !selectedType) return
-    const resumeMoveTool = isRelocatingMapElement
-    placeAssetAt(selectedAsset, selectedType, x, y, resumeMoveTool)
-      .then(placed => {
-        if (placed && resumeMoveTool) {
-          setIsRelocatingMapElement(false)
-          setIsMoveToolActive(true)
-        }
-      })
-  }, [selectedAsset, selectedType, isEraserActive, isMoveToolActive, isRelocatingMapElement, placeAssetAt])
+    placeAssetAt(selectedAsset, selectedType, x, y, false)
+  }, [relocatingMapElement, mapElements, isEraserActive, isMoveToolActive, selectedAsset, selectedType, placeAssetAt])
 
   const handleDropOnGrid = useCallback((asset, type, x, y) => {
     placeAssetAt(asset, type, x, y, true)
@@ -1139,45 +1174,43 @@ useEffect(() => {
       .catch(console.error)
   }, [isEraserActive, isMoveToolActive])
 
-  const handlePickupMapElement = useCallback((element) => {
+  const handleBeginMapElementMove = useCallback((element) => {
     if (!element?.id) return
 
     setIsMoveToolActive(false)
     setIsEraserActive(false)
     setFogEditMode(false)
     setPingMode(false)
-    setMapElements(prev => prev.filter(el => el.id !== element.id))
     setSelectedAsset({
       id: element.assetId,
       src: element.src,
-      name: element.name || ''
+      name: element.name || '',
+      scale: element.scale ?? 1,
+      rotation: element.rotation ?? 0,
     })
     setSelectedType('map')
-    setIsRelocatingMapElement(true)
+    setRelocatingMapElement(element)
+  }, [])
 
-    fetch(`${API_BASE}?action=remove-map-element`, {
+  const handleUpdateMapElement = useCallback((elementId, updates) => {
+    setMapElements(prev => prev.map(el =>
+      el.id === elementId ? { ...el, ...updates } : el
+    ))
+    setRelocatingMapElement(prev => (
+      prev?.id === elementId ? { ...prev, ...updates } : prev
+    ))
+
+    fetch(`${API_BASE}?action=update-map-element`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ id: element.id })
+      body: JSON.stringify({ id: elementId, ...updates })
     })
       .then(res => res.json())
       .then(data => {
-        if (data.success) {
-          setVersion(data.version)
-          return
-        }
-        setMapElements(prev => prev.some(el => el.id === element.id) ? prev : [...prev, element])
-        setSelectedAsset(null)
-        setSelectedType(null)
-        setIsRelocatingMapElement(false)
+        if (data.success) setVersion(data.version)
       })
-      .catch(() => {
-        setMapElements(prev => prev.some(el => el.id === element.id) ? prev : [...prev, element])
-        setSelectedAsset(null)
-        setSelectedType(null)
-        setIsRelocatingMapElement(false)
-      })
+      .catch(console.error)
   }, [])
 
   
@@ -1439,6 +1472,7 @@ useEffect(() => {
           setSelectedType(null)
           setIsEraserActive(false)
           setIsMoveToolActive(false)
+          setRelocatingMapElement(null)
           setFogEditMode(false)
           setFogBitmap(createEmptyFog())
         }
@@ -1511,6 +1545,7 @@ useEffect(() => {
       setSelectedType(null)
       setIsEraserActive(false)
       setIsMoveToolActive(false)
+      setRelocatingMapElement(null)
     }
   }, [fogEditMode])
 
@@ -1749,7 +1784,9 @@ useEffect(() => {
           onTokenMove={handleTokenMove}
           onTokenUpdate={handleTokenUpdate}
           onRemoveMapElement={handleRemoveMapElement}
-          onPickupMapElement={handlePickupMapElement}
+          onUpdateMapElement={handleUpdateMapElement}
+          onBeginMapElementMove={handleBeginMapElementMove}
+          relocatingMapElementId={relocatingMapElement?.id || null}
           onRemoveToken={handleRemoveToken}
           onDuplicateToken={handleDuplicateToken}
           onDropPlace={handleDropOnGrid}

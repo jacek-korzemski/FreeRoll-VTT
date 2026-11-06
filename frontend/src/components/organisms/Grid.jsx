@@ -29,7 +29,9 @@ const Grid = forwardRef(function Grid(props, ref) {
     onTokenMove,
     onTokenUpdate,
     onRemoveMapElement,
-    onPickupMapElement,
+    onUpdateMapElement,
+    onBeginMapElementMove,
+    relocatingMapElementId = null,
     onRemoveToken,
     onDuplicateToken,
     onDropPlace,
@@ -48,6 +50,7 @@ const Grid = forwardRef(function Grid(props, ref) {
   const [panStart, setPanStart] = useState({ x: 0, y: 0 })
   const [scrollStart, setScrollStart] = useState({ x: 0, y: 0 })
   const [hoverCell, setHoverCell] = useState(null)
+  const [openMenuId, setOpenMenuId] = useState(null)
   const [dragPreview, setDragPreview] = useState(null)
 
   useImperativeHandle(ref, () => gridRef.current, [])
@@ -231,12 +234,16 @@ const Grid = forwardRef(function Grid(props, ref) {
 
   const handleGridClick = useCallback((e) => {
     if (e.button !== 0) return
+    const onMapElement = Boolean(e.target.closest('.map-element'))
+    if (isMoveToolActive && !onMapElement) {
+      setOpenMenuId(null)
+    }
     if (e.target.closest('.token')) return
     if (e.target.closest('.token-note-popover')) return
     if (e.target.closest('.token-note-modal-content')) return
     if (e.target.closest('.token-note-editor')) return
     if (e.target.closest('.swysiwyg-wrapper')) return
-    if (e.target.closest('.map-element')) return
+    if (onMapElement) return
     if (e.target.closest('.fog-canvas')) return
     if (draggedToken) return
     if (fogEditMode) return
@@ -308,14 +315,26 @@ const Grid = forwardRef(function Grid(props, ref) {
 
   const handleMapElementClick = useCallback((element) => {
     if (isEraserActive) {
+      setOpenMenuId(null)
       onRemoveMapElement(element.id)
       return
     }
-    if (isMoveToolActive && onPickupMapElement) {
-      setHoverCell({ x: element.x, y: element.y })
-      onPickupMapElement(element)
+    if (isMoveToolActive) {
+      setOpenMenuId(prev => prev === element.id ? null : element.id)
     }
-  }, [isEraserActive, isMoveToolActive, onRemoveMapElement, onPickupMapElement])
+  }, [isEraserActive, isMoveToolActive, onRemoveMapElement])
+
+  useEffect(() => {
+    if (!isMoveToolActive) setOpenMenuId(null)
+  }, [isMoveToolActive])
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === 'Escape') setOpenMenuId(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   const handleMouseLeave = useCallback(() => {
     setDraggedToken(null)
@@ -362,7 +381,11 @@ const Grid = forwardRef(function Grid(props, ref) {
   const placementBlocked = Boolean(hoverCell && previewAsset && (
     previewType === 'token'
       ? tokens.some(token => token.x === hoverCell.x && token.y === hoverCell.y)
-      : mapElements.some(element => element.x === hoverCell.x && element.y === hoverCell.y)
+      : mapElements.some(element =>
+        element.id !== relocatingMapElementId &&
+        element.x === hoverCell.x &&
+        element.y === hoverCell.y
+      )
   ))
 
   return (
@@ -420,7 +443,15 @@ const Grid = forwardRef(function Grid(props, ref) {
               basePath={basePath}
               isEraserActive={isEraserActive}
               isMoveToolActive={isMoveToolActive}
+              isRelocating={element.id === relocatingMapElementId}
+              menuOpen={isMoveToolActive && openMenuId === element.id}
               onElementClick={handleMapElementClick}
+              onUpdate={onUpdateMapElement}
+              onRemove={onRemoveMapElement}
+              onBeginMove={(element) => {
+                setHoverCell({ x: element.x, y: element.y })
+                onBeginMapElementMove?.(element)
+              }}
             />
           ))}
           

@@ -33,6 +33,11 @@ function PlacementGhost({ asset, type, cell, cellSize, basePath, blocked = false
   const naturalSize = sizeBySrc[asset.src]
   const footprintWidth = isToken ? cellSize : (naturalSize?.width || 0)
   const footprintHeight = isToken ? cellSize : (naturalSize?.height || 0)
+  const mapScale = isToken ? 1 : (Number(asset.scale ?? 1) || 1)
+  const mapRotation = isToken ? 0 : (Number(asset.rotation ?? 0) || 0)
+  const mapTransform = !isToken && (mapScale !== 1 || mapRotation !== 0)
+    ? `rotate(${mapRotation}deg) scale(${mapScale})`
+    : undefined
 
   return (
     <div className={`placement-ghost ${isToken ? 'is-token' : 'is-map'} ${blocked ? 'blocked' : ''}`} aria-hidden>
@@ -52,7 +57,8 @@ function PlacementGhost({ asset, type, cell, cellSize, basePath, blocked = false
             left: centerX - footprintWidth / 2,
             top: centerY - footprintHeight / 2,
             width: footprintWidth,
-            height: footprintHeight
+            height: footprintHeight,
+            transform: mapTransform
           }}
         />
       )}
@@ -66,7 +72,7 @@ function PlacementGhost({ asset, type, cell, cellSize, basePath, blocked = false
           alt=""
           draggable={false}
           onLoad={isToken ? undefined : handleImageLoad}
-          style={isToken ? { width: cellSize, height: cellSize } : undefined}
+          style={isToken ? { width: cellSize, height: cellSize } : (mapTransform ? { transform: mapTransform } : undefined)}
         />
       </div>
     </div>

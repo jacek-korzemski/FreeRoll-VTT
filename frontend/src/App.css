@@ -68,9 +68,9 @@ body {
   min-width: 0;
 }
 
-/* Prawy panel zmniejsza scenę. Na mapie taktycznej nadal na nią nachodzi. */
+/* Prawy panel zmniejsza scenę do swojej krawędzi. Przycisk kości leży na scenie. Na mapie taktycznej panel nadal na nią nachodzi. */
 .app:has(.dice-panel.open) .main-content {
-  margin-right: calc(320px + 48px);
+  margin-right: 320px;
 }
 
 .app.app--scene-tactical:not(.app--adventure):has(.dice-panel.open) .main-content {
@@ -7685,104 +7685,11 @@ label.ttrpg-btn-accent {
   min-height: 0;
 }
 
-.travel-board,
 .combat-board,
 .narrative-board {
   height: 100%;
   min-height: 0;
   background: var(--color-bg-deep);
-}
-
-.travel-board {
-  overflow: auto;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.travel-board.placing {
-  cursor: crosshair;
-}
-
-.travel-world {
-  position: relative;
-}
-
-.travel-map-image {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-  -webkit-user-drag: none;
-}
-
-.travel-piece {
-  position: absolute;
-  object-fit: contain;
-  cursor: grab;
-  user-select: none;
-  z-index: 3;
-}
-
-.travel-board.move-mode {
-  cursor: pointer;
-}
-
-.travel-map-piece {
-  position: absolute;
-  z-index: 2;
-  pointer-events: auto;
-}
-
-.travel-map-piece img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  -webkit-user-drag: none;
-  pointer-events: auto;
-}
-
-.travel-map-piece.movable {
-  cursor: pointer;
-}
-
-.travel-map-piece.erasable {
-  cursor: crosshair;
-}
-
-.travel-map-piece.movable:hover img,
-.travel-map-piece.menu-open img {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.travel-map-piece.erasable:hover img {
-  outline: 3px solid var(--color-warning);
-  outline-offset: 2px;
-}
-
-.travel-map-piece.menu-open {
-  z-index: 6;
-}
-
-.travel-map-piece.relocating {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.travel-placement-ghost {
-  position: fixed;
-  z-index: 40;
-  pointer-events: none;
-  opacity: 0.8;
-  transform: translate(-50%, -50%);
-}
-
-.travel-placement-ghost img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  -webkit-user-drag: none;
 }
 
 .combat-board {

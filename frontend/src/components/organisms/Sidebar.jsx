@@ -120,8 +120,8 @@ function Sidebar({
   const showServer = isGameMaster && sidebarTab === 'server'
   const type = sceneType || 'tactical'
   const showFog = type === 'tactical'
-  const showMapElements = type === 'tactical' || type === 'travel' || type === 'narrative'
-  const showTokens = type === 'tactical' || type === 'travel' || type === 'combat' || type === 'narrative'
+  const showMapElements = type === 'tactical' || type === 'narrative'
+  const showTokens = type === 'tactical' || type === 'combat' || type === 'narrative'
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
@@ -305,7 +305,7 @@ function Sidebar({
                 onToggleEraser={onToggleEraser}
                 isMoveToolActive={isMoveToolActive}
                 onToggleMoveTool={onToggleMoveTool}
-                showMoveTool={type === 'tactical' || type === 'travel'}
+                showMoveTool={type === 'tactical'}
               />
             </CollapsibleSection>
             )}

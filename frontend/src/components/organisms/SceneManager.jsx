@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { t } from '../../lang'
 import BackgroundSection from './BackgroundSection'
 
-const SCENE_TYPES = ['tactical', 'combat', 'travel', 'narrative']
+const SCENE_TYPES = ['tactical', 'combat', 'narrative']
 
 function EyeIcon({ open }) {
   return (
@@ -100,7 +100,7 @@ function SceneManager({
           const type = SCENE_TYPES.includes(scene.type) ? scene.type : 'tactical'
           const isView = scene.id === activeSceneId
           const isEditing = editingId === scene.id
-          const showBackground = type === 'tactical' || type === 'travel' || type === 'narrative' || type === 'combat'
+          const showBackground = type === 'tactical' || type === 'narrative' || type === 'combat'
           return (
             <div key={scene.id} className="scene-block">
               <div className={`scene-item ${isView ? 'active' : ''} ${scene.playerVisible ? 'player-visible' : ''}`}>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef, startTransition } from 'react'
 import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer, AdventurePanel } from './components'
-import TravelBoard from './components/organisms/TravelBoard'
 import CombatBoard from './components/organisms/CombatBoard'
 import NarrativeBoard from './components/organisms/NarrativeBoard'
 import DebugOverlay from './components/atoms/DebugOverlay'
@@ -21,6 +20,11 @@ function assetListQuery(source, path) {
 }
 
 const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug')
+
+function normalizeSceneType(type) {
+  if (type === 'combat' || type === 'narrative') return type
+  return 'tactical'
+}
 
 function App() {
   const [scenes, setScenes] = useState([])
@@ -168,7 +172,7 @@ function App() {
 
   const updateSceneState = useCallback((sceneData) => {
     if (!sceneData) return
-    const nextType = sceneData.type || 'tactical'
+    const nextType = normalizeSceneType(sceneData.type)
     setSceneType(nextType)
     setHideHp(!!sceneData.hideHp)
     setTurn(Number(sceneData.turn) > 0 ? Number(sceneData.turn) : 1)
@@ -594,7 +598,7 @@ useEffect(() => {
           setScenes(prev => prev.map(s => s.id === sceneId ? { ...s, ...data.scene } : s))
         }
         if (sceneId === activeSceneIdRef.current) {
-          if (data.scene?.type) setSceneType(data.scene.type)
+          if (data.scene?.type) setSceneType(normalizeSceneType(data.scene.type))
           if (typeof data.hideHp === 'boolean') setHideHp(data.hideHp)
           if (typeof data.turn === 'number') setTurn(data.turn)
           if (Object.prototype.hasOwnProperty.call(patch, 'background')) {
@@ -1097,45 +1101,6 @@ useEffect(() => {
     placeAssetAt(asset, type, x, y, true)
   }, [placeAssetAt])
 
-  const handleTravelPlace = useCallback((asset, type, x, y) => {
-    if (relocatingMapElement) {
-      const elementId = relocatingMapElement.id
-      const originX = relocatingMapElement.x
-      const originY = relocatingMapElement.y
-      setMapElements(prev => prev.map(el =>
-        el.id === elementId ? { ...el, x, y } : el
-      ))
-      fetch(`${API_BASE}?action=move-map-element`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ id: elementId, x, y })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setVersion(data.version)
-            return
-          }
-          setMapElements(prev => prev.map(el =>
-            el.id === elementId ? { ...el, x: originX, y: originY } : el
-          ))
-        })
-        .catch(() => {
-          setMapElements(prev => prev.map(el =>
-            el.id === elementId ? { ...el, x: originX, y: originY } : el
-          ))
-        })
-      setRelocatingMapElement(null)
-      setSelectedAsset(null)
-      setSelectedType(null)
-      setIsMoveToolActive(true)
-      return
-    }
-    placeAssetAt(asset, type, x, y, false)
-  }, [placeAssetAt, relocatingMapElement])
-
-  
   const handleTokenMove = useCallback((tokenId, newX, newY) => {
     const isOccupied = sceneTypeRef.current === 'tactical'
       && tokens.some(t => t.id !== tokenId && t.x === newX && t.y === newY)
@@ -1410,7 +1375,7 @@ useEffect(() => {
   }, [])
 
   const handleDuplicateToken = useCallback((token) => {
-    const step = sceneTypeRef.current === 'tactical' ? 1 : 48
+    const step = 1
     const candidates = [
       { x: token.x + step, y: token.y },
       { x: token.x - step, y: token.y },
@@ -1736,28 +1701,7 @@ useEffect(() => {
       
       <main className="main-content">
         <div className={`grid-host${adventureOpen ? ' grid-host--hidden' : ''}`} aria-hidden={adventureOpen || undefined}>
-        {sceneType === 'travel' ? (
-          <TravelBoard
-            background={background}
-            mapElements={mapElements}
-            tokens={tokens}
-            selectedAsset={selectedAsset}
-            selectedType={selectedType}
-            isEraserActive={isEraserActive}
-            isTokenEraserActive={isTokenEraserActive}
-            isMoveToolActive={isMoveToolActive}
-            relocatingMapElement={relocatingMapElement}
-            onPlace={handleTravelPlace}
-            onTokenMove={handleTokenMove}
-            onUpdateMapElement={handleUpdateMapElement}
-            onBeginMapElementMove={handleBeginMapElementMove}
-            onRemoveMapElement={handleRemoveMapElement}
-            onRemoveToken={handleRemoveToken}
-            onDeselectPlacement={handleCancelPlacementAndTools}
-            basePath={ASSET_BASE}
-            zoomLevel={zoomLevel}
-          />
-        ) : sceneType === 'combat' ? (
+        {sceneType === 'combat' ? (
           <CombatBoard
             combatants={combatants}
             hideHp={hideHp}

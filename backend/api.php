@@ -258,7 +258,28 @@ function generateId() {
 }
 
 function isSceneType($type) {
-    return $type === 'tactical' || $type === 'combat' || $type === 'travel' || $type === 'narrative';
+    return $type === 'tactical' || $type === 'combat' || $type === 'narrative';
+}
+
+function retainGridPieces($items) {
+    if (!is_array($items)) {
+        return [];
+    }
+    $kept = [];
+    foreach ($items as $item) {
+        if (!is_array($item) || !is_numeric($item['x'] ?? null) || !is_numeric($item['y'] ?? null)) {
+            continue;
+        }
+        $x = intval($item['x']);
+        $y = intval($item['y']);
+        if ($x < 0 || $y < 0 || $x >= 128 || $y >= 128) {
+            continue;
+        }
+        $item['x'] = $x;
+        $item['y'] = $y;
+        $kept[] = $item;
+    }
+    return $kept;
 }
 
 function sceneUsesGrid($scene) {
@@ -488,6 +509,11 @@ function getState() {
             continue;
         }
         $next = $scene;
+        if (($next['type'] ?? null) === 'travel') {
+            $next['type'] = 'tactical';
+            $next['mapElements'] = retainGridPieces($next['mapElements'] ?? []);
+            $next['tokens'] = retainGridPieces($next['tokens'] ?? []);
+        }
         $type = $next['type'] ?? null;
         if (!isSceneType($type)) {
             $next['type'] = 'tactical';

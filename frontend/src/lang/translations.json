@@ -386,7 +386,8 @@
       "closePreview": "Close",
       "unnamed": "Untitled card",
       "noImage": "No image",
-      "showImage": "Show image"
+      "zoomIn": "Enlarge image",
+      "zoomOut": "Show description"
     },
     "counters": {
       "title": "Counters",
@@ -1027,7 +1028,8 @@
       "closePreview": "Zamknij",
       "unnamed": "Karta bez nazwy",
       "noImage": "Brak obrazka",
-      "showImage": "Pokaż obrazek"
+      "zoomIn": "Powiększ obrazek",
+      "zoomOut": "Pokaż opis"
     },
     "counters": {
       "title": "Liczniki",

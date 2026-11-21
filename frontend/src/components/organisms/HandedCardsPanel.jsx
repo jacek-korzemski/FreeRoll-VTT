@@ -53,6 +53,7 @@ function HandedCardStage({ card, imageSrc, origin, source, onClose }) {
   const [present, setPresent] = useState(reduced)
   const [revealed, setRevealed] = useState(reduced)
   const [closing, setClosing] = useState(false)
+  const [imageFill, setImageFill] = useState(false)
   const [box, setBox] = useState(() => (reduced ? stageDest() : origin))
   const cardRef = useRef(null)
   const closeRef = useRef(null)
@@ -106,7 +107,12 @@ function HandedCardStage({ card, imageSrc, origin, source, onClose }) {
 
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === 'Escape') beginClose()
+      if (event.key !== 'Escape') return
+      if (imageFill) {
+        setImageFill(false)
+        return
+      }
+      beginClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -160,7 +166,7 @@ function HandedCardStage({ card, imageSrc, origin, source, onClose }) {
     >
       <article
         ref={cardRef}
-        className={`handed-stage-card${present || closing ? ' is-present' : ''}${revealed ? ' is-revealed' : ''}${imageSrc ? ' has-image' : ''}`}
+        className={`handed-stage-card${present || closing ? ' is-present' : ''}${revealed ? ' is-revealed' : ''}${imageSrc ? ' has-image' : ''}${imageFill ? ' is-image-fill' : ''}`}
         style={boxStyle}
         role="dialog"
         aria-modal="true"
@@ -170,9 +176,17 @@ function HandedCardStage({ card, imageSrc, origin, source, onClose }) {
       >
         <div className="handed-stage-sheet">
           {imageSrc ? (
-            <div className="handed-stage-figure">
-              <img src={imageSrc} alt="" />
-            </div>
+            <button
+              type="button"
+              className="handed-stage-figure"
+              aria-pressed={imageFill}
+              aria-label={imageFill ? t('handedCards.zoomOut') : t('handedCards.zoomIn')}
+              onClick={() => setImageFill((prev) => !prev)}
+            >
+              <span className="handed-stage-figure-frame">
+                <img src={imageSrc} alt="" />
+              </span>
+            </button>
           ) : null}
           <div className="handed-stage-copy">
             <p className="handed-stage-kicker">#{card.id}</p>
@@ -202,20 +216,10 @@ function HandedCardsPanel({ cards = [], basePath = '' }) {
   })
   const [sort, setSort] = useState({ key: 'id', dir: 'asc' })
   const [stage, setStage] = useState(null)
-  const [imageSrc, setImageSrc] = useState('')
 
   useEffect(() => {
     setTableItem(VIEW_KEY, view)
   }, [view])
-
-  useEffect(() => {
-    if (!imageSrc) return undefined
-    const onKey = (event) => {
-      if (event.key === 'Escape') setImageSrc('')
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [imageSrc])
 
   const sorted = useMemo(() => {
     const list = cards.slice()
@@ -230,7 +234,6 @@ function HandedCardsPanel({ cards = [], basePath = '' }) {
   }, [cards, sort])
 
   const openStage = (card, node) => {
-    setImageSrc('')
     setStage({ card, origin: readRect(node), source: node })
   }
 
@@ -343,9 +346,10 @@ function HandedCardsPanel({ cards = [], basePath = '' }) {
                             type="button"
                             className="handed-thumb-btn"
                             disabled={!src}
-                            aria-label={t('handedCards.showImage')}
-                            onClick={() => {
-                              if (src) setImageSrc(src)
+                            aria-label={cardTitle(card)}
+                            onClick={(event) => {
+                              if (!src) return
+                              openStage(card, event.currentTarget.closest('tr'))
                             }}
                           >
                             {src ? <img src={src} alt="" draggable={false} /> : <span />}
@@ -391,13 +395,6 @@ function HandedCardsPanel({ cards = [], basePath = '' }) {
           source={stage.source}
           onClose={() => setStage(null)}
         />
-      ) : null}
-
-      {imageSrc ? createPortal(
-        <div className="handed-image-lightbox" onClick={() => setImageSrc('')} role="presentation">
-          <img src={imageSrc} alt="" />
-        </div>,
-        document.body,
       ) : null}
     </section>
   )

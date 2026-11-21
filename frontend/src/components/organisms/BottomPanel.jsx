@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef, Suspense, lazy, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, Suspense, lazy, useMemo } from 'react'
 import NotesPanel from './NotesPanel'
 import { NotesTemplateProvider } from '../../contexts/NotesTemplateContext'
 import { t } from '../../lang'
@@ -46,11 +46,8 @@ function BottomPanel({
   const [heightPercent, setHeightPercent] = useState(DEFAULT_HEIGHT_PERCENT)
   const [isResizing, setIsResizing] = useState(false)
   const [mountedTabs, setMountedTabs] = useState(new Set())
-  const [handedUnread, setHandedUnread] = useState(false)
-  const seenHandedMax = useRef(null)
   const isOpen = activeTab !== null
   const handedCount = handedCards.length
-  const handedMaxId = handedCards.reduce((max, card) => Math.max(max, Number(card.id) || 0), 0)
   const configured = !!ttrpgManager?.configured
 
   const visiblePanels = useMemo(() => {
@@ -68,21 +65,6 @@ function BottomPanel({
       setMountedTabs(prev => new Set([...prev, activeTab]))
     }
   }, [activeTab, mountedTabs])
-
-  useEffect(() => {
-    if (seenHandedMax.current === null) {
-      seenHandedMax.current = handedMaxId
-      return
-    }
-    if (activeTab === 'handed') {
-      seenHandedMax.current = handedMaxId
-      setHandedUnread(false)
-      return
-    }
-    if (handedMaxId > seenHandedMax.current) {
-      setHandedUnread(true)
-    }
-  }, [handedMaxId, activeTab])
 
   useEffect(() => {
     if (activeTab === 'ttrpg' && !configured && !isGameMaster) {
@@ -181,7 +163,7 @@ function BottomPanel({
             {visiblePanels.map(panel => (
               <button
                 key={panel.id}
-                className={`bottom-panel-tab ${activeTab === panel.id ? 'active' : ''} ${panel.id === 'handed' && handedUnread ? 'has-unread' : ''}`}
+                className={`bottom-panel-tab ${activeTab === panel.id ? 'active' : ''}`}
                 onClick={() => handleTabClick(panel.id)}
                 title={panel.id === 'handed' && handedCount > 0
                   ? `${t(panel.titleKey)} (${handedCount})`
@@ -190,9 +172,6 @@ function BottomPanel({
                 {panel.icon}
                 {panel.id === 'handed' && handedCount > 0 ? (
                   <span className="bottom-panel-tab-badge">{handedCount}</span>
-                ) : null}
-                {panel.id === 'handed' && handedUnread ? (
-                  <span className="bottom-panel-tab-dot" />
                 ) : null}
               </button>
             ))}

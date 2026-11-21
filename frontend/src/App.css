@@ -8795,29 +8795,18 @@ label.ttrpg-btn-accent {
 
 .bottom-panel-tab-badge {
   position: absolute;
-  top: -4px;
-  right: -3px;
-  min-width: 15px;
-  height: 15px;
-  padding: 0 3px;
-  border-radius: 8px;
-  background: var(--color-accent);
-  color: var(--color-text-strong);
+  right: 2px;
+  bottom: 1px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 2px;
+  border-radius: 3px;
+  background: #111;
+  color: #fff;
   font-size: 9px;
-  font-weight: 700;
-  line-height: 15px;
-  pointer-events: none;
-}
-
-.bottom-panel-tab-dot {
-  position: absolute;
-  top: 2px;
-  left: 3px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-panel);
+  font-weight: 600;
+  line-height: 13px;
+  text-align: center;
   pointer-events: none;
 }
 
@@ -9111,7 +9100,7 @@ label.ttrpg-btn-accent {
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.32);
   overflow: hidden;
-  cursor: zoom-in;
+  cursor: pointer;
 }
 
 .handed-thumb-btn:disabled {
@@ -9125,8 +9114,7 @@ label.ttrpg-btn-accent {
   height: 100%;
 }
 
-.handed-stage,
-.handed-image-lightbox {
+.handed-stage {
   position: fixed;
   inset: 0;
   z-index: 1000000;
@@ -9168,10 +9156,6 @@ label.ttrpg-btn-accent {
   transition: opacity 180ms ease;
 }
 
-.handed-stage-card.has-image .handed-stage-sheet {
-  grid-template-columns: minmax(180px, 42%) minmax(0, 1fr);
-}
-
 .handed-stage-figure,
 .handed-stage-copy {
   min-width: 0;
@@ -9179,18 +9163,75 @@ label.ttrpg-btn-accent {
 }
 
 .handed-stage-figure {
-  display: grid;
-  place-items: center;
-  padding: 1rem;
+  display: block;
+  margin: 0;
+  border: 0;
+  padding: 0;
   background:
     radial-gradient(circle at 50% 40%, rgba(var(--color-accent-rgb), 0.16), transparent 68%),
     rgba(0, 0, 0, 0.28);
+  color: inherit;
+  font: inherit;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.handed-stage-card.has-image .handed-stage-figure {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 42%;
+  height: auto;
+  transition: width 380ms cubic-bezier(0.22, 0.8, 0.24, 1), height 380ms cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.handed-stage-card.has-image.is-image-fill .handed-stage-figure {
+  width: 100%;
+  overflow: auto;
+  cursor: zoom-out;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+.handed-stage-figure-frame {
+  box-sizing: border-box;
+  display: flex;
+  align-items: safe center;
+  justify-content: safe center;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 1rem;
+}
+
+.handed-stage-card.has-image .handed-stage-copy {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 42%;
+  opacity: 1;
+  transition: opacity 280ms ease, left 380ms cubic-bezier(0.22, 0.8, 0.24, 1), top 380ms cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.handed-stage-card.has-image.is-image-fill .handed-stage-copy {
+  left: 100%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .handed-stage-figure img {
+  display: block;
+  flex: 0 0 auto;
   max-width: 100%;
+  width: auto;
   max-height: 100%;
-  object-fit: contain;
+  height: auto;
+}
+
+.handed-stage-card.is-image-fill .handed-stage-figure img {
+  max-height: none;
 }
 
 .handed-stage-close {
@@ -9209,7 +9250,9 @@ label.ttrpg-btn-accent {
 .handed-stage-copy {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   padding: 1.35rem 3.2rem 1.2rem 1.35rem;
+  transition: opacity 280ms ease;
 }
 
 .handed-stage-kicker {
@@ -9240,6 +9283,7 @@ label.ttrpg-btn-accent {
 
 .handed-stage-close {
   position: absolute;
+  z-index: 2;
   top: 12px;
   right: 12px;
   width: 36px;
@@ -9258,29 +9302,34 @@ label.ttrpg-btn-accent {
   color: var(--color-accent);
 }
 
-.handed-image-lightbox {
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: rgba(6, 4, 10, 0.9);
-  cursor: zoom-out;
-}
-
-.handed-image-lightbox img {
-  width: min(1100px, calc(100vw - 48px));
-  height: min(86vh, calc(100vh - 48px));
-  object-fit: contain;
-}
-
 @media (max-width: 720px) {
   .handed-header {
     align-items: stretch;
     flex-direction: column;
   }
 
-  .handed-stage-card.has-image .handed-stage-sheet {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(120px, 34%) minmax(0, 1fr);
+  .handed-stage-card.has-image .handed-stage-figure {
+    right: 0;
+    bottom: auto;
+    width: auto;
+    height: 38%;
+  }
+
+  .handed-stage-card.has-image.is-image-fill .handed-stage-figure {
+    height: 100%;
+    width: auto;
+  }
+
+  .handed-stage-card.has-image .handed-stage-copy {
+    top: 38%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .handed-stage-card.has-image.is-image-fill .handed-stage-copy {
+    top: 100%;
+    left: 0;
   }
 
   .handed-stage-copy {
@@ -9299,6 +9348,8 @@ label.ttrpg-btn-accent {
   .handed-stage,
   .handed-stage-card,
   .handed-stage-sheet,
+  .handed-stage-figure,
+  .handed-stage-copy,
   .handed-stage-close {
     transition: none;
   }

@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff screen.tm-admin
+
 namespace App\Livewire\Admin;
 
 use App\Models\VttTable;

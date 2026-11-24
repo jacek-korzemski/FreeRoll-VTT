@@ -1,3 +1,4 @@
+// @appgraff state.client-local
 const STORAGE_KEY = 'vtt_client_id'
 
 export function getOrCreateClientId() {

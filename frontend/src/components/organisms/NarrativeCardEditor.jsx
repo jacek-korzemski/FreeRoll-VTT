@@ -1,3 +1,4 @@
+// @appgraff screen.panel-cards
 import { useEffect, useState } from 'react'
 import { API_BASE } from '../../../config'
 import { t } from '../../lang'

@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff state.ttrpg-integration
+
 namespace FreeRoll\Ttrpg;
 
 use PDO;

@@ -1,3 +1,4 @@
+// @appgraff screen.panel-assets
 import { useEffect, useState } from 'react'
 import { useScrollToSection } from '../../hooks/useScrollToSection'
 import { useBackgroundZoom } from '../../hooks/useBackgroundZoom'

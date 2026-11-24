@@ -1,4 +1,6 @@
 <?php
+
+// @appgraff guard.gm, state.game, state.assets, action.api-poll, action.scenes, action.board-edit, action.combat, action.cards, action.dice-roll, action.counters, action.assets, action.adventure, action.card-library, action.ttrpg
 // Treat all string operations as UTF-8 by default. Prevents `substr`-style
 // byte truncation from cutting Polish/UTF-8 characters in half.
 if (function_exists('mb_internal_encoding')) {

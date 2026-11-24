@@ -1,3 +1,4 @@
+// @appgraff state.client-local
 import { BASE_PATH } from '../../config'
 
 /** Set once by the first table that opens after this change. Other tables start empty. */

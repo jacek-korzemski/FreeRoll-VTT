@@ -1,3 +1,4 @@
+// @appgraff screen.panel-counters
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { t } from '../../lang'
 import { getOrCreateClientId } from '../../utils/clientId'

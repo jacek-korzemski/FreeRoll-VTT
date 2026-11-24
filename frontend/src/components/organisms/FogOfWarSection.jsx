@@ -1,3 +1,4 @@
+// @appgraff screen.panel-scenes
 import { t } from '../../lang'
 import CollapsibleSection from '../atoms/CollapsibleSection'
 

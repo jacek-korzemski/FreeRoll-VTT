@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# @appgraff job.pre-commit
 # Table sources are built on the commit, not in GitHub Actions.
 # The hook raises VERSION first, then build.bat copies that package into
 # table-manager/current-source. Push only uploads the result.

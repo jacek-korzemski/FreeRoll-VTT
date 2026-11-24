@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff screen.tm-dashboard, action.tm-manage-table
+
 namespace App\Livewire;
 
 use App\Exceptions\TableUpdateException;

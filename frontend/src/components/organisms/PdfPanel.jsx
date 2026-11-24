@@ -1,3 +1,4 @@
+// @appgraff screen.panel-pdf
 import React, { useState, useEffect, useCallback, useRef, Component } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { API_BASE } from '../../../config'

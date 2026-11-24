@@ -1,3 +1,4 @@
+// @appgraff screen.table-board
 import React, { useRef, useEffect, useCallback, useState } from 'react'
 import { isRevealed, applyCircleBrush, GRID_SIZE } from '../../utils/fogBitmap'
 import { CELL_SIZE } from '../../../config'

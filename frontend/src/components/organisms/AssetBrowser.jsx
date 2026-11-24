@@ -1,3 +1,4 @@
+// @appgraff screen.panel-assets
 import { t } from '../../lang'
 import Breadcrumbs from '../atoms/Breadcrumbs'
 import FolderList from '../molecules/FolderList'

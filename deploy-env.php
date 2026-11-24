@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff state.table-config, state.session
+
 function loadDeployEnv($rootDir) {
     $path = rtrim($rootDir, '/\\') . DIRECTORY_SEPARATOR . '.env';
     if (!file_exists($path)) {

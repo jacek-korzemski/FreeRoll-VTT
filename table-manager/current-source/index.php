@@ -1,4 +1,6 @@
 <?php
+
+// @appgraff screen.login, guard.table-login
 require_once __DIR__ . '/deploy-env.php';
 
 $cfg = getDeployConfig(__DIR__);

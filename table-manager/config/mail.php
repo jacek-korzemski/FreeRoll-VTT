@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff integration.mail
+
 return [
 
     /*

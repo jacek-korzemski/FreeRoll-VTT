@@ -1,4 +1,6 @@
 <?php
+
+// @appgraff state.global-assets
 /**
  * Read-only shared graphics. One folder, served at /vtt/global/{map|tokens|backgrounds}/.
  * Tables never copy these files and upload quota does not count them.

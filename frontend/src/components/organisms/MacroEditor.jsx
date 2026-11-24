@@ -1,3 +1,4 @@
+// @appgraff screen.panel-macros
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'

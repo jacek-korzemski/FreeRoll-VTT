@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff state.adventure
+
 namespace FreeRoll\Ttrpg;
 
 use PDO;

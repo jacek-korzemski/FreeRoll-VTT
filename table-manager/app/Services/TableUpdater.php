@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.tm-update-table
+
 namespace App\Services;
 
 use App\Exceptions\TableUpdateException;

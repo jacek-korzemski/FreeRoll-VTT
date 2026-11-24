@@ -1,3 +1,4 @@
+// @appgraff screen.panel-dice
 /**
  * Shared dice roll parsing and execution for templates and macros.
  * Dispatches 'vtt:dice-roll' so App can add to history and sync.

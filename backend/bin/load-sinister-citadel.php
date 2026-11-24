@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff job.seed-sinister
+
 require dirname(__DIR__) . '/src/Ttrpg/Database.php';
 require dirname(__DIR__) . '/src/Ttrpg/AdventureHtml.php';
 require dirname(__DIR__) . '/src/Ttrpg/AdventureStore.php';

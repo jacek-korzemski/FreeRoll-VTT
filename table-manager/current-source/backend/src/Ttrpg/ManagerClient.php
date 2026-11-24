@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff integration.ttrpg-manager
+
 namespace FreeRoll\Ttrpg;
 
 use GuzzleHttp\Client;

@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.tm-manage-table, state.tm-db
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;

@@ -1,3 +1,4 @@
+// @appgraff screen.panel-dice
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { t } from '../../lang'
 import { ENABLE_L5R } from '../../../config'

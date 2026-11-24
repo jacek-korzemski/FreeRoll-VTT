@@ -1,3 +1,4 @@
+// @appgraff screen.panel-pdf, state.client-local
 import { getTableItem, setTableItem } from './tableStorage'
 
 const DB_NAME = 'vtt_pdf_storage'

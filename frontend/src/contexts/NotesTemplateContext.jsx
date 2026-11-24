@@ -1,3 +1,4 @@
+// @appgraff screen.panel-notes, screen.panel-macros
 import React, { createContext, useContext, useState, useRef, useCallback, useMemo } from 'react'
 import {
   readNoteStorageData,

@@ -1,3 +1,4 @@
+# @appgraff job.link-global-assets
 # Optional junction so `php -S localhost:8080` can serve /vtt/global/ as static files.
 # Junctions need NTFS. On exFAT the command fails; dev still works because the
 # table API streams the same folder from backend/api.php?action=global-file.

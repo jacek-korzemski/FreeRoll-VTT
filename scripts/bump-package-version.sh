@@ -1,4 +1,5 @@
 #!/bin/sh
+# @appgraff job.pre-commit
 # Raise repo-root VERSION by one from HEAD, then stage it.
 # --restore puts VERSION back to HEAD after a failed build.
 set -eu

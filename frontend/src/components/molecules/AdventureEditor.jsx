@@ -1,3 +1,4 @@
+// @appgraff screen.panel-adventure
 import { useCallback, useEffect, useRef, useState } from 'react'
 import SimpleWYSIWYG from '../atoms/SimpleWYSIWYG'
 import { t } from '../../lang'

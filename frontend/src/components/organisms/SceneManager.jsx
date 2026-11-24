@@ -1,3 +1,4 @@
+// @appgraff screen.panel-scenes
 import { useState, useCallback } from 'react'
 import { t } from '../../lang'
 import BackgroundSection from './BackgroundSection'

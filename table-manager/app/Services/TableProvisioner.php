@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.tm-create-table, state.user-tables
+
 namespace App\Services;
 
 use App\Exceptions\VttSourceMissingException;

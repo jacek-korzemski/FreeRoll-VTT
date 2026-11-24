@@ -1,3 +1,4 @@
+# @appgraff job.ci-deploy-tm, integration.ftp-host
 # Deploy Table Manager to FTP. The VTT package is already in git
 # (table-manager/current-source). Husky pre-commit bumps VERSION, then build.bat
 # refreshes that package. CI only builds Table Manager CSS/JS and uploads.

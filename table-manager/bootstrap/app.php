@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff guard.tm-auth
+
 use App\Http\Middleware\ApplySeoRobots;
 use App\Http\Middleware\EnsureAdminAuthenticated;
 use App\Http\Middleware\RedirectIfAdminAuthenticated;

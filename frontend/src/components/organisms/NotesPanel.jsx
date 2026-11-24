@@ -1,3 +1,4 @@
+// @appgraff screen.panel-notes
 import React, { useState, useCallback, useEffect } from 'react'
 import NoteEditor from '../molecules/NoteEditor'
 import { useNotesTemplate } from '../../contexts/NotesTemplateContext'

@@ -1,3 +1,4 @@
+// @appgraff screen.table-board
 import { useState, useEffect, useCallback, useRef, startTransition } from 'react'
 import { Sidebar, Grid, DicePanel, BottomPanel, RollSnackbarContainer, AdventurePanel } from './components'
 import CombatBoard from './components/organisms/CombatBoard'

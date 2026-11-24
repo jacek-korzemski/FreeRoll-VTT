@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff state.tm-config, state.global-assets
+
 return [
     'max_tables' => (int) env('VTT_MAX_TABLES', 3),
 

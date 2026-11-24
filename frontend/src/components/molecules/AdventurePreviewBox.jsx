@@ -1,3 +1,4 @@
+// @appgraff screen.panel-adventure
 import { useCallback, useMemo, useRef } from 'react'
 import { t } from '../../lang'
 import { executeDiceRoll } from '../../utils/diceRollUtils'

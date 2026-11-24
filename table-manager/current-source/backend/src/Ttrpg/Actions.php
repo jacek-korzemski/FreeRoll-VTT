@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.ttrpg
+
 namespace FreeRoll\Ttrpg;
 
 final class Actions

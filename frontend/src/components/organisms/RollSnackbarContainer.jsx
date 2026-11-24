@@ -1,3 +1,4 @@
+// @appgraff screen.panel-dice
 import { useCallback, useEffect, useRef, useState } from 'react'
 import RollSnackbar from '../molecules/RollSnackbar'
 

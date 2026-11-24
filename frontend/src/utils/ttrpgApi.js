@@ -1,3 +1,4 @@
+// @appgraff screen.panel-ttrpg
 /**
  * FreeRoll ↔ TTRPG Manager proxy helpers (server holds the API key in SQLite).
  */

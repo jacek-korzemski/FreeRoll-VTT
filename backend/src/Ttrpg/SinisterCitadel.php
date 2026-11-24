@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff job.seed-sinister
+
 namespace FreeRoll\Ttrpg;
 
 /**

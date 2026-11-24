@@ -1,3 +1,4 @@
+// @appgraff screen.panel-compendium
 import React, { useState, useEffect, useMemo } from 'react'
 import { t } from '../../lang'
 

@@ -1,3 +1,4 @@
+// @appgraff screen.panel-adventure
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ConfirmModal from '../atoms/ConfirmModal'
 import AdventureEditor from '../molecules/AdventureEditor'

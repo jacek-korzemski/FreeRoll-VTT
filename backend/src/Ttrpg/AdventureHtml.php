@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.adventure
+
 namespace FreeRoll\Ttrpg;
 
 use DOMDocument;

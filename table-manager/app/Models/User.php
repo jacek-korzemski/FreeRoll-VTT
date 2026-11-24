@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff guard.tm-table-limit
+
 namespace App\Models;
 
 use App\Services\TableProvisioner;

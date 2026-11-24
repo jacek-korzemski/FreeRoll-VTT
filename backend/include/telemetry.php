@@ -1,4 +1,6 @@
 <?php
+
+// @appgraff state.telemetry
 /**
  * Lightweight VTT telemetry: logins, presence windows, interactions.
  * Writes under backend/data/telemetry/. Failures are swallowed so the table still works.

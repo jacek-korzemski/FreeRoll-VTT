@@ -1,3 +1,4 @@
+// @appgraff screen.table-board
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../../lang'
 import { getImageSrc } from '../../utils/sidebarHelpers'

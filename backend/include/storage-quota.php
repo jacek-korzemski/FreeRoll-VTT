@@ -1,4 +1,6 @@
 <?php
+
+// @appgraff state.assets
 /**
  * Per-table quota for GM-uploaded assets (tokens, maps, backgrounds, templates, PDFs).
  * Default: 50 MB. 0 = unlimited. Table Manager writes VTT_TABLE_UPLOAD_QUOTA_MB into each table .env.

@@ -1,3 +1,4 @@
+// @appgraff screen.panel-adventure
 import { getImageSrc } from './sidebarHelpers'
 
 const DICE_RE = /(?<![\w/])(\d*d\d+(?:\s*[+-]\s*(?:\d*d\d+|\d+))*)/gi

@@ -1,3 +1,4 @@
+// @appgraff job.l5r-convert, artifact.l5r-data
 /**
  * Dev-time converter: turns the Google Sheets HTML exports of the L5R game-data
  * tables into structured JSON consumed by the in-app Compendium and card pickers.

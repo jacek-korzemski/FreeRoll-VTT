@@ -1,5 +1,7 @@
 <?php
 
+// @appgraff action.card-library, state.card-library
+
 namespace FreeRoll\Ttrpg;
 
 use PDO;
